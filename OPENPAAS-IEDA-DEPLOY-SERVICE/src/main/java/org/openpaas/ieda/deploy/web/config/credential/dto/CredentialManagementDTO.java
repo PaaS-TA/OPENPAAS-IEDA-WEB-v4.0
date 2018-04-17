@@ -2,19 +2,21 @@ package org.openpaas.ieda.deploy.web.config.credential.dto;
 
 
 public class CredentialManagementDTO {
+    
     private String id;
     private String credentialName;
     private String credentialKeyName;
     private String directorPublicIp;
     private String createUserId;
     private String updateUserId;
+    
     public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getCredentialName() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+    public String getCredentialName() {
         return credentialName;
     }
     public void setCredentialName(String credentialName) {

@@ -1,6 +1,5 @@
 package org.openpaas.ieda.deploy.web.config.setting.service;
 
-import java.io.BufferedOutputStream;
 import java.io.File
 ;
 import java.io.FileInputStream;
@@ -10,7 +9,6 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.security.Principal;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +30,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.yaml.snakeyaml.Yaml;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -181,13 +177,22 @@ public class DirectorConfigService  {
         director.setCreateUserId(sessionInfo.getUserId());
         director.setUpdateUserId(sessionInfo.getUserId());
         
+        //입력된 설치관리자 정보를 데이터베이스에 저장한다.
+        if(!director.equals(null)){
+            dao.insertDirector(director);
+            List<DirectorConfigVO> resultList = dao.selectDirectorConfigByDirectorUrl(createDto.getDirectorUrl());
+            try {
+                director.setIedaDirectorConfigSeq(resultList.get(0).getIedaDirectorConfigSeq());
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+                throw new CommonException("outbound.directorFile.exception", "설치관리자가 제대로 설정되지 않았습니다.", HttpStatus.BAD_REQUEST);
+            }
+        }
         //기존에 기본 설치관리자가 존재한다면 N/ 존재하지않는다면 기본 설치관리자로 설정
         DirectorConfigVO directorConfig = dao.selectDirectorConfigByDefaultYn("Y");
         director.setDefaultYn((directorConfig == null ) ? "Y":"N");
         if( director.getDefaultYn().equalsIgnoreCase("Y") ) {
             boshEnvAliasSequence(director);
-        }else{
-            dao.insertDirector(director);
         }
     }
     
@@ -197,6 +202,7 @@ public class DirectorConfigService  {
      * @title : boshEnvAliasSequence
      * @return : void
     *****************************************************************/
+    @SuppressWarnings("unchecked")
     public void boshEnvAliasSequence(DirectorConfigVO directorConfig){
         try{
             // bosh-env에 로그인
@@ -209,7 +215,7 @@ public class DirectorConfigService  {
             String httpStatus = String.valueOf(statusResult);
             // stemcell 조회 > httpStatus > 조건 200 이 아닐경우 Exception >> database update
             if(httpStatus.equals("200")){
-                dao.insertDirector(directorConfig);
+                dao.updateDirector(directorConfig);
             }else{
                 throw new CommonException("unAuthorized.director.exception",
                         "실행 권한이 없습니다.", HttpStatus.UNAUTHORIZED);
@@ -217,11 +223,11 @@ public class DirectorConfigService  {
         } catch (NullPointerException e){
             e.printStackTrace();
             throw new CommonException("notfound.directorFile.exception",
-                    "설치관리자 입력 정보를 확인해 주세요.", HttpStatus.NOT_FOUND);
+                    "설치관리자 관리 파일을 읽어오는 중 오류가 발생했습니다.", HttpStatus.NOT_FOUND);
         } catch (ClassCastException e){
             e.printStackTrace();
             throw new CommonException("classCastException.directorFile.exception",
-                    "설치관리자 입력 정보를 확인해 주세요.", HttpStatus.NOT_FOUND);
+                    "설치관리자 관리 파일을 읽어오는 중 오류가 발생했습니다.", HttpStatus.NOT_FOUND);
         }
     }
     /****************************************************************
@@ -266,11 +272,11 @@ public class DirectorConfigService  {
         } catch (IOException e) {
             e.printStackTrace();
             throw new CommonException("taretDirector.director.exception",
-                    "설치관리자 입력 정보를 확인해 주세요.", HttpStatus.NOT_FOUND);
+                    "설치관리자 타겟 설정 중 오류 발생하였습니다.", HttpStatus.NOT_FOUND);
         } catch (NullPointerException e){
             e.printStackTrace();
             throw new CommonException("notfound.directorFile.exception",
-                    "설치관리자 입력 정보를 확인해 주세요.", HttpStatus.NOT_FOUND);
+                    "설치관리자 관리 파일을 읽어오는 중 오류가 발생했습니다.", HttpStatus.NOT_FOUND);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -332,7 +338,7 @@ public class DirectorConfigService  {
         DirectorConfigVO directorConfig = dao.selectDirectorConfigBySeq(seq);
         if (directorConfig == null) {
             throw new CommonException("notfound.director.exception",
-                    "해당하는 설치관리자는 존재하지 않습니다.", HttpStatus.NOT_FOUND);
+                    "해당하는 설치관리자 존재하지 않습니다.", HttpStatus.NOT_FOUND);
         }
         
         //2.    설치관리자 정보를 확인한다
@@ -352,6 +358,7 @@ public class DirectorConfigService  {
     * @title : setDefaultDirectorInfo
     * @return : DirectorConfigVO
     ***************************************************/
+    @SuppressWarnings("unchecked")
     public DirectorConfigVO setDefaultDirectorInfo(DirectorConfigVO directorConfig, DirectorInfoDTO info, Principal principal, String boshConfigFileName){
         // 기존 기본관리자의 정보를 불러온다.
         DirectorConfigVO oldDefaultDiretor = dao.selectDirectorConfigByDefaultYn("Y");
@@ -394,11 +401,11 @@ public class DirectorConfigService  {
         } catch (NullPointerException e){
             e.printStackTrace();
             throw new CommonException("notfound.directorFile.exception",
-                    "설치관리자 입력 정보를 확인해 주세요.", HttpStatus.NOT_FOUND);
+                    "설치관리자 관리 파일을 읽어오는 중 오류가 발생했습니다.", HttpStatus.NOT_FOUND);
         } catch (ClassCastException e){
             e.printStackTrace();
             throw new CommonException("classCastException.directorFile.exception",
-                    "설치관리자 입력 정보를 확인해 주세요.", HttpStatus.NOT_FOUND);
+                    "설치관리자 관리 파일을 읽어오는 중 오류가 발생했습니다.", HttpStatus.NOT_FOUND);
         } catch(HttpStatusCodeException e) {
             e.printStackTrace();
             throw new CommonException("unAuthorized.director.exception",
@@ -410,7 +417,7 @@ public class DirectorConfigService  {
                 }
             } catch (IOException e) {
                 throw new CommonException("taretDirector.director.exception",
-                        "설치관리자 입력 정보를 확인해 주세요.", HttpStatus.INTERNAL_SERVER_ERROR);
+                        "읽어오는중 오류가 발생했습니다!", HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
         return directorConfig;
@@ -435,53 +442,4 @@ public class DirectorConfigService  {
         return statusResult;
     }
     
-    /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description :  
-     * @title : uploadCredentialKeyFile
-     * @return : void
-    *****************************************************************/
-    public void uploadCredentialKeyFile(MultipartHttpServletRequest request) {
-        Iterator<String> itr =  request.getFileNames();
-        File keyPathFile = new File(CREDENTIAL_DIR);
-        if (!keyPathFile.isDirectory()){
-            boolean result = keyPathFile.mkdir();
-            LOGGER.debug("Credential key path file directory create :: " + result);
-        }
-        if(itr.hasNext()) {
-            BufferedOutputStream stream = null;
-            MultipartFile mpf = request.getFile(itr.next());
-            try {
-                String keyFilePath = CREDENTIAL_DIR + mpf.getOriginalFilename();
-                byte[] bytes = mpf.getBytes();
-                File isKeyFile = new File(keyFilePath);
-                stream = new BufferedOutputStream(new FileOutputStream(isKeyFile));
-                stream.write(bytes);
-                
-//                boolean result = isKeyFile.setWritable(false, false);
-//                if(LOGGER.isDebugEnabled()){
-//                    LOGGER.debug("isKeyFile.setWritable : " + result);
-//                }
-//                isKeyFile.setExecutable(true, false);
-//                isKeyFile.setReadable(true, false);
-//                Set<PosixFilePermission> pfp = new HashSet<PosixFilePermission>();
-//                pfp.add(PosixFilePermission.OWNER_READ);
-//                Files.setPosixFilePermissions(Paths.get(keyFilePath), pfp);
-                
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new CommonException("notfound.keyFile.exception",
-                        "Key 입력 정보를 확인해 주세요.", HttpStatus.INTERNAL_SERVER_ERROR);
-            } finally {
-                try {
-                    if( stream != null ) {
-                        stream.close();
-                    }
-                } catch (IOException e) {
-                    throw new CommonException("notfound.keyFile.exception",
-                            "Key 입력 정보를 확인해 주세요.", HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-            }
-        }
-    }
 }

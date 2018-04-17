@@ -90,11 +90,10 @@ public class CredentialManagementService {
             builder.start();
             Thread.sleep(10000);
         } catch (IOException e) {
-            throw new CommonException("conflict.credentialName.exception", "디렉터 인증서 파일 생성 중 에러가 발생 하였습니다.", HttpStatus.CONFLICT);
+            throw new CommonException("conflict.credentialName.exception", "디렉터 인증서 파일 생성 중 에러가 발생 하였습니다.", HttpStatus.BAD_REQUEST);
         } catch (InterruptedException e) {
             throw new CommonException("Thread.interruptedException", "서버 실행 중 에러가 발생 했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
     
     /***************************************************
