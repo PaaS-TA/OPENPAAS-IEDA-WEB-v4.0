@@ -456,6 +456,7 @@ function credsChangeKeyPathStyle( showDiv, hideDiv ){
      $(".w2ui-msg-body "+ hideDiv +" p").remove();
      $(".w2ui-msg-body "+ showDiv).show();
 }
+
 </script>
 
 <div id="main">
