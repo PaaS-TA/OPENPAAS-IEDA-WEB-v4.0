@@ -51,7 +51,7 @@
                   <sec:authorize access="hasAuthority('INFO_IAASCONFIG_MENU')">
                         <li><a href="javascript:goPage('<c:url value="/info/iaasConfig"/>', '인프라 환경 설정 관리');">인프라 환경 설정 관리</a></li>
                   </sec:authorize>
-                  <sec:authorize access="hasAuthority('CONFIG_CREDENTIAL_MENU')">
+                  <sec:authorize access="hasAuthority('INFO_IAASCONFIG_MENU')">
                         <li><a href="javascript:goPage('<c:url value="/config/credential"/>', '디렉터 인증서 관리');">디렉터 인증서 관리</a></li>
                    </sec:authorize>
                </ul>
