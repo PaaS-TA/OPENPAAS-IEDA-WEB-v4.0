@@ -82,7 +82,7 @@ public class CredentialManagementServiceUnitTest extends BaseDeployControllerUni
     @Test
     public void testMakeCredentialFile(){
         CredentialManagementDTO dto = setDirectornfo();
-        mockCredentialManagementService.makeCredentialFile(dto.getDirectorPublicIp(), dto.getCredentialName());
+        mockCredentialManagementService.makeCredentialFile(dto, dto.getCredentialName());
         File file = new File(CREDENTIAL_DIR + SEPARATOR + dto.getCredentialKeyName());
         if(file.exists()) file.delete(); // TEST 종료 후 해당 파일 삭제
     }

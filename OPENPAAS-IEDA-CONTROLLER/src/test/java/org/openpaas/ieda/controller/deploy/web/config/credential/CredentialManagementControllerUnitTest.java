@@ -136,10 +136,12 @@ public class CredentialManagementControllerUnitTest extends BaseControllerUnitTe
         dto.setCreateUserId("admin");
         dto.setUpdateUserId("admin");
         dto.setDirectorPublicIp("172.16.100.1");
+        dto.setDirectorPrivateIp("192.168.100.1");
         dto.setCredentialKeyName("my-credential-cred.yml");
         dto.setCredentialName("my-credential");
         dto.setId("1");
         dto.getCreateUserId();
+        dto.getDirectorPrivateIp();
         dto.getUpdateUserId();
         dto.getDirectorPublicIp();
         dto.getCredentialKeyName();
@@ -160,6 +162,7 @@ public class CredentialManagementControllerUnitTest extends BaseControllerUnitTe
         vo.setCreateUserId("admin");
         vo.setUpdateUserId("admin");
         vo.setDirectorPublicIp("172.16.100.1");
+        vo.setDirectorPrivateIp("192.168.100.1");
         vo.setCredentialKeyName("my-credential-cred.yml");
         vo.setCredentialName("my-credential");
         vo.setRecid(1);
@@ -167,6 +170,7 @@ public class CredentialManagementControllerUnitTest extends BaseControllerUnitTe
         vo.getCreateUserId();
         vo.getUpdateUserId();
         vo.getDirectorPublicIp();
+        vo.getDirectorPrivateIp();
         vo.getCredentialKeyName();
         vo.getCredentialName();
         vo.getRecid();

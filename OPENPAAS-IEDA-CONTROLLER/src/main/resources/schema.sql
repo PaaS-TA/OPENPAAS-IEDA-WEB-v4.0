@@ -519,6 +519,7 @@ CREATE TABLE ieda_director_credential
   director_credential_name              VARCHAR(100),
   director_credential_key_name          VARCHAR(100),
   director_public_ip                    VARCHAR(100),
+  director_private_ip                    VARCHAR(100),
   create_user_id                        VARCHAR(255) NOT NULL,
   create_date                           DATE         NOT NULL,
   update_user_id                        VARCHAR(255) NOT NULL,

@@ -7,6 +7,7 @@ public class CredentialManagementDTO {
     private String credentialName;
     private String credentialKeyName;
     private String directorPublicIp;
+    private String directorPrivateIp;
     private String createUserId;
     private String updateUserId;
     
@@ -33,6 +34,12 @@ public class CredentialManagementDTO {
     }
     public void setDirectorPublicIp(String directorPublicIp) {
         this.directorPublicIp = directorPublicIp;
+    }
+    public String getDirectorPrivateIp() {
+        return directorPrivateIp;
+    }
+    public void setDirectorPrivateIp(String directorPrivateIp) {
+        this.directorPrivateIp = directorPrivateIp;
     }
     public String getCreateUserId() {
         return createUserId;

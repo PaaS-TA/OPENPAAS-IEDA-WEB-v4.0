@@ -32,6 +32,7 @@ $(function(){
                { field: 'credentialName', caption: '디렉터 인증서 명', size:'25%', style:'text-align:center;' },
                { field: 'credentialKeyName', caption: '디렉터 인증서 파일 명', size:'50%', style:'text-align:center;' },
                { field: 'directorPublicIp', caption: '설치 관리자 공인 IP', size:'50%', style:'text-align:center;'},
+               { field: 'directorPrivateIp', caption: '설치 관리자 내부 IP', size:'50%', style:'text-align:center;'},
               ],
         onSelect : function(event) {
             event.onComplete = function() {
@@ -58,7 +59,7 @@ $(function(){
         w2popup.open({
             title     : "<b>디렉터 인증서 등록</b>",
             width     : 600,
-            height    : 260,
+            height    : 280,
             modal    : true,
             body    : $("#regPopupDiv").html(),
             buttons : $("#regPopupBtnDiv").html(),
@@ -121,6 +122,7 @@ function registDirectorCredentialInfo(){
     var credentialInfo = {
         credentialName : $(".w2ui-msg-body input[name='credentialName']").val(),    
         directorPublicIp : $(".w2ui-msg-body input[name='directorPublicIp']").val(),
+        directorPrivateIp : $(".w2ui-msg-body input[name='directorPrivateIp']").val()
     }
     $.ajax({
         type : "POST",
@@ -214,7 +216,7 @@ function clearMainPage() {
         <div class="w2ui-page page-0" style="">
            <div class="panel panel-info"  style="margin-top:5px;">
                <div class="panel-heading"><b>디렉터 인증서 정보</b></div>
-               <div class="panel-body" style="height:120px; overflow-y:auto;">
+               <div class="panel-body" style="height:143px; overflow-y:auto;">
                    <div class="w2ui-field">
                        <label style="width:33%;text-align: left;padding-left: 20px;">디렉터 인증서 명</label>
                        <div>
@@ -227,6 +229,13 @@ function clearMainPage() {
                            <input name="directorPublicIp" type="text" maxlength="100" style="width: 320px" placeholder="디렉터 공인 IPs를 하세요."/>
                        </div>
                    </div>
+                   <div class="w2ui-field">
+                       <label style="width:33%;text-align: left;padding-left: 20px;">디렉터 내부 IPs</label>
+                       <div>
+                           <input name="directorPrivateIp" type="text" maxlength="100" style="width: 320px" placeholder="디렉터 내부 IPs를 하세요."/>
+                       </div>
+                   </div>
+                   
                </div>
            </div>
         </div>

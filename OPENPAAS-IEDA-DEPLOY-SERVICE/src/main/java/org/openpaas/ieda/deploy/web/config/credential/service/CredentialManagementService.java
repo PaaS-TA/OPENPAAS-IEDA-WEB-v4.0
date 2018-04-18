@@ -59,9 +59,10 @@ public class CredentialManagementService {
             throw new CommonException("conflict.credentialName.exception", "디렉터 인증서 명이 중복 되었습니다.", HttpStatus.CONFLICT);
         }else {
             String credentialKeyName = dto.getCredentialName() + "-cred.yml";
-            makeCredentialFile(dto.getDirectorPublicIp(), credentialKeyName);
+            makeCredentialFile(dto, credentialKeyName);
             vo.setCreateUserId(principal.getName());
             vo.setUpdateUserId(principal.getName());
+            vo.setDirectorPrivateIp(dto.getDirectorPrivateIp());
             vo.setCredentialName(dto.getCredentialName());
             vo.setCredentialKeyName(credentialKeyName);
             vo.setDirectorPublicIp(dto.getDirectorPublicIp());
@@ -75,7 +76,7 @@ public class CredentialManagementService {
      * @title : makeCredentialFile
      * @return : void
     ***************************************************/
-    public void makeCredentialFile(String directorPublicIp, String credentialKeyName) {
+    public void makeCredentialFile(CredentialManagementDTO dto, String credentialKeyName) {
         String commonCredentialManifestPath = MANIFEST_TEMPLATE_DIR + "/bootstrap/264.7/common/DirectorCredential.yml";
         try {
             List<String> cmd = new ArrayList<String>(); //bosh 명령어 실행 줄
@@ -83,7 +84,9 @@ public class CredentialManagementService {
             cmd.add("interpolate");
             cmd.add(commonCredentialManifestPath);
             cmd.add("-v");
-            cmd.add("publicStaticIp="+directorPublicIp+"");
+            cmd.add("publicStaticIp="+dto.getDirectorPublicIp()+"");
+            cmd.add("-v");
+            cmd.add("privateStaticIp="+dto.getDirectorPrivateIp()+"");
             cmd.add("--vars-store="+CREDENTIAL_DIR + SEPARATOR + credentialKeyName+"");
             ProcessBuilder builder = new ProcessBuilder(cmd);
             builder.redirectErrorStream(true);
