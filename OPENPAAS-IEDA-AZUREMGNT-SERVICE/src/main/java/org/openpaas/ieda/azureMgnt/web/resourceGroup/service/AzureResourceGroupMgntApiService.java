@@ -68,6 +68,7 @@ public class AzureResourceGroupMgntApiService {
         List<ResourceGroup> resourceGroupList = resource.list();
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("resourceGroupList", resourceGroupList);
+        
         return map;
     }
     
@@ -94,7 +95,7 @@ public class AzureResourceGroupMgntApiService {
  
    /***************************************************
     * @project : 인프라 관리 대시보드
-    * @description :Azure API를 통해 MS Azure 계정 Subscription 명 가져오기 
+    * @description :Azure API를 통해 MS Azure 계정 Subscription ID 가져오기 
     * @title : getSubscriptionInfoFromAzure
     * @return : Subscription
    ***************************************************/ 

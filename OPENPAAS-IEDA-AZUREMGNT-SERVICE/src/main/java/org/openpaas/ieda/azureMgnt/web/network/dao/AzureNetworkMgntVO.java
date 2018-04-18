@@ -11,15 +11,19 @@ public class AzureNetworkMgntVO {
 	private Integer recid;
     @NotNull
     private String networkName;//network 명
+    private String networkId; //network id
     private String azureSubscriptionId;//구독id
     private String subscriptionName;//그룹 명
-    private String location;//그룹 명
+    private String location;//리전
     private String resourceGroupId;//리소스 그룹 id
     private String resourceGroupName;//리소스 그룹 명
     private String resourceType;
     private String networkAddressSpaceCidr; //network address range
     private String subnetName;//Subnet 명
     private String subnetAddressRangeCidr; //Subnet address range
+    private Integer subnetAddressesCnt;
+    private String securityGroupName; 
+    
     private String dnsServer; //dns server
     private String deviceName; 
     private String deviceType;
@@ -44,6 +48,12 @@ public class AzureNetworkMgntVO {
 	}
 	public void setNetworkName(String networkName) {
 		this.networkName = networkName;
+	}
+	public String getNetworkId() {
+		return networkId;
+	}
+	public void setNetworkId(String networkId) {
+		this.networkId = networkId;
 	}
 	public String getAzureSubscriptionId() {
 		return azureSubscriptionId;
@@ -86,6 +96,18 @@ public class AzureNetworkMgntVO {
 	}
 	public void setNetworkAddressSpaceCidr(String networkAddressSpaceCidr) {
 		this.networkAddressSpaceCidr = networkAddressSpaceCidr;
+	}
+	public Integer getSubnetAddressesCnt() {
+		return subnetAddressesCnt;
+	}
+	public void setSubnetAddressesCnt(Integer subnetAddressesCnt) {
+		this.subnetAddressesCnt = subnetAddressesCnt;
+	}
+	public String getSecurityGroupName() {
+		return securityGroupName;
+	}
+	public void setSecurityGroupName(String securityGroupName) {
+		this.securityGroupName = securityGroupName;
 	}
 	public String getSubnetName() {
 		return subnetName;
