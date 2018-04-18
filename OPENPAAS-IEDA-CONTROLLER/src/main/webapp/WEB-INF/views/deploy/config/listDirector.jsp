@@ -424,6 +424,36 @@ function getCredsKeyPathFileList(){
     });
 }
 
+/****************************************************
+ * 기능 : uploadCredentialKey
+ * 설명 : CredentialKey 업로드
+*****************************************************/
+function uploadCredentialKey(){
+    var form = $(".w2uimsgbody #settingForm")[0];
+    var formData = new FormData(form);
+            
+    var files = document.getElementsByName('keyPathFile')[0].files;
+    console.log(files);
+    formData.append("file", files[0]);
+            
+    $.ajax({
+        type : "POST",        
+        url : "/config/director/credskey/upload",
+        enctype : 'multipart/formdata',
+        dataType: "text",
+        async : true,
+        processData: false,
+        contentType:false,
+        data : formData,
+        success : function(data, status) {
+            registDirectorConfig();
+        },
+        error : function( e, status ) {
+            w2alert( "Credential Key 업로드에 실패 하였습니다.", "설치관리자 설정");
+        }
+    });
+}
+
 /******************************************************************
  * 기능 : credsChangeKeyPathType
  * 설명 : Credential key file 선택
@@ -650,10 +680,10 @@ $(function() {
                 setInvalidHandlerStyle(errors, validator);
             }
         }, submitHandler: function (form) {
-            if(checkEmpty( $(".w2ui-msg-body input[name='seq']").val() )){
+            if(checkEmpty( $(".w2ui-msg-body input[name='keyPathFile']").val() )){
                 registDirectorConfig();
             }else{
-                updateDirectorConfig();
+                uploadCredentialKey();
             }
             
         }
