@@ -124,7 +124,7 @@ $(function() {
        w2popup.open({
            title   : "<b>Azure Network 생성</b>",
            width   : 580,
-           height  : 450,
+           height  : 465,
            modal   : true,
            body    : $("#registPopupDiv").html(),
            buttons : $("#registPopupBtnDiv").html(),
@@ -465,7 +465,7 @@ td {
                         <label style="width:36%;text-align: left; padding-left: 20px;">Location</label>
                          <div id="locationInfoDiv">
                          <div id="locationInfo" style="width:300px; font-size: 15px; height: 28px; border: 1px solid #ccc; border-radius:2px; padding-left:5px; line-height:28px; color:#777 !important;" ></div>
-                           <input id ="locationVal" name="location" hidden="true" readonly='readonly'  style="width:300px; font-size: 15px; height: 32px;"/> 
+                                <input id ="locationVal" name="location" hidden="true" readonly='readonly'  style="width:300px; font-size: 15px; height: 32px;"/> 
                         </div>
                     </div>
                     <div class="w2ui-field">
