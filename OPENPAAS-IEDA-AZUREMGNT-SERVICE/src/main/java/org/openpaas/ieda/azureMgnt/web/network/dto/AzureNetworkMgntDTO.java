@@ -10,10 +10,15 @@ public class AzureNetworkMgntDTO {
     private Integer accountId; // 계정 아이디
     @NotNull
     private String networkName;//network 명
-    private String networkAddressRangeCidr; //network address range
+    private String networkId;
+    private String networkAddressSpaceCidr; //network address space
     private String subnetName;//Subnet 명
     private String subnetAddressRangeCidr; //Subnet address range
-	
+    private String resourceGroupId;
+    private String resourceGroupName;
+    private String location;
+    
+    
     public Integer getAccountId() {
 		return accountId;
 	}
@@ -26,11 +31,17 @@ public class AzureNetworkMgntDTO {
 	public void setNetworkName(String networkName) {
 		this.networkName = networkName;
 	}
-	public String getNetworkAddressRangeCidr() {
-		return networkAddressRangeCidr;
+	public String getNetworkId() {
+		return networkId;
 	}
-	public void setNetworkAddressRangeCidr(String networkAddressRangeCidr) {
-		this.networkAddressRangeCidr = networkAddressRangeCidr;
+	public void setNetworkId(String networkId) {
+		this.networkId = networkId;
+	}
+	public String getNetworkAddressSpaceCidr() {
+		return networkAddressSpaceCidr;
+	}
+	public void setNetworkAddressSpaceCidr(String networkAddressSpaceCidr) {
+		this.networkAddressSpaceCidr = networkAddressSpaceCidr;
 	}
 	public String getSubnetName() {
 		return subnetName;
@@ -43,5 +54,23 @@ public class AzureNetworkMgntDTO {
 	}
 	public void setSubnetAddressRangeCidr(String subnetAddressRangeCidr) {
 		this.subnetAddressRangeCidr = subnetAddressRangeCidr;
+	}
+	public String getResourceGroupId() {
+		return resourceGroupId;
+	}
+	public void setResourceGroupId(String resourceGroupId) {
+		this.resourceGroupId = resourceGroupId;
+	}
+	public String getResourceGroupName() {
+		return resourceGroupName;
+	}
+	public void setResourceGroupName(String resourceGroupName) {
+		this.resourceGroupName = resourceGroupName;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
 	}
 }

@@ -49,13 +49,14 @@ public class AzureResourceGroupMgntService {
     * @return : List<AzureResourceGroupMgntVO>
     ***************************************************/
     public List<AzureResourceGroupMgntVO> getAzureResourceGroupInfoList(Principal principal, int accountId) {
-        
+      
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, accountId);
         List<ResourceGroup> azureResourceGroupList = azureResourceGroupMgntApiService.getAzureResourceGroupInfoListApiFromAzure(vo);
         List<AzureResourceGroupMgntVO> list = new ArrayList<AzureResourceGroupMgntVO>();
         for (int i=0; i<azureResourceGroupList.size(); i++ ){
             ResourceGroup resourceGroup = azureResourceGroupList.get(i);
             AzureResourceGroupMgntVO azureRgVo = new AzureResourceGroupMgntVO();
+            
             azureRgVo.setName(resourceGroup.name());
             azureRgVo.setLocation(resourceGroup.inner().location());
             azureRgVo.setResourceGroupId(resourceGroup.id());
@@ -129,12 +130,12 @@ public class AzureResourceGroupMgntService {
          
          IaasAccountMgntVO vo =  getAzureAccountInfo(principal, dto.getAccountId());
          String regionName = getAzureLocationInfo(dto.getRglocation());
-         ResourceGroup apiResourceGroup = azureResourceGroupMgntApiService.createResourceGroupromAzure(vo, regionName, dto.getName(),dto.getAzureSubscriptionId());
-         AzureResourceGroupMgntVO azureRGVo = new AzureResourceGroupMgntVO();
-         azureRGVo.setLocation(apiResourceGroup.region().name());
-         azureRGVo.setName(apiResourceGroup.name());
-         azureRGVo.setAzureSubscriptionId(dto.getAzureSubscriptionId());
-         return azureRGVo;
+             ResourceGroup apiResourceGroup = azureResourceGroupMgntApiService.createResourceGroupromAzure(vo, regionName, dto.getName(),dto.getAzureSubscriptionId());
+             AzureResourceGroupMgntVO azureRGVo = new AzureResourceGroupMgntVO();
+               azureRGVo.setLocation(apiResourceGroup.region().name());
+               azureRGVo.setName(apiResourceGroup.name());
+               azureRGVo.setAzureSubscriptionId(dto.getAzureSubscriptionId());
+             return azureRGVo;
      }
 
      /***************************************************

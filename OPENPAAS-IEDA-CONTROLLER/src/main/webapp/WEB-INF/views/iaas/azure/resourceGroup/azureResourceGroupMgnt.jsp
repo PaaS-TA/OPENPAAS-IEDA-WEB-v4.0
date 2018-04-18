@@ -350,7 +350,7 @@ function setAzureSubscription(){
       }
       $.ajax({
           type : "DELETE",
-          url : "/azureMgnt/resourceGroup/delete",
+          url : "/azureMgnt/resouceGroup/delete",
           contentType : "application/json",
           async : true,
           data : JSON.stringify(rgInfo),
@@ -426,23 +426,23 @@ td {
                         <sec:authorize access="hasAuthority('AZURE_SUBNET_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/subnet"/>', 'Azure Subnet');">Subnet 관리</a></li>
                         </sec:authorize>
-                        <sec:authorize access="hasAuthority('AZURE_GATEWAY_SUBNET_MENU')">
-                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/gatewaySubnet"/>', 'Azure Gateway Subnet');"> Gateway Subnet 관리</a></li>
+                        <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCOUNT_MENU')">
+                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/storageAccount"/>', 'Azure Storage Account');"> Storage Account 관리</a></li>
+                        </sec:authorize>
+                         <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCESS_KEY_MENU')">
+                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/storageAccessKey"/>', 'Azure Storage Access Key');"> Storage Access Key 관리</a></li>
+                        </sec:authorize>
+                        <sec:authorize access="hasAuthority('AZURE_STORAGE_CONTAINER_MENU')">
+                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/storageContainer"/>', 'Azure Storage Container');">Storage Container 관리</a></li>
+                        </sec:authorize>
+                        <sec:authorize access="hasAuthority('AZURE_PUBLIC_IP_MENU')">
+                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/publicIp"/>', 'Azure Public IP');">Public IP 관리</a></li>
                         </sec:authorize>
                         <sec:authorize access="hasAuthority('AZURE_SECURITY_GROUP_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/securityGroup"/>', 'Azure Security Group');">Security Group 관리</a></li>
                         </sec:authorize>
-                        <sec:authorize access="hasAuthority('AZURE_SECURITY_RULE_MENU')">
-                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/securityRule"/>', 'Azure Security Rule');">Security Rule 관리</a></li>
-                        </sec:authorize>
-                        <sec:authorize access="hasAuthority('AZURE_PUBILIC_IP_MENU')">
-                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/publicIp"/>', 'Azure Public IP');">Public IP 관리</a></li>
-                        </sec:authorize>
-                        <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCOUNT_MENU')">
-                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/storageAccount"/>', 'Azure Storage Account');"> Storage Account 관리</a></li>
-                        </sec:authorize>
-                        <sec:authorize access="hasAuthority('AZURE_STORAGE_CONTAINER_MENU')">
-                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/storageContainer"/>', 'Azure Storage Container');">Storage Container 관리</a></li>
+                        <sec:authorize access="hasAuthority('AZURE_ROUTE_TABLE_MENU')">
+                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/routeTable"/>', 'Azure Route Tablee');">Route Table 관리</a></li>
                         </sec:authorize>
                     </ul>
                 </div>
@@ -506,7 +506,7 @@ td {
      <button class="btn" id="popClose"  onclick="w2popup.close();">취소</button>
 </div>
     <div class="pdt20" >
-        <div class="title fl">Azure Resource Group 상세 목록</div>
+        <div class="title fl">azure Resource Group 상세 목록</div>
     </div>
     <div id="azure_rgDetailGrid" style="width:100%; height:128px; margin-top:50px; border-top: 2px solid #c5c5c5; ">
     <table id= "rgDetailTable" class="table table-condensed table-hover">

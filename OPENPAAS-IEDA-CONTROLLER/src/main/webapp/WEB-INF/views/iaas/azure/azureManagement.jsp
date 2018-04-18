@@ -59,7 +59,7 @@ function unhover(event, val){
         </div>
         <div id="azureMgntWrap" >
             <ul>
-               <%--  <sec:authorize access="hasAuthority('AZURE_RESOURCE_GROUP_MENU')"> --%>
+                <sec:authorize access="hasAuthority('AZURE_RESOURCE_GROUP_MENU')"> 
                     <li class="azureMgntDiv" onmouseover="hover(this,'securityGroup_a2');" onmouseout="unhover(this,'securityGroup_a1');" onclick="javascript:goPage('<c:url value="/azureMgnt/resourceGroup"/>', 'Resource Group');">
                         <ul>
                              <li class="azure-li"><span class="azure-li-span1">Resource Group</span></li>
@@ -72,8 +72,8 @@ function unhover(event, val){
                              </li>
                          </ul>
                     </li>
-                <%-- </sec:authorize> --%>
-                <%--  <sec:authorize access="hasAuthority('AZURE_NETWORK_MENU')"> --%>
+                 </sec:authorize> 
+                 <sec:authorize access="hasAuthority('AZURE_NETWORK_MENU')"> 
                     <li class="azureMgntDiv" onmouseover="hover(this,'subnet_a2');" onmouseout="unhover(this,'subnet_a1');" onclick="javascript:goPage('<c:url value="/azureMgnt/network"/>', 'Virtual Network');">
                         <ul>
                              <li class="azure-li"><span class="azure-li-span1">Virtual Network</span></li>
@@ -86,11 +86,11 @@ function unhover(event, val){
                              </li>
                          </ul>
                     </li>
-                <%-- </sec:authorize> --%>
-                <sec:authorize access="hasAuthority('AZURE_NETWORK_MENU')">
+                 </sec:authorize> 
+                <sec:authorize access="hasAuthority('AZURE_SUBNET_MENU')">
                 <li class="azureMgntDiv"  onmouseover="hover(this,'subnet_a2');" onmouseout="unhover(this,'subnet_a1');" onclick="javascript:goPage('<c:url value="/azureMgnt/subnet"/>', 'Subnet');">
                     <ul>
-                         <li class="azure-li"><span class="azure-li-span1">Network</span></li>
+                         <li class="azure-li"><span class="azure-li-span1">Subnet</span></li>
                          <li>
                              <ul style="margin-top:59px">
                                  <li style="margin-bottom:22px;">
@@ -101,10 +101,48 @@ function unhover(event, val){
                      </ul>
                 </li>
                 </sec:authorize>
-                <sec:authorize access="hasAuthority('AZURE_SUBNET_MENU')">
-                    <li class="azureMgntDiv" onmouseover="hover(this,'subnet_a2');" onmouseout="unhover(this,'vpc_b1');" onclick="javascript:goPage('<c:url value="/azureMgnt/vpc"/>', 'VPC');">
+                <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCOUNT_MENU')">
+                    <li class="azureMgntDiv" onmouseover="hover(this,'elasticIP_c2');" onmouseout="unhover(this,'elasticIP_c1');" onclick="javascript:goPage('<c:url value="/azureMgnt/storageAccount"/>', 'Storage Account');">
                         <ul>
-                            <li class="azure-li"><span class="azure-li-span1">Subnet</span></li>
+                            <li class="azure-li"><span class="azure-li-span1">Storage Account</span></li>
+                            <li>
+                                <ul style="margin-top:59px">
+                                    <li style="margin-bottom:22px;"><img src='<c:url value="images/azureMgnt/elasticIP_c1.png"/>'  class="azure-icon" alt="azure"><span></span></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </sec:authorize>
+                <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCESS_KEY_MENU')">
+                    <li class="azureMgntDiv" onmouseover="hover(this,'elasticIP_c2');" onmouseout="unhover(this,'elasticIP_c1');" onclick="javascript:goPage('<c:url value="/azureMgnt/storageAccessKey"/>', 'Storage Access Key');">
+                        <ul>
+                            <li class="azure-li"><span class="azure-li-span1">Storage Access Key</span></li>
+                            <li>
+                                <ul style="margin-top:59px">
+                                    <li style="margin-bottom:22px;"><img src='<c:url value="images/azureMgnt/elasticIP_c1.png"/>'  class="azure-icon" alt="azure"><span></span></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </sec:authorize>
+                <sec:authorize access="hasAuthority('AZURE_STORAGE_CONTAINER_MENU')">
+                    <li class="azureMgntDiv" onmouseover="hover(this,'elasticIP_c2');" onmouseout="unhover(this,'elasticIP_c1');" onclick="javascript:goPage('<c:url value="/azureMgnt/storageContainer"/>', 'Storage Container');">
+                        <ul>
+                            <li class="azure-li"><span class="azure-li-span1">Storage Container</span></li>
+                            <li>
+                                <ul style="margin-top:59px">
+                                    <li style="margin-bottom:22px;"><img src='<c:url value="images/azureMgnt/elasticIP_c1.png"/>'  class="azure-icon" alt="azure"><span></span></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </sec:authorize>
+                 
+                
+                <sec:authorize access="hasAuthority('AZURE_PUBLIC_IP_MENU')">
+                    <li class="azureMgntDiv" onmouseover="hover(this,'subnet_a2');" onmouseout="unhover(this,'vpc_b1');" onclick="javascript:goPage('<c:url value="/azureMgnt/publicIp"/>', 'Public IP');">
+                        <ul>
+                            <li class="azure-li"><span class="azure-li-span1">Public IP</span></li>
                             <li>
                                 <ul style="margin-top:59px">
                                     <li style="margin-bottom:22px;"><img src='<c:url value="images/azureMgnt/subnet_a1.png"/>' class="azure-icon" alt="azure"><span></span></li>
@@ -114,7 +152,7 @@ function unhover(event, val){
                     </li>
                 </sec:authorize>
                 <sec:authorize access="hasAuthority('AZURE_SECURITY_GROUP_MENU')">
-                    <li class="azureMgntDiv" onmouseover="hover(this,'gateway_b2');" onmouseout="unhover(this,'gateway_b1');" onclick="javascript:goPage('<c:url value="/azureMgnt/internetGateway"/>', 'Internet Gateway');">
+                    <li class="azureMgntDiv" onmouseover="hover(this,'gateway_b2');" onmouseout="unhover(this,'gateway_b1');" onclick="javascript:goPage('<c:url value="/azureMgnt/securityGroup"/>', 'Security Group');">
                         <ul>
                             <li class="azure-li"><span class="azure-li-span1">Security Group</span></li>
                             <li>
@@ -125,10 +163,10 @@ function unhover(event, val){
                         </ul>
                     </li>
                 </sec:authorize>
-                <sec:authorize access="hasAuthority('AZURE_PUBLIC_IP_MENU')">
-                    <li class="azureMgntDiv" onmouseover="hover(this,'elasticIP_c2');" onmouseout="unhover(this,'elasticIP_c1');" onclick="javascript:goPage('<c:url value="/azureMgnt/elasticIp"/>', 'Elastic IPs');">
+                <sec:authorize access="hasAuthority('AZURE_ROUTE_TABLE_MENU')">
+                    <li class="azureMgntDiv" onmouseover="hover(this,'elasticIP_c2');" onmouseout="unhover(this,'elasticIP_c1');" onclick="javascript:goPage('<c:url value="/azureMgnt/routeTable"/>', 'Route Table');">
                         <ul>
-                            <li class="azure-li"><span class="azure-li-span1">Public IPs</span></li>
+                            <li class="azure-li"><span class="azure-li-span1">Route Table</span></li>
                             <li>
                                 <ul style="margin-top:59px">
                                     <li style="margin-bottom:22px;"><img src='<c:url value="images/azureMgnt/elasticIP_c1.png"/>'  class="azure-icon" alt="azure"><span></span></li>
@@ -137,7 +175,7 @@ function unhover(event, val){
                         </ul>
                     </li>
                 </sec:authorize>
-            </ul>
+             </ul>
         </div>
     </div>
 </div>

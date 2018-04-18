@@ -354,8 +354,8 @@ function onchangesubnetInfo(subnetId){
 function doSearch() {
     region = $("select[name='region']").val();
     if(region == null) region = "us-west-2";
-    if(accountId != "")
-    w2ui['aws_routeTableGrid'].load("<c:url value='/awsMgnt/routeTable/list/"+accountId+"/"+region+"'/>","",function(event){});
+    if(accountId != null)
+    w2ui['aws_routeTableGrid'].load("<c:url value='/awsMgnt/routeTable/list/'/>"+accountId+"/"+region);
     doButtonStyle();
  }
 
@@ -676,7 +676,7 @@ function disassociateSubnetFromRouteTable(){
 function routeTableDelete(){
      w2popup.lock("삭제 중", true);
      var selected = w2ui['aws_routeTableGrid'].getSelection();
-        if( selected == 0 ){
+        if( selected == null ){
             w2alert("선택된 정보가 없습니다.", "");
             return;
         }else{
