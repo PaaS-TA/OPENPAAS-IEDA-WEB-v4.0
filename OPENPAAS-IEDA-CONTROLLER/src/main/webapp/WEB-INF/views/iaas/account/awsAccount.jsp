@@ -10,6 +10,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix = "spring" uri = "http://www.springframework.org/tags" %>
+
 <script type="text/javascript">
 var popup_height =0;
 var body_height =0;
@@ -27,13 +28,12 @@ $(function() {
     // AWS 클라우드 인프라 계정 정보 조회
     $('#aws_accountGrid').w2grid({
         name: 'aws_accountGrid',
-        style   : 'background-color:black;',
+        style   : 'text-align:center',
         method  : 'GET',
         multiSelect: false,
         show: {
             selectColumn: true,
             footer: true
-            
             },
         columns : [
            {field: 'id',  caption: 'id', hidden:true}
@@ -196,7 +196,6 @@ $( window ).resize(function() {
 });
 
 </script>
-
 <div id="main">
     <div class="page_site">계정 관리 > <strong>AWS 계정 관리 </strong></div>
      <div class="pdt20">
