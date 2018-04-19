@@ -429,11 +429,11 @@ function getCredsKeyPathFileList(){
  * 설명 : CredentialKey 업로드
 *****************************************************/
 function uploadCredentialKey(){
-    var form = $(".w2uimsgbody #settingForm")[0];
+    var form = $(".w2ui-msg-body #settingForm")[0];
     var formData = new FormData(form);
             
     var files = document.getElementsByName('keyPathFile')[0].files;
-    console.log(files);
+    console.log("1:"+files[0]);
     formData.append("file", files[0]);
             
     $.ajax({
@@ -520,7 +520,7 @@ function credsChangeKeyPathStyle( showDiv, hideDiv ){
 </div>
 <!-- 설치관리자 정보추가/수정 팝업 -->
 <div id="regPopupDiv" hidden="true">
-    <form id="settingForm">
+    <form id="settingForm" action="POST">
         <input name="seq" type="hidden"/>
         <div class="w2ui-page page-0">
             <div class="panel panel-info" style="margin-top:5px;">
