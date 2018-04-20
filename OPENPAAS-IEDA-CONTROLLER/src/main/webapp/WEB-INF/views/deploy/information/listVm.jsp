@@ -48,7 +48,7 @@ $(function() {
          , {field: 'az', caption: 'AZ', size: '7%', style: 'text-align:center'}
          , {field: 'vmType', caption: 'VM Type', size: '7%', style: 'text-align:center'}
          , {field: 'ips', caption: 'IPs', size: '7%', style: 'text-align:center'}
-         , {field: 'load', caption: 'Load<br/>(avg01, avg05, avg15)', size: '120px', style: 'text-align:center'}
+         , {field: 'load', caption: 'Load<br/>(avg01, avg05, avg15)', size: '10%', style: 'text-align:center'}
          , {field: 'cpuUser', caption: 'Cpu User', size: '7%', style: 'text-align:center'}
          , {field: 'cpuSys', caption: 'Cpu Sys', size: '7%', style: 'text-align:center'}
          , {field: 'cpuWait', caption: 'Cpu Wait', size: '7%', style: 'text-align:center'}
