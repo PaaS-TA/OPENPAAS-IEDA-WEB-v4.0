@@ -316,8 +316,12 @@ function doSearch(){
  * 기능 : setstemcellFilePath
  *********************************************************/
 function setstemcellFilePath(fileInput){
+	console.log(fileInput);
     var file = fileInput.files;
+    alert("1");
     var files = $('.w2ui-msg-body #stemcellPathFile')[0].files;
+    console.log(files);
+    
     $(".w2ui-msg-body input[name='stemcellSize']").val(files[0].size);
     $(".w2ui-msg-body input[name=stemcellPath]").val(files[0].name);
     $(".w2ui-msg-body #stemcellPathFileName").val(files[0].name);

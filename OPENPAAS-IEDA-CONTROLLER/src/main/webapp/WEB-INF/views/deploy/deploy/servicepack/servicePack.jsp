@@ -70,7 +70,6 @@ var deleteClient = "";
                        , {field: 'createDate', caption: '최초 배포 일자', size: '180px', style: 'text-align:center'}
                        ,{field: 'updateDate', caption: '배포 수정 일자', size: '180px', style: 'text-align:center'}
                        ,{field: 'deploymentFile', caption: '배포 파일 명', size: '170px', style: 'text-align:center'}
-
                        ],
                onSelect: function(event) {
                 event.onComplete = function() {
@@ -431,8 +430,8 @@ var deleteClient = "";
             var body = '<textarea id="deleteLogs" style="width:95%;height:90%;overflow-y:visible;resize:none;background-color:#FFF; margin:2%" readonly="readonly"></textarea>';
             
             w2popup.open({
-                width :700,
-                height :500,
+                width   : 730,
+                height  : 615,
                 title :"<b>서비스팩 삭제</b>",
                 body  :body,
                 buttons :'<button class="btn" onclick="popupComplete();">닫기</button>',
