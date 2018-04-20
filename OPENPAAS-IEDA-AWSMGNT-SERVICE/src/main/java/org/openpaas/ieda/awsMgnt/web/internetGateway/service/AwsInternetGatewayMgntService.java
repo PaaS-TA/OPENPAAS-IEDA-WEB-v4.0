@@ -132,19 +132,33 @@ public class AwsInternetGatewayMgntService {
         List<AwsInternetGatewayMgntVO> resultList = new ArrayList<AwsInternetGatewayMgntVO>();
         
         for(int i=0;i<apiVpcList.size();i++){
+            String attachedVpcIds ="";
             for(int j=0;j<apiInternetList.size();j++){
-                if(apiInternetList.get(j).getAttachments().size()!=0 
-                        && apiInternetList.get(j).getAttachments().get(0).getVpcId()!= null 
-                            && apiVpcList.get(i).getVpcId().equals(apiInternetList.get(j).getAttachments().get(0).getVpcId())){
-                    apiVpcList.remove(i);
+                int attSize = apiInternetList.get(j).getAttachments().size();
+                if(attSize!=0){
+                    for(int k=0; k< attSize; k++){
+                        if(apiInternetList.get(j).getAttachments().get(k).getVpcId()!= null ){
+                          attachedVpcIds += apiInternetList.get(j).getAttachments().get(k).getVpcId();
+                        }
+                    }
+                    
                 }
             }
-        }
-        
-        for(Vpc vpc : apiVpcList ){
             AwsInternetGatewayMgntVO internetGatewayVO = new AwsInternetGatewayMgntVO();
-            internetGatewayVO.setVpcId(vpc.getVpcId());
-            resultList.add(internetGatewayVO);
+            //VPC id가 연결을 가지고 있는 VPC id 목록에 해당 되지 않을 때에만 실행 한다.
+            if(attachedVpcIds.contains(apiVpcList.get(i).getVpcId()) != true){
+                internetGatewayVO.setVpcId(apiVpcList.get(i).getVpcId());
+                //VPC에 nameTag가 있으면 VO로 nameTag 값을 넘겨준다.
+                int tsize = apiVpcList.get(i).getTags().size();
+                String tags = "";
+                if(tsize !=0){
+                  for (int m=0; m<tsize; m++ ){
+                    tags += apiVpcList.get(i).getTags().get(m).getValue().toString();
+                  }
+                  internetGatewayVO.setVpcName(tags);
+                }
+                resultList.add(internetGatewayVO);
+            }
         }
         return resultList;
     }

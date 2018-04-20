@@ -69,7 +69,7 @@ public class AzureNetworkMgntApiService {
      * @project : Azure 인프라 관리 대시보드
      * @description : Azure API를 통해 Virtural Network 생성
      * @title : createAzureNetworkFromAzure
-     * @return : Network
+     * @return : void
      *****************************************************************/
     public void createAzureNetworkFromAzure(IaasAccountMgntVO vo, String regionName, AzureNetworkMgntDTO dto) {
         AzureTokenCredentials azureClient = getAzureClient(vo);
@@ -117,13 +117,44 @@ public class AzureNetworkMgntApiService {
      * @title : deleteAzureNetworkFromAzure
      * @return : void
      *****************************************************************/
-     public void deleteAzureNetworkFromAzure (IaasAccountMgntVO vo, String regionName, AzureNetworkMgntDTO dto) {
-         AzureTokenCredentials azureClient = getAzureClient(vo);
-         Azure azure = Azure.configure().withLogLevel(LogLevel.BASIC).authenticate(azureClient)
-                 .withSubscription(vo.getAzureSubscriptionId());
-         azure.networks().deleteById(dto.getNetworkId());
-     }
-     
+    public void deleteAzureNetworkFromAzure(IaasAccountMgntVO vo, String regionName, AzureNetworkMgntDTO dto) {
+        AzureTokenCredentials azureClient = getAzureClient(vo);
+        Azure azure = Azure.configure().withLogLevel(LogLevel.BASIC).authenticate(azureClient)
+                .withSubscription(vo.getAzureSubscriptionId());
+        azure.networks().deleteById(dto.getNetworkId());
+    }
+
+    /****************************************************************
+     * @project : Azure 인프라 관리 대시보드
+     * @description : Azure API를 통해 Virtural Network Subnet 생성
+     * @title : addSubnetFromAzure
+     * @return : void
+     *****************************************************************/
+    public void addSubnetFromAzure(IaasAccountMgntVO vo, String regionName, AzureNetworkMgntDTO dto) {
+        AzureTokenCredentials azureClient = getAzureClient(vo);
+        Azure azure = Azure.configure().withLogLevel(LogLevel.BASIC).authenticate(azureClient)
+                .withSubscription(vo.getAzureSubscriptionId());
+        azure.networks().getById(dto.getNetworkId()).update().defineSubnet(dto.getSubnetName()).withAddressPrefix(dto.getSubnetAddressRangeCidr()).attach().apply();
+    }
+
+    /****************************************************************
+     * @project : Azure 인프라 관리 대시보드
+     * @description : Azure API를 통해 Virtural Network의 Subnet 삭제
+     * @title : deleteSubnetFromAzure
+     * @return : void
+     *****************************************************************/
+    public void deleteSubnetFromAzure(IaasAccountMgntVO vo, String regionName, AzureNetworkMgntDTO dto) {
+        AzureTokenCredentials azureClient = getAzureClient(vo);
+        Azure azure = Azure.configure().withLogLevel(LogLevel.BASIC).authenticate(azureClient)
+                .withSubscription(vo.getAzureSubscriptionId());
+        String resourceGroupName = dto.getResourceGroupName();
+        String virtualNetworkName = dto.getNetworkName();
+        String subnetName = dto.getSubnetName();
+        if (resourceGroupName!= null && virtualNetworkName!= null && subnetName!= null ){
+        	azure.networks().getById(dto.getNetworkId()).manager().inner().subnets().delete(resourceGroupName, virtualNetworkName, subnetName);
+        }	
+    }
+    
     /****************************************************************
      * @project : Azure 인프라 관리 대시보드
      * @description : Azure API를 통해 리소스 그룹 목록 정보 조회

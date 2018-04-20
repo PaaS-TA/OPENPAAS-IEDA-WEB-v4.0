@@ -18,7 +18,6 @@ public class AzureNetworkMgntDTO {
     private String resourceGroupName;
     private String location;
     
-    
     public Integer getAccountId() {
 		return accountId;
 	}

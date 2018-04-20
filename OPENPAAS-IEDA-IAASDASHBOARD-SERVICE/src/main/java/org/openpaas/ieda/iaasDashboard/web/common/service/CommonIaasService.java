@@ -228,14 +228,12 @@ public class CommonIaasService {
      * @return : Location
      ***************************************************/
     public String getAzureLocationInfo(String location){
-    	com.microsoft.azure.management.resources.fluentcore.arm.Region theRegion = 
-    			com.microsoft.azure.management.resources.fluentcore.arm.Region.fromName(location);
-    	String regionName = theRegion.name().toString();
-    	 String rglocation = com.microsoft.azure.management.resources.fluentcore.arm.Region.findByLabelOrName(regionName).name();
-    	return  rglocation;
+        com.microsoft.azure.management.resources.fluentcore.arm.Region theRegion = 
+                com.microsoft.azure.management.resources.fluentcore.arm.Region.fromName(location);
+        String regionName = theRegion.name().toString();
+         String rglocation = com.microsoft.azure.management.resources.fluentcore.arm.Region.findByLabelOrName(regionName).name();
+        return  rglocation;
     }
-    
-    
    
     /***************************************************
      * @project : 인프라 관리 대시보드
@@ -251,6 +249,4 @@ public class CommonIaasService {
         }
         return list;
     }
-    
-    
 }

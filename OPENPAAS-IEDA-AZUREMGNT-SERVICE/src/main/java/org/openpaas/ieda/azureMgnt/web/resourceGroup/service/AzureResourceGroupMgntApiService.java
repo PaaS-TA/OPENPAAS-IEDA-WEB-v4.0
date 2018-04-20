@@ -59,7 +59,7 @@ public class AzureResourceGroupMgntApiService {
     * @return : HashMap<String, Object>
     ***************************************************/
     public HashMap<String, Object> getAzureResourceGroupDetailInfoFromAzure(IaasAccountMgntVO vo) {
-    	AzureTokenCredentials azureClient = getAzureClient(vo);
+        AzureTokenCredentials azureClient = getAzureClient(vo);
         Azure azure  = Azure.configure()
                 .withLogLevel(LogLevel.NONE)
                 .authenticate(azureClient)
@@ -100,13 +100,13 @@ public class AzureResourceGroupMgntApiService {
     * @return : Subscription
    ***************************************************/ 
    public String getSubscriptionInfoFromAzure (IaasAccountMgntVO vo, String subscriptionId ){
-	   AzureTokenCredentials azureClient = getAzureClient(vo);
+       AzureTokenCredentials azureClient = getAzureClient(vo);
        Azure azure  = Azure.configure()
                .withLogLevel(LogLevel.BASIC)
                .authenticate(azureClient)
                .withSubscription(subscriptionId);
        String subscription = azure.subscriptions().getById(subscriptionId).displayName().toString();
-   	return subscription;
+       return subscription;
    }
   
    /***************************************************
@@ -116,8 +116,8 @@ public class AzureResourceGroupMgntApiService {
     * @return : String
    ***************************************************/ 
    public String getDepolymentInfoFromAzure (IaasAccountMgntVO vo, String resourceGroupName ){
-	   AzureTokenCredentials azureClient = getAzureClient(vo);
-	   String subscriptionId = vo.getAzureSubscriptionId();
+       AzureTokenCredentials azureClient = getAzureClient(vo);
+       String subscriptionId = vo.getAzureSubscriptionId();
        Azure azure  = Azure.configure()
                .withLogLevel(LogLevel.BASIC)
                .authenticate(azureClient)
@@ -130,7 +130,7 @@ public class AzureResourceGroupMgntApiService {
        }else{
            depolyments = depolyments  +" Succeeded";
        }
-   	return depolyments;
+       return depolyments;
    }
    
    /***************************************************
@@ -140,14 +140,14 @@ public class AzureResourceGroupMgntApiService {
     * @return : HashMap<String, Object>
    ***************************************************/ 
    public PagedList<GenericResource> getAzureResouceListFromAzure(IaasAccountMgntVO vo, String resourceGroupName){
-	   AzureTokenCredentials azureClient = getAzureClient(vo);
-	   String subscriptionId = vo.getAzureSubscriptionId();
+       AzureTokenCredentials azureClient = getAzureClient(vo);
+       String subscriptionId = vo.getAzureSubscriptionId();
        Azure azure  = Azure.configure()
                .withLogLevel(LogLevel.BASIC)
                .authenticate(azureClient)
                .withSubscription(subscriptionId);
        PagedList<GenericResource> resourceList = azure.genericResources().listByResourceGroup(resourceGroupName);
-	   return resourceList;
+       return resourceList;
    }
    
    /****************************************************************
@@ -157,8 +157,8 @@ public class AzureResourceGroupMgntApiService {
     * @return : void
    *****************************************************************/
    public void deleteResourceGroupInfoApiFromAzure(IaasAccountMgntVO vo, String resourceGroupName){
-	   AzureTokenCredentials azureClient = getAzureClient(vo);
-	   String subscriptionId = vo.getAzureSubscriptionId();
+       AzureTokenCredentials azureClient = getAzureClient(vo);
+       String subscriptionId = vo.getAzureSubscriptionId();
        Azure azure  = Azure.configure()
                .withLogLevel(LogLevel.BASIC)
                .authenticate(azureClient)

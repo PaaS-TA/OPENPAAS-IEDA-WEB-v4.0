@@ -59,15 +59,17 @@ $(function() {
         onSelect: function(event) {
             event.onComplete = function() {
                 $('#deleteBtn').attr('disabled', false);
+                $('#addSubnetBtn').attr('disabled', false);
                 var accountId =  w2ui.azure_vnetGrid.get(event.recid).accountId;
                 var networkName = w2ui.azure_vnetGrid.get(event.recid).networkName;
-                var location = w2ui.azure_vnetGrid.get(event.recid).location;
+                //var location = w2ui.azure_vnetGrid.get(event.recid).location;
                 doSearchNetworkSubnetsInfo(accountId, networkName); 
             }
         },
         onUnselect: function(event) {
             event.onComplete = function() {
                 $('#deleteBtn').attr('disabled', true);
+                $('#addSubnetBtn').attr('disabled', true);
                 w2ui['azure_subnetsGrid'].clear();
             }
         },
@@ -92,7 +94,8 @@ $(function() {
         style: 'text-align: center',
         columns    : [
                      {field: 'recid',     caption: 'recid', hidden: true}
-                   //, {field: 'accountId',     caption: 'accountId', hidden: true}
+                   , {field: 'networkName',     caption: 'networkName',  size: '50%', style: 'text-align:center'}
+                   , {field: 'resourceGroupName',     caption: 'resourceGroupName', hidden: true}
                    , {field: 'subnetName', caption: 'Subnet Name', size: '50%', style: 'text-align:center'}
                    , {field: 'subnetAddressRangeCidr', caption: 'Address Range', size: '50%', style: 'text-align:center'}
                    , {field: 'subnetAddressesCnt', caption: 'Available Addresses', size: '50%', style: 'text-align:center'}
@@ -100,11 +103,12 @@ $(function() {
                    ],
         onSelect: function(event) {
             event.onComplete = function() {
+            	$('#deleteSubnetBtn').attr('disabled', false);
             }
         },
         onUnselect: function(event) {
             event.onComplete = function() {
-                
+            	$('#deleteSubnetBtn').attr('disabled', true);
             }
         },
            onLoad:function(event){
@@ -162,7 +166,8 @@ $(function() {
                 no_text : "취소",
                 height : 250,
                 yes_callBack: function(event){
-                     deleteAzureNetworkInfo(record);
+                	w2utils.lock($("#layout_layout_panel_main"), delete_lock_msg, true);
+                    deleteAzureNetworkInfo(record);
                 },
                 no_callBack    : function(){
                     w2ui['azure_vnetGrid'].clear();
@@ -173,6 +178,70 @@ $(function() {
             });
         }
     });
+    
+    /********************************************************
+     * 설명 : Azure Network Subnet 생성 버튼 클릭
+    *********************************************************/
+    $("#addSubnetBtn").click(function(){
+         if($("#addSubnetBtn").attr('disabled') == "disabled") return;
+    	 var subnetsInfo = $('.w2ui-grid-data').text();
+    	 if(subnetsInfo.includes("GatewaySubnet")){
+    		 //subnet 중 gatewaysubnet이 존 재 할 경우 선택 옵션을 없애준다.
+    		$('div #typeB input').hide();
+     		$('div #typeB span').css('color', '#fff');
+    	 }
+    	
+       w2popup.open({
+           title   : "<b>Network Subnet 생성</b>",
+           width   : 580,
+           height  : 300,
+           modal   : true,
+           body    : $("#addSubnetPopupDiv").html(),
+           buttons : $("#addSubnetPopupBtnDiv").html(),
+           onOpen  : function () {
+           },
+           onClose : function(event){
+            w2popup.unlock();
+            accountId = $("select[name='accountId']").val();
+            w2ui['azure_vnetGrid'].clear();
+            w2ui['azure_subnetsGrid'].clear();
+            doSearch();
+           }
+       });
+    });
+    
+    /********************************************************
+     * 설명 : Azure Network 삭제 버튼 클릭
+    *********************************************************/
+     $("#deleteSubnetBtn").click(function(){
+         if($("#deleteSubnetBtn").attr('disabled') == "disabled") return;
+         var selected = w2ui['azure_subnetsGrid'].getSelection();        
+         if( selected.length == 0 ){
+             w2alert("선택된 정보가 없습니다.", "Subnet 삭제");
+             return;
+         }
+         else {
+             var record = w2ui['azure_subnetsGrid'].get(selected);
+             w2confirm({
+                 title   : "<b>Subnet 삭제</b>",
+                 msg     : "Virtual Network (" + record.subnetName +") 를<br/>"
+                                        +"<strong><font color='red'> 삭제 하시 겠습니까?</strong><red>"   ,
+                 yes_text : "확인",
+                 no_text : "취소",
+                 height : 250,
+                 yes_callBack: function(event){
+                 	w2utils.lock($("#layout_layout_panel_main"), delete_lock_msg, true);
+                     deleteSubnet(record);
+                 },
+                 no_callBack    : function(){
+                     w2ui['azure_vnetGrid'].clear();
+                     w2ui['azure_subnetsGrid'].clear();
+                     accountId = record.accountId;
+                     doSearch();
+                 }
+             });
+         }
+     });
     
 });
 
@@ -207,7 +276,7 @@ function saveAzureNetworkInfo(){
         networkName : $(".w2ui-msg-body input[name='networkName']").val(),
         networkAddressSpaceCidr : $(".w2ui-msg-body input[name='networkAddressSpaceCidr']").val(),
         resourceGroupName : $(".w2ui-msg-body select[name='resourceGroupName'] :selected").text(),
-        location : $(".w2ui-msg-body select[name='resourceGroupName']").val(),    
+        location : $(".w2ui-msg-body select[name='resourceGroupName'] :selected").val(),    
         subnetName : $(".w2ui-msg-body input[name='subnetName']").val(),
         subnetAddressRangeCidr : $(".w2ui-msg-body input[name='subnetAddressRangeCidr']").val(),
         azureSubscriptionId : $(".w2ui-msg-body input[name='azureSubscriptionId']").val(),
@@ -233,6 +302,44 @@ function saveAzureNetworkInfo(){
 }
 
 /********************************************************
+ * 설명 : Azure Network 생성
+ * 기능 : addNewSubnet
+ *********************************************************/
+function addNewSubnet(){
+    w2popup.lock(save_lock_msg, true);
+    var selected = w2ui['azure_vnetGrid'].getSelection();
+    var record = w2ui['azure_vnetGrid'].get(selected);
+    var rgInfo = {
+        accountId : $("select[name='accountId']").val(),
+        networkId : record.networkId,
+        location : record.location,
+        subnetAddressRangeCidr : $(".w2ui-msg-body #addSubnetForm input[name='subnetAddressRangeCidr']").val(),
+        subnetName : $(".w2ui-msg-body #addSubnetForm input[name='subnetName']").val(),
+        //subnetName : $(".w2ui-msg-body #addSubnetForm input[name='gatewaySubnetName']").val(),
+    }
+    console.log(JSON.stringify(rgInfo)+"TEST TEST TEST");
+    $.ajax({
+        type : "POST",
+        url : "/azureMgnt/subnet/save",
+        contentType : "application/json",
+        async : true,
+        data : JSON.stringify(rgInfo),
+        success : function(status) {
+            w2popup.unlock();
+            w2popup.close();
+            accountId = rgInfo.accountId;
+            doSearch();
+        }, error : function(request, status, error) {
+            w2popup.unlock();
+            var errorResult = JSON.parse(request.responseText);
+            w2alert(errorResult.message);
+        }
+    });
+}
+
+
+
+/********************************************************
  * 기능 : setAzureResourceGroupList
  * 설명 : 해당 Supscription 에 대한  Azure 리소스 그룹 목록 조회 기능
  *********************************************************/
@@ -245,14 +352,17 @@ function saveAzureNetworkInfo(){
             dataType : "json",
             success : function(data, status) {
                 var result = "";
-                var locationInfo ="";
-                var intInfo = 0;
-                for(var i=0; i<data.total; i++){
+                if(data.total != 0){
+                    	    result = "<option value=''>리소스 그룹을 선택하세요.</option>";
+                  for(var i=0; i<data.total; i++){
                     if(data.records != null){
                             result += "<option value='" +data.records[i].location + "' >";
                             result += data.records[i].resourceGroupName;
                             result += "</option>";
                     }
+                  }
+                }else{
+                	result = "<option value=''>리소스 그룹이 존재 하지 않습니다.</option>"
                 }
                 $("#resourceGroupInfoDiv #resourceGroupInfo").html(result);
                 
@@ -273,7 +383,7 @@ function setAzureSubscription(){
     accountId = $("select[name='accountId']").val();
     $.ajax({
            type : "GET",
-           url : '/azureMgnt/resourceGroup/save/subscription/list/'+accountId,
+           url : '/azureMgnt/resourceGroup/save/subscription/list/'+accountId, //common  으로 변경
            contentType : "application/json",
            dataType : "json",
            success : function(data, status) {
@@ -323,14 +433,54 @@ function setAzureSubscription(){
          data : JSON.stringify(rgInfo),
          success : function(status) {
              w2popup.unlock();
-             w2popup.close();
+        	 w2popup.close();
              accountId = rgInfo.accountId;
              w2ui['azure_vnetGrid'].clear();
              w2ui['azure_subnetsGrid'].clear();
+             w2utils.unlock($("#layout_layout_panel_main"));
              doSearch();
          }, error : function(request, status, error) {
              w2popup.unlock();
              w2ui['azure_vnetGrid'].clear();
+             var errorResult = JSON.parse(request.responseText);
+             w2alert(errorResult.message);
+         }
+     });
+ }
+ 
+ /********************************************************
+  * 설명 : Azure Network Subnet 삭제
+  * 기능 : deleteSubnet
+  *********************************************************/
+ function  deleteSubnet(record){
+     w2popup.lock(delete_lock_msg, true);
+     var selectedvnet = w2ui['azure_vnetGrid'].getSelection();
+     var vnetrecord = w2ui['azure_vnetGrid'].get(selectedvnet);
+     var rgInfo = {
+             accountId : vnetrecord.accountId,
+             networkId : vnetrecord.networkId,
+             networkName : vnetrecord.networkName,
+             resourceGroupName : vnetrecord.resourceGroupName,
+             location : vnetrecord.location,
+             subnetName : record.subnetName,
+     }
+     console.log(JSON.stringify(rgInfo)+"TEST TEST TEST ")
+     $.ajax({
+         type : "DELETE",
+         url : "/azureMgnt/subnet/delete",
+         contentType : "application/json",
+         async : true,
+         data : JSON.stringify(rgInfo),
+         success : function(status) {
+             w2popup.unlock();
+             w2utils.unlock($("#layout_layout_panel_main"));
+             accountId = rgInfo.accountId;
+             w2ui['azure_vnetGrid'].clear();
+             w2ui['azure_subnetsGrid'].clear();
+             doSearch();
+        	 w2popup.close();
+         }, error : function(request, status, error) {
+             w2popup.unlock();
              var errorResult = JSON.parse(request.responseText);
              w2alert(errorResult.message);
          }
@@ -343,6 +493,8 @@ function setAzureSubscription(){
  *********************************************************/
 function doButtonStyle() {
     $('#deleteBtn').attr('disabled', true);
+    $('#addSubnetBtn').attr('disabled', true);
+    $('#deleteSubnetBtn').attr('disabled', true);
 }
 
 /****************************************************
@@ -351,6 +503,7 @@ function doButtonStyle() {
 *****************************************************/
 function clearMainPage() {
     $().w2destroy('azure_vnetGrid');
+    $().w2destroy('azure_subnetsGrid');
 }
 
 /****************************************************
@@ -426,7 +579,7 @@ td {
         <div class="fr"> 
         <sec:authorize access="hasAuthority('AZURE_NETWORK_CREATE')">
             <span id="addBtn" class="btn btn-primary" style="width:120px">생성</span>
-            </sec:authorize>
+        </sec:authorize>
         <sec:authorize access="hasAuthority('AZURE_NETWORK_DELETE')">
             <span id="deleteBtn" class="btn btn-danger" style="width:120px">삭제</span>
         </sec:authorize>
@@ -438,7 +591,7 @@ td {
 
     <!-- Network 생성 팝업 -->
     <div id="registPopupDiv" hidden="true">
-        <form id="azureRGForm" action="POST" style="padding:5px 0 5px 0;margin:0;">
+        <form id="azureNetworkForm" action="POST" style="padding:5px 0 5px 0;margin:0;">
             <div class="panel panel-info" style="height: 350px; margin-top: 7px;"> 
                 <div class="panel-heading"><b>Azure Network 생성 정보</b></div>
                 <div class="panel-body" style="padding:20px 10px; height:340px; overflow-y:auto;">
@@ -452,7 +605,7 @@ td {
                     <div class="w2ui-field">
                         <label style="width:36%;text-align: left; padding-left: 20px;">Network 주소 공간</label>
                         <div>
-                            <input name="networkAddressSpaceCidr" type="text" maxlength="100" style="width: 300px; margin-top: 1px;" placeholder="Network  Address Space CIDR를 입력하세요."/>
+                            <input name="networkAddressSpaceCidr" type="text" maxlength="100" style="width: 300px; margin-top: 1px;" placeholder="Network Space CIDR  ex) 10.0.0.0/16 "/>
                         </div>
                     </div>
                     <div class="w2ui-field">
@@ -477,7 +630,7 @@ td {
                      <div class="w2ui-field">
                         <label style="width:36%;text-align: left; padding-left: 20px;">Subnet 주소 범위</label>
                         <div>
-                            <input name="subnetAddressRangeCidr" type="text"   maxlength="100" style="width: 300px; margin-top: 1px;" placeholder="Subnet Address Range CIDR를 입력하세요."/>
+                            <input name="subnetAddressRangeCidr" type="text"   maxlength="100" style="width: 300px; margin-top: 1px;" placeholder="Subnet Range CIDR ex) 10.0.0.0/24"/>
                         </div>
                     </div>
                     <div class="w2ui-field">
@@ -492,15 +645,65 @@ td {
     </div>
     
     <div id="registPopupBtnDiv" hidden="true">
-         <button class="btn" id="registBtn" onclick="$('#azureRGForm').submit();">확인</button>
+         <button class="btn" id="registBtn" onclick="$('#azureNetworkForm').submit();">확인</button>
          <button class="btn" id="popClose"  onclick="w2popup.close();">취소</button>
     </div>
     
     <div class="pdt20" >
         <div class="title fl">선택 한 Azure Network에 대한 Subnets 정보 목록</div>
     </div>
+    <div class="fr"> 
+        <sec:authorize access="hasAuthority('AZURE_SUBNET_CREATE')">
+            <span id="addSubnetBtn" class="btn btn-primary" style="width:120px">Subnet 추가</span>
+            </sec:authorize>
+        <sec:authorize access="hasAuthority('AZURE_SUBNET_DELETE')">
+            <span id="deleteSubnetBtn" class="btn btn-danger" style="width:120px">Subnet 삭제</span>
+        </sec:authorize>
+        </div>
     
     <div id="azure_subnetsGrid" style="width:100%; min-height:200px; top:0px;"></div>
+    
+    <!-- Network Subnet 생성 팝업 -->
+    <div id="addSubnetPopupDiv" hidden="true">
+        <form id="addSubnetForm" action="POST" style="padding:5px 0 5px 0;margin:0;">
+            <div class="panel panel-info" style="height: 200px; margin-top: 7px;"> 
+                <div class="panel-heading"><b>Network Subnet 생성</b></div>
+                <div class="panel-body" style="padding:20px 10px; height:150px; overflow-y:auto;">
+                    <input type="hidden" name="accountId"/>
+                    <div class="w2ui-field">
+                        <label style="width:36%;text-align: left; padding-left: 20px;">Subnet Type</label>
+                        <div id="switchType"> 
+                            <input type="radio" name="chk_type" value="subnet" checked="checked"> Subnet &nbsp; &nbsp;
+                            <div id="types" style="display:inline-block;">
+                                <input id="typeB" type="radio" name="chk_type" value="gatewaySubnet"> <span>Gateway Subnet </span>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="w2ui-field">
+                            <label style="width:36%;text-align: left; padding-left: 20px;">Subnet Name</label>
+                        <div class="subnetInfo">
+                            <input name="subnetName" type="text"   maxlength="100" style="width: 300px; margin-top: 1px;" placeholder="Subnet 명을 입력하세요."/>
+                        </div>
+                        <div class="gatewaySubnetInfo" style="margin-left:-5px;">
+                        </div>
+                    </div>
+                     <div class="w2ui-field">
+                        <label style="width:36%;text-align: left; padding-left: 20px;">Subnet 주소 범위</label>
+                        <div>
+                            <input name="subnetAddressRangeCidr" type="text"   maxlength="100" style="width: 300px; margin-top: 1px;" placeholder="Subnet Range CIDR ex) 10.0.1.0/24"/>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </form> 
+    </div>
+    
+    <div id="addSubnetPopupBtnDiv" hidden="true">
+         <button class="btn" id="registBtn" onclick="$('#addSubnetForm').submit();">확인</button>
+         <button class="btn" id="popClose"  onclick="w2popup.close();">취소</button>
+    </div>
+    
 </div>
 
 <div id="registAccountPopupDiv"  hidden="true">
@@ -527,7 +730,7 @@ $(function() {
         return /^((\b|\.)(0|1|2(?!5(?=6|7|8|9)|6|7|8|9))?\d{1,2}){4}(-((\b|\.)(0|1|2(?!5(?=6|7|8|9)|6|7|8|9))?\d{1,2}){4}|\/((0|1|2|3(?=1|2))\d|\d))\b$/.test(params);
     }, text_cidr_msg );
     
-    $("#azureRGForm").validate({
+    $("#azureNetworkForm").validate({
         ignore : "",
         onfocusout: true,
         rules: {
@@ -597,5 +800,63 @@ $(function() {
             saveAzureNetworkInfo();
         }
     });
+    
+    $("#addSubnetForm").validate({
+        ignore : "",
+        onfocusout: true,
+        rules: {
+            subnetName: { 
+                required: function(){
+                    return checkEmpty( $(".w2ui-msg-body #addSubnetForm input[name='subnetName']").val() );
+                }
+            }, 
+            subnetAddressRangeCidr : { 
+                required: function(){
+                    return checkEmpty( $(".w2ui-msg-body #addSubnetForm input[name='subnetAddressRangeCidr']").val() );
+                }, 
+                ipv4Range : function(){
+                    return $(".w2ui-msg-body #addSubnetForm input[name='subnetAddressRangeCidr']").val();
+                }
+            }
+        }, messages: {
+            subnetName: { 
+                required:  "Subnet Name "+text_required_msg
+                
+            },
+            subnetAddressRangeCidr: { 
+                required:  "Subnet Address Range CIDR"+text_required_msg
+               ,ipv4Range : text_cidr_msg
+                
+            }
+        }, unhighlight: function(element) {
+            setSuccessStyle(element);
+        },errorPlacement: function(error, element) {
+            //do nothing
+            console.log(error+"error TEST")
+        }, invalidHandler: function(event, validator) {
+            var errors = validator.numberOfInvalids();
+            if (errors) {
+                setInvalidHandlerStyle(errors, validator);
+                console.log(errors+"error TEST")
+            }
+        }, submitHandler: function (form) {
+            addNewSubnet();
+        }
+    });
+   
+   	$(document).on("change","#switchType input[name='chk_type']:radio",function() {
+   	    switch($(this).val()) {
+   	        case 'gatewaySubnet' :
+   	        	$("#addSubnetForm .gatewaySubnetInfo").html("<input name='subnetName' value='GatewaySubnet' type='text' readonly='readonly'  maxlength='100' style='width: 300px; margin-top: 1px;'/>");
+   	            $("#addSubnetForm .subnetInfo").html('');
+   	            break;
+   	        case 'subnet' :
+   	            $("#addSubnetForm .subnetInfo").html("<input name='subnetName' type='text'   maxlength='100' style='width: 300px; margin-top: 1px;' placeholder='Subnet 명을 입력하세요.'/>");
+   	            $("#addSubnetForm .gatewaySubnetInfo").html('');
+   	            break;
+       }            
+   	});
+
 });
+
 </script>

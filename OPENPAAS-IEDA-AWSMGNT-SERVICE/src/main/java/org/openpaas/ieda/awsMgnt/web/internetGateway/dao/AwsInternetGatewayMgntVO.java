@@ -6,6 +6,7 @@ public class AwsInternetGatewayMgntVO {
     private String status;
     private String internetGatewayId;
     private String vpcId;
+    private String vpcName;
     private Integer accountId;
     
     
@@ -39,7 +40,13 @@ public class AwsInternetGatewayMgntVO {
     public void setVpcId(String vpcId) {
         this.vpcId = vpcId;
     }
-    public Integer getAccountId() {
+    public String getVpcName() {
+		return vpcName;
+	}
+	public void setVpcName(String vpcName) {
+		this.vpcName = vpcName;
+	}
+	public Integer getAccountId() {
         return accountId;
     }
     public void setAccountId(Integer accountId) {
