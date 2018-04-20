@@ -120,6 +120,8 @@ instance_groups:
             password: admin
           - name: hm
             password: hm-password
+      enable-snapshots: true
+      snapshot-schedule: 0 0 7 * * * UTC
       cpi_job: google_cpi
     hm:
       director_account:

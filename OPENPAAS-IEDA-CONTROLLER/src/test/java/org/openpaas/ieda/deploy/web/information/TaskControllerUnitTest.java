@@ -126,7 +126,8 @@ public class TaskControllerUnitTest  extends BaseControllerUnitTest {
    *****************************************************************/
     @Test
     public void testDoGetTaskLog() throws Exception {
-        doNothing().when(mockTaskAsyncService).doGetTaskLogAsync("event", "1", "", principal);
+    	TaskDTO.GetLog dto = setTaskLogInfo();
+        doNothing().when(mockTaskAsyncService).doGetTaskLogAsync(dto, principal);
         mockTaskController.doGetTaskLog(setTaskLogInfo(), principal);
     }
     

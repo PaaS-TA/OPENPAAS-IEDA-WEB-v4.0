@@ -59,19 +59,19 @@ instance_groups:
       user: nats
       password: nats-password
       tls:
-        ca: ((director_ssl.ca))
+        ca: ((nats_server_tls.ca))
         client_ca:
-          certificate: ((director_ssl.certificate))
-          private_key: ((director_ssl.private_key))
+          certificate: ((nats_ca.certificate))
+          private_key: ((nats_ca.private_key))
         server:
-          certificate: ((director_ssl.certificate))
-          private_key: ((director_ssl.private_key))
+          certificate: ((nats_server_tls.certificate))
+          private_key: ((nats_server_tls.private_key))
         director:
-          certificate: ((director_ssl.certificate))
-          private_key: ((director_ssl.private_key))
+          certificate: ((nats_clients_director_tls.certificate))
+          private_key: ((nats_clients_director_tls.private_key))
         health_monitor:
-          certificate: ((director_ssl.certificate))
-          private_key: ((director_ssl.private_key))
+          certificate: ((nats_clients_health_monitor_tls.certificate))
+          private_key: ((nats_clients_health_monitor_tls.private_key))
     postgres: &db
       listen_address: 127.0.0.1
       host: 127.0.0.1
