@@ -129,8 +129,10 @@ public class ManifestService {
                     String deploymentName = object.get("name").toString();
                     ManifestVO vo = manifestDao.selectManifestInfoByDeployName(deploymentName);
                     if( vo != null ) {
-                        throw new CommonException("conflict.manifest.exception",
-                                "해당 Manifest의 배포명은 이미 존재합니다. 확인해주세요.", HttpStatus.CONFLICT);
+                        if ( vo.getIaas().equals(request.getParameter("iaas"))){
+                            throw new CommonException("conflict.manifest.exception",
+                                    "해당 Manifest의 배포명은 이미 존재합니다. 확인해주세요.", HttpStatus.CONFLICT);
+                        }
                     }
                     //1.4 출력
                     int i =0;
