@@ -24,6 +24,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 import org.openpaas.ieda.common.exception.CommonException;
+import org.openpaas.ieda.common.web.common.service.CommonApiService;
 import org.openpaas.ieda.iaasDashboard.api.account.IaasAccountMgntApiService;
 import org.openpaas.ieda.iaasDashboard.web.account.dao.IaasAccountMgntDAO;
 import org.openpaas.ieda.iaasDashboard.web.account.dao.IaasAccountMgntVO;
@@ -37,11 +38,15 @@ import org.springframework.stereotype.Service;
 
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
+import com.microsoft.azure.credentials.AzureTokenCredentials;
+import com.microsoft.azure.management.Azure;
+import com.microsoft.rest.LogLevel;
 @Service
 public class CommonIaasService {
     
     @Autowired MessageSource message;
     @Autowired CommonIaasDAO commonIaasDAO;
+    @Autowired CommonApiService commonApiService;
     @Autowired IaasAccountMgntApiService api;
     @Autowired IaasAccountMgntDAO iaasAccountDao;
     /***************************************************
@@ -212,6 +217,21 @@ public class CommonIaasService {
     }
     
     /***************************************************
+     * @project : 인프라 관리 대시보드
+     * @description : 서브그룹 정보 목록을 조회 
+     * @title : getSubGroupCodeList
+     * @return : List<CommonIaasVO>
+    ***************************************************/
+    public List<CommonCodeVO> getSubGroupCodeList(String parentCode) {
+        List<CommonCodeVO> list = commonIaasDAO.selectParentCodeAndSubGroupCode(parentCode);
+        if ( list.size() == 0 ) {
+            throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), 
+                    message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+        }
+        return list;
+    }
+    
+    /***************************************************
     * @project : 인프라 관리 대시보드
     * @description : AWS 공통 리전 명 정보 조회
     * @title : getAwsRegionInfo
@@ -231,22 +251,34 @@ public class CommonIaasService {
         com.microsoft.azure.management.resources.fluentcore.arm.Region theRegion = 
                 com.microsoft.azure.management.resources.fluentcore.arm.Region.fromName(location);
         String regionName = theRegion.name().toString();
-         String rglocation = com.microsoft.azure.management.resources.fluentcore.arm.Region.findByLabelOrName(regionName).name();
+        String rglocation = com.microsoft.azure.management.resources.fluentcore.arm.Region.findByLabelOrName(regionName).name();
         return  rglocation;
     }
-   
+    
     /***************************************************
      * @project : 인프라 관리 대시보드
-     * @description : 서브그룹 정보 목록을 조회 
-     * @title : getSubGroupCodeList
-     * @return : List<CommonIaasVO>
-    ***************************************************/
-    public List<CommonCodeVO> getSubGroupCodeList(String parentCode) {
-        List<CommonCodeVO> list = commonIaasDAO.selectParentCodeAndSubGroupCode(parentCode);
-        if ( list.size() == 0 ) {
-            throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), 
-                    message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
-        }
-        return list;
+     * @description :Azure API를 통해 MS Azure 계정 Subscription Name 가져오기
+     * @title : getSubscriptionInfoFromAzure
+     * @return : String
+     ***************************************************/
+    public String getSubscriptionNameFromAzure(IaasAccountMgntVO vo, String subscriptionId) {
+        AzureTokenCredentials azureClient = getAzureClient(vo);
+        Azure azure = Azure.configure().withLogLevel(LogLevel.BASIC).authenticate(azureClient)
+                .withSubscription(subscriptionId);
+        String subscriptionName = azure.subscriptions().getById(subscriptionId).displayName().toString();
+        return subscriptionName;
+    }
+   
+    
+    /****************************************************************
+     * @project : Azure 인프라 관리 대시보드
+     * @description : Azure TokenCredentials 공통 빌드
+     * @title : getAzureClient
+     * @return : AzureTokenCredentials
+     *****************************************************************/
+    public AzureTokenCredentials getAzureClient(IaasAccountMgntVO vo) {
+        AzureTokenCredentials azure = commonApiService.getAzureCredentialsFromAzure(vo.getCommonAccessUser(),
+                vo.getCommonTenant(), vo.getCommonAccessSecret(), vo.getAzureSubscriptionId());
+        return azure;
     }
 }

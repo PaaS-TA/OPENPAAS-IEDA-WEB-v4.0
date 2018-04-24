@@ -143,13 +143,12 @@ public class AzureNetworkMgntController {
     
     /***************************************************
      * @project : AZURE 관리 대시보드
-     * @description : AZURE 구독 목록 조회 //common iaas controller 로 변경    
      * @title : getAzureSubscription
      * @return : ResponseEntity<?>
      ***************************************************/
-    @RequestMapping(value="/azureMgnt/resourceGroup/save/subscription/list/{accountId}", method=RequestMethod.GET)
-    public ResponseEntity<AzureNetworkMgntVO>  getAzureSubscription(Principal principal,@PathVariable("accountId") int accountId){
-        AzureNetworkMgntVO rgVO  = azureNetworkMgntService.getAzureSubscription(principal, accountId);
+    @RequestMapping(value="/azureMgnt/network/list/subscriptionInfo/{accountId}", method=RequestMethod.GET)
+    public ResponseEntity<AzureNetworkMgntVO> getAzureSubscriptionInfo(Principal principal,@PathVariable("accountId") int accountId){
+    	AzureNetworkMgntVO rgVO  = azureNetworkMgntService.getAzureSubscriptionInfo(principal, accountId);
         return new ResponseEntity<AzureNetworkMgntVO>(rgVO, HttpStatus.OK);
     }
 }

@@ -59,7 +59,6 @@ public class AzureNetworkMgntApiService {
         Azure azure = Azure.configure().withLogLevel(LogLevel.NONE).authenticate(azureClient)
                 .withSubscription(vo.getAzureSubscriptionId());
         List<Network> networkList = azure.networks().list();
-        // networkList.get(0).manager().resourceManager().genericResources().list().contains("resorceType");
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("networkList", networkList);
         return map;
@@ -177,12 +176,12 @@ public class AzureNetworkMgntApiService {
      * @title : getSubscriptionInfoFromAzure
      * @return : String
      ***************************************************/
-    public String getSubscriptionInfoFromAzure(IaasAccountMgntVO vo, String subscriptionId) {
+    /*public String getSubscriptionInfoFromAzure(IaasAccountMgntVO vo, String subscriptionId) {
         AzureTokenCredentials azureClient = getAzureClient(vo);
         Azure azure = Azure.configure().withLogLevel(LogLevel.BASIC).authenticate(azureClient)
                 .withSubscription(subscriptionId);
         String subscription = azure.subscriptions().getById(subscriptionId).displayName().toString();
         return subscription;
-    }
+    }*/
 
 }

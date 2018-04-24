@@ -50,7 +50,7 @@ public class AzureNetworkMgntService {
     public List<AzureNetworkMgntVO> getAzureNetworkInfoList(Principal principal, int accountId) {
 
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, accountId);
-        String subName = getAzureSubscriptionNameInfo(principal, accountId, vo.getAzureSubscriptionId());
+        String subName = getAzureSubscriptionName(principal, accountId, vo.getAzureSubscriptionId());
         List<Network> azureNetworkList = azureNetworkMgntApiService.getAzureNetworkInfoListApiFromAzure(vo);
         List<AzureNetworkMgntVO> list = new ArrayList<AzureNetworkMgntVO>();
         for (int i = 0; i < azureNetworkList.size(); i++) {
@@ -64,11 +64,6 @@ public class AzureNetworkMgntService {
             if (network.addressSpaces().size() != 0) {
                 azureRgVo.setNetworkAddressSpaceCidr(network.addressSpaces().get(0).toString());
             }
-            // DNS server name
-            /*if (network.dnsServerIPs().size() != 0) {
-                azureRgVo.setDnsServer(network.dnsServerIPs().get(0).toString());
-            }
-            azureRgVo.setDnsServer("Default (Azure-provided)");*/
             azureRgVo.setSubscriptionName(subName);
             azureRgVo.setAzureSubscriptionId(vo.getAzureSubscriptionId());
             azureRgVo.setAccountId(vo.getId());
@@ -107,7 +102,11 @@ public class AzureNetworkMgntService {
                             azureRgVo.setSecurityGroupName(" - ");
                         }
                         // Available IP Address Count
-                        azureRgVo.setSubnetAddressesCnt(256 - subnetList.listAvailablePrivateIPAddresses().size());
+                        int azureReservedIPs = 5;
+                        int configCnt = subnetList.networkInterfaceIPConfigurationCount();
+                        int netmaskLength = Integer.parseInt(subnetList.addressPrefix().split("/")[1]);
+                        int countOfAvailableIPs = (int)(Math.pow(2, 32-netmaskLength)-azureReservedIPs-configCnt); 
+                        azureRgVo.setSubnetAddressesCnt(countOfAvailableIPs);
                         azureRgVo.setNetworkName(networkName);
                         azureRgVo.setRecid(k);
                         azureRgVo.setAccountId(accountId);
@@ -236,13 +235,13 @@ public class AzureNetworkMgntService {
     /***************************************************
      * @project : 인프라 관리 대시보드
      * @description : Azure 구독 정보 조회
-     * @title : getAzureSubscription
+     * @title : getAzureSubscriptionInfo
      * @return : AzureNetworkMgntVO
      ***************************************************/
-    public AzureNetworkMgntVO getAzureSubscription(Principal principal, int accountId) {
+    public AzureNetworkMgntVO getAzureSubscriptionInfo(Principal principal, int accountId) {
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, accountId);
         String subId = vo.getAzureSubscriptionId().toString();
-        String subName = getAzureSubscriptionNameInfo(principal, accountId, subId);
+        String subName = getAzureSubscriptionName(principal, accountId, subId);
         AzureNetworkMgntVO networkVO = new AzureNetworkMgntVO();
         networkVO.setAzureSubscriptionId(subId);
         networkVO.setSubscriptionName(subName);
@@ -252,13 +251,13 @@ public class AzureNetworkMgntService {
     /***************************************************
      * @project : 인프라 관리 대시보드
      * @description : Azure 구독 명 조회
-     * @title : getAzureSubNameInfo
+     * @title : getAzureSubscriptionName
      * @return : String
      ***************************************************/
-    public String getAzureSubscriptionNameInfo(Principal principal, int accountId, String subscriptionId) {
+    public String getAzureSubscriptionName(Principal principal, int accountId, String subscriptionId) {
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, accountId);
-        String subName = azureNetworkMgntApiService.getSubscriptionInfoFromAzure(vo, subscriptionId);
-        return subName;
+        String subscriptionName = commonIaasService.getSubscriptionNameFromAzure(vo, subscriptionId);
+        return subscriptionName;
     }
 
     /***************************************************

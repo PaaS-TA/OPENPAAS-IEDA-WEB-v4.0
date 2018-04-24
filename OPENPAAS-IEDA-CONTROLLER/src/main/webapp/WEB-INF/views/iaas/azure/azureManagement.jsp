@@ -76,7 +76,7 @@ function unhover(event, val){
                  <sec:authorize access="hasAuthority('AZURE_NETWORK_MENU')"> 
                     <li class="azureMgntDiv" onmouseover="hover(this,'subnet_a2');" onmouseout="unhover(this,'subnet_a1');" onclick="javascript:goPage('<c:url value="/azureMgnt/network"/>', 'Virtual Network');">
                         <ul>
-                             <li class="azure-li"><span class="azure-li-span1">Virtual Network</span></li>
+                             <li class="azure-li"><span class="azure-li-span1">Virtual Network & Subnets </span></li>
                              <li>
                                  <ul style="margin-top:59px">
                                      <li style="margin-bottom:22px;">
@@ -87,7 +87,7 @@ function unhover(event, val){
                          </ul>
                     </li>
                  </sec:authorize> 
-                <sec:authorize access="hasAuthority('AZURE_SUBNET_MENU')">
+                <%-- <sec:authorize access="hasAuthority('AZURE_SUBNET_MENU')">
                 <li class="azureMgntDiv"  onmouseover="hover(this,'subnet_a2');" onmouseout="unhover(this,'subnet_a1');" onclick="javascript:goPage('<c:url value="/azureMgnt/subnet"/>', 'Subnet');">
                     <ul>
                          <li class="azure-li"><span class="azure-li-span1">Subnet</span></li>
@@ -100,7 +100,7 @@ function unhover(event, val){
                          </li>
                      </ul>
                 </li>
-                </sec:authorize>
+                </sec:authorize> --%>
                 <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCOUNT_MENU')">
                     <li class="azureMgntDiv" onmouseover="hover(this,'elasticIP_c2');" onmouseout="unhover(this,'elasticIP_c1');" onclick="javascript:goPage('<c:url value="/azureMgnt/storageAccount"/>', 'Storage Account');">
                         <ul>

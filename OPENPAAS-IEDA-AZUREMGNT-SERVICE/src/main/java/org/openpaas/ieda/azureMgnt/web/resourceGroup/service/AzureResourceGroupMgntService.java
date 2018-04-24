@@ -79,7 +79,7 @@ public class AzureResourceGroupMgntService {
     public HashMap<String, Object> getAzureResourceGroupDetailInfo(Principal principal, int accountId, String resourceGroupName) {
          IaasAccountMgntVO vo =  getAzureAccountInfo(principal, accountId);
          HashMap<String, Object> result = azureResourceGroupMgntApiService.getAzureResourceGroupDetailInfoFromAzure(vo);
-         String subName = getAzureSubscriptionNameInfo(principal, accountId, vo.getAzureSubscriptionId());
+         String subName = getAzureSubscriptionName(principal, accountId, vo.getAzureSubscriptionId());
          List<ResourceGroup> azureResourceGroupList = (List<ResourceGroup>) result.get("resourceGroupList");
          HashMap<String, Object> apiAzureRgInfo = new HashMap<String, Object>();
          for( int i=0; i<azureResourceGroupList.size(); i++ ){
@@ -154,9 +154,10 @@ public class AzureResourceGroupMgntService {
        * @title : getAzureSubNameInfo
        * @return : String
        ***************************************************/
-      public String getAzureSubscriptionNameInfo(Principal principal, int accountId, String subscriptionId){
+      public String getAzureSubscriptionName(Principal principal, int accountId, String subscriptionId){
           IaasAccountMgntVO vo =  getAzureAccountInfo(principal, accountId);
-          String subName = azureResourceGroupMgntApiService.getSubscriptionInfoFromAzure(vo, subscriptionId);
+          //String subName = azureResourceGroupMgntApiService.getSubscriptionInfoFromAzure(vo, subscriptionId);
+          String subName = commonIaasService.getSubscriptionNameFromAzure(vo, subscriptionId);
           return  subName;
       }
       /***************************************************
@@ -168,7 +169,7 @@ public class AzureResourceGroupMgntService {
       public AzureResourceGroupMgntVO getAzureSubscription(Principal principal, int accountId){
           IaasAccountMgntVO vo =  getAzureAccountInfo(principal, accountId);
           String subId = vo.getAzureSubscriptionId().toString();
-          String subName = getAzureSubscriptionNameInfo(principal, accountId, subId);
+          String subName = getAzureSubscriptionName(principal, accountId, subId);
           AzureResourceGroupMgntVO rgVO = new AzureResourceGroupMgntVO();
           rgVO.setAzureSubscriptionId(subId);
           rgVO.setSubscriptionName(subName);
