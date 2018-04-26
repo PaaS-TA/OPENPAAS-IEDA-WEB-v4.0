@@ -387,6 +387,11 @@ $(window).resize(function() {
                 <input type="radio" name="structureType" id="type4" value="GOOGLE" tabindex="3" />
                  &nbsp;GOOGLE
             </label>
+            <label style="width: 130px; margin-left: 40px;">
+                <input type="radio" name="structureType" id="type4" value="Azure" tabindex="3" />
+                 &nbsp;Azure
+            </label>
+            
         </div>
     </div>
 </div>
