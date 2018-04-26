@@ -3,18 +3,19 @@ package org.openpaas.ieda.azureMgnt.web.network.service;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.openpaas.ieda.azureMgnt.web.network.dao.AzureNetworkMgntVO;
 import org.openpaas.ieda.azureMgnt.web.network.dto.AzureNetworkMgntDTO;
+import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.iaasDashboard.web.account.dao.IaasAccountMgntVO;
 import org.openpaas.ieda.iaasDashboard.web.common.service.CommonIaasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-//import com.amazonaws.services.ec2.model.Subnet;
-//import com.amazonaws.services.ec2.model.Subnet;
 import com.microsoft.azure.management.network.Network;
 import com.microsoft.azure.management.network.Subnet;
 import com.microsoft.azure.management.resources.ResourceGroup;
@@ -22,16 +23,13 @@ import com.microsoft.azure.management.resources.ResourceGroup;
 @Service
 public class AzureNetworkMgntService {
 
+
     @Autowired
-    AzureNetworkMgntVO azureNetworkMgntVO;
+    private AzureNetworkMgntApiService azureNetworkMgntApiService;
     @Autowired
-    AzureNetworkMgntDTO azureNetworkMgntDTO;
+    private CommonIaasService commonIaasService;
     @Autowired
-    AzureNetworkMgntApiService azureNetworkMgntApiService;
-    @Autowired
-    CommonIaasService commonIaasService;
-    @Autowired
-    MessageSource message;
+    private MessageSource message;
 
     /***************************************************
      * @project : AZURE 인프라 관리 대시보드
@@ -52,7 +50,7 @@ public class AzureNetworkMgntService {
     public List<AzureNetworkMgntVO> getAzureNetworkInfoList(Principal principal, int accountId) {
 
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, accountId);
-        String subName = getAzureSubscriptionNameInfo(principal, accountId, vo.getAzureSubscriptionId());
+        String subName = getAzureSubscriptionName(principal, accountId, vo.getAzureSubscriptionId());
         List<Network> azureNetworkList = azureNetworkMgntApiService.getAzureNetworkInfoListApiFromAzure(vo);
         List<AzureNetworkMgntVO> list = new ArrayList<AzureNetworkMgntVO>();
         for (int i = 0; i < azureNetworkList.size(); i++) {
@@ -66,11 +64,6 @@ public class AzureNetworkMgntService {
             if (network.addressSpaces().size() != 0) {
                 azureRgVo.setNetworkAddressSpaceCidr(network.addressSpaces().get(0).toString());
             }
-            // DNS server name
-            if (network.dnsServerIPs().size() != 0) {
-                azureRgVo.setDnsServer(network.dnsServerIPs().get(0).toString());
-            }
-            azureRgVo.setDnsServer("Default (Azure-provided)");
             azureRgVo.setSubscriptionName(subName);
             azureRgVo.setAzureSubscriptionId(vo.getAzureSubscriptionId());
             azureRgVo.setAccountId(vo.getId());
@@ -109,8 +102,13 @@ public class AzureNetworkMgntService {
                             azureRgVo.setSecurityGroupName(" - ");
                         }
                         // Available IP Address Count
-                        azureRgVo.setSubnetAddressesCnt(256 - subnetList.listAvailablePrivateIPAddresses().size());
-                        azureRgVo.setRecid(i);
+                        int azureReservedIPs = 5;
+                        int configCnt = subnetList.networkInterfaceIPConfigurationCount();
+                        int netmaskLength = Integer.parseInt(subnetList.addressPrefix().split("/")[1]);
+                        int countOfAvailableIPs = (int)(Math.pow(2, 32-netmaskLength)-azureReservedIPs-configCnt); 
+                        azureRgVo.setSubnetAddressesCnt(countOfAvailableIPs);
+                        azureRgVo.setNetworkName(networkName);
+                        azureRgVo.setRecid(k);
                         azureRgVo.setAccountId(accountId);
                         list.add(azureRgVo);
                     }
@@ -154,7 +152,19 @@ public class AzureNetworkMgntService {
     public void saveNetworkInfo(AzureNetworkMgntDTO dto, Principal principal) {
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, dto.getAccountId());
         String regionName = getAzureLocationInfo(dto.getLocation());
-        azureNetworkMgntApiService.createAzureNetworkFromAzure(vo, regionName, dto);
+        try{
+            azureNetworkMgntApiService.createAzureNetworkFromAzure(vo, regionName, dto);
+        }catch (Exception e) {
+            String detailMessage = e.getMessage();
+            if(!detailMessage.equals("") && detailMessage != null){
+                throw new CommonException(
+                  detailMessage, detailMessage, HttpStatus.BAD_REQUEST);
+            }else{
+                throw new CommonException(
+                  message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+            }
+            
+        }
     }
     
     /***************************************************
@@ -166,18 +176,72 @@ public class AzureNetworkMgntService {
     public void deleteNetworkInfo(AzureNetworkMgntDTO dto, Principal principal) {
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, dto.getAccountId());
         String regionName = getAzureLocationInfo(dto.getLocation());
-        azureNetworkMgntApiService.deleteAzureNetworkFromAzure(vo, regionName, dto);
+        try{
+          azureNetworkMgntApiService.deleteAzureNetworkFromAzure(vo, regionName, dto);
+        }catch (Exception e) {
+            throw new CommonException(
+                    message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /***************************************************
+     * @project : 인프라 관리 대시보드
+     * @description : Azure Network Subnet 생성
+     * @title : addSubnet
+     * @return : void
+     ***************************************************/
+    public void addSubnet(AzureNetworkMgntDTO dto, Principal principal) {
+    	IaasAccountMgntVO vo = getAzureAccountInfo(principal, dto.getAccountId());
+        String regionName = getAzureLocationInfo(dto.getLocation());
+        try{
+          azureNetworkMgntApiService.addSubnetFromAzure(vo, regionName, dto);
+        }catch (Exception e) {
+            String detailMessage = e.getMessage();
+            if(!detailMessage.equals("") && detailMessage != null){
+                throw new CommonException(
+                  detailMessage, detailMessage, HttpStatus.BAD_REQUEST);
+            }else{
+                throw new CommonException(
+                  message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+            }
+            
+        }
     }
     /***************************************************
      * @project : 인프라 관리 대시보드
+     * @description : Azure Network Subnet 삭제
+     * @title : deleteSubnet
+     * @return : void
+     ***************************************************/    
+    public void deleteSubnet(AzureNetworkMgntDTO dto, Principal principal) {
+        IaasAccountMgntVO vo = getAzureAccountInfo(principal, dto.getAccountId());
+        String regionName = getAzureLocationInfo(dto.getLocation());
+        try{
+          azureNetworkMgntApiService.deleteSubnetFromAzure(vo, regionName, dto);
+        }catch (Exception e) {
+            String detailMessage = e.getMessage();
+            
+            if(!detailMessage.equals("") && detailMessage != null && !detailMessage.equals("No message available.")){
+                throw new CommonException(
+                  detailMessage, detailMessage, HttpStatus.BAD_REQUEST);
+            }else{
+                throw new CommonException(
+                  message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+            }
+            
+        }  	
+    }
+    
+    /***************************************************
+     * @project : 인프라 관리 대시보드
      * @description : Azure 구독 정보 조회
-     * @title : getAzureSubscription
+     * @title : getAzureSubscriptionInfo
      * @return : AzureNetworkMgntVO
      ***************************************************/
-    public AzureNetworkMgntVO getAzureSubscription(Principal principal, int accountId) {
+    public AzureNetworkMgntVO getAzureSubscriptionInfo(Principal principal, int accountId) {
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, accountId);
         String subId = vo.getAzureSubscriptionId().toString();
-        String subName = getAzureSubscriptionNameInfo(principal, accountId, subId);
+        String subName = getAzureSubscriptionName(principal, accountId, subId);
         AzureNetworkMgntVO networkVO = new AzureNetworkMgntVO();
         networkVO.setAzureSubscriptionId(subId);
         networkVO.setSubscriptionName(subName);
@@ -187,13 +251,13 @@ public class AzureNetworkMgntService {
     /***************************************************
      * @project : 인프라 관리 대시보드
      * @description : Azure 구독 명 조회
-     * @title : getAzureSubNameInfo
+     * @title : getAzureSubscriptionName
      * @return : String
      ***************************************************/
-    public String getAzureSubscriptionNameInfo(Principal principal, int accountId, String subscriptionId) {
+    public String getAzureSubscriptionName(Principal principal, int accountId, String subscriptionId) {
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, accountId);
-        String subName = azureNetworkMgntApiService.getSubscriptionInfoFromAzure(vo, subscriptionId);
-        return subName;
+        String subscriptionName = commonIaasService.getSubscriptionNameFromAzure(vo, subscriptionId);
+        return subscriptionName;
     }
 
     /***************************************************

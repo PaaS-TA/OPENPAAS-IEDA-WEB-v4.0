@@ -275,8 +275,9 @@ function getAwsVpcListInfo(){
             if(data.length != 0){
                 for(var i=0;i<data.length;i++){
                     result+="<option value="+data[i].vpcId+">"+data[i].vpcId;
-                    if(data[i].nameTag != null){
-                      result+=" | "+data[i].nameTag;
+                    console.log(JSON.stringify(data[i])+"TEST NAME TAG");
+                    if(data[i].vpcName != null && data[i].vpcName != ""){
+                      result+=" | "+data[i].vpcName;
                     }
                     result+="</option>";
             }

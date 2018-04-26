@@ -423,9 +423,9 @@ td {
                         <sec:authorize access="hasAuthority('AZURE_NETWORK_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/network"/>', 'Azure Network');">Virtual Network 관리</a></li>
                         </sec:authorize>
-                        <sec:authorize access="hasAuthority('AZURE_SUBNET_MENU')">
+                        <%-- <sec:authorize access="hasAuthority('AZURE_SUBNET_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/subnet"/>', 'Azure Subnet');">Subnet 관리</a></li>
-                        </sec:authorize>
+                        </sec:authorize> --%>
                         <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCOUNT_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/storageAccount"/>', 'Azure Storage Account');"> Storage Account 관리</a></li>
                         </sec:authorize>
