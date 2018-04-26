@@ -10,10 +10,9 @@ networks:
       dns: (( meta.network-1-dns ))
       static: (( meta.network-1-static ))
       cloud_properties:
-        ephemeral_external_ip: true
-        network_name: (( meta.network-1-network-name ))
-        subnetwork_name: (( meta.network-1-subnet-name ))
-        tags: (( meta.network-1-security-groups ))
+        security_groups: (( meta.network-1-security-groups ))
+        virtual_network_name: (( meta.network-1-network-name ))
+        subnet_name: (( meta.network-1-subnet-name ))
 
 jobs:
   - name: nats_z2

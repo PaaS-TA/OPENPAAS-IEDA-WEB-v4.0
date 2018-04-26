@@ -417,8 +417,8 @@ function setInputDisplay(val){
         $(".w2ui-msg-body #deaMemorymbDiv").css("display", "none");
         $(".w2ui-msg-body #loggregator").css("display", "block");
         if( Number(version) == "3.1" || Number(version) == "287" ){
-        	$(".w2ui-msg-body #loggregator").css("display", "none");
-        	$(".w2ui-msg-body #loggregator").val("");
+            $(".w2ui-msg-body #loggregator").css("display", "none");
+            $(".w2ui-msg-body #loggregator").val("");
         }
         $(".w2ui-msg-body input[name='appSshFingerprint']").val("");
         $(".w2ui-msg-body input[name='deaMemoryMB']").val("");
@@ -579,10 +579,13 @@ function defaultNetworkPopup(div, height){
   * 기능 : settingNetwork
   *********************************************************/
   function settingNetwork( index ){
+      console.log(iaas.toLowerCase());
       if( iaas.toLowerCase() == 'aws' || iaas.toLowerCase() == "openstack" ){
           addInternalNetworkInputs('#defaultNetworkInfoDiv_1', "#defaultNetworkInfoForm" );
       }else if( iaas.toLowerCase() == 'google' ){
           addInternalNetworkInputs('#googleNetworkInfoDiv_1', "#googleNetworkInfoForm" );
+      }else if( iaas.toLowerCase() == 'azure' ){
+          addInternalNetworkInputs('#azureNetworkInfoDiv_1', "#azureNetworkInfoForm" );
       }else{
           addInternalNetworkInputs('#vSphereNetworkInfoDiv_1', "#vSphereNetworkInfoForm" );
       }
@@ -1249,7 +1252,7 @@ function jobPopupComplete(){
  * 기능 : settingCfJobs
  *********************************************************/
 function settingCfJobs(){
-	console.log("1");
+    console.log("1");
     var release_version = defaultInfo.releaseVersion;
     release_version = settingReleaseVersion(release_version);
     $.ajax({
@@ -1257,7 +1260,7 @@ function settingCfJobs(){
         url : "/deploy/cf/install/save/job/list/"+release_version+"/"+'DEPLOY_TYPE_CF',
         contentType : "application/json",
         success : function(data, status) {
-        	console.log(data);
+            console.log(data);
             if( !checkEmpty(data) ){
                 var div = "";
                 var html = "";
@@ -1305,7 +1308,7 @@ function settingReleaseVersion( version ){
     }else if( version == "2.0" ){
         releaseVersion = "247"
     } else if(version == "3.1"){
-    	releaseVersion = "287";
+        releaseVersion = "287";
     }
     return releaseVersion;
 }
@@ -1709,6 +1712,8 @@ function settingIaasPopup(type){
             defaultNetworkPopup("#VsphereNetworkInfo", 695);
         }else if(iaas.toUpperCase() == "GOOGLE" ){
             defaultNetworkPopup("#googleNetworkInfo", 665);
+        }else if(iaas.toUpperCase() == "AZURE" ){
+            defaultNetworkPopup("#azureNetworkInfo", 665);
         }else{
             defaultNetworkPopup("#defaultNetworkInfo", 665);
         }
@@ -2068,19 +2073,19 @@ function gridReload() {
                 <div class="panel-body">
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">네트워크 명</label>
-                        <div>
+                        <div style=" width: 60%;">
                             <input name="networkName_1" type="text" style="display:inline-blcok; width:70%;" placeholder="네트워크명을 입력하세요."/>
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">서브넷 명</label>
-                        <div>
+                        <div style=" width: 60%;">
                             <input name="subnetId_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="서브넷 아이디를 입력하세요."/>
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">방화벽 규칙</label>
-                        <div>
+                        <div style=" width: 60%;">
                             <input name="cloudSecurityGroups_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) internet, cf-security"/>
                         </div>
                     </div>
@@ -2092,25 +2097,25 @@ function gridReload() {
                     </div>
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">서브넷 범위</label>
-                        <div>
+                        <div style=" width: 60%;">
                             <input name="subnetRange_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) 10.0.0.0/24"/>
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">게이트웨이</label>
-                        <div>
+                        <div style=" width: 60%;">
                             <input name="subnetGateway_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) 10.0.0.1"/>
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">DNS</label>
-                        <div>
+                        <div style=" width: 60%;">
                             <input name="subnetDns_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) 8.8.8.8"/>
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">IP할당 제외 대역</label>
-                        <div>
+                        <div style=" width: 60%;">
                             <input name="subnetReservedFrom_1" id="subnetReservedFrom_1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.100" />
                             <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
                             <input name="subnetReservedTo_1" id="subnetReservedTo_1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.106" />
@@ -2118,7 +2123,7 @@ function gridReload() {
                     </div>
                     <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">IP할당 대역(최소 20개)</label>
-                        <div>
+                        <div style=" width: 60%;">
                             <input name="subnetStaticFrom_1" id="subnetStaticFrom_1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.100" />
                             <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
                             <input name="subnetStaticTo_1" id="subnetStaticTo_1" type="text" style="display:iinline-block; width:32%;" placeholder="예) 10.0.0.106" />
@@ -2133,6 +2138,104 @@ function gridReload() {
     <div class="w2ui-buttons" id="googleNetworkInfoButtons" hidden="true">
         <button class="btn" style="float: left;" onclick="saveNetworkInfo('before', 'googleNetworkInfoForm');" >이전</button>
         <button class="btn" style="float: right; padding-right: 15%" onclick="$('#googleNetworkInfoForm').submit();" >다음>></button>
+    </div>
+</div>
+
+
+<!-- azure Network 설정 DIV -->
+<div id="azureNetworkInfoDiv" style="width: 100%; height: 100%;" hidden="true">
+    <form id="azureNetworkInfoForm">
+        <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
+            <ul class="progressStep_6">
+                <li class="pass">기본 정보</li>
+                <li class="active">네트워크 정보</li>
+                <li class="before">Key 생성</li>
+                <li class="before">리소스 정보</li>
+                <li class="before">배포파일 정보</li>
+                <li class="before install">설치</li>
+            </ul>
+        </div>
+        <div class="w2ui-page page-0" style="margin-top:15px;padding:0 3%;">
+            <div class="panel panel-info" style="margin-bottom:10px;">    
+                <div  class="panel-heading" style=""><b>External 네트워크</b></div>
+                <div class="panel-body">
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:36%;font-size:11px;">CF API TARGET IP</label> 
+                        <div style=" width: 60%;">
+                            <input name="publicStaticIp" type="text" style="display:inline-blcok; width:70%;" placeholder="예) 10.0.0.20"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info" id="azureNetworkInfoDiv_1">
+                <div  class="panel-heading" style="position:relative;">
+                    <b>Internal 네트워크</b>
+                    <div style="position: absolute;right: 10px ;top: 2px; ">
+                        <a class="btn btn-info btn-sm addInternal" onclick="addInternalNetworkInputs('#azureNetworkInfoDiv_1', '#azureNetworkInfoForm');">추가</a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:36%;font-size:11px;">네트워크 명</label>
+                        <div style=" width: 60%;">
+                            <input name="networkName_1" type="text" style="display:inline-blcok; width:70%;" placeholder="네트워크명을 입력하세요."/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:36%;font-size:11px;">서브넷 명</label>
+                        <div style=" width: 60%;">
+                            <input name="subnetId_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="서브넷 명을 입력하세요."/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:36%;font-size:11px;">보안 그룹</label>
+                        <div style=" width: 60%;">
+                            <input name="cloudSecurityGroups_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) bosh-security"/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:36%;font-size:11px;">서브넷 범위</label>
+                        <div style=" width: 60%;">
+                            <input name="subnetRange_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) 10.0.0.0/24"/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:36%;font-size:11px;">게이트웨이</label>
+                        <div style=" width: 60%;">
+                            <input name="subnetGateway_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) 10.0.0.1"/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:36%;font-size:11px;">DNS</label>
+                        <div style=" width: 60%;">
+                            <input name="subnetDns_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) 8.8.8.8"/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">IP할당 제외 대역</label>
+                        <div style=" width: 60%;">
+                            <input name="subnetReservedFrom_1" id="subnetReservedFrom_1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.100" />
+                            <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
+                            <input name="subnetReservedTo_1" id="subnetReservedTo_1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.106" />
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">IP할당 대역(최소 20개)</label>
+                        <div style=" width: 60%;">
+                            <input name="subnetStaticFrom_1" id="subnetStaticFrom_1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.100" />
+                            <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
+                            <input name="subnetStaticTo_1" id="subnetStaticTo_1" type="text" style="display:iinline-block; width:32%;" placeholder="예) 10.0.0.106" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 추가 네트워크 div_1 -->
+            <div  id="azureNetworkInfoDiv_2" hidden="true"></div>
+        </div>
+    </form>
+    <div class="w2ui-buttons" id="azureNetworkInfoButtons" hidden="true">
+        <button class="btn" style="float: left;" onclick="saveNetworkInfo('before', 'azureNetworkInfoForm');" >이전</button>
+        <button class="btn" style="float: right; padding-right: 15%" onclick="$('#azureNetworkInfoForm').submit();" >다음>></button>
     </div>
 </div>
 
@@ -2587,6 +2690,7 @@ function gridReload() {
 <script type="text/javascript" src="<c:url value='/js/rules/cf/cf_network_default.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rules/cf/cf_network_vsphere.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rules/cf/cf_network_google.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/js/rules/cf/cf_network_azure.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rules/cf/cf_keyinfo.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rules/cf/cf_resource.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rules/cf/cf_vSphereResource.js'/>"></script>
