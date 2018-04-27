@@ -79,7 +79,7 @@ public class AzureNetworkMgntService {
      * @title : getAzureNetworkSubnetsInfo
      * @return : List<AzureNetworkMgntVO>
      ***************************************************/
-    public List<AzureNetworkMgntVO> getAzureNetworkSubnetsInfo(Principal principal, int accountId, String networkName) {
+    public List<AzureNetworkMgntVO> getAzureNetworkSubnetsInfoList(Principal principal, int accountId, String networkName) {
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, accountId);
         List<Network> results = azureNetworkMgntApiService.getAzureNetworkInfoListApiFromAzure(vo);
         List<AzureNetworkMgntVO> list = new ArrayList<AzureNetworkMgntVO>();
@@ -95,7 +95,7 @@ public class AzureNetworkMgntService {
                         AzureNetworkMgntVO azureRgVo = new AzureNetworkMgntVO();
                         azureRgVo.setSubnetName(subnets[k].toString());
                         Subnet subnetList = results.get(i).subnets().get(subnets[k]);
-                        azureRgVo.setSubnetAddressRangeCidr(subnetList.addressPrefix().toString());
+                        azureRgVo.setSubnetAddressRangeCidr(subnetList.addressPrefix());
                         if (subnetList.getNetworkSecurityGroup() != null) {
                             azureRgVo.setSecurityGroupName(subnetList.getNetworkSecurityGroup().name().toString());
                         } else {
@@ -132,7 +132,6 @@ public class AzureNetworkMgntService {
         for (int i = 0; i < azureResourceGroupList.size(); i++) {
             ResourceGroup resourceGroup = azureResourceGroupList.get(i);
             AzureNetworkMgntVO azureRgVo = new AzureNetworkMgntVO();
-
             azureRgVo.setResourceGroupName(resourceGroup.name());
             azureRgVo.setLocation(resourceGroup.inner().location());
             azureRgVo.setResourceGroupId(resourceGroup.id());
@@ -151,9 +150,8 @@ public class AzureNetworkMgntService {
      ***************************************************/
     public void saveNetworkInfo(AzureNetworkMgntDTO dto, Principal principal) {
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, dto.getAccountId());
-        String regionName = getAzureLocationInfo(dto.getLocation());
         try{
-            azureNetworkMgntApiService.createAzureNetworkFromAzure(vo, regionName, dto);
+            azureNetworkMgntApiService.createAzureNetworkFromAzure(vo, dto);
         }catch (Exception e) {
             String detailMessage = e.getMessage();
             if(!detailMessage.equals("") && detailMessage != null){
@@ -175,9 +173,8 @@ public class AzureNetworkMgntService {
      ***************************************************/
     public void deleteNetworkInfo(AzureNetworkMgntDTO dto, Principal principal) {
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, dto.getAccountId());
-        String regionName = getAzureLocationInfo(dto.getLocation());
         try{
-          azureNetworkMgntApiService.deleteAzureNetworkFromAzure(vo, regionName, dto);
+          azureNetworkMgntApiService.deleteAzureNetworkFromAzure(vo, dto);
         }catch (Exception e) {
             throw new CommonException(
                     message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
@@ -192,9 +189,8 @@ public class AzureNetworkMgntService {
      ***************************************************/
     public void addSubnet(AzureNetworkMgntDTO dto, Principal principal) {
     	IaasAccountMgntVO vo = getAzureAccountInfo(principal, dto.getAccountId());
-        String regionName = getAzureLocationInfo(dto.getLocation());
         try{
-          azureNetworkMgntApiService.addSubnetFromAzure(vo, regionName, dto);
+          azureNetworkMgntApiService.addSubnetFromAzure(vo, dto);
         }catch (Exception e) {
             String detailMessage = e.getMessage();
             if(!detailMessage.equals("") && detailMessage != null){
@@ -207,6 +203,7 @@ public class AzureNetworkMgntService {
             
         }
     }
+    
     /***************************************************
      * @project : 인프라 관리 대시보드
      * @description : Azure Network Subnet 삭제
@@ -215,9 +212,8 @@ public class AzureNetworkMgntService {
      ***************************************************/    
     public void deleteSubnet(AzureNetworkMgntDTO dto, Principal principal) {
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, dto.getAccountId());
-        String regionName = getAzureLocationInfo(dto.getLocation());
         try{
-          azureNetworkMgntApiService.deleteSubnetFromAzure(vo, regionName, dto);
+          azureNetworkMgntApiService.deleteSubnetFromAzure(vo, dto);
         }catch (Exception e) {
             String detailMessage = e.getMessage();
             
@@ -240,11 +236,11 @@ public class AzureNetworkMgntService {
      ***************************************************/
     public AzureNetworkMgntVO getAzureSubscriptionInfo(Principal principal, int accountId) {
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, accountId);
-        String subId = vo.getAzureSubscriptionId().toString();
-        String subName = getAzureSubscriptionName(principal, accountId, subId);
+        String subscriptionId = vo.getAzureSubscriptionId().toString();
+        String subscriptionName = getAzureSubscriptionName(principal, accountId, subscriptionId);
         AzureNetworkMgntVO networkVO = new AzureNetworkMgntVO();
-        networkVO.setAzureSubscriptionId(subId);
-        networkVO.setSubscriptionName(subName);
+        networkVO.setAzureSubscriptionId(subscriptionId);
+        networkVO.setSubscriptionName(subscriptionName);
         return networkVO;
     }
 
@@ -258,16 +254,6 @@ public class AzureNetworkMgntService {
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, accountId);
         String subscriptionName = commonIaasService.getSubscriptionNameFromAzure(vo, subscriptionId);
         return subscriptionName;
-    }
-
-    /***************************************************
-     * @project : Azure 인프라 관리 대시보드
-     * @description : Azure 리전 조회
-     * @title : getAzureLocationInfo
-     * @return : Region
-     ***************************************************/
-    public String getAzureLocationInfo(String rglocation) {
-        return commonIaasService.getAzureLocationInfo(rglocation);
     }
 
 }

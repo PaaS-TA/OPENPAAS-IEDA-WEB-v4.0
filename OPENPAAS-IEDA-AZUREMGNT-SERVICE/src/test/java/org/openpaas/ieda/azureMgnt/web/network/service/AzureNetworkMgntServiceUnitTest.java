@@ -7,7 +7,11 @@ import static org.mockito.Mockito.when;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
@@ -28,7 +32,19 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.microsoft.azure.management.network.Network;
+import com.microsoft.azure.management.network.NetworkPeerings;
+import com.microsoft.azure.management.network.NetworkSecurityGroup;
+import com.microsoft.azure.management.network.NetworkSecurityRule;
+import com.microsoft.azure.management.network.NicIPConfiguration;
+import com.microsoft.azure.management.network.RouteTable;
 import com.microsoft.azure.management.network.Subnet;
+import com.microsoft.azure.management.network.implementation.NetworkManager;
+import com.microsoft.azure.management.network.implementation.NetworkSecurityGroupInner;
+import com.microsoft.azure.management.network.implementation.SubnetInner;
+import com.microsoft.azure.management.network.implementation.VirtualNetworkInner;
+import com.microsoft.azure.management.resources.fluentcore.arm.Region;
+
+import rx.Observable;
 @SpringApplicationConfiguration(classes = {Application.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -83,29 +99,333 @@ public class AzureNetworkMgntServiceUnitTest extends BaseAzureMgntControllerUnit
      * @title : getResultNetworkListInfo
      * @return : List<AzureNetworkMgntVO>
      ***************************************************/
-    public List<Network> getResultNetworkListInfo (){
+    public List<Network> getResultNetworkListInfo () {
         List<Network> networkList = new ArrayList<Network>();
+        Network network = new Network() {
+			
+			@Override
+			public Update update() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Observable<Network> refreshAsync() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Network refresh() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public VirtualNetworkInner inner() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public NetworkManager manager() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String resourceGroupName() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String name() {
+				// TODO Auto-generated method stub
+				return "test-networkName";
+			}
+			
+			@Override
+			public String id() {
+				// TODO Auto-generated method stub
+				return "test-networkId";
+			}
+			
+			@Override
+			public String key() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String type() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Map<String, String> tags() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String regionName() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Region region() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Map<String, Subnet> subnets() {
+				HashMap<String, Subnet> a = new HashMap<String, Subnet>();
+				Subnet subnet = new Subnet() {
+					@Override
+					public Network parent() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public String name() {
+						// TODO Auto-generated method stub
+						return "test-subnetName";
+					}
+					
+					@Override
+					public String key() {
+						// TODO Auto-generated method stub
+						return "lee";
+					}
+					
+					@Override
+					public SubnetInner inner() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public String routeTableId() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public String networkSecurityGroupId() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public int networkInterfaceIPConfigurationCount() {
+						// TODO Auto-generated method stub
+						return 0;
+					}
+					
+					@Override
+					public Collection<NicIPConfiguration> listNetworkInterfaceIPConfigurations() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public Set<String> listAvailablePrivateIPAddresses() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public RouteTable getRouteTable() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public NetworkSecurityGroup getNetworkSecurityGroup() {
+						NetworkSecurityGroup sg = new NetworkSecurityGroup() {
+							
+							@Override
+							public List<Subnet> listAssociatedSubnets() {
+								// TODO Auto-generated method stub
+								return null;
+							}
+							
+							@Override
+							public com.microsoft.azure.management.network.NetworkSecurityGroup.Update update() {
+								// TODO Auto-generated method stub
+								return null;
+							}
+							
+							@Override
+							public Observable<NetworkSecurityGroup> refreshAsync() {
+								// TODO Auto-generated method stub
+								return null;
+							}
+							
+							@Override
+							public NetworkSecurityGroup refresh() {
+								// TODO Auto-generated method stub
+								return null;
+							}
+							
+							@Override
+							public NetworkSecurityGroupInner inner() {
+								// TODO Auto-generated method stub
+								return null;
+							}
+							
+							@Override
+							public NetworkManager manager() {
+								// TODO Auto-generated method stub
+								return null;
+							}
+							
+							@Override
+							public String resourceGroupName() {
+								// TODO Auto-generated method stub
+								return null;
+							}
+							
+							@Override
+							public String name() {
+								// TODO Auto-generated method stub
+								return "test-securityGroupName";
+							}
+							
+							@Override
+							public String id() {
+								// TODO Auto-generated method stub
+								return null;
+							}
+							
+							@Override
+							public String key() {
+								// TODO Auto-generated method stub
+								return null;
+							}
+							
+							@Override
+							public String type() {
+								// TODO Auto-generated method stub
+								return null;
+							}
+							
+							@Override
+							public Map<String, String> tags() {
+								// TODO Auto-generated method stub
+								return null;
+							}
+							
+							@Override
+							public String regionName() {
+								// TODO Auto-generated method stub
+								return null;
+							}
+							
+							@Override
+							public Region region() {
+								// TODO Auto-generated method stub
+								return null;
+							}
+							
+							@Override
+							public Map<String, NetworkSecurityRule> securityRules() {
+								// TODO Auto-generated method stub
+								return null;
+							}
+							
+							@Override
+							public Set<String> networkInterfaceIds() {
+								// TODO Auto-generated method stub
+								return null;
+							}
+							
+							@Override
+							public Map<String, NetworkSecurityRule> defaultSecurityRules() {
+								// TODO Auto-generated method stub
+								return null;
+							}
+						};
+						return sg;
+					}
+					
+					@Override
+					public Set<NicIPConfiguration> getNetworkInterfaceIPConfigurations() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public String addressPrefix() {
+						// TODO Auto-generated method stub
+						return "10.10.1.0/24";
+					}
+				};
+				a.put("test-subnetName", subnet);
+				return a;
+			}
+			
+			@Override
+			public NetworkPeerings peerings() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public boolean isPrivateIPAddressInNetwork(String ipAddress) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean isPrivateIPAddressAvailable(String ipAddress) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public List<String> dnsServerIPs() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public List<String> addressSpaces() {
+				// TODO Auto-generated method stub
+				List<String> space = new ArrayList<String>();
+				
+				space.add("10.10.0.0/16");
+				return space;
+			}
+		};
+        networkList.add(network);
         return networkList;
     }
     
     /***************************************************
      * @project : Azure 관리 대시보드
      * @description : 해당 NETWORK 에 대한 Subnets 정보 목록 조회 TEST
-     * @title : testGetAzureNetworkSubnetsInfo
+     * @title : testGetAzureNetworkSubnetsInfoList
      * @return : void
      ***************************************************/
     @Test
-    public void testGetAzureNetworkSubnetsInfo(){
+    public void testGetAzureNetworkSubnetsInfoList(){
         List<Network> networkList = getResultNetworkListInfo();
-        String networkName = networkList.get(0).name();
         List<Subnet> subnetList = getResultSubnetListInfo();
         when(mockAzureNetworkMgntApiService.getAzureNetworkInfoListApiFromAzure(any())).thenReturn(networkList);
-        List<AzureNetworkMgntVO> resultList = mockAzureNetworkMgntService.getAzureNetworkSubnetsInfo(principal, 1 , networkName);
+        String networkName = networkList.get(0).name();
+        //String networkName = "test-networkName";
+        List<AzureNetworkMgntVO> resultList = mockAzureNetworkMgntService.getAzureNetworkSubnetsInfoList(principal, 1 , networkName);
         assertEquals(resultList.size(), 1);
         assertEquals(resultList.get(0).getNetworkName(), networkName);
         assertEquals(resultList.get(0).getSubnetName(), subnetList.get(0).name());
         assertEquals(resultList.get(0).getSubnetAddressRangeCidr(), subnetList.get(0).addressPrefix());
-        assertEquals(resultList.get(0).getSubnetAddressesCnt(), "251");
+        assertEquals(resultList.get(0).getSubnetAddressesCnt().toString(), "251");
         assertEquals(resultList.get(0).getSecurityGroupName(), subnetList.get(0).getNetworkSecurityGroup().name());
         
     }
@@ -117,6 +437,192 @@ public class AzureNetworkMgntServiceUnitTest extends BaseAzureMgntControllerUnit
      ***************************************************/
     public List<Subnet> getResultSubnetListInfo(){
         List<Subnet> subnetList = new ArrayList<Subnet>();
+        Subnet subnet = new Subnet() {
+			
+			@Override
+			public Network parent() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String name() {
+				// TODO Auto-generated method stub
+				return "test-subnetName";
+			}
+			
+			@Override
+			public String key() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public SubnetInner inner() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String routeTableId() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String networkSecurityGroupId() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public int networkInterfaceIPConfigurationCount() {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+			
+			@Override
+			public Collection<NicIPConfiguration> listNetworkInterfaceIPConfigurations() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Set<String> listAvailablePrivateIPAddresses() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public RouteTable getRouteTable() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public NetworkSecurityGroup getNetworkSecurityGroup() {
+				// TODO Auto-generated method stub
+				NetworkSecurityGroup sg = new NetworkSecurityGroup() {
+					
+					@Override
+					public List<Subnet> listAssociatedSubnets() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public Update update() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public Observable<NetworkSecurityGroup> refreshAsync() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public NetworkSecurityGroup refresh() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public NetworkSecurityGroupInner inner() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public NetworkManager manager() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public String resourceGroupName() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public String name() {
+						// TODO Auto-generated method stub
+						return "test-securityGroupName";
+					}
+					
+					@Override
+					public String id() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public String key() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public String type() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public Map<String, String> tags() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public String regionName() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public Region region() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public Map<String, NetworkSecurityRule> securityRules() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public Set<String> networkInterfaceIds() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public Map<String, NetworkSecurityRule> defaultSecurityRules() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+				};
+				
+				return sg;
+			}
+			
+			@Override
+			public Set<NicIPConfiguration> getNetworkInterfaceIPConfigurations() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String addressPrefix() {
+				// TODO Auto-generated method stub
+				return "10.10.1.0/24";
+			}
+		};
+		subnetList.add(subnet);
         return subnetList;
     }
     /***************************************************
@@ -180,8 +686,8 @@ public class AzureNetworkMgntServiceUnitTest extends BaseAzureMgntControllerUnit
     public AzureNetworkMgntDTO setAzureNetworkInfo() {
         AzureNetworkMgntDTO dto = new AzureNetworkMgntDTO();
         dto.setAccountId(1);
-        dto.setNetworkName("test-network-name");
-        dto.setNetworkId("test-network-id");
+        dto.setNetworkName("test-networkName");
+        dto.setNetworkId("test-networkId");
         dto.setNetworkAddressSpaceCidr("10.10.0.0/16");
         dto.setSubnetName("test-subnetName");
         dto.setSubnetAddressRangeCidr("10.10.1.0/24");
@@ -206,7 +712,6 @@ public class AzureNetworkMgntServiceUnitTest extends BaseAzureMgntControllerUnit
         vo.setCommonAccessSecret("commonSecret");
         vo.setAzureSubscriptionId("azureSubscriptionId");
         when(mockCommonIaasService.getIaaSAccountInfo(any(), anyInt(), anyString())).thenReturn(vo);
-        when(mockCommonIaasService.getAzureLocationInfo(any())).thenReturn(anyString());
         return vo;
     }
     
@@ -218,7 +723,7 @@ public class AzureNetworkMgntServiceUnitTest extends BaseAzureMgntControllerUnit
      ***************************************************/
     public String getAzureSubscriptionName() {
         getAzureAccountInfo();
-        String subscriptionName = "";
+        String subscriptionName = "aswdsad";
         when(mockCommonIaasService.getSubscriptionNameFromAzure(any(), anyString())).thenReturn(subscriptionName);
         return subscriptionName;
     }
@@ -285,4 +790,6 @@ public class AzureNetworkMgntServiceUnitTest extends BaseAzureMgntControllerUnit
         return vo;
     }
 }
+
+
 
