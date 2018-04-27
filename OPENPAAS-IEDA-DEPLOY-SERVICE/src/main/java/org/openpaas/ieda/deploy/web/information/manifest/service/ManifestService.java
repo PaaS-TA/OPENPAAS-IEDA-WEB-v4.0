@@ -60,7 +60,7 @@ public class ManifestService {
      * @project : Paas 플랫폼 설치 자동화
      * @description : 해당 Manifest 파일 내용 조회
      * @title : getManifestInfo
-     * @return : String
+     * @return : String다운로
     ***************************************************/
     public String getManifestInfo( int id ){
         
