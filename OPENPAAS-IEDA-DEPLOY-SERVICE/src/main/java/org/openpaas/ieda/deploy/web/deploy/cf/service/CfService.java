@@ -392,6 +392,8 @@ public class CfService {
                         }else if( "GOOGLE".equalsIgnoreCase(vo.getIaasType()) ){
                             items.add(new ReplaceItemDTO("[zone]", vo.getNetworks().get(i).getAvailabilityZone()));
                             items.add(new ReplaceItemDTO("[networkName]", vo.getNetworks().get(i).getNetworkName()));
+                        } else if( "AZURE".equalsIgnoreCase(vo.getIaasType()) ){
+                        	items.add(new ReplaceItemDTO("[networkName]", vo.getNetworks().get(i).getNetworkName()));
                         }
                     }
                 }else if( internalCnt > 1){
@@ -408,6 +410,8 @@ public class CfService {
                         }else if( "GOOGLE".equalsIgnoreCase(vo.getIaasType()) ){
                             items.add(new ReplaceItemDTO("[zone]", vo.getNetworks().get(i).getAvailabilityZone()));
                             items.add(new ReplaceItemDTO("[networkName]", vo.getNetworks().get(i).getNetworkName()));
+                        }else if( "AZURE".equalsIgnoreCase(vo.getIaasType()) ){
+                        	items.add(new ReplaceItemDTO("[networkName]", vo.getNetworks().get(i).getNetworkName()));
                         }
                     }
                 }

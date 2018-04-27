@@ -702,7 +702,7 @@ public class DirectorRestHelper {
                             sendTaskOutputWithTag(userId, messageTemplate, messageEndpoint, STARTED, tag, Arrays.asList(output));
                         }
                     } else {
-                        
+                    	Thread.sleep(THREAD_SLEEP_TIME);
                         String outputs1 = getTaskOutput.getResponseBodyAsString();
                         String outputs2 = outputs1.substring(0, outputs1.length() - 1).replace("\n", ",");
                         String outputs = "[" + outputs2 + "]";
