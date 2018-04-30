@@ -624,7 +624,17 @@ function defaultNetworkPopup(div, height){
             html+= field_div_label + "영역" + "</label>"; 
             html+= "<div style=' width: 60%;'>"+"<input name='availabilityZone_"+index+"'" + text_style +" placeholder='예) asia-northeast1-a'/>"+"</div></div>";
             
-        }else if(iaas.toLowerCase() == "vsphere"){
+        } else if( iaas.toLowerCase() == "azure" ){
+            html+= field_div_label + "네트워크 명" + "</label>";
+            html+= "<div style=' width: 60%;'>"+"<input name='networkName_"+index+"'" + text_style +" placeholder='네트워크 명을 입력하세요.'/>"+"</div></div>";
+            
+            html+= field_div_label + "서브넷 명" + "</label>"; 
+            html+= "<div style=' width: 60%;'>"+"<input name='subnetId_"+index+"'" + text_style +" placeholder='서브넷 명을 입력하세요.'/>"+"</div></div>";
+            
+            html+= field_div_label + "보안 그룹" + "</label>"; 
+            html+= "<div style=' width: 60%;'>"+"<input name='cloudSecurityGroups_"+index+"'" + text_style +" placeholder='예) bosh-security, cf-security'/>"+"</div></div>";
+        }
+        else if(iaas.toLowerCase() == "vsphere"){
             html+= field_div_label + "포트 그룹명" + "</label>"; 
             html+= "<div style=' width: 60%;'>"+"<input name='subnetId_"+index+"'" + text_style +" placeholder='포트 그룹명을 입력하세요.'/>"+"</div></div>";
         }else{
@@ -782,7 +792,13 @@ function createInternalNetworkValidate(index){
             }, messages: {required: zone_message + text_required_msg}
         });
     }
-    
+    if( iaas.toLowerCase() == "azure" ){
+        $("[name*='networkName_"+index+"']").rules("add", {
+            required: function(){
+                return checkEmpty($(".w2ui-msg-body input[name='networkName_"+index+"']").val());
+            }, messages: {required: "네트워크 명"+text_required_msg}
+        });
+    }
     w2popup.unlock();
 }
 
@@ -1544,7 +1560,6 @@ function installPopup(){
             iaas     : iaas,
             platform : "cf"
     };
-    
     w2popup.open({
         title   : "<b>CF 설치</b>",
         width   : 750,
