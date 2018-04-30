@@ -2484,6 +2484,97 @@ function gridReload() {
     </form>
 </div>
 
+<!--  Azure Resource -->
+<div id="azureResourceInfoDiv" style="width: 100%; height: 100%;" hidden="true">
+    <form id="azureResourceInfoForm">
+        <div style="margin-left: 2%; display:inline-block; width: 98%; padding-top:20px;">
+            <ul class="progressStep_5">
+                <li class="pass">기본 정보</li>
+                <li class="pass">네트워크 정보</li>
+                <li class="active">리소스 정보</li>
+                <li class="before">배포파일 정보</li>
+                <li class="before">설치</li>
+            </ul>
+        </div>
+<div class="w2ui-page page-0" style="margin-top:15px;padding:0 3%;">
+            <div class="panel panel-info">    
+                <div class="panel-heading" style="position:relative"><b>리소스 정보</b>
+                    <div style="position: absolute;right: 10px ;top: 2px;  ">
+                        <a class="btn btn-info btn-sm" onclick="resourceAdvancedSettingsPop();">고급 기능</a>
+                    </div>
+                </div>    
+                <div class="panel-body" style="padding:5px 5% 10px 5%;">
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 40%; font-size: 11px;">Stemcell</label>
+                        <div style="width: 60%">
+                            <div>
+                                <select name="stemcells" style="width: 80%;display: inline-block;"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 40%; font-size: 11px;">VM 비밀번호</label>
+                        <div style="width: 60%">
+                            <input name="boshPassword" type="text" style="display:inline-block; width: 80%;" required placeholder="VM 비밀번호를 입력하세요." />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info"  style="margin-top:20px;">    
+                <div class="panel-heading"><b>Small Instance Type</b></div>
+                <div class="panel-body"  style="padding:5px 5% 10px 5%;">
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 40%; font-size: 11px;">Flavor</label>
+                        <div style="width: 60%">
+                            <input name="smallFlavor" type="text" style="display:inline-block; width: 80%;" required placeholder="Small Instance Type을 입력하세요."  />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info"  style="margin-top:20px;">    
+                <div class="panel-heading"><b>Medium Instance Type</b></div>
+                <div class="panel-body"  style="padding:5px 5% 10px 5%;" >
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 40%; font-size: 11px;">Flavor</label>
+                        <div style="width: 60%">
+                            <input name="mediumFlavor" type="text" style="display:inline-block; width: 80%;" required placeholder="Medium Instance Type을 입력하세요."  />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info"  style="margin-top:20px;">    
+                <div class="panel-heading"><b>Large Instance Type</b></div>
+                <div class="panel-body"  style="padding:5px 5% 10px 5%;">
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 40%; font-size: 11px;">Flavor</label>
+                        <div style="width: 60%">
+                            <input name="largeFlavor" type="text" style="display:inline-block; width: 80%;" required placeholder="Large Instance Type을 입력하세요."  />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info"  style="margin-top:20px;">    
+                <div class="panel-heading"><b>Cell Instance Type</b></div>
+                <div class="panel-body"  style="padding:5px 5% 10px 5%;">
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 40%; font-size: 11px;">Flavor</label>
+                        <div style="width: 60%">
+                            <input name="runnerFlavor" type="text" style="display:inline-block; width: 80%;" required placeholder="Cell Instance Type을 입력하세요."  />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w2ui-buttons">
+                <button class="btn" style="display:none; float: right; margin-top:10px;" id="keyBtn" onclick="createKeyConfirm();" >Key 생성</button>
+            </div>
+        </div>
+        <div class="w2ui-buttons" id="resourceInfoButtons" hidden="true">
+            <button class="btn" style="float:left;" onclick="saveResourceInfo('before');">이전</button>
+            <button class="btn" style="float: right; padding-right: 15%" onclick="$('#resourceInfoForm').submit();">다음>></button>
+        </div>
+    </form>
+</div>
+
 <!-- DIEGO 고급 설정 화면 -->
 <div class="w2ui-buttons" id="diegoDetailButtons" hidden="true">
     <button class="btn" id="" style="" onclick="saveDiegoJobsInfo();">저장</button>
@@ -2491,6 +2582,7 @@ function gridReload() {
 </div>
 <div id="diegoDetailPopDiv" hidden="true" style="width:100%;">
     <form id="diegoDetailForm" style="height:100%;">
+        
     </form>
 </div>
 
