@@ -24,13 +24,6 @@ public class AzureNetworkMgntVO {
     private Integer subnetAddressesCnt;
     private String securityGroupName; 
     
-    private String dnsServer; //dns server
-    private String deviceName; 
-    private String deviceType;
-    private String deviceIpAddress;
-    private String deviceSubnet;
-    
-    
     public Integer getAccountId() {
 		return accountId;
 	}
@@ -120,35 +113,5 @@ public class AzureNetworkMgntVO {
 	}
 	public void setSubnetAddressRangeCidr(String subnetAddressRangeCidr) {
 		this.subnetAddressRangeCidr = subnetAddressRangeCidr;
-	}
-	public String getDnsServer() {
-		return dnsServer;
-	}
-	public void setDnsServer(String dnsServer) {
-		this.dnsServer = dnsServer;
-	}
-	public String getDeviceName() {
-		return deviceName;
-	}
-	public void setDeviceName(String deviceName) {
-		this.deviceName = deviceName;
-	}
-	public String getDeviceType() {
-		return deviceType;
-	}
-	public void setDeviceType(String deviceType) {
-		this.deviceType = deviceType;
-	}
-	public String getDeviceIpAddress() {
-		return deviceIpAddress;
-	}
-	public void setDeviceIpAddress(String deviceIpAddress) {
-		this.deviceIpAddress = deviceIpAddress;
-	}
-	public String getDeviceSubnet() {
-		return deviceSubnet;
-	}
-	public void setDeviceSubnet(String deviceSubnet) {
-		this.deviceSubnet = deviceSubnet;
 	}
 }

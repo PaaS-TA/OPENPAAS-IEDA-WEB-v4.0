@@ -209,4 +209,14 @@ public class CommonApiService {
     }
 		return azure;
     }
+    
+    /***************************************************
+     * @project : 인프라 관리 대시보드
+     * @description : Azure Location Name으로 리전 정보 조회
+     * @title : getAzureRegionFromAzure
+     * @return : Region
+     ***************************************************/
+    /*public com.microsoft.azure.management.resources.fluentcore.arm.Region getAzureRegionFromAzure(String location){
+        return com.microsoft.azure.management.resources.fluentcore.arm.Region.findByLabelOrName(location);
+    }*/
 }

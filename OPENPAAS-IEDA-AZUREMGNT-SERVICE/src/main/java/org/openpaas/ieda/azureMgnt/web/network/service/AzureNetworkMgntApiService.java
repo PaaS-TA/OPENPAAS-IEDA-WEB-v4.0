@@ -1,6 +1,5 @@
 package org.openpaas.ieda.azureMgnt.web.network.service;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.openpaas.ieda.azureMgnt.web.network.dto.AzureNetworkMgntDTO;
@@ -50,33 +49,25 @@ public class AzureNetworkMgntApiService {
 
     /****************************************************************
      * @project : Azure 인프라 관리 대시보드
-     * @description : Azure API를 통해 Virtural Network 상세 정보 조회
-     * @title : getAzureNetworkDetailInfoFromAzure
-     * @return : HashMap<String, Object>
-     *****************************************************************/
-    public HashMap<String, Object> getAzureNetworkDetailInfoFromAzure(IaasAccountMgntVO vo) {
-        AzureTokenCredentials azureClient = getAzureClient(vo);
-        Azure azure = Azure.configure().withLogLevel(LogLevel.NONE).authenticate(azureClient)
-                .withSubscription(vo.getAzureSubscriptionId());
-        List<Network> networkList = azure.networks().list();
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("networkList", networkList);
-        return map;
-    }
-
-    /****************************************************************
-     * @project : Azure 인프라 관리 대시보드
      * @description : Azure API를 통해 Virtural Network 생성
      * @title : createAzureNetworkFromAzure
      * @return : void
      *****************************************************************/
-    public void createAzureNetworkFromAzure(IaasAccountMgntVO vo, String regionName, AzureNetworkMgntDTO dto) {
+    public void createAzureNetworkFromAzure(IaasAccountMgntVO vo, AzureNetworkMgntDTO dto) {
         AzureTokenCredentials azureClient = getAzureClient(vo);
         Azure azure = Azure.configure().withLogLevel(LogLevel.BASIC).authenticate(azureClient)
                 .withSubscription(vo.getAzureSubscriptionId());
-        com.microsoft.azure.management.resources.fluentcore.arm.Region region = com.microsoft.azure.management.resources.fluentcore.arm.Region
-                .findByLabelOrName(regionName);
+        //Azure location name 으로 Azure region 가져오기
+        com.microsoft.azure.management.resources.fluentcore.arm.Region region = com.microsoft.azure.management.resources.fluentcore.arm.Region.findByLabelOrName(dto.getLocation());
+        
+        // create a virtual network with one subnet
+        azure.networks().define(dto.getNetworkName()).withRegion(region)
+        .withExistingResourceGroup(dto.getResourceGroupName())
+        .withAddressSpace(dto.getNetworkAddressSpaceCidr())
+        .withSubnet(dto.getSubnetName(), dto.getSubnetAddressRangeCidr()).create();
 
+        
+        // create a virtual network with two subnets 인 경우 보안그룹 설정
         // this NSG definition block traffic to and from the public Internet
         /*
          * NetworkSecurityGroup backEndSubnetNsg = azure.networkSecurityGroups()
@@ -102,12 +93,6 @@ public class AzureNetworkMgntApiService {
          * .withExistingNetworkSecurityGroup(backEndSubnetNsg) .attach()
          * .create();
          */
-
-        // create a virtual network with one subnet
-        azure.networks().define(dto.getNetworkName()).withRegion(region)
-                .withExistingResourceGroup(dto.getResourceGroupName())
-                .withAddressSpace(dto.getNetworkAddressSpaceCidr())
-                .withSubnet(dto.getSubnetName(), dto.getSubnetAddressRangeCidr()).create();
     }
 
     /****************************************************************
@@ -116,7 +101,7 @@ public class AzureNetworkMgntApiService {
      * @title : deleteAzureNetworkFromAzure
      * @return : void
      *****************************************************************/
-    public void deleteAzureNetworkFromAzure(IaasAccountMgntVO vo, String regionName, AzureNetworkMgntDTO dto) {
+    public void deleteAzureNetworkFromAzure(IaasAccountMgntVO vo, AzureNetworkMgntDTO dto) {
         AzureTokenCredentials azureClient = getAzureClient(vo);
         Azure azure = Azure.configure().withLogLevel(LogLevel.BASIC).authenticate(azureClient)
                 .withSubscription(vo.getAzureSubscriptionId());
@@ -129,7 +114,7 @@ public class AzureNetworkMgntApiService {
      * @title : addSubnetFromAzure
      * @return : void
      *****************************************************************/
-    public void addSubnetFromAzure(IaasAccountMgntVO vo, String regionName, AzureNetworkMgntDTO dto) {
+    public void addSubnetFromAzure(IaasAccountMgntVO vo, AzureNetworkMgntDTO dto) {
         AzureTokenCredentials azureClient = getAzureClient(vo);
         Azure azure = Azure.configure().withLogLevel(LogLevel.BASIC).authenticate(azureClient)
                 .withSubscription(vo.getAzureSubscriptionId());
@@ -142,7 +127,7 @@ public class AzureNetworkMgntApiService {
      * @title : deleteSubnetFromAzure
      * @return : void
      *****************************************************************/
-    public void deleteSubnetFromAzure(IaasAccountMgntVO vo, String regionName, AzureNetworkMgntDTO dto) {
+    public void deleteSubnetFromAzure(IaasAccountMgntVO vo, AzureNetworkMgntDTO dto) {
         AzureTokenCredentials azureClient = getAzureClient(vo);
         Azure azure = Azure.configure().withLogLevel(LogLevel.BASIC).authenticate(azureClient)
                 .withSubscription(vo.getAzureSubscriptionId());
@@ -161,7 +146,6 @@ public class AzureNetworkMgntApiService {
      * @return : List<ResourceGroup>
      *****************************************************************/
     public List<ResourceGroup> getResourceGroupInfoListApiFromAzure(IaasAccountMgntVO vo) {
-
         AzureTokenCredentials azureClient = getAzureClient(vo);
         Azure azure = Azure.configure().withLogLevel(LogLevel.NONE).authenticate(azureClient)
                 .withSubscription(vo.getAzureSubscriptionId());
@@ -169,19 +153,5 @@ public class AzureNetworkMgntApiService {
         List<ResourceGroup> list = resource.list();
         return list;
     }
-
-    /***************************************************
-     * @project : 인프라 관리 대시보드
-     * @description :Azure API를 통해 MS Azure 계정 Subscription ID 가져오기
-     * @title : getSubscriptionInfoFromAzure
-     * @return : String
-     ***************************************************/
-    /*public String getSubscriptionInfoFromAzure(IaasAccountMgntVO vo, String subscriptionId) {
-        AzureTokenCredentials azureClient = getAzureClient(vo);
-        Azure azure = Azure.configure().withLogLevel(LogLevel.BASIC).authenticate(azureClient)
-                .withSubscription(subscriptionId);
-        String subscription = azure.subscriptions().getById(subscriptionId).displayName().toString();
-        return subscription;
-    }*/
 
 }

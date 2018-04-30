@@ -60,8 +60,8 @@ public class AzureNetworkMgntController {
      * @return : ResponseEntity<?>
      ***************************************************/
     @RequestMapping(value="/azureMgnt/network/list/subnets/{accountId}/{networkName}", method=RequestMethod.GET)
-    public ResponseEntity<HashMap<String, Object>> getAzureNetworkSubnetsInfo(Principal principal, @PathVariable("accountId") int accountId, @PathVariable("networkName") String networkName){
-        List<AzureNetworkMgntVO> list  = azureNetworkMgntService.getAzureNetworkSubnetsInfo(principal, accountId, networkName);
+    public ResponseEntity<HashMap<String, Object>> getAzureNetworkSubnetsInfoList(Principal principal, @PathVariable("accountId") int accountId, @PathVariable("networkName") String networkName){
+        List<AzureNetworkMgntVO> list  = azureNetworkMgntService.getAzureNetworkSubnetsInfoList(principal, accountId, networkName);
         HashMap<String, Object> map = new HashMap<String, Object>();
         if(list != null){
             map.put("total", list.size());

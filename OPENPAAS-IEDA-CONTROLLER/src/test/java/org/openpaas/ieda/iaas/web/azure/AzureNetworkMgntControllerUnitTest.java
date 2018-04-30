@@ -152,7 +152,7 @@ public class AzureNetworkMgntControllerUnitTest {
     @Test
     public void testGetAzureNetworkSubnetsInfo() throws Exception{
     List<AzureNetworkMgntVO> list = getAzureNetworkSubnetsInfo();
-        when(mockAzureNetworkMgntService.getAzureNetworkSubnetsInfo(any(), anyInt(), any())).thenReturn(list);
+        when(mockAzureNetworkMgntService.getAzureNetworkSubnetsInfoList(any(), anyInt(), any())).thenReturn(list);
         mockMvc.perform(get(NETWORK_SUBNETS_INFO_URL, 1).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.records[0].accountId").value(1))

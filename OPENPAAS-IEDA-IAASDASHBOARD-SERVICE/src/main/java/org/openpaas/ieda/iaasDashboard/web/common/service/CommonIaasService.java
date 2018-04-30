@@ -240,7 +240,6 @@ public class CommonIaasService {
     public Region getAwsRegionInfo(String regionName) {
         return Region.getRegion(Regions.fromName(regionName));
     }
-    
     /***************************************************
      * @project : 인프라 관리 대시보드
      * @description : Azure 리전 명 정보 조회
@@ -268,7 +267,6 @@ public class CommonIaasService {
         String subscriptionName = azure.subscriptions().getById(subscriptionId).displayName().toString();
         return subscriptionName;
     }
-   
     
     /****************************************************************
      * @project : Azure 인프라 관리 대시보드
