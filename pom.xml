@@ -22,6 +22,7 @@
         <module>OPENPAAS-IEDA-OPENSTACKMGNT-SERVICE</module>
         <module>OPENPAAS-IEDA-IAASDASHBOARD-SERVICE</module>
         <module>OPENPAAS-IEDA-AZUREMGNT-SERVICE</module>
+        <module>OPENPAAS-IEDA-HBDEPLOY-SERVICE</module>
     </modules>
 
     <dependencies>

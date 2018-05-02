@@ -3,6 +3,7 @@ package org.openpaas.ieda.iaas.web.azure;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -28,6 +29,7 @@ import org.openpaas.ieda.azureMgnt.web.resourceGroup.dao.AzureResourceGroupMgntV
 import org.openpaas.ieda.azureMgnt.web.resourceGroup.dto.AzureResourceGroupMgntDTO;
 import org.openpaas.ieda.azureMgnt.web.resourceGroup.service.AzureResourceGroupMgntService;
 import org.openpaas.ieda.controller.iaasMgnt.azureMgnt.web.resourceGroup.AzureResourceGroupMgntController;
+import org.openpaas.ieda.iaasDashboard.web.common.service.CommonIaasService;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,7 +51,8 @@ public class AzureResourceGroupMgntControllerUnitTest {
 
     @InjectMocks AzureResourceGroupMgntController mockAzureResourceGroupMgntController;
     @Mock AzureResourceGroupMgntService mockAzureResourceGroupMgntService;
-    
+    @Mock CommonIaasService commonIaasService;
+    Principal principal = null;
     private MockMvc mockMvc;
     private static final ObjectMapper mapper = new ObjectMapper();
     
@@ -59,7 +62,7 @@ public class AzureResourceGroupMgntControllerUnitTest {
     final static String RESOURCE_GROUP_DETAIL_INFO_URL = "/azureMgnt/resourceGroup/save/detail/{accountId}/{resourceGroupName}";
     final static String RESOURCE_LIST_INFO_URL = "/azureMgnt/resourceGroup/save/detail/resource/{accountId}/{resourceGroupName}";
     final static String RESOURCE_GROUP_SAVE_URL = "/azureMgnt/resourceGroup/save";
-    final static String RESOURCE_GROUP_DELETE_URL = "/azureMgnt/resourceGroup/delete";
+    final static String RESOURCE_GROUP_DELETE_URL = "/azureMgnt/resouceGroup/delete";
      
     /***************************************************
      * @project : Azure 관리 대시보드
@@ -133,11 +136,11 @@ public class AzureResourceGroupMgntControllerUnitTest {
         when(mockAzureResourceGroupMgntService.getAzureResourceGroupDetailInfo(any(), anyInt(), anyString())).thenReturn(vo);
         mockMvc.perform(get(RESOURCE_GROUP_DETAIL_INFO_URL, 1, "resourceGroupName").contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.accountId").value(1))
-        .andExpect(jsonPath("$.recid").value(1))
-        .andExpect(jsonPath("$.name").value("name"))
-        .andExpect(jsonPath("$.subscriptionName").value("subname"))
-        .andExpect(jsonPath("$.deployments").value("3"));
+        .andExpect(jsonPath("$.name.accountId").value(1))
+        .andExpect(jsonPath("$.name.recid").value(1))
+        .andExpect(jsonPath("$.name.name").value("name"))
+        .andExpect(jsonPath("$.name.subscriptionName").value("subname"))
+        .andExpect(jsonPath("$.name.depolyments").value("3"));
     }
     
     /***************************************************
@@ -186,13 +189,13 @@ public class AzureResourceGroupMgntControllerUnitTest {
      * @return : HashMap<String, Object> 
      ***************************************************/
     private HashMap<String, Object> getAzureResourceGroupResultInfo() {
+    	HashMap<String, Object> map = new HashMap<String, Object>();
         AzureResourceGroupMgntVO vo = new AzureResourceGroupMgntVO();
         vo.setAccountId(1);
         vo.setRecid(1);
         vo.setName("name");
         vo.setSubscriptionName("subname");
         vo.setDepolyments("3");
-        HashMap<String, Object> map = new HashMap<String, Object>();
         map.put(vo.getName(), vo);
         return map;
     }
@@ -238,21 +241,23 @@ public class AzureResourceGroupMgntControllerUnitTest {
     private AzureResourceGroupMgntDTO setRgInfo(){
         AzureResourceGroupMgntDTO dto = new AzureResourceGroupMgntDTO();
         dto.setAccountId(1);
-        dto.setName("");
+        dto.setName("azure");
         return null;
     }
     
     /***************************************************
      * @project : Azure 관리 대시보드
-     * @description : Azure Resource Group 삭 TEST
+     * @description : Azure Resource Group 삭제 TEST
      * @title : testDeleteAzureResourceGroupInfo
      * @return : void
      ***************************************************/
     @Test
     public void testDeleteAzureResourceGroupInfo() throws Exception{
-    	AzureResourceGroupMgntDTO dto = setRgInfo();
-    	mockMvc.perform(delete(RESOURCE_GROUP_DELETE_URL).contentType(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+        AzureResourceGroupMgntDTO dto = setRgInfo();
+        doNothing().when(mockAzureResourceGroupMgntService).deleteAzureResourceGroupInfo(any(), any());
+        mockMvc.perform(delete(RESOURCE_GROUP_DELETE_URL).contentType(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsBytes(dto))).andDo(MockMvcResultHandlers.print())
         .andExpect(status().isNoContent());
     }
+    
 }

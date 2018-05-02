@@ -44,7 +44,6 @@ meta:
   # Default vcap & root password on deployed VMs (ie c1oudc0w)
   # Generated using mkpasswd -m sha-512
   zone: [zone]
-  
   vcap-password: [boshPassword]
 
   small-instance-type: [smallInstanceType]

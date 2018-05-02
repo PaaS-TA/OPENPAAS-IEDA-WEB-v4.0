@@ -408,10 +408,10 @@ public class CfService {
                         if("AWS".equalsIgnoreCase(vo.getIaasType())){
                             items.add(new ReplaceItemDTO("[availabilityZone1]", vo.getNetworks().get(i).getAvailabilityZone()));
                         }else if( "GOOGLE".equalsIgnoreCase(vo.getIaasType()) ){
-                            items.add(new ReplaceItemDTO("[zone]", vo.getNetworks().get(i).getAvailabilityZone()));
-                            items.add(new ReplaceItemDTO("[networkName]", vo.getNetworks().get(i).getNetworkName()));
+                            items.add(new ReplaceItemDTO("[zone1]", vo.getNetworks().get(i).getAvailabilityZone()));
+                            items.add(new ReplaceItemDTO("[networkName1]", vo.getNetworks().get(i).getNetworkName()));
                         }else if( "AZURE".equalsIgnoreCase(vo.getIaasType()) ){
-                        	items.add(new ReplaceItemDTO("[networkName]", vo.getNetworks().get(i).getNetworkName()));
+                        	items.add(new ReplaceItemDTO("[networkName1]", vo.getNetworks().get(i).getNetworkName()));
                         }
                     }
                 }

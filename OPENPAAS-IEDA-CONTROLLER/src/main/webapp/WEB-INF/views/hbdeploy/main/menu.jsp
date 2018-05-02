@@ -35,7 +35,7 @@
 <div id="left">
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav side-nav">
-           <li class="active"><a href="javascript:goPage('<c:url value="/main/dashboard"/>', 'Dashboard');" style="font-weight:600; font-size:20px;"><i class="fa fa-fw fa-home"></i> PaaS-TA 설치 자동화</a></li>
+           <li class="active"><a href="javascript:goPage('<c:url value="/main/hbDashboard"/>', 'Dashboard');" style="font-weight:600; font-size:20px;"><i class="fa fa-fw fa-home"></i> PaaS-TA 설치 자동화</a></li>
            <li>
               <a href="javascript:;" data-toggle="collapse" data-target="#configMenu" ><i class="fa fa-fw fa fa-cog"></i> 환경설정 및 관리 <i class="fa fa-fw fa-caret-down"></i></a>
               <ul id="configMenu" class="collapse">
@@ -71,37 +71,19 @@
                    <sec:authorize access="hasAuthority('DEPLOY_CF_DIEGO_MENU')">
                        <li><a href="javascript:goPage('<c:url value="/deploy/cfDiego"/>', 'CF & DIEGO 통합 설치');">CF & DIEGO 통합 설치</a></li>
                    </sec:authorize>
-                   <sec:authorize access="hasAuthority('DEPLOY_SERVICEPACK_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/servicePack"/>', '서비스팩 설치');">서비스팩 설치</a></li>
-                   </sec:authorize>
                 </ul>
             </li>
             <li>
                <a href="javascript:;" data-toggle="collapse" data-target="#deploymentMenu" ><i class="fa fa-fw fa-search-plus"></i> 배포 정보 조회 및 관리 <i class="fa fa-fw fa-caret-down"></i></a>
                <ul id="deploymentMenu" class="collapse">
                     <sec:authorize access="hasAuthority('INFO_STEMCELL_MENU')">
-                        <li><a href="javascript:goPage('<c:url value="/info/stemcell"/>', '스템셀 업로드');">스템셀 업로드</a></li>        
+                        <li><a href="javascript:goPage('<c:url value="/info/stemcell"/>', '스템셀 업로드');">스템셀 업로드</a></li>
                     </sec:authorize>
                     <sec:authorize access="hasAuthority('INFO_RELEASE_MENU')">
                         <li><a href="javascript:goPage('<c:url value="/info/release"/>', '릴리즈 업로드');">릴리즈 업로드</a></li>
                     </sec:authorize>
                     <sec:authorize access="hasAuthority('INFO_DEPLOYMENT_MENU')">
                         <li><a href="javascript:goPage('<c:url value="/info/deployment"/>', '배포목록');">배포 정보</a></li>
-                    </sec:authorize>
-                    <sec:authorize access="hasAuthority('INFO_TASK_MENU')">
-                        <li><a href="javascript:goPage('<c:url value="/info/task"/>', 'Task정보');">Task 정보</a></li>
-                    </sec:authorize>
-                    <sec:authorize access="hasAuthority('INFO_VM_MENU')">
-                        <li><a href="javascript:goPage('<c:url value="/info/vms"/>', 'VM 관리');">VM 관리</a></li>
-                    </sec:authorize>
-                    <sec:authorize access="hasAuthority('INFO_PROPERTY_MENU')">
-                        <li><a href="javascript:goPage('<c:url value="/info/property"/>', 'Property 관리');">Property 관리</a></li>
-                    </sec:authorize>
-                    <sec:authorize access="hasAuthority('INFO_SNAPSHOT_MENU')">
-                        <li><a href="javascript:goPage('<c:url value="/info/snapshot"/>', '스냅샷 관리');">스냅샷 관리</a></li>
-                    </sec:authorize>
-                    <sec:authorize access="hasAuthority('INFO_MANIFEST_MENU')">
-                        <li><a href="javascript:goPage('<c:url value="/info/manifest"/>', 'Manifest 관리');">Manifest 관리</a></li>
                     </sec:authorize>
                 </ul>
             </li>

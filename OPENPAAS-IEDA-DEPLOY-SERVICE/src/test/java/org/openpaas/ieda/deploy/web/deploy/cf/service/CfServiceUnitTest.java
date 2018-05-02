@@ -342,6 +342,21 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
     }
     
     /***************************************************
+    * @project : Paas 플랫폼 설치 자동화
+    * @description : Google CF 정보 Replace Test
+    * @title : testSetReplaceItemsGoogle
+    * @return : void
+    ***************************************************/
+    @Test
+    public void testSetReplaceItemsAzure(){
+        
+        when(mockCommonCodeDAO.selectCommonCodeList(anyString())).thenReturn(setCommonCodeListInfo());
+        CfVO expectCfInfo = setCfInfo("azure");
+        mockCfService.setReplaceItems(expectCfInfo, "azure");
+    }
+    
+    
+    /***************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description :  CF 고급 설정 정보 ReplaceItemDTO에 설정
      * @title : testSetReplaceItmesFromJobsInfo
@@ -485,6 +500,10 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
         if(type.equals("aws")){
             vo.setNetworks(setNetworkInfoList("size"));
             vo.setIaasType("aws");
+        }
+        if(type.equals("azure")){
+            vo.setNetworks(setNetworkInfoList("size"));
+            vo.setIaasType("azure");
         }
         vo.setJobs(new ArrayList<HashMap<String, Object>>());
         return vo;
