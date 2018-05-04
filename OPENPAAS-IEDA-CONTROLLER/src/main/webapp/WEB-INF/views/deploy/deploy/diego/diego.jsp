@@ -386,6 +386,10 @@ $(window).resize(function() {
                 <input type="radio" name="structureType" id="type3" value="VSPHERE" tabindex="3" />
                  &nbsp;VSPHERE
             </label>
+            <label>
+                <input type="radio" name="structureType" id="type4" value="AZURE" tabindex="4" />
+                 &nbsp;AZURE
+            </label>
         </div>
     </div>
 </div>

@@ -2,7 +2,7 @@
  * 
  */
 $(function() {
-    $("#googleNetworkInfoForm").validate({
+    $("#azureNetworkInfoForm").validate({
         ignore : "",
         rules:{
             networkName_0 : {
@@ -11,9 +11,7 @@ $(function() {
                 required : function(){ return checkEmpty( $(".w2ui-msg-body input[name='subnetId_0']").val() ); }
             },cloudSecurityGroups_0 : {
                 required : function(){ return checkEmpty( $(".w2ui-msg-body input[name='cloudSecurityGroups_0']").val() ); }
-            },availabilityZone_0 : {
-                required : function(){ return checkEmpty( $(".w2ui-msg-body input[name='availabilityZone_0']").val() ); }
-            }, subnetRange_0: { 
+            },subnetRange_0: { 
                 required : function(){ return checkEmpty( $(".w2ui-msg-body input[name='subnetRange_0']").val() ); }
                ,ipv4Range: function(){ return $(".w2ui-msg-body input[name='subnetRange_0']").val(); }
             }, subnetGateway_0: { 
@@ -51,8 +49,7 @@ $(function() {
          },messages: {
               networkName_0        : { required: "네트워크 명"+text_required_msg } 
              ,subnetId_0           : { required: "서브넷 명"+text_required_msg }
-             ,cloudSecurityGroups_0: { required: "방화벽 규칙"+text_required_msg }
-             ,availabilityZone_0   : { required: "영역"+text_required_msg }
+             ,cloudSecurityGroups_0: { required: "보안 그룹"+text_required_msg }
              ,subnetRange_0        : { required: "서브넷 범위"+text_required_msg }
              ,subnetGateway_0      : { required: "게이트웨이"+text_required_msg }
              ,subnetDns_0          : { required: "DNS" + text_required_msg }

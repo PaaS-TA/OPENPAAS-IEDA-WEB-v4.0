@@ -19,7 +19,7 @@ public class NetworkVO {
         private String subnetDns;//DNS
         private String subnetId; //네트워크 ID
         private String availabilityZone;
-        private String networkName;//google network 명
+        private String networkName;//google network 명 //azure network 명
         private String cloudSecurityGroups;//시큐리티 그룹
         private Date createDate; // 생성일자
         private Date updateDate; // 수정일자
