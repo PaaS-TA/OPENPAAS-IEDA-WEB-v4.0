@@ -5,96 +5,96 @@ iaas_settings:
     name: (( meta.stemcell-name ))
     version: (( meta.stemcell-version || "latest" ))
   compilation_cloud_properties:
-    machine_type: (( meta.small-instance-type || "Standard-A2" ))
+    instance_type: (( meta.small-instance-type || "Standard-A2" ))
   resource_pool_cloud_properties:
     - name: access_z1
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.small-instance-type || "Standard-A2" ))
+        instance_type: (( meta.small-instance-type || "Standard-A2" ))
     - name: access_z2
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.small-instance-type || "Standard-A2" ))
+        instance_type: (( meta.small-instance-type || "Standard-A2" ))
     - name: access_z3
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.small-instance-type || "Standard-A2" ))
+        instance_type: (( meta.small-instance-type || "Standard-A2" ))
     - name: brain_z1
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.small-instance-type || "Standard-A2" ))
+        instance_type: (( meta.small-instance-type || "Standard-A2" ))
     - name: brain_z2
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.small-instance-type || "Standard-A2" ))
+        instance_type: (( meta.small-instance-type || "Standard-A2" ))
     - name: brain_z3
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.small-instance-type || "Standard-A2" ))
+        instance_type: (( meta.small-instance-type || "Standard-A2" ))
     - name: cc_bridge_z1
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.small-instance-type || "Standard-A2" ))
+        instance_type: (( meta.small-instance-type || "Standard-A2" ))
     - name: cc_bridge_z2
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.small-instance-type || "Standard-A2" ))
+        instance_type: (( meta.small-instance-type || "Standard-A2" ))
     - name: cc_bridge_z3
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.small-instance-type || "Standard-A2" ))
+        instance_type: (( meta.small-instance-type || "Standard-A2" ))
     - name: cell_z1
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.cell-instance-type || "Standard-A5" ))
+        instance_type: (( meta.cell-instance-type || "Standard-A5" ))
     - name: cell_z2
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.cell-instance-type || "Standard-A5" ))
+        instance_type: (( meta.cell-instance-type || "Standard-A5" ))
     - name: cell_z3
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.cell-instance-type || "Standard-A5" ))
+        instance_type: (( meta.cell-instance-type || "Standard-A5" ))
     - name: colocated_z1
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.large-instance-type || "Standard-A4" ))
+        instance_type: (( meta.large-instance-type || "Standard-A4" ))
     - name: colocated_z2
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.large-instance-type || "Standard-A4" ))
+        instance_type: (( meta.large-instance-type || "Standard-A4" ))
     - name: colocated_z3
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.large-instance-type || "Standard-A4" ))
+        instance_type: (( meta.large-instance-type || "Standard-A4" ))
     - name: database_z1
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.small-instance-type || "Standard-A2" ))
+        instance_type: (( meta.small-instance-type || "Standard-A2" ))
     - name: database_z2
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.small-instance-type || "Standard-A2" ))
+        instance_type: (( meta.small-instance-type || "Standard-A2" ))
     - name: database_z3
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.small-instance-type || "Standard-A2" ))
+        instance_type: (( meta.small-instance-type || "Standard-A2" ))
     - name: route_emitter_z1
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.small-instance-type || "Standard-A2" ))
+        instance_type: (( meta.small-instance-type || "Standard-A2" ))
     - name: route_emitter_z2
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.small-instance-type || "Standard-A2" ))
+        instance_type: (( meta.small-instance-type || "Standard-A2" ))
     - name: route_emitter_z3
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.small-instance-type || "Standard-A2" ))
+        instance_type: (( meta.small-instance-type || "Standard-A2" ))
     - name: errand
       cloud_properties:
         <<: (( merge ))
-        machine_type: (( meta.small-instance-type || "Standard-A2" ))
+        instance_type: (( meta.small-instance-type || "Standard-A2" ))
 
   subnet_configs:
     - name: diego1
