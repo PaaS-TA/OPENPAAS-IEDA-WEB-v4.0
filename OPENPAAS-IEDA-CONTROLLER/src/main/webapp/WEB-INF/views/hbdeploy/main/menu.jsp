@@ -60,7 +60,7 @@
                <a href="javascript:;" data-toggle="collapse" data-target="#deployMenu" ><i class="fa fa-fw fa-spinner"></i> 플랫폼 설치 <i class="fa fa-fw fa-caret-down"></i></a>
                <ul id="deployMenu" class="collapse">
                    <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/bootstrap"/>', 'Micro BOSH 설치');">BOOTSTRAP 설치</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/bootstrap"/>', 'BOOTSTRAP 설치');">BOOTSTRAP 설치</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('DEPLOY_CF_MENU')">
                        <li><a href="javascript:goPage('<c:url value="/deploy/cf"/>', 'CF 설치');">CF 설치</a></li>
@@ -70,6 +70,9 @@
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('DEPLOY_CF_DIEGO_MENU')">
                        <li><a href="javascript:goPage('<c:url value="/deploy/cfDiego"/>', 'CF & DIEGO 통합 설치');">CF & DIEGO 통합 설치</a></li>
+                   </sec:authorize>
+                   <sec:authorize access="hasAuthority('DEPLOY_SERVICEPACK_MENU')">
+                       <li><a href="javascript:goPage('<c:url value="/deploy/servicePack"/>', '서비스팩 설치');">서비스팩 설치</a></li>
                    </sec:authorize>
                 </ul>
             </li>
