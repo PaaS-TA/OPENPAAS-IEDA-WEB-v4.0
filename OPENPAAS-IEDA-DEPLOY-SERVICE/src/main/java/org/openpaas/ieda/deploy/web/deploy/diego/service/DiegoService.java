@@ -319,7 +319,7 @@ public class DiegoService {
                             items.add(new ReplaceItemDTO("[networkName"+i+"]", vo.getNetworks().get(i).getNetworkName()));
                         }
                         if( "azure".equalsIgnoreCase(vo.getIaasType()) ){
-                            items.add(new ReplaceItemDTO("[networkName]", vo.getNetworks().get(i).getNetworkName()));
+                            items.add(new ReplaceItemDTO("[networkName"+i+"]", vo.getNetworks().get(i).getNetworkName()));
                         }
                     }
                 }else if(vo.getIaasType().equalsIgnoreCase("vsphere")){
