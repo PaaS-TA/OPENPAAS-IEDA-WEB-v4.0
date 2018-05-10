@@ -2,11 +2,11 @@ package org.openpaas.ieda.deploy.web.information.manifest;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +24,7 @@ import org.openpaas.ieda.deploy.web.config.setting.service.DirectorConfigService
 import org.openpaas.ieda.deploy.web.information.manifest.dao.ManifestDAO;
 import org.openpaas.ieda.deploy.web.information.manifest.dao.ManifestVO;
 import org.openpaas.ieda.deploy.web.information.manifest.dto.ManifestListDTO;
+import org.openpaas.ieda.deploy.web.information.manifest.dto.ManifestParamDTO;
 import org.openpaas.ieda.deploy.web.information.manifest.service.ManifestService;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.MessageSource;
@@ -38,7 +39,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 public class ManifestMgntServiceUnitTest extends BaseDeployControllerUnitTest{
     
     final private static String SEPARATOR = System.getProperty("file.separator");
-    final private static String MANIFEST_REAL_PATH = LocalDirectoryConfiguration.getManifastDir() + SEPARATOR;
+    final private static String MANIFEST_REAL_PATH = LocalDirectoryConfiguration.getManifastDir() + SEPARATOR + "aws-microbosh-7.yml";
     final private static String MANIFEST_TMP_PATH = LocalDirectoryConfiguration.getTmpDir() + SEPARATOR + "aws-microbosh-7.yml";
 
     @InjectMocks 
@@ -50,6 +51,8 @@ public class ManifestMgntServiceUnitTest extends BaseDeployControllerUnitTest{
     @Mock
     private MessageSource mockMessageSource;
     
+    private Principal principal = null;
+    
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description :  
@@ -59,7 +62,7 @@ public class ManifestMgntServiceUnitTest extends BaseDeployControllerUnitTest{
     @Before
     public void setUp() throws Exception{
         MockitoAnnotations.initMocks(this);
-        getLoggined();
+        principal = getLoggined();
         File file = new File(MANIFEST_TMP_PATH);
         FileWriter writer = new FileWriter(file);
         writer.write("test"); 
@@ -113,6 +116,35 @@ public class ManifestMgntServiceUnitTest extends BaseDeployControllerUnitTest{
     public void testSaveManifestInfo(){
         ManifestListDTO manifestDto = setDefaultManifestListDTO();
         mockManifestDao.insertManifestInfo(manifestDto);
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description :  Manifest 업데이트 테스트
+     * @title : testUpdateManifestContent
+     * @return : void
+    *****************************************************************/
+    @Test
+    public void testUpdateManifestContent(){
+        ManifestVO manifestVO = setDefaultManifestVO();
+        ManifestParamDTO manifestParamDTO = setDefaultManifestParamDTO("update");
+        when(mockManifestDao.selectManifestInfo(Integer.parseInt(manifestParamDTO.getId()))).thenReturn(manifestVO);
+        String updateDeploymentName = "renewName";
+        when(mockManifestDao.selectManifestInfoByDeployNameANDId(updateDeploymentName, Integer.parseInt(manifestParamDTO.getId()))).thenReturn(null);
+        mockManifestService.updateManifestContent(manifestParamDTO, principal);
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description :  Manifest 삭제 테스트
+     * @title : testDeleteManifest
+     * @return : void
+    *****************************************************************/
+    @Test
+    public void testDeleteManifest(){
+        ManifestVO manifestVO = setDefaultManifestVO();
+        when(mockManifestDao.selectManifestInfo(manifestVO.getId())).thenReturn(manifestVO);
+        mockManifestService.deleteManifest(manifestVO.getId());
     }
     
     /****************************************************************
@@ -193,6 +225,23 @@ public class ManifestMgntServiceUnitTest extends BaseDeployControllerUnitTest{
         dto.setPath("/home/local/manifest");
         dto.setCreateUserId("admin");
         dto.setUpdateUserId("admin");
+        return dto;
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description :  param DTO 데이터 세팅
+     * @title : setDefaultManifestParamDTO
+     * @return : ManifestParamDTO
+    *****************************************************************/
+    public ManifestParamDTO setDefaultManifestParamDTO(String save){
+        ManifestParamDTO dto = new ManifestParamDTO();
+        if(save.equals("update")){
+            dto.setId("1");
+        }
+        dto.setFileName("aws-microbosh-7.yml");
+        dto.setIaas("aws");
+        dto.setContent("name: aws-manifest");
         return dto;
     }
 }

@@ -302,6 +302,9 @@ public class DiegoService {
                             items.add(new ReplaceItemDTO("[zone]", vo.getNetworks().get(i).getAvailabilityZone()));
                             items.add(new ReplaceItemDTO("[networkName]", vo.getNetworks().get(i).getNetworkName()));
                         }
+                        if( "azure".equalsIgnoreCase(vo.getIaasType()) ){
+                            items.add(new ReplaceItemDTO("[networkName]", vo.getNetworks().get(i).getNetworkName()));
+                        }
                     }else if(i > 0){
                         items.add(new ReplaceItemDTO("[subnetRange"+i+"]", vo.getNetworks().get(i).getSubnetRange()));
                         items.add(new ReplaceItemDTO("[subnetGateway"+i+"]", vo.getNetworks().get(i).getSubnetGateway()));
@@ -313,6 +316,9 @@ public class DiegoService {
                         items.add(new ReplaceItemDTO("[availabilityZone"+i+"]", vo.getNetworks().get(i).getAvailabilityZone()));
                         if( "google".equalsIgnoreCase(vo.getIaasType()) ){
                             items.add(new ReplaceItemDTO("[zone"+i+"]", vo.getNetworks().get(i).getAvailabilityZone()));
+                            items.add(new ReplaceItemDTO("[networkName"+i+"]", vo.getNetworks().get(i).getNetworkName()));
+                        }
+                        if( "azure".equalsIgnoreCase(vo.getIaasType()) ){
                             items.add(new ReplaceItemDTO("[networkName"+i+"]", vo.getNetworks().get(i).getNetworkName()));
                         }
                     }

@@ -18,7 +18,7 @@
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Open PaaS 플랫폼 설치 자동화</title>
+<title>플랫폼 설치 자동화</title>
 
 <!-- CSS  -->
 <link rel="stylesheet" type="text/css" href="<c:url value='/webjars/bootstrap/3.3.5/css/bootstrap.min.css'/>"/>

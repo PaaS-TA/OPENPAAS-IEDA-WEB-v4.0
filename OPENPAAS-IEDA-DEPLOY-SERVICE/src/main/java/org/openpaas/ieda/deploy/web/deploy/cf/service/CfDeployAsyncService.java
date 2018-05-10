@@ -104,14 +104,14 @@ public class CfDeployAsyncService {
                 status = DirectorRestHelper.trackToTask(defaultDirector, messagingTemplate, messageEndpoint, httpClient, taskId, "event", principal.getName());
                 
             } else {
-                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(errorMessage));
+                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
             }
         }catch(IOException e){
             status = "error";
             DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(errorMessage));
         }catch (RuntimeException e) {
             status = "error";
-            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(errorMessage));
+            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
         }catch ( Exception e) {
             status = "error";
             DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(errorMessage));

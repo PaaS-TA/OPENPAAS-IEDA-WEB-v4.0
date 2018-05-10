@@ -1,6 +1,7 @@
 package org.openpaas.ieda.iaas.web.azure;
 
 import static org.mockito.Matchers.any;
+
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -59,7 +60,7 @@ public class AzureNetworkMgntControllerUnitTest {
     final static String NETWORK_DELETE_URL = "/azureMgnt/network/delete";
     //final static String NETWORK_SUBNETS_ADD_URL = "/azureMgnt/subnet/save";
     final static String AZURE_RESOURCE_GROUP_LIST_URL = "/azureMgnt/resourceGroup/list/groupInfo/{accountId}";
-    final static String AZURE_SUBSCRIPTION_LIST_URL = "/azureMgnt/resourceGroup/save/subscription/list/{accountId}";
+    final static String AZURE_SUBSCRIPTION_LIST_URL = "/azureMgnt/network/list/subscriptionInfo/{accountId}";
     /***************************************************
      * @project : Azure 관리 대시보드
      * @description : 하나의 메소드가 실행되기전 호출
@@ -117,7 +118,7 @@ public class AzureNetworkMgntControllerUnitTest {
         .andExpect(jsonPath("$.records[0].networkAddressSpaceCidr").value("10.0.0.0/16"))
         .andExpect(jsonPath("$.records[0].resourceGroupName").value("test-rg-name"))
         .andExpect(jsonPath("$.records[0].location").value("koreasouth"))
-        .andExpect(jsonPath("$.records[0].subnetName").value("test-name"))
+        .andExpect(jsonPath("$.records[0].subnetName").value("test-subnet-name"))
         .andExpect(jsonPath("$.records[0].subnetAddressRangeCidr").value("10.0.0.0/24"))
         .andExpect(jsonPath("$.records[0].subscriptionName").value("test-subscriptionName"));
     }
@@ -140,6 +141,7 @@ public class AzureNetworkMgntControllerUnitTest {
         vo.setSubnetName("test-subnet-name");
         vo.setSubnetAddressRangeCidr("10.0.0.0/24");
         vo.setSubscriptionName("test-subscriptionName");
+        list.add(vo);
         return list;
     }
 
@@ -151,9 +153,9 @@ public class AzureNetworkMgntControllerUnitTest {
      ***************************************************/
     @Test
     public void testGetAzureNetworkSubnetsInfo() throws Exception{
-    List<AzureNetworkMgntVO> list = getAzureNetworkSubnetsInfo();
+        List<AzureNetworkMgntVO> list = getAzureNetworkSubnetsInfo();
         when(mockAzureNetworkMgntService.getAzureNetworkSubnetsInfoList(any(), anyInt(), any())).thenReturn(list);
-        mockMvc.perform(get(NETWORK_SUBNETS_INFO_URL, 1).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
+        mockMvc.perform(get(NETWORK_SUBNETS_INFO_URL, 1, "AzureNetwork").contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.records[0].accountId").value(1))
         .andExpect(jsonPath("$.records[0].recid").value(1))
@@ -178,6 +180,7 @@ public class AzureNetworkMgntControllerUnitTest {
         vo.setSubnetAddressRangeCidr("10.0.0.0/24");
         vo.setSubnetAddressesCnt(251);
         vo.setSecurityGroupName("test-securityGroupName");
+        list.add(vo);
         return list;
     }
     
@@ -241,8 +244,8 @@ public class AzureNetworkMgntControllerUnitTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.records[0].accountId").value(1))
         .andExpect(jsonPath("$.records[0].recid").value(1))
-        .andExpect(jsonPath("$.records[0].resourceGroupName").value("test-resourceGroup-name"))
-        .andExpect(jsonPath("$.records[0].location").value("koreasouth"));
+        .andExpect(jsonPath("$.records[0].resourceGroupName").value("test-resource-group-name"))
+        .andExpect(jsonPath("$.records[0].location").value("koreaSouth"));
             
     }
     
@@ -259,6 +262,7 @@ public class AzureNetworkMgntControllerUnitTest {
         vo.setRecid(1);
         vo.setResourceGroupName("test-resource-group-name");
         vo.setLocation("koreaSouth");
+        list.add(vo);
         return list;
     }
     
@@ -270,15 +274,15 @@ public class AzureNetworkMgntControllerUnitTest {
      ***************************************************/
     @Test
     public void testGetAzureSubscription() throws Exception{
-    List<AzureNetworkMgntVO> list = getAzureSubscription();
-        when(mockAzureNetworkMgntService.getResourceGroupInfoList(any(), anyInt())).thenReturn(list);
-        mockMvc.perform(get(AZURE_SUBSCRIPTION_LIST_URL, 1).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.records[0].accountId").value(1))
-        .andExpect(jsonPath("$.records[0].recid").value(1))
-        .andExpect(jsonPath("$.records[0].azureSubscriptionId").value("test-subscription-id"))
-        .andExpect(jsonPath("$.records[0].subscriptionName").value("test-subscription-name"))
-        .andExpect(jsonPath("$.records[0].location").value("koreasouth"));
+		AzureNetworkMgntVO vo = getAzureSubscription();
+	    when(mockAzureNetworkMgntService.getAzureSubscriptionInfo(any(), anyInt())).thenReturn(vo);
+	    mockMvc.perform(get(AZURE_SUBSCRIPTION_LIST_URL, 1).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
+	    .andExpect(status().isOk())
+	    .andExpect(jsonPath("$.accountId").value(1))
+	    .andExpect(jsonPath("$.recid").value(1))
+	    .andExpect(jsonPath("$.azureSubscriptionId").value("test-subscription-id"))
+	    .andExpect(jsonPath("$.subscriptionName").value("test-subscription-name"))
+	    .andExpect(jsonPath("$.location").value("koreaSouth"));
             
     }
     
@@ -288,15 +292,14 @@ public class AzureNetworkMgntControllerUnitTest {
      * @title : getAzureSubscription
      * @return :  List<AzureNetworkMgntVO>
      ***************************************************/
-    private List<AzureNetworkMgntVO> getAzureSubscription(){
-        List<AzureNetworkMgntVO> list = new ArrayList<AzureNetworkMgntVO>();
+    private AzureNetworkMgntVO getAzureSubscription(){
         AzureNetworkMgntVO vo = new AzureNetworkMgntVO();
         vo.setAccountId(1);
         vo.setRecid(1);
         vo.setSubscriptionName("test-subscription-name");
         vo.setAzureSubscriptionId("test-subscription-id");
         vo.setLocation("koreaSouth");
-        return list;
+        return vo;
     }
     
 }

@@ -818,10 +818,13 @@ function networkPopup(div, height){
  function settingNetwork( index ){
      if( iaas.toLowerCase() == 'aws' || iaas.toLowerCase() == "openstack" ){
          addInternalNetworkInputs('#defaultNetworkInfoDiv_'+index+'', "#defaultNetworkInfoForm" );
-     }else if( iaas.toLowerCase() == 'google' ){
+     }else if( iaas.toLowerCase() == 'google'){
          addInternalNetworkInputs('#googleNetworkInfoDiv_'+index+'', "#googleNetworkInfoForm" );
-     }else{
+     }else if( iaas.toLowerCase() == 'vsphere'){
          addInternalNetworkInputs('#vSphereNetworkInfoDiv_'+index+'', "#vSphereNetworkInfoForm" );
+     }else if( iaas.toLowerCase() == 'azure' ){
+    	 console.log('azure123');
+         addInternalNetworkInputs('#azureNetworkInfoDiv_'+index+'', "#azureNetworkInfoForm");
      }
  }
 
@@ -869,6 +872,15 @@ function addInternalNetworkInputs( preDiv, form ){
         }else if(iaas.toLowerCase() == "vsphere"){
             html+= field_div_label + "포트 그룹명" + "</label>"; 
             html+= "<div style='width: 60%'>"+"<input name='subnetId_"+inputIndex+"'" + text_style +" placeholder='포트 그룹명을 입력하세요.'/>"+"</div></div>";
+        }else if(iaas.toLowerCase() == "azure"){
+            html+= field_div_label + "네트워크 명" + "</label>";
+            html+= "<div style='width: 60%'>"+"<input name='networkName_"+inputIndex+"'" + text_style +" placeholder='네트워크 명을 입력하세요.'/>"+"</div></div>";
+            
+            html+= field_div_label + "서브넷 명" + "</label>"; 
+            html+= "<div style='width: 60%'>"+"<input name='subnetId_"+inputIndex+"'" + text_style +" placeholder='서브넷 명을 입력하세요.'/>"+"</div></div>";
+            
+            html+= field_div_label + "보안 그룹" + "</label>"; 
+            html+= "<div style='width: 60%'>"+"<input name='cloudSecurityGroups_"+inputIndex+"'" + text_style +" placeholder='예) internet, cf-security'/>"+"</div></div>";
         }else{
             html+= field_div_label + "시큐리티 그룹" + "</label>"; 
             html+= "<div style='width: 60%'>"+"<input name='cloudSecurityGroups_"+inputIndex+"'" + text_style +" placeholder='예) bosh-security, cf-security'/>"+"</div></div>";
@@ -1056,6 +1068,7 @@ function saveNetworkInfo(type, form) {
     var form = "#defaultNetworkInfoForm";
     if(iaas.toUpperCase()=="VSPHERE") form = "#vSphereNetworkInfoForm";
     else if(iaas.toUpperCase()=="GOOGLE") form = "#googleNetworkInfoForm";
+    else if(iaas.toUpperCase()=="AZURE") form = "#azureNetworkInfoForm";
     $(".w2ui-msg-body "+form+" .panel-body").each(function(){
         var div = $($(this).parent().parent()).attr("id");
         var count = div.split("_")[1];
@@ -1522,6 +1535,8 @@ function settingIaasPopup(type){
             networkPopup("#VsphereNetworkInfo", 505);
         }else if(iaas.toUpperCase() == "GOOGLE" ){
             networkPopup("#googleNetworkInfo", 545);
+        }else if(iaas.toUpperCase() == "AZURE" ){
+            networkPopup("#azureNetworkInfo", 515);
         }else{
             networkPopup("#defaultNetworkInfo", 515);
         }
@@ -2253,6 +2268,91 @@ function gridReload() {
     </div>
 </div>
 
+<!-- azure Network 설정 DIV -->
+<div id="azureNetworkInfoDiv" style="width: 100%; height: 100%;" hidden="true">
+    <form id="azureNetworkInfoForm">
+        <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
+            <ul class="progressStep_5">
+                <li class="pass">기본 정보</li>
+                <li class="active">네트워크 정보</li>
+                <li class="before">리소스 정보</li>
+                <li class="before">배포파일 정보</li>
+                <li class="before install">설치</li>
+            </ul>
+        </div>
+        <div class="w2ui-page page-0" id="azureNetworkInfoDiv_1" style="margin-top:15px;padding:0 3%;">
+            <div class="panel panel-info">
+                <div  class="panel-heading" style="position:relative;">
+                    <b>Internal 네트워크</b>
+                    <div style="position: absolute;right: 10px ;top: 2px; ">
+                        <a class="btn btn-info btn-sm addInternal" onclick="addInternalNetworkInputs('#azureNetworkInfoDiv_1', '#azureNetworkInfoForm');">추가</a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:40%;font-size:11px;">네트워크 명</label>
+                        <div style="width: 60%">
+                            <input name="networkName_0" type="text" style="display:inline-blcok; width:70%;" placeholder="네트워크명을 입력하세요."/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:40%;font-size:11px;">서브넷 명</label>
+                        <div style="width: 60%">
+                            <input name="subnetId_0" type="text"  style="display:inline-blcok; width:70%;" placeholder="서브넷 아이디를 입력하세요."/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:40%;font-size:11px;">보안 그룹</label>
+                        <div style="width: 60%">
+                            <input name="cloudSecurityGroups_0" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) internet, cf-security"/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:40%;font-size:11px;">서브넷 범위</label>
+                        <div style="width: 60%">
+                            <input name="subnetRange_0" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) 10.0.0.0/24"/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:40%;font-size:11px;">게이트웨이</label>
+                        <div style="width: 60%">
+                            <input name="subnetGateway_0" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) 10.0.0.1"/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left;width:40%;font-size:11px;">DNS</label>
+                        <div style="width: 60%">
+                            <input name="subnetDns_0" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) 8.8.8.8"/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 40%; font-size: 11px;">IP할당 제외 대역</label>
+                        <div style="width: 60%">
+                            <input name="subnetReservedFrom_0" id="subnetReservedFrom_0" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.100" />
+                            <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
+                            <input name="subnetReservedTo_0" id="subnetReservedTo_0" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.106" />
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 40%; font-size: 11px;">IP할당 대역(최소 20개)</label>
+                        <div style="width: 60%">
+                            <input name="subnetStaticFrom_0" id="subnetStaticFrom_0" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.100" />
+                            <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
+                            <input name="subnetStaticTo_0" id="subnetStaticTo_0" type="text" style="display:iinline-block; width:32%;" placeholder="예) 10.0.0.106" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 추가 네트워크 div_1 -->
+            <div  id="azureNetworkInfoDiv_2" hidden="true"></div>
+            <div  id="azureNetworkInfoDiv_3" hidden="true"></div>
+        </div>
+    </form>
+    <div class="w2ui-buttons" id="azureNetworkInfoButtons" hidden="true">
+        <button class="btn" style="float: left;" onclick="saveNetworkInfo('before', '#azureNetworkInfoForm');" >이전</button>
+        <button class="btn" style="float: right; padding-right: 15%" onclick="$('#azureNetworkInfoForm').submit();" >다음>></button>
+    </div>
+</div>
 
 <!-- Resource  설정 DIV -->
 <div id="resourceInfoDiv" style="width:100%; height:100%;" hidden="true">
@@ -2491,6 +2591,7 @@ function gridReload() {
 </div>
 <div id="diegoDetailPopDiv" hidden="true" style="width:100%;">
     <form id="diegoDetailForm" style="height:100%;">
+        
     </form>
 </div>
 
@@ -2538,6 +2639,7 @@ function gridReload() {
 <script type="text/javascript" src="<c:url value='/js/rules/diego/diego_network_default.js?v=2'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rules/diego/diego_network_vsphere.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rules/diego/diego_network_google.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/js/rules/diego/diego_network_azure.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rules/diego/diego_resource.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rules/diego/diego_vSphereResource.js'/>"></script>
 <script>
