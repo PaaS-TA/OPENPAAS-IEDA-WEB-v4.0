@@ -544,20 +544,14 @@ td {
                         <sec:authorize access="hasAuthority('AZURE_RESOURCE_GROUP_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/resourceGroup"/>', 'Azure Resource Group');">Resource Group 관리</a></li>
                         </sec:authorize>
-                        <%-- <sec:authorize access="hasAuthority('AZURE_SUBNET_MENU')">
-                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/subnet"/>', 'Azure Subnet');">Subnet 관리</a></li>
-                        </sec:authorize> --%>
                         <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCOUNT_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/storageAccount"/>', 'Azure Storage Account');"> Storage Account 관리</a></li>
                         </sec:authorize>
-                         <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCESS_KEY_MENU')">
-                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/storageAccessKey"/>', 'Azure Storage Access Key');"> Storage Access Key 관리</a></li>
-                        </sec:authorize>
-                        <sec:authorize access="hasAuthority('AZURE_STORAGE_CONTAINER_MENU')">
-                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/storageContainer"/>', 'Azure Storage Container');">Storage Container 관리</a></li>
-                        </sec:authorize>
                         <sec:authorize access="hasAuthority('AZURE_PUBLIC_IP_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/publicIp"/>', 'Azure Public IP');">Public IP 관리</a></li>
+                        </sec:authorize>
+                         <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCESS_KEY_MENU')">
+                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/keypairs"/>', 'Azure Key Pair');">Key Pair 관리</a></li>
                         </sec:authorize>
                         <sec:authorize access="hasAuthority('AZURE_SECURITY_GROUP_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/securityGroup"/>', 'Azure Security Group');">Security Group 관리</a></li>

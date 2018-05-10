@@ -107,6 +107,7 @@ public class AzureNetworkMgntService {
                         int netmaskLength = Integer.parseInt(subnetList.addressPrefix().split("/")[1]);
                         int countOfAvailableIPs = (int)(Math.pow(2, 32-netmaskLength)-azureReservedIPs-configCnt); 
                         azureRgVo.setSubnetAddressesCnt(countOfAvailableIPs);
+                        azureRgVo.setResourceGroupName(network.resourceGroupName());
                         azureRgVo.setNetworkName(networkName);
                         azureRgVo.setRecid(k);
                         azureRgVo.setAccountId(accountId);

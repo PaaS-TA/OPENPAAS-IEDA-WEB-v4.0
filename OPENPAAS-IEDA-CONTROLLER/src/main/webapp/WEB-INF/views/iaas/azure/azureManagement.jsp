@@ -113,32 +113,6 @@ function unhover(event, val){
                         </ul>
                     </li>
                 </sec:authorize>
-                <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCESS_KEY_MENU')">
-                    <li class="azureMgntDiv" onmouseover="hover(this,'elasticIP_c2');" onmouseout="unhover(this,'elasticIP_c1');" onclick="javascript:goPage('<c:url value="/azureMgnt/storageAccessKey"/>', 'Storage Access Key');">
-                        <ul>
-                            <li class="azure-li"><span class="azure-li-span1">Storage Access Key</span></li>
-                            <li>
-                                <ul style="margin-top:59px">
-                                    <li style="margin-bottom:22px;"><img src='<c:url value="images/azureMgnt/elasticIP_c1.png"/>'  class="azure-icon" alt="azure"><span></span></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </sec:authorize>
-                <sec:authorize access="hasAuthority('AZURE_STORAGE_CONTAINER_MENU')">
-                    <li class="azureMgntDiv" onmouseover="hover(this,'elasticIP_c2');" onmouseout="unhover(this,'elasticIP_c1');" onclick="javascript:goPage('<c:url value="/azureMgnt/storageContainer"/>', 'Storage Container');">
-                        <ul>
-                            <li class="azure-li"><span class="azure-li-span1">Storage Container</span></li>
-                            <li>
-                                <ul style="margin-top:59px">
-                                    <li style="margin-bottom:22px;"><img src='<c:url value="images/azureMgnt/elasticIP_c1.png"/>'  class="azure-icon" alt="azure"><span></span></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </sec:authorize>
-                 
-                
                 <sec:authorize access="hasAuthority('AZURE_PUBLIC_IP_MENU')">
                     <li class="azureMgntDiv" onmouseover="hover(this,'subnet_a2');" onmouseout="unhover(this,'vpc_b1');" onclick="javascript:goPage('<c:url value="/azureMgnt/publicIp"/>', 'Public IP');">
                         <ul>
@@ -146,6 +120,18 @@ function unhover(event, val){
                             <li>
                                 <ul style="margin-top:59px">
                                     <li style="margin-bottom:22px;"><img src='<c:url value="images/azureMgnt/subnet_a1.png"/>' class="azure-icon" alt="azure"><span></span></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </sec:authorize>
+                <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCESS_KEY_MENU')">
+                    <li class="azureMgntDiv" onmouseover="hover(this,'elasticIP_c2');" onmouseout="unhover(this,'elasticIP_c1');" onclick="javascript:goPage('<c:url value="/azureMgnt/keypairs"/>', 'Key Pair');">
+                        <ul>
+                            <li class="azure-li"><span class="azure-li-span1">Key Pair </span></li>
+                            <li>
+                                <ul style="margin-top:59px">
+                                    <li style="margin-bottom:22px;"><img src='<c:url value="images/azureMgnt/elasticIP_c1.png"/>'  class="azure-icon" alt="azure"><span></span></li>
                                 </ul>
                             </li>
                         </ul>
@@ -191,7 +177,7 @@ function unhover(event, val){
 <div id="registAccountPopupDiv"  hidden="true">
     <input name="codeIdx" type="hidden"/>
     <div class="panel panel-info" style="margin-top:5px;" >    
-        <div class="panel-heading"><b>azure 계정 별칭 목록</b></div>
+        <div class="panel-heading"><b>Azure 계정 별칭 목록</b></div>
         <div class="panel-body" style="padding:5px 5% 10px 5%;height:65px;">
             <div class="w2ui-field">
                 <label style="width:30%;text-align: left;padding-left: 20px; margin-top: 20px;">azure 계정 별칭</label>
