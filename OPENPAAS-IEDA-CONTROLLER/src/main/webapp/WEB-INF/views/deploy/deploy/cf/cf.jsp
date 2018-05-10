@@ -134,7 +134,7 @@ $(function() {
      * 설명 :  CF 설치 버튼
      *********************************************************/
     $("#installBtn").click(function() {
-        if($("#installBtn").attr('disabled') == "disabled") return;
+//        if($("#installBtn").attr('disabled') == "disabled") return;
         w2confirm({
             width        : 550,
             height       : 180,

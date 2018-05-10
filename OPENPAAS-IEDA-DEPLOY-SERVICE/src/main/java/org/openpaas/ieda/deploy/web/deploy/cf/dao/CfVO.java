@@ -36,6 +36,7 @@ public class CfVO {
     private String description;//도메인 설명
     private String domainOrganization;//도메인 그룹
     private String loginSecret; //로그인 비밀번호
+    private String userAddSsh;  //os-conf ssh public-key
     
     //1.3 PaaS-TA 모니터링
     private String paastaMonitoringUse;//PaaS-TA 모니터링 사용 유무
@@ -293,5 +294,14 @@ public class CfVO {
     public void setJobs(List<HashMap<String, Object>> jobs) {
         this.jobs = jobs;
     }
+
+    public String getUserAddSsh() {
+        return userAddSsh;
+    }
+
+    public void setUserAddSsh(String userAddSsh) {
+        this.userAddSsh = userAddSsh;
+    }
+    
     
 }

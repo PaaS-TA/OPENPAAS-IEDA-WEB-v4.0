@@ -45,7 +45,7 @@ public class CfParamDTO {
         @NotNull
         private String paastaMonitoringUse;//PaaS-TA 모니터링 사용 유무
         private String ingestorIp;//PaaS-TA 모니터링 DB 서버 IP
-        
+        private String userAddSsh;//os-cof ssh public-key
         
         public String getId() {
             return id;
@@ -155,6 +155,13 @@ public class CfParamDTO {
         public void setIngestorIp(String ingestorIp) {
             this.ingestorIp = ingestorIp;
         }
+        public String getUserAddSsh() {
+            return userAddSsh;
+        }
+        public void setUserAddSsh(String userAddSsh) {
+            this.userAddSsh = userAddSsh;
+        }
+        
     }
     
     public static class Delete{

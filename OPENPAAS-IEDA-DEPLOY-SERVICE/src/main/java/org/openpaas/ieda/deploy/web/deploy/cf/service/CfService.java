@@ -82,6 +82,7 @@ public class CfService {
                 cfInfo.setPaastaMonitoringUse(vo.getPaastaMonitoringUse());
                 cfInfo.setIngestorIp(vo.getIngestorIp());
                 cfInfo.setKeyFile(vo.getKeyFile());
+                cfInfo.setUserAddSsh(vo.getUserAddSsh());
                 //NETWORK
                 cfInfo = setNetworkInfoList(cfInfo, vo, codeName);
                 
@@ -269,7 +270,11 @@ public class CfService {
         }
         //Job Template File
         if(result.getCommonJobTemplate() != null && !(StringUtils.isEmpty( result.getCommonJobTemplate()) )){
-            manifestTemplate.setCommonJobTemplate(  MANIFEST_TEMPLATE_LOCATION + result.getTemplateVersion() + SEPARATOR + "common" + SEPARATOR  +  result.getCommonJobTemplate() );
+            if(vo.getIaasType().equalsIgnoreCase("google")){
+                manifestTemplate.setCommonJobTemplate(  MANIFEST_TEMPLATE_LOCATION + result.getTemplateVersion() + SEPARATOR + "common" + SEPARATOR  +  "google_cf.yml"  );
+            }else{
+                manifestTemplate.setCommonJobTemplate(  MANIFEST_TEMPLATE_LOCATION + result.getTemplateVersion() + SEPARATOR + "common" + SEPARATOR  +  result.getCommonJobTemplate() );
+            }
         }else{
             manifestTemplate.setCommonJobTemplate("");
         }
@@ -327,6 +332,7 @@ public class CfService {
         items.add(new ReplaceItemDTO("[directorUuid]", vo.getDirectorUuid()));
         items.add(new ReplaceItemDTO("[releaseName]", vo.getReleaseName()));
         items.add(new ReplaceItemDTO("[releaseVersion]",  "\"" +vo.getReleaseVersion() + "\""));
+        items.add(new ReplaceItemDTO("[userAddSsh]", vo.getUserAddSsh()));
         
         items.add(new ReplaceItemDTO("[loggregatorReleaseName]", vo.getLoggregatorReleaseName()));
         items.add(new ReplaceItemDTO("[loggregatorReleaseVersion]",  "\"" +vo.getLoggregatorReleaseVersion() + "\""));

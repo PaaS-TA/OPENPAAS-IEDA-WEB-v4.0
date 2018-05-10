@@ -66,6 +66,14 @@ $("#defaultInfoForm").validate({
                         return false;
                     }
                 }
+            }, userAddSsh: {
+                required: function(){
+                    if( $(".w2ui-msg-body #userAddSsh").css("display") == "none"  ){
+                        return false;
+                    }else{
+                        return checkEmpty( $(".w2ui-msg-body textarea[name='userAddSsh']").val() ); 
+                    }
+                }
             }
         }, messages: {
              directorUuid        : { required: "설치관리자 UUID" + text_required_msg }
@@ -80,6 +88,7 @@ $("#defaultInfoForm").validate({
             ,ingestorIp          : { required: "Ingestor 서버 IP"+text_required_msg } 
             ,ingestorPort        : { required: "Ingestor 서버 PORT"+text_required_msg }
             ,loggregatorReleases : { required: "Loggergator 릴리즈"+select_required_msg }
+            ,userAddSsh          : { required: "Public SSH KEY" +text_required_msg}
         }, unhighlight: function(element) {
             setSuccessStyle(element);
         },errorPlacement: function(error, element) {

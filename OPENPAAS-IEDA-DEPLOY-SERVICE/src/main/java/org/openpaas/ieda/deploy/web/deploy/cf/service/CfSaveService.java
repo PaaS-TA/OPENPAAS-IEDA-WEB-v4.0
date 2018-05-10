@@ -61,6 +61,7 @@ public class CfSaveService {
         vo.setAppSshFingerprint(dto.getAppSshFingerprint());
         vo.setDeaMemoryMB(dto.getDeaMemoryMB().isEmpty() ? null : Integer.parseInt(dto.getDeaMemoryMB()));
         vo.setDeaDiskMB(dto.getDeaDiskMB().isEmpty() ? null : Integer.parseInt(dto.getDeaDiskMB()));
+        vo.setUserAddSsh(dto.getUserAddSsh());
         
         // 1.2 기본정보
         vo.setDomain(dto.getDomain());

@@ -184,6 +184,7 @@ function setCfData(contents) {
         loginSecret            : contents.loginSecret,
         paastaMonitoringUse    : contents.paastaMonitoringUse,
         ingestorIp             : contents.ingestorIp,
+        userAddSsh             : contents.userAddSsh
     }
     //네트워크 정보 
     for(var i=0; i<contents.networks.length; i++){
@@ -282,7 +283,12 @@ function defaultInfoPopup() {
                  if( menu.toLowerCase() =="cfdiego" ){
                      $(".w2ui-msg-body input[name='appSshFingerprint']").attr("readonly", true);
                  }
-
+                 
+                 //Iaas가 gcp가 아닐 경우 public ssh key 숨김
+                 if( !(iaas.toLowerCase() == 'google')){
+                     $(".w2ui-msg-body #userAddSsh").css("display", "none");
+                 }
+                 
                  if ( !checkEmpty(defaultInfo )) {
                     //설치관리자 UUID
                     $(".w2ui-msg-body input[name='deploymentName']").val(defaultInfo.deploymentName);
@@ -291,7 +297,8 @@ function defaultInfoPopup() {
                     $(".w2ui-msg-body input[name='domainOrganization']").val(defaultInfo.domainOrganization);
                     $(".w2ui-msg-body input[name='deaMemoryMB']").val(defaultInfo.deaMemoryMB);
                     $(".w2ui-msg-body input[name='deaDiskMB']").val(defaultInfo.deaDiskMB);
-                    
+                    $(".w2ui-msg-body textarea[name='userAddSsh']").val(defaultInfo.userAddSsh);
+
                     //CF 정보
                     $(".w2ui-msg-body input[name='domain']").val(defaultInfo.domain);
                     $(".w2ui-msg-body input[name='description']").val(defaultInfo.description);
@@ -481,6 +488,7 @@ function saveDefaultInfo() {
                 loginSecret          : $(".w2ui-msg-body input[name='loginSecret']").val(),
                 paastaMonitoringUse  : $(".w2ui-msg-body input:checkbox[name='paastaMonitoring']").is(":checked") == true ? "true" : "false",
                 ingestorIp           : $(".w2ui-msg-body input[name='ingestorIp']").val(),
+                userAddSsh           : $(".w2ui-msg-body textarea[name='userAddSsh']").val()
     }
     $.ajax({
         type : "PUT",
@@ -1902,6 +1910,12 @@ function gridReload() {
                             <input name="deaMemoryMB" type="text" style="display:inline-block;width:80%;" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled;' placeholder="예) 8192" />
                         </div>
                     </div>
+                    <div class="w2ui-field" id="userAddSsh">
+                        <label style="text-align: left; width:36%; font-size:11px;">SSH Public-Key</label>
+                        <div style="width: 60%;">
+                            <textarea name="userAddSsh" style="float:left;width:80%; height:85px;resize:none;"rows=10; placeholder="SSH 공개 키를 입력하세요."></textarea>
+                        </div>
+                    </div>
                     <div class="w2ui-field">
                         <label style="text-align:left; width:36%; font-size:11px;">PaaS-TA 모니터링
                         <span class="glyphicon glyphicon glyphicon-question-sign paastaMonitoring-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="click" data-html="true"></span>
@@ -2106,7 +2120,7 @@ function gridReload() {
                     </div>
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">영역</label>
-                        <div>
+                        <div style=" width: 60%;">
                             <input name="availabilityZone_1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) asia-northeast1-a"/>
                         </div>
                     </div>

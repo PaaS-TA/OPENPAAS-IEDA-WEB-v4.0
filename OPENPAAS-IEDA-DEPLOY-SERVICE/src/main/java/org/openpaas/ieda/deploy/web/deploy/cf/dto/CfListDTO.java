@@ -21,6 +21,7 @@ public class CfListDTO {
     private String domain; //도메인
     private String description; //도메인 설명
     private String domainOrganization; //도메인 그룹
+    private String userAddSsh; // os-conf ssh public-key
 
     // 1.3 HA프록시 정보
     private String proxyStaticIps; //HAProxy 공인 IP 
@@ -254,4 +255,11 @@ public class CfListDTO {
     public void setKeyFile(String keyFile) {
         this.keyFile = keyFile;
     }
+    public String getUserAddSsh() {
+        return userAddSsh;
+    }
+    public void setUserAddSsh(String userAddSsh) {
+        this.userAddSsh = userAddSsh;
+    }
+    
 }
