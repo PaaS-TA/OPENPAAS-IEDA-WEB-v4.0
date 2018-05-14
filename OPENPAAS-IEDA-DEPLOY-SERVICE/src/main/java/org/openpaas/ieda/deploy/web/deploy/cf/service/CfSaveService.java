@@ -62,6 +62,8 @@ public class CfSaveService {
         vo.setDeaMemoryMB(dto.getDeaMemoryMB().isEmpty() ? null : Integer.parseInt(dto.getDeaMemoryMB()));
         vo.setDeaDiskMB(dto.getDeaDiskMB().isEmpty() ? null : Integer.parseInt(dto.getDeaDiskMB()));
         vo.setUserAddSsh(dto.getUserAddSsh());
+        vo.setOsConfReleaseName(dto.getOsConfReleaseName());
+        vo.setOsConfReleaseVersion(dto.getOsConfReleaseVersion());
         
         // 1.2 기본정보
         vo.setDomain(dto.getDomain());

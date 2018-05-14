@@ -70,6 +70,10 @@ public class DiegoSaveService {
         vo.setCadvisorDriverIp(dto.getCadvisorDriverIp());
         vo.setUpdateUserId(principal.getName());
         
+        vo.setUserAddSsh(dto.getUserAddSsh());
+        vo.setOsConfReleaseName(dto.getOsConfReleaseName());
+        vo.setOsConfReleaseVersion(dto.getOsConfReleaseVersion());
+        
         //배포 명 중복 검사
         int count = diegoDao.selectDiegoDeploymentNameDuplication(vo.getIaasType(), vo.getDeploymentName(), vo.getId());
         if( count > 0 ){

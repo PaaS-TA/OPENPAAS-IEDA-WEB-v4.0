@@ -45,7 +45,10 @@ public class CfParamDTO {
         @NotNull
         private String paastaMonitoringUse;//PaaS-TA 모니터링 사용 유무
         private String ingestorIp;//PaaS-TA 모니터링 DB 서버 IP
-        private String userAddSsh;//os-cof ssh public-key
+        private String userAddSsh;//os-conf ssh public-key
+        private String osConfReleaseName;//os-conf Release Name
+        private String osConfReleaseVersion;//os-conf Release Version
+
         
         public String getId() {
             return id;
@@ -160,6 +163,18 @@ public class CfParamDTO {
         }
         public void setUserAddSsh(String userAddSsh) {
             this.userAddSsh = userAddSsh;
+        }
+        public String getOsConfReleaseName() {
+            return osConfReleaseName;
+        }
+        public void setOsConfReleaseName(String osConfReleaseName) {
+            this.osConfReleaseName = osConfReleaseName;
+        }
+        public String getOsConfReleaseVersion() {
+            return osConfReleaseVersion;
+        }
+        public void setOsConfReleaseVersion(String osConfReleaseVersion) {
+            this.osConfReleaseVersion = osConfReleaseVersion;
         }
         
     }

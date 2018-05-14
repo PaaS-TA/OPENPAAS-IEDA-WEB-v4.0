@@ -28,6 +28,9 @@
         <result property="cflinuxfs2rootfsreleaseVersion" column="CFLINUXFS2_ROOTFS_RELEASE_VERSION" />
         <result property="paastaMonitoringUse" column="PAASTA_MONITORING_USE" />
         <result property="cadvisorDriverIp" column="CADVISOR_DRIVER_IP" />
+        <result property="userAddSsh" column="USER_ADD_SSH" />
+        <result property="osConfReleaseName" column="OSCONF_RELEASE_NAME" />
+        <result property="osConfReleaseVersion" column="OSCONF_RELEASE_VERSION"/>
         <collection property="resource" ofType="org.openpaas.ieda.deploy.web.deploy.common.dao.resource.ResourceVO"  javaType="org.openpaas.ieda.deploy.web.deploy.common.dao.resource.ResourceVO">
             <result property="id" column="RESOURCE_ID" />
             <result property="deployType" column="RESOURCE_DEPLOY_TYPE"/>
@@ -80,6 +83,9 @@
             ,task_id
             ,d.update_date as update_date
             ,d.create_date as create_date
+            ,d.user_add_ssh as user_add_ssh
+            ,d.osconf_release_name osconf_release_name
+            ,d.osconf_release_version osconf_release_version
         From ieda_diego d
         LEFT JOIN ieda_cf_diego a
         ON d.id = a.diego_id
@@ -111,6 +117,9 @@
             ,a.cadvisor_driver_ip
             ,a.task_id
             ,a.update_date
+            ,a.user_add_ssh
+            ,a.osconf_release_name
+            ,a.osconf_release_version
             ,(select c.deployment_name from ieda_diego a, ieda_cf c where c.deployment_file = a.cf_deployment and a.id=#{id}) as cfName
         From ieda_diego a
       Where id = #{id}
@@ -140,6 +149,9 @@
             ,key_file
             ,create_date
             ,update_date
+            ,user_add_ssh
+            ,osconf_release_name
+            ,osconf_release_version
         ) values (
              #{diego.id}
             ,#{diego.iaasType}
@@ -162,6 +174,9 @@
             ,#{diego.keyFile}
             ,now()
             ,now()
+            ,#{diego.userAddSsh}
+            ,#{diego.osConfReleaseName}
+            ,#{diego.osConfReleaseVersion}
         )
         <selectKey keyProperty="diego.id" resultType="int" order="AFTER">
             <if test="diego.id != 1"> SELECT LAST_INSERT_ID(); </if>
@@ -212,6 +227,9 @@
             ,cadvisor_driver_ip
             ,key_file
             ,task_id
+            ,user_add_ssh
+            ,osconf_release_name
+            ,osconf_release_version
             ,resource.id as resource_id
             ,resource.deploy_type as resource_deploy_type
             ,resource.bosh_password as bosh_password
@@ -261,7 +279,10 @@
             deployment_file=#{diego.deploymentFile}, 
             deploy_status=#{diego.deployStatus}, 
             task_id=#{diego.taskId}, 
-            update_date=now() 
+            update_date=now(),
+            user_add_ssh = #{diego.userAddSsh},
+            osconf_release_name = #{diego.osConfReleaseName},
+            osconf_release_version = #{diego.osConfReleaseVersion}
         Where id=#{diego.id}
     </update>
     

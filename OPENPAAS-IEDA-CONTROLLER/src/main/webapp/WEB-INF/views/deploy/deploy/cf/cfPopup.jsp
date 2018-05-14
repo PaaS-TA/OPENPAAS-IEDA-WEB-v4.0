@@ -184,7 +184,9 @@ function setCfData(contents) {
         loginSecret            : contents.loginSecret,
         paastaMonitoringUse    : contents.paastaMonitoringUse,
         ingestorIp             : contents.ingestorIp,
-        userAddSsh             : contents.userAddSsh
+        userAddSsh             : contents.userAddSsh,
+        osConfReleaseName      : contents.osConfReleaseName,
+        osConfReleaseVersion   : contents.osConfReleaseVersion
     }
     //네트워크 정보 
     for(var i=0; i<contents.networks.length; i++){
@@ -268,7 +270,7 @@ function defaultInfoPopup() {
     w2popup.open({
         title : "<b>CF 설치</b>",
         width : 750,
-        height :825,
+        height :850,
         modal : true,
         body    : $("#defaultInfoDiv").html(),
         buttons : $("#DefaultInfoButtonDiv").html(),
@@ -284,9 +286,10 @@ function defaultInfoPopup() {
                      $(".w2ui-msg-body input[name='appSshFingerprint']").attr("readonly", true);
                  }
                  
-                 //Iaas가 gcp가 아닐 경우 public ssh key 숨김
-                 if( !(iaas.toLowerCase() == 'google')){
-                     $(".w2ui-msg-body #userAddSsh").css("display", "none");
+                 //Iaas가 gcp일 경우 public ssh key, os-conf 입력창 show
+                 if( iaas.toLowerCase() == 'google' ){
+                     $(".w2ui-msg-body #userAddSsh").css("display", "inline");
+                     $(".w2ui-msg-body #osConfRelease").css("display", "inline");
                  }
                  
                  if ( !checkEmpty(defaultInfo )) {
@@ -298,7 +301,8 @@ function defaultInfoPopup() {
                     $(".w2ui-msg-body input[name='deaMemoryMB']").val(defaultInfo.deaMemoryMB);
                     $(".w2ui-msg-body input[name='deaDiskMB']").val(defaultInfo.deaDiskMB);
                     $(".w2ui-msg-body textarea[name='userAddSsh']").val(defaultInfo.userAddSsh);
-
+                    $(".w2ui-msg-body select[name='osConfReleases']").val(defaultInfo.osConfRelease);
+                    
                     //CF 정보
                     $(".w2ui-msg-body input[name='domain']").val(defaultInfo.domain);
                     $(".w2ui-msg-body input[name='description']").val(defaultInfo.description);
@@ -386,7 +390,37 @@ function getLoggregatorRelease(){
         }
     });
 }
-
+/********************************************************
+ * 설명 : OS-CONF 릴리즈 조회
+ * 기능 : getOsConfRelease
+ *********************************************************/
+function getOsConfRelease(){
+    $.ajax({
+        type : "GET",
+        url : "/common/deploy/release/list/os-conf",
+        contentType : "application/json",
+        success : function(data, status){
+            osConfReleases = new Array();
+            if( data.records != null){
+                w2popup.unlock();
+                var option = "<option value=''>OS-CONF 릴리즈를 선택하세요.</option>";
+                data.records.map(function(obj) {
+                    osConfReleases.push(obj.version);
+                    if( defaultInfo.osConfReleaseName == obj.name && defaultInfo.osConfReleaseVersion == obj.version){
+                        option += "<option value='"+obj.name+"/"+obj.version+"' selected>"+obj.name+"/"+obj.version+"</option>";
+                    }else{
+                        option += "<option value='"+obj.name+"/"+obj.version+"'>"+obj.name+"/"+obj.version+"</option>";    
+                    }
+                });
+            }
+            $(".w2ui-msg-body select[name='osConfReleases']").html(option);
+        },
+        error : function(e, status){
+            w2popup.unlock();
+            w2alert("OS-CONF Release List 를 가져오는데 실패하였습니다.", "CF 설치");
+        }
+    });
+}
 
 /********************************************************
  * 설명 : paasta-controller v2.0 이상에서 지원 
@@ -440,7 +474,7 @@ function setInputDisplay(val){
         $(".w2ui-msg-body #deaMemorymbDiv").css("display", "block");
     }
     getLoggregatorRelease();
-    
+    getOsConfRelease();
 }
 
 /********************************************************
@@ -468,6 +502,7 @@ function checkPaasTAMonitoringUseYn(value){
 function saveDefaultInfo() {
     var release = $(".w2ui-msg-body select[name='releases']").val();
     var loggregatorRelease = $(".w2ui-msg-body select[name='loggregatorReleases']").val();
+    var osConfRelease = $(".w2ui-msg-body select[name='osConfReleases']").val();
     defaultInfo = {
                 id                   : (cfId) ? cfId : "",
                 iaas                 : iaas.toUpperCase(),
@@ -488,7 +523,9 @@ function saveDefaultInfo() {
                 loginSecret          : $(".w2ui-msg-body input[name='loginSecret']").val(),
                 paastaMonitoringUse  : $(".w2ui-msg-body input:checkbox[name='paastaMonitoring']").is(":checked") == true ? "true" : "false",
                 ingestorIp           : $(".w2ui-msg-body input[name='ingestorIp']").val(),
-                userAddSsh           : $(".w2ui-msg-body textarea[name='userAddSsh']").val()
+                userAddSsh           : $(".w2ui-msg-body textarea[name='userAddSsh']").val(),
+                osConfReleaseName    : osConfRelease.split("/")[0],
+                osConfReleaseVersion : osConfRelease.split("/")[1]
     }
     $.ajax({
         type : "PUT",
@@ -1885,6 +1922,14 @@ function gridReload() {
                             </select>
                         </div>
                     </div>
+                    <div class="w2ui-field" id="osConfRelease" style="display:none;">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">OS-CONF 릴리즈</label>
+                        <div style=" width: 60%;">
+                            <select name="osConfReleases" style="display:inline-block; width: 80%;">
+                                <option value="">OS-CONF 릴리즈를 선택하세요.</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="w2ui-field" id="fingerprint">
                         <label style="text-align: left; width: 36%; font-size: 11px;">SSH 핑거프린트
                         </label>
@@ -1910,7 +1955,7 @@ function gridReload() {
                             <input name="deaMemoryMB" type="text" style="display:inline-block;width:80%;" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled;' placeholder="예) 8192" />
                         </div>
                     </div>
-                    <div class="w2ui-field" id="userAddSsh">
+                    <div class="w2ui-field" id="userAddSsh" style="display:none;">
                         <label style="text-align: left; width:36%; font-size:11px;">SSH Public-Key</label>
                         <div style="width: 60%;">
                             <textarea name="userAddSsh" style="float:left;width:80%; height:85px;resize:none;"rows=10; placeholder="SSH 공개 키를 입력하세요."></textarea>

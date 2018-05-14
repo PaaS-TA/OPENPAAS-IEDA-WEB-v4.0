@@ -333,6 +333,8 @@ public class CfService {
         items.add(new ReplaceItemDTO("[releaseName]", vo.getReleaseName()));
         items.add(new ReplaceItemDTO("[releaseVersion]",  "\"" +vo.getReleaseVersion() + "\""));
         items.add(new ReplaceItemDTO("[userAddSsh]", vo.getUserAddSsh()));
+        items.add(new ReplaceItemDTO("[osConfReleaseName]", vo.getOsConfReleaseName()));
+        items.add(new ReplaceItemDTO("[osConfReleaseVersion]", "\"" +vo.getOsConfReleaseVersion()+ "\""));
         
         items.add(new ReplaceItemDTO("[loggregatorReleaseName]", vo.getLoggregatorReleaseName()));
         items.add(new ReplaceItemDTO("[loggregatorReleaseVersion]",  "\"" +vo.getLoggregatorReleaseVersion() + "\""));

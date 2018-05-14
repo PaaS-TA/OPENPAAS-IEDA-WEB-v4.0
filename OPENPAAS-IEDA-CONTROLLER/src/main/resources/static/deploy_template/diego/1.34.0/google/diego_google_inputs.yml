@@ -30,7 +30,10 @@ meta:
   stemcell-name: [stemcellName]
   stemcell-version: [stemcellVersion]
   stemcell-password: [boshPassword]
-
+  
+  ## os_conf SSH Public Key Block
+  public-key: [userAddSsh]
+  
   ## Resouce_pools Block
   small-instance-type: [smallInstanceType]
   medium-instance-type: [mediumInstanceType]
@@ -46,6 +49,8 @@ meta:
   garden-runc-release-version: [gardenLinuxReleaseVersion]
   cflinuxfs2-release-name: [cflinuxfs2RootfsReleaseName]
   cflinuxfs2-release-version: [cflinuxfs2RootfsReleaseVersion]
+  osConf-release-name: [osConfReleaseName]
+  osConf-release-version: [osConfReleaseVersion]
   
   ## Instacnce Setting
   database-z1-instances: [databaseZ1]
@@ -68,3 +73,5 @@ meta:
   cc_bridge-z3-instances: [cc_bridgeZ3]
   cell-z3-instances: [cellZ3]
   brain-z3-instances: [brainZ3]
+  
+  

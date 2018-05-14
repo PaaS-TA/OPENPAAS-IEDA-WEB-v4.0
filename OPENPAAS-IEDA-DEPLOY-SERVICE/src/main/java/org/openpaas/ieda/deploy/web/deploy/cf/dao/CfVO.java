@@ -37,6 +37,8 @@ public class CfVO {
     private String domainOrganization;//도메인 그룹
     private String loginSecret; //로그인 비밀번호
     private String userAddSsh;  //os-conf ssh public-key
+    private String osConfReleaseName;//os-conf Release Name
+    private String osConfReleaseVersion;//os-conf Release Version
     
     //1.3 PaaS-TA 모니터링
     private String paastaMonitoringUse;//PaaS-TA 모니터링 사용 유무
@@ -302,6 +304,22 @@ public class CfVO {
     public void setUserAddSsh(String userAddSsh) {
         this.userAddSsh = userAddSsh;
     }
-    
+
+    public String getOsConfReleaseName() {
+        return osConfReleaseName;
+    }
+
+    public void setOsConfReleaseName(String osConfReleaseName) {
+        this.osConfReleaseName = osConfReleaseName;
+    }
+
+    public String getOsConfReleaseVersion() {
+        return osConfReleaseVersion;
+    }
+
+    public void setOsConfReleaseVersion(String osConfReleaseVersion) {
+        this.osConfReleaseVersion = osConfReleaseVersion;
+    }
+
     
 }

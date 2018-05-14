@@ -172,6 +172,9 @@ function setDiegoData(contents) {
             cflinuxfs2rootfsreleaseVersion  : contents.cflinuxfs2rootfsreleaseVersion,
             paastaMonitoringUse             : contents.paastaMonitoringUse,
             cadvisorDriverIp                : contents.cadvisorDriverIp,
+            userAddSsh                      : contents.userAddSsh,
+            osConfReleaseName               : contents.osConfReleaseName,
+            osConfReleaseVersion            : contents.osConfReleaseVersion
         }
         //네트워크 정보 설정
         for(var i=0; i<contents.networks.length; i++){
@@ -246,7 +249,7 @@ function defaultPopup() {
     $("#defaultInfoDiv").w2popup({
         title : "<b>DIEGO 설치</b>",
         width : 750,
-        height :560,
+        height :680,
         modal :true,
         body    : $("#defaultInfoDiv").html(),
         buttons : $("#defaultInfoButtonDiv").html(),
@@ -263,32 +266,38 @@ function defaultPopup() {
                  $(".etcd-info").attr('data-content', "https://github.com/cloudfoundry/diego-cf-compatibility");
                  $(".paastaMonitoring-info").attr('data-content', "paasta-container v3.0 이상에서 지원")
                  
-                if( menu == "cfDiego") {
+                 if( menu == "cfDiego") {
                     $('.w2ui-msg-buttons #defaultPopupBtn').show();
-                }
+                 }
+                 //Iaas가 gcp일 경우 public ssh key, os-conf 입력창 show
+                 if( iaas.toLowerCase() == 'google' ){
+                     $(".w2ui-msg-body #userAddSsh").css("display", "inline");
+                     $(".w2ui-msg-body #osConfRelease").css("display", "inline");
+                 }
                 
-                if (defaultInfo != "") {
-                    $(".w2ui-msg-body input[name='deploymentName']").val(defaultInfo.deploymentName);
-                    $(".w2ui-msg-body input[name='directorUuid']").val(defaultInfo.directorUuid);
-                    $(".w2ui-msg-body input[name='cfId']").val(cfId);
-                    if( !checkEmpty(defaultInfo.cadvisorDriverIp) ){//PaaS-TA 모니터링 체크
-                        $(".w2ui-msg-body input:checkbox[name='paastaMonitoring']").attr("checked", true);
-                        checkPaasTAMonitoringUseYn();
-                        $(".w2ui-msg-body input[name='cadvisorDriverIp']").val(defaultInfo.cadvisorDriverIp);
-                    }
-                    if(compare( defaultInfo.diegoReleaseVersion, "1.2.0" ) > 0){
-                        $('.w2ui-msg-body #etcd').css('display','none');
-                        $(".w2ui-msg-body input[name='etcdReleases']").val("");
-                    } else {
-                        $('.w2ui-msg-body #etcd').css('display','block');
-                    }
-                }else{
-                    if( !checkEmpty($("#directorUuid").text()) ){
-                        $(".w2ui-msg-body input[name='directorUuid']").val($("#directorUuid").text());
-                    }
-                }
-                getReleases();//릴리즈 조회    
-            }
+                 if (defaultInfo != "") {
+                     $(".w2ui-msg-body input[name='deploymentName']").val(defaultInfo.deploymentName);
+                     $(".w2ui-msg-body input[name='directorUuid']").val(defaultInfo.directorUuid);
+                     $(".w2ui-msg-body input[name='cfId']").val(cfId);
+                     $(".w2ui-msg-body textarea[name='userAddSsh']").val(defaultInfo.userAddSsh);
+                     if( !checkEmpty(defaultInfo.cadvisorDriverIp) ){//PaaS-TA 모니터링 체크
+                         $(".w2ui-msg-body input:checkbox[name='paastaMonitoring']").attr("checked", true);
+                         checkPaasTAMonitoringUseYn();
+                         $(".w2ui-msg-body input[name='cadvisorDriverIp']").val(defaultInfo.cadvisorDriverIp);
+                     }
+                     if(compare( defaultInfo.diegoReleaseVersion, "1.2.0" ) > 0){
+                         $('.w2ui-msg-body #etcd').css('display','none');
+                         $(".w2ui-msg-body input[name='etcdReleases']").val("");
+                     } else {
+                         $('.w2ui-msg-body #etcd').css('display','block');
+                     }
+                 }else{
+                     if( !checkEmpty($("#directorUuid").text()) ){
+                         $(".w2ui-msg-body input[name='directorUuid']").val($("#directorUuid").text());
+                     }
+                 }
+                 getReleases();//릴리즈 조회    
+             }
         },
         onClose :function(event) {
             event.onComplete = function() {
@@ -308,6 +317,7 @@ function getReleases(){
     gardenReleaseName = new Array(); //Garden-Linux 릴리즈
     diegoReleases = new Array(); //DIEGO 릴리즈
     stemcells = new Array(); //STEMCELL
+    osConfReleases = new Array(); //OS-CONF릴리즈
     //화면 LOCK
     w2popup.lock("릴리즈를 조회 중입니다.", true);
     getCfRelease(); //Diego 릴리즈 조회
@@ -525,8 +535,7 @@ function getEtcdRelease() {
                 });
             }
             $(".w2ui-msg-body select[name='etcdReleases']").html(option);
-            w2popup.unlock();
-            setReleaseList();
+            getOsConfRelease();
         },
         error :function(e, status) {
             w2popup.unlock();
@@ -535,6 +544,38 @@ function getEtcdRelease() {
     });
 }
 
+/********************************************************
+ * 설명 : OS-CONF 릴리즈 조회
+ * 기능 : getOsConfRelease
+ *********************************************************/
+function getOsConfRelease(){
+    $.ajax({
+        type : "GET",
+        url : "/common/deploy/release/list/os-conf",
+        contentType : "application/json",
+        success : function(data, status){
+            osConfReleases = new Array();
+            if( data.records != null){
+                w2popup.unlock();
+                var option = "<option value=''>OS-CONF 릴리즈를 선택하세요.</option>";
+                data.records.map(function(obj) {
+                    osConfReleases.push(obj.version);
+                    if( defaultInfo.osConfReleaseName == obj.name && defaultInfo.osConfReleaseVersion == obj.version){
+                        option += "<option value='"+obj.name+"/"+obj.version+"' selected>"+obj.name+"/"+obj.version+"</option>";
+                    }else{
+                        option += "<option value='"+obj.name+"/"+obj.version+"'>"+obj.name+"/"+obj.version+"</option>";    
+                    }
+                });
+            }
+            $(".w2ui-msg-body select[name='osConfReleases']").html(option);
+            setReleaseList();
+        },
+        error : function(e, status){
+            w2popup.unlock();
+            w2alert("OS-CONF Release List 를 가져오는데 실패하였습니다.", "DIEGO 설치");
+        }
+    });
+}
 /********************************************************
  * 설명 : Release List W2Field 적용
  * 기능 : setReleaseList
@@ -695,6 +736,7 @@ function saveDefaultInfo(type) {
         return;
     }
     var diegoRelease = $(".w2ui-msg-body select[name='diegoReleases']").val();
+    var osConfRelease = $(".w2ui-msg-body select[name='osConfReleases']").val();
     
     if(compare( diegoRelease.split("/")[1], "1.2.0" ) > 0){
         $(".w2ui-msg-body select[name='etcdReleases']").val("");
@@ -731,6 +773,9 @@ function saveDefaultInfo(type) {
                 cflinuxfs2rootfsreleaseVersion  : cflinuxfs2rootfsrelease.split("/")[1],
                 paastaMonitoringUse             : monitoringUse,
                 cadvisorDriverIp                : $(".w2ui-msg-body input[name='cadvisorDriverIp']").val(),
+                userAddSsh                      : $(".w2ui-msg-body textarea[name='userAddSsh']").val(),
+                osConfReleaseName               : osConfRelease.split("/")[0],
+                osConfReleaseVersion            : osConfRelease.split("/")[1]
     }
     if( type == 'after'){
             $.ajax({
@@ -1942,6 +1987,14 @@ function gridReload() {
                             </select>
                         </div>
                     </div>
+                    <div class="w2ui-field" id="osConfRelease" style="display:none;">
+                        <label style="text-align: left; width: 40%; font-size: 11px;">OS-CONF 릴리즈</label>
+                        <div style=" width: 60%;">
+                            <select name="osConfReleases" style="display:inline-block; width: 80%;">
+                                <option value="">OS-CONF 릴리즈를 선택하세요.</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="w2ui-field" id="cflinux" style="display:none">
                         <label style="text-align:left; width:40%; font-size:11px;">Cflinuxfs2-Rootfs 릴리즈
                         <span class="glyphicon glyphicon glyphicon-question-sign cflinux-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="click" data-html="true" title="Cflinuxfs2-Rootfs릴리즈 호환성 참조 사이트"></span>
@@ -1981,6 +2034,12 @@ function gridReload() {
                         <input name="cfDeploymentFile" type="hidden"/>
                         <input name="cfReleaseVersion" type="hidden"/>
                         <input name="cfKeyFile" type="hidden"/>
+                    </div>
+                    <div class="w2ui-field" id="userAddSsh">
+                        <label style="text-align: left; width: 40%; font-size:11px;">SSH Public-Key</label>
+                        <div style="width: 60%;">
+                            <textarea name="userAddSsh" style="float:left;width:80%; height:85px;resize:none;"rows=10; placeholder="SSH 공개 키를 입력하세요."></textarea>
+                        </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="text-align:left; width:40%; font-size:11px;">PaaS-TA 모니터링

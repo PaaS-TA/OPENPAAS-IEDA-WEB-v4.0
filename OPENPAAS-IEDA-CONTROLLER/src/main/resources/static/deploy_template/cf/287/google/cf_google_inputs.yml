@@ -11,8 +11,8 @@ meta:
     version: [releaseVersion]
   
   os-conf_release:
-    name: os-conf
-    version: "20"
+    name: [osConfReleaseName]
+    version: [osConfReleaseVersion]
 
   director-uuid: [directorUuid]
 
