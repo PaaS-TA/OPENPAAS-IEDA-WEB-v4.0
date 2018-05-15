@@ -527,6 +527,7 @@ function saveDefaultInfo() {
                 osConfReleaseName    : osConfRelease.split("/")[0],
                 osConfReleaseVersion : osConfRelease.split("/")[1]
     }
+    console.log(defaultInfo)
     $.ajax({
         type : "PUT",
         url : "/deploy/"+menu+"/install/saveDefaultInfo",

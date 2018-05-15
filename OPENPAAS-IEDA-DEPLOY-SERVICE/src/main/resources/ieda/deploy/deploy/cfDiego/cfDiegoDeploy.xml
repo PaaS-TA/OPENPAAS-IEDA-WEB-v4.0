@@ -34,6 +34,9 @@
             <result property="deploymentFile" column="CF_DEPLOYMENT_FILE" />
             <result property="deployStatus" column="CF_DEPLOY_STATUS" />
             <result property="taskId" column="CF_TASK_ID" />
+            <result property="userAddSsh" column="USER_ADD_SSH" />
+            <result property="osConfReleaseName" column="OSCONF_RELEASE_NAME" />
+            <result property="osConfReleaseVersion" column="OSCONF_RELEASE_VERSION"/>
         </collection>
         <collection property="diegoVo"   ofType="org.openpaas.ieda.deploy.web.deploy.diego.dao.DiegoVO"  javaType="String" >
             <id property="id" column="DIEGO_ID" />
@@ -74,7 +77,10 @@
             ,c.domain_organization as domain_organization 
             ,c.deployment_file as cf_deployment_file 
             ,c.deploy_status as cf_deploy_status
-            ,c.task_id as cf_task_id 
+            ,c.task_id as cf_task_id
+            ,c.user_add_ssh as user_add_ssh
+            ,c.osconf_release_name as osconf_release_name
+            ,c.osconf_release_version as osconf_release_version
             ,d.id as diego_id 
             ,d.deployment_name as diego_deployment_name 
             ,d.diego_release_name as diego_release_name 
@@ -150,6 +156,9 @@
                     ,c.deploy_status as cf_deploy_status
                     ,c.task_id as cf_task_id
                     ,c.key_file
+                    ,c.user_add_ssh as user_add_ssh
+                    ,c.osconf_release_name as osconf_release_name
+                    ,c.osconf_release_version as osconf_release_version
                 </when>
                 <when test="platform == 'diego' and platform != null">
                     ,d.id as diego_id
