@@ -17,6 +17,7 @@ import org.openpaas.ieda.deploy.web.common.dao.CommonDeployDAO;
 import org.openpaas.ieda.deploy.web.common.dao.ManifestTemplateVO;
 import org.openpaas.ieda.deploy.web.common.dto.ReplaceItemDTO;
 import org.openpaas.ieda.deploy.web.common.service.CommonDeployUtils;
+import org.openpaas.ieda.deploy.web.deploy.cf.service.CfService;
 import org.openpaas.ieda.deploy.web.deploy.common.dao.network.NetworkDAO;
 import org.openpaas.ieda.deploy.web.deploy.common.dao.network.NetworkVO;
 import org.openpaas.ieda.deploy.web.deploy.common.dao.resource.ResourceDAO;
@@ -24,6 +25,8 @@ import org.openpaas.ieda.deploy.web.deploy.diego.dao.DiegoDAO;
 import org.openpaas.ieda.deploy.web.deploy.diego.dao.DiegoVO;
 import org.openpaas.ieda.deploy.web.deploy.diego.dto.DiegoListDTO;
 import org.openpaas.ieda.deploy.web.deploy.diego.dto.DiegoParamDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -44,6 +47,7 @@ public class DiegoService {
     final private static String CF_FILE  = LocalDirectoryConfiguration.getDeploymentDir()+ SEPARATOR;
     final private static String TEMP_FILE = LocalDirectoryConfiguration.getTempDir() + SEPARATOR;
     final private static String SHELLSCRIPT_FILE = LocalDirectoryConfiguration.getManifastTemplateDir() + SEPARATOR  + "diego" + SEPARATOR;
+    final private static Logger LOGGER = LoggerFactory.getLogger(CfService.class);
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
@@ -81,6 +85,10 @@ public class DiegoService {
                 diegoInfo.setGardenReleaseVersion(vo.getGardenReleaseVersion());
                 diegoInfo.setEtcdReleaseName(vo.getEtcdReleaseName());
                 diegoInfo.setEtcdReleaseVersion(vo.getEtcdReleaseVersion());
+                diegoInfo.setUserAddSsh(vo.getUserAddSsh());
+                diegoInfo.setOsConfReleaseName(vo.getOsConfReleaseName());
+                diegoInfo.setOsConfReleaseVersion(vo.getOsConfReleaseVersion());
+                //네트워크 정보
                 List<NetworkVO> netowrks = networkDao.selectNetworkList(vo.getId(), deployType);
                 vo.setNetworks(netowrks);
                 String br = "";
@@ -187,6 +195,9 @@ public class DiegoService {
             for (ReplaceItemDTO item : replaceItems) {
                 content = content.replace(item.getTargetItem(), item.getSourceItem());
             }
+            if( LOGGER.isDebugEnabled() ) {
+                LOGGER.debug("content: " + content);
+            }
             IOUtils.write(content, new FileOutputStream(TEMP_FILE+ vo.getDeploymentFile()), "UTF-8");
             CommonDeployUtils.setShellScript(vo.getDeploymentFile(),  manifestTemplate, vo);
         } catch (IOException e) {
@@ -213,7 +224,11 @@ public class DiegoService {
         }
         //Job Template File
         if( result.getCommonJobTemplate()!=null && !(StringUtils.isEmpty( result.getCommonJobTemplate())) ){
-            manifestTemplate.setCommonJobTemplate( result.getCommonJobTemplate());
+            if(vo.getIaasType().equalsIgnoreCase("google")){
+                manifestTemplate.setCommonJobTemplate( "google_diego.yml" );
+            }else{
+                manifestTemplate.setCommonJobTemplate( result.getCommonJobTemplate() );
+            }
         } else{
             manifestTemplate.setCommonJobTemplate("");
         }
@@ -285,6 +300,9 @@ public class DiegoService {
             items.add(new ReplaceItemDTO("[cflinuxfs2RootfsReleaseVersion]", "\"" + "" + "\""));
         }
         items.add(new ReplaceItemDTO("[cadvisorDriverIp]", vo.getCadvisorDriverIp()));
+        items.add(new ReplaceItemDTO("[userAddSsh]", vo.getUserAddSsh()));
+        items.add(new ReplaceItemDTO("[osConfReleaseName]", vo.getOsConfReleaseName()));
+        items.add(new ReplaceItemDTO("[osConfReleaseVersion]", "\"" +vo.getOsConfReleaseVersion()+ "\""));
         // 2. 네트워크 정보
         for( int i=0; i<vo.getNetworks().size(); i++ ){
             if( "internal".equalsIgnoreCase(vo.getNetworks().get(i).getNet())){

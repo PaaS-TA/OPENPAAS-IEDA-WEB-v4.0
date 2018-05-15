@@ -9,6 +9,10 @@ meta:
   cf_release:
     name: [releaseName]
     version: [releaseVersion]
+  
+  os-conf_release:
+    name: [osConfReleaseName]
+    version: [osConfReleaseVersion]
 
   director-uuid: [directorUuid]
 
@@ -38,6 +42,7 @@ meta:
   system-domain: [domain]
   description: [description]
   system-domain-organization: [domainOrganization]
+  public_key: [userAddSsh]
 
   login-password: [loginSecret]
 

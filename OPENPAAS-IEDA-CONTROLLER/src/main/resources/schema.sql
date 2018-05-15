@@ -364,6 +364,9 @@ CREATE TABLE ieda_cf
   create_date                       DATE          NOT NULL,
   update_user_id                    VARCHAR(255)  NOT NULL,
   update_date                       DATE          NOT NULL,
+  user_add_ssh                      LONGTEXT NULL,
+  osconf_release_name               VARCHAR(255) NULL,
+  osconf_release_version            VARCHAR(255) NULL
   PRIMARY KEY (id)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
@@ -427,6 +430,9 @@ CREATE TABLE ieda_diego
   create_date                       DATE          NOT NULL,
   update_user_id                    VARCHAR(255)  NOT NULL,
   update_date                       DATE          NOT NULL,
+  user_add_ssh                      LONGTEXT NULL,
+  osconf_release_name               VARCHAR(255) NULL,
+  osconf_release_version            VARCHAR(255) NULL
   PRIMARY KEY (id)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 

@@ -25,6 +25,9 @@ public class DiegoListDTO {
     private String cflinuxfs2rootfsreleaseName; //cflinuxfs2rootf 릴리즈 명
     private String cflinuxfs2rootfsreleaseVersion; //cflinuxfs2rootf 릴리즈 버전
     private String keyFile;
+    private String userAddSsh; // os-conf ssh public-key
+    private String osConfReleaseName;//os-conf Release Name
+    private String osConfReleaseVersion;//os-conf Release Version
 
     //3.1 네트워크 정보
     private String publicStaticIp;
@@ -244,6 +247,24 @@ public class DiegoListDTO {
     }
     public void setTaskId(Integer taskId) {
         this.taskId = taskId;
+    }
+    public String getUserAddSsh() {
+        return userAddSsh;
+    }
+    public void setUserAddSsh(String userAddSsh) {
+        this.userAddSsh = userAddSsh;
+    }
+    public String getOsConfReleaseName() {
+        return osConfReleaseName;
+    }
+    public void setOsConfReleaseName(String osConfReleaseName) {
+        this.osConfReleaseName = osConfReleaseName;
+    }
+    public String getOsConfReleaseVersion() {
+        return osConfReleaseVersion;
+    }
+    public void setOsConfReleaseVersion(String osConfReleaseVersion) {
+        this.osConfReleaseVersion = osConfReleaseVersion;
     }
     
     

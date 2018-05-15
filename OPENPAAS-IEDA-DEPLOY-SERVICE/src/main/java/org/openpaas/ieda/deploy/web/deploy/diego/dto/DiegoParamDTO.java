@@ -35,6 +35,10 @@ public class DiegoParamDTO {
         private String cflinuxfs2rootfsreleaseName; //cflinuxfs2rootf 릴리즈 명
         private String cflinuxfs2rootfsreleaseVersion; //cflinuxfs2rootf 릴리즈 버전
         
+        private String userAddSsh;  //os-conf ssh public-key
+        private String osConfReleaseName;//os-conf Release Name
+        private String osConfReleaseVersion;//os-conf Release Version
+        
         @NotNull
         private String paastaMonitoringUse;//PaaS-TA 모니터링 사용 유무
         private String cadvisorDriverIp;//PaaS-TA 모니터링 DB 서버 IP
@@ -141,7 +145,24 @@ public class DiegoParamDTO {
         public void setPaastaMonitoringUse(String paastaMonitoringUse) {
             this.paastaMonitoringUse = paastaMonitoringUse;
         }
-        
+        public String getUserAddSsh() {
+            return userAddSsh;
+        }
+        public void setUserAddSsh(String userAddSsh) {
+            this.userAddSsh = userAddSsh;
+        }
+        public String getOsConfReleaseName() {
+            return osConfReleaseName;
+        }
+        public void setOsConfReleaseName(String osConfReleaseName) {
+            this.osConfReleaseName = osConfReleaseName;
+        }
+        public String getOsConfReleaseVersion() {
+            return osConfReleaseVersion;
+        }
+        public void setOsConfReleaseVersion(String osConfReleaseVersion) {
+            this.osConfReleaseVersion = osConfReleaseVersion;
+        }
         
     }
     

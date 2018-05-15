@@ -36,6 +36,9 @@
         <result property="deploymentFile" column="DEPLOYMENT_FILE" />
         <result property="deployStatus" column="DEPLOY_STATUS" />
         <result property="taskId" column="TASK_ID" />
+        <result property="userAddSsh" column="USER_ADD_SSH" />
+        <result property="osConfReleaseName" column="OSCONF_RELEASE_NAME" />
+        <result property="osConfReleaseVersion" column="OSCONF_RELEASE_VERSION"/>
         <collection property="resource" ofType="org.openpaas.ieda.deploy.web.deploy.common.dao.resource.ResourceVO"  javaType="org.openpaas.ieda.deploy.web.deploy.common.dao.resource.ResourceVO">
             <result property="id" column="RESOURCE_ID" />
             <result property="deployType" column="RESOURCE_DEPLOY_TYPE"/>
@@ -88,6 +91,9 @@
             ,task_id
             ,c.create_date as create_date
             ,c.update_date as update_date
+            ,c.user_add_ssh
+            ,c.osconf_release_name
+            ,c.osconf_release_version
         From ieda_cf c 
         LEFT JOIN ieda_cf_diego a
         ON c.id = a.cf_id
@@ -128,6 +134,9 @@
             ,email
             ,key_file
             ,task_id
+            ,user_add_ssh
+            ,osconf_release_name
+            ,osconf_release_version
         From ieda_cf
         where id = #{id}
     </select>
@@ -196,6 +205,9 @@
             ,runner_type_ram
             ,runner_type_disk
             ,task_id
+            ,user_add_ssh
+            ,osconf_release_name
+            ,osconf_release_version
         From (select * from ieda_cf where id = #{id} ) as cf
          Left Join ieda_resource as resource
               On cf.id = resource.id
@@ -236,6 +248,9 @@
             ,create_user_id
             ,update_date
             ,update_user_id
+            ,user_add_ssh
+            ,osconf_release_name
+            ,osconf_release_version
         ) 
         Values(
              #{cf.id}
@@ -268,6 +283,9 @@
             ,#{cf.createUserId}
             ,now()
             ,#{cf.updateUserId}
+            ,#{cf.userAddSsh}
+            ,#{cf.osConfReleaseName}
+            ,#{cf.osConfReleaseVersion}
         )
         <selectKey keyProperty="cf.id" resultType="int" order="AFTER">
             <if test="cf.id != 1"> SELECT LAST_INSERT_ID(); </if>
@@ -305,6 +323,9 @@
             ,task_id=#{cf.taskId}
             ,update_user_id = #{cf.updateUserId}
             ,update_date = now()
+            ,user_add_ssh = #{cf.userAddSsh}
+            ,osconf_release_name = #{cf.osConfReleaseName}
+            ,osconf_release_version = #{cf.osConfReleaseVersion}
         Where id=#{cf.id}
     </update>
     
@@ -438,6 +459,9 @@
             ,email
             ,key_file
             ,task_id
+            ,user_add_ssh
+            ,osconf_release_name
+            ,osconf_release_version
         From ieda_cf
        Where iaas_type = #{iaasType}
          And deployment_file = #{deploymentFile}
