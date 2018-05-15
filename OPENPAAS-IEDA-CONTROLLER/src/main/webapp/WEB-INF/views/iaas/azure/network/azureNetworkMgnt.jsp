@@ -531,7 +531,7 @@ td {
  
 </style>
 <div id="main">
-     <div class="page_site pdt20">인프라 관리 > azure 관리 > <strong>azure Network 관리 </strong></div>
+     <div class="page_site pdt20">인프라 관리 > Azure 관리 > <strong>Azure Network 관리 </strong></div>
      <div id="azureMgnt" class="pdt20">
         <ul>
             <li>

@@ -715,11 +715,11 @@ td {
                         &nbsp;&nbsp;Storage Account 관리<b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu alert-dropdown">
-                        <sec:authorize access="hasAuthority('AZURE_NETWORK_MENU')">
-                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/network"/>', 'Azure Virtual Network');">Virtual Network 관리</a></li>
-                        </sec:authorize>
                         <sec:authorize access="hasAuthority('AZURE_RESOURCE_GROUP_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/resourceGroup"/>', 'Azure Resource Group');">Resource Group 관리</a></li>
+                        </sec:authorize>
+                        <sec:authorize access="hasAuthority('AZURE_NETWORK_MENU')">
+                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/network"/>', 'Azure Virtual Network');">Virtual Network 관리</a></li>
                         </sec:authorize>
                         <sec:authorize access="hasAuthority('AZURE_PUBLIC_IP_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/publicIp"/>', 'Azure Public IP');">Public IP 관리</a></li>

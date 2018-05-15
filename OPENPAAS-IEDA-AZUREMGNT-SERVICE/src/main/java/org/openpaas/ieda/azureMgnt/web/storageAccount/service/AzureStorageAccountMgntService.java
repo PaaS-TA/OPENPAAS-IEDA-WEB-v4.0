@@ -157,6 +157,7 @@ public class AzureStorageAccountMgntService {
         } catch (InvalidKeyException | StorageException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            //common exception 
         }
         return list;
         
@@ -178,7 +179,7 @@ public class AzureStorageAccountMgntService {
                 "AccountName="+storageAccountName+";" + 
                 "AccountKey="+accountKey+";EndpointSuffix=core.windows.net";
         List<AzureStorageAccountMgntVO> list = new ArrayList<AzureStorageAccountMgntVO>();
-        StorageCredentials storageCredentials;
+        StorageCredentials storageCredentials = null;
         String tableName ="";
         try {
             storageCredentials = StorageCredentials.tryParseCredentials(storageConnectionString);

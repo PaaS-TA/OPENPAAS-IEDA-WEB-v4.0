@@ -53,6 +53,7 @@ public class AzureResourceGroupMgntService {
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, accountId);
         List<ResourceGroup> azureResourceGroupList = azureResourceGroupMgntApiService.getAzureResourceGroupInfoListApiFromAzure(vo);
         List<AzureResourceGroupMgntVO> list = new ArrayList<AzureResourceGroupMgntVO>();
+        if(azureResourceGroupList !=null && azureResourceGroupList.size() != 0){
         for (int i=0; i<azureResourceGroupList.size(); i++ ){
             ResourceGroup resourceGroup = azureResourceGroupList.get(i);
             AzureResourceGroupMgntVO azureRgVo = new AzureResourceGroupMgntVO();
@@ -65,7 +66,7 @@ public class AzureResourceGroupMgntService {
             azureRgVo.setAzureSubscriptionId(vo.getAzureSubscriptionId());
             azureRgVo.setAccountId(vo.getId());
             list.add(azureRgVo);
-        }
+        }}
         return list;
     }
     
@@ -82,6 +83,7 @@ public class AzureResourceGroupMgntService {
          String subName = getAzureSubscriptionName(principal, accountId, vo.getAzureSubscriptionId());
          List<ResourceGroup> azureResourceGroupList = (List<ResourceGroup>) result.get("resourceGroupList");
          HashMap<String, Object> apiAzureRgInfo = new HashMap<String, Object>();
+         if(azureResourceGroupList !=null && azureResourceGroupList.size() != 0){
          for( int i=0; i<azureResourceGroupList.size(); i++ ){
              if( azureResourceGroupList.get(i).inner().name().toString().equals( resourceGroupName )){
                  ResourceGroup resourceGroup = azureResourceGroupList.get(i);
@@ -92,6 +94,7 @@ public class AzureResourceGroupMgntService {
                  String deployments = getDepolymentInfo(principal, accountId, resourceGroup.name());
                  apiAzureRgInfo.put("deployments",deployments);
              }
+         }
          }
          return apiAzureRgInfo;
      }
@@ -107,6 +110,7 @@ public class AzureResourceGroupMgntService {
          PagedList<GenericResource> results = azureResourceGroupMgntApiService.getAzureResouceListFromAzure(vo, resourceGroupName);
         
          List<AzureResourceGroupMgntVO> list = new ArrayList<AzureResourceGroupMgntVO>();
+        if(results!=null && results.size() != 0){
          for (int i=0; i<results.size(); i++ ){
              GenericResource resource = results.get(i);
              AzureResourceGroupMgntVO azureRgVo = new AzureResourceGroupMgntVO();
@@ -116,6 +120,7 @@ public class AzureResourceGroupMgntService {
              azureRgVo.setRecid(i);
              azureRgVo.setAccountId(vo.getId());
              list.add(azureRgVo);
+         }
          }
          return list;
      }
