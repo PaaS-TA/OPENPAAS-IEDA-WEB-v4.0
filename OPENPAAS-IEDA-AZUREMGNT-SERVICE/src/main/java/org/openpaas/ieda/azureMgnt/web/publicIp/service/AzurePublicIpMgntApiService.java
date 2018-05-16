@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.microsoft.azure.credentials.AzureTokenCredentials;
 import com.microsoft.azure.management.Azure;
-import com.microsoft.azure.management.network.IPVersion;
 import com.microsoft.azure.management.network.PublicIPAddress;
 import com.microsoft.azure.management.network.PublicIPSkuType;
 import com.microsoft.rest.LogLevel;

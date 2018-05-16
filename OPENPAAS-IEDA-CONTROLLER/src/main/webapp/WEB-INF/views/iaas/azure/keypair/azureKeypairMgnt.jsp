@@ -1,8 +1,8 @@
 <%
 /* =================================================================
- * 작성일 : 2018.05.15
+ * 작성일 : 2018.05.17
  * 작성자 : 이정윤 
- * 상세설명 : Azure Public IP 관리 화면
+ * 상세설명 : Azure Keypair 관리 화면
  * =================================================================
  */ 
 %>
@@ -16,9 +16,6 @@
 var save_lock_msg = '<spring:message code="common.save.data.lock"/>';//등록 중 입니다.
 var detail_rg_lock_msg='<spring:message code="common.search.detaildata.lock"/>';//상세 조회 중 입니다.
 var text_required_msg='<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
-var delete_confirm_msg ='<spring:message code="common.popup.delete.message"/>';//삭제 하시겠습니까?
-var delete_lock_msg= '<spring:message code="common.delete.data.lock"/>';//삭제 중 입니다.
-var text_cidr_msg='<spring:message code="common.text.validate.cidr.message"/>';//CIDR 대역을 확인 하세요.
 var accountId ="";
 var bDefaultAccount = "";
 
@@ -27,11 +24,11 @@ $(function() {
     
     bDefaultAccount = setDefaultIaasAccountList("azure");
     
-    $('#azure_publicIpGrid').w2grid({
-        name: 'azure_publicIpGrid',
+    $('#azure_keypairGrid').w2grid({
+        name: 'azure_keypairGrid',
         method: 'GET',
         msgAJAXerror : 'Azure 계정을 확인해주세요.',
-        header: '<b>Public IP 목록</b>',
+        header: '<b>Keypair 목록</b>',
         multiSelect: false,
         show: {    
                 selectColumn: false,
@@ -40,19 +37,14 @@ $(function() {
         columns    : [
                      {field: 'recid',     caption: 'recid', hidden: true}
                    , {field: 'accountId',     caption: 'accountId', hidden: true}
-                   //, {field: 'networkId',     caption: 'networkId', hidden: true}
-                   , {field: 'publicIpName', caption: 'Public IP Name', size: '50%', style: 'text-align:center', render : function(record){
-                       if(record.publicIpName == null || record.publicIpName == ""){
+                   , {field: 'keypairName', caption: 'Keypair Name', size: '50%', style: 'text-align:center', render : function(record){
+                       if(record.keypairName == null || record.keypairName == ""){
                            return "-"
                        }else{
-                           return record.publicIpName;
+                           return record.keypairName;
                        }}
                    }
-                   , {field: 'publicIpAddress', caption: 'Public IP', size: '50%', style: 'text-align:center'}
-                   , {field: 'subscriptionName', caption: 'Subscription', size: '50%', style: 'text-align:center'}
-                   , {field: 'azureSubscriptionId', caption: 'Subscription ID',  hidden: true}
-                   , {field: 'location', caption: 'Location', size: '50%', style: 'text-align:center'}
-                   , {field: 'resourceGroupName', caption: 'Resource Group', size: '50%', style: 'text-align:center'}
+                   , {field: 'keypairType', caption: 'Keypair Type', size: '50%', style: 'text-align:center'}
                    ],
         onSelect: function(event) {
             event.onComplete = function() {
@@ -73,12 +65,12 @@ $(function() {
     
     
     /********************************************************
-     * 설명 : Azure Public IP 할당 버튼 클릭
+     * 설명 : Azure Keypair 할당 버튼 클릭
     *********************************************************/
     $("#addBtn").click(function(){
        if($("#addBtn").attr('disabled') == "disabled") return;
        w2popup.open({
-           title   : "<b>Azure Public IP 할당</b>",
+           title   : "<b>Azure Keypair 할당</b>",
            width   : 580,
            height  : 465,
            modal   : true,
@@ -91,7 +83,7 @@ $(function() {
            onClose : function(event){
             w2popup.unlock();
             accountId = $("select[name='accountId']").val();
-            w2ui['azure_publicIpGrid'].clear();
+            w2ui['azure_keypairGrid'].clear();
             doSearch();
            }
        });
@@ -101,33 +93,30 @@ $(function() {
 });
 
 /********************************************************
- * 설명 : Azure Public IP 정보 목록 조회 Function 
+ * 설명 : Azure Keypair 정보 목록 조회 Function 
  * 기능 : doSearch
  *********************************************************/
 function doSearch() {
-    w2ui['azure_publicIpGrid'].load("<c:url value='/azureMgnt/publicIp/list/'/>"+accountId);
+    w2ui['azure_keypairGrid'].load("<c:url value='/azureMgnt/keypair/list/'/>"+accountId);
     doButtonStyle();
     accountId = "";
 }
 
 
 /********************************************************
- * 설명 : Azure Public IP 할당 
- * 기능 : saveAzurePublicIpInfo
+ * 설명 : Azure Keypair 할당 
+ * 기능 : saveAzureKeypairInfo
  *********************************************************/
-function saveAzurePublicIpInfo(){
+function saveAzureKeypairInfo(){
     w2popup.lock(save_lock_msg, true);
     var rgInfo = {
         accountId : $("select[name='accountId']").val(),
-        publicIpName : $(".w2ui-msg-body input[name='publicIpName']").val(),
-        resourceGroupName : $(".w2ui-msg-body select[name='resourceGroupName'] :selected").text(),
-        location : $(".w2ui-msg-body select[name='resourceGroupName'] :selected").val(),    
-        azureSubscriptionId : $(".w2ui-msg-body input[name='azureSubscriptionId']").val(),
+        keypairName : $(".w2ui-msg-body input[name='keypairName']").val(),
     }
-    console.log(JSON.stringify(rgInfo)+"TEST TEST TEST Allocate PUBLIC IP");
+    console.log(JSON.stringify(rgInfo)+"TEST TEST TEST Keypair");
     $.ajax({
         type : "POST",
-        url : "/azureMgnt/publicIp/save",
+        url : "/azureMgnt/keypair/save",
         contentType : "application/json",
         async : true,
         data : JSON.stringify(rgInfo),
@@ -235,7 +224,7 @@ function doButtonStyle() {
  * 설명 : 다른페이지 이동시 호출
 *****************************************************/
 function clearMainPage() {
-    $().w2destroy('azure_publicIpGrid');
+    $().w2destroy('azure_keypairGrid');
 }
 
 /****************************************************
@@ -258,14 +247,14 @@ td {
  
 </style>
 <div id="main">
-     <div class="page_site pdt20">인프라 관리 > Azure 관리 > <strong>Azure Public IP 관리 </strong></div>
+     <div class="page_site pdt20">인프라 관리 > Azure 관리 > <strong>Azure Keypair 관리 </strong></div>
      <div id="azureMgnt" class="pdt20">
         <ul>
             <li>
                 <label style="font-size: 14px;">Azure 관리 화면</label> &nbsp;&nbsp;&nbsp; 
                 <div class="dropdown" style="display:inline-block;">
                     <a href="#" class="dropdown-toggle iaas-dropdown" data-toggle="dropdown" aria-expanded="false">
-                        &nbsp;&nbsp;Public IP 관리<b class="caret"></b>
+                        &nbsp;&nbsp;Keypair 관리<b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu alert-dropdown">
                         <sec:authorize access="hasAuthority('AZURE_RESOURCE_GROUP_MENU')">
@@ -276,9 +265,6 @@ td {
                         </sec:authorize>
                         <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCOUNT_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/storageAccount"/>', 'Azure Storage Account');"> Storage Account 관리</a></li>
-                        </sec:authorize>
-                         <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCESS_KEY_MENU')">
-                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/keypairs"/>', 'Azure Key Pair');">Key Pair 관리</a></li>
                         </sec:authorize>
                         <sec:authorize access="hasAuthority('AZURE_SECURITY_GROUP_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/securityGroup"/>', 'Azure Security Group');">Security Group 관리</a></li>
@@ -301,28 +287,28 @@ td {
     </div>
     
     <div class="pdt20">
-        <div class="title fl">Azure Public IP 목록</div>
+        <div class="title fl">Azure Keypair 목록</div>
         <div class="fr"> 
-        <sec:authorize access="hasAuthority('AZURE_PUBLIC_IP_CREATE')">
+        <sec:authorize access="hasAuthority('AZURE_KEYPAIR_CREATE')">
             <span id="addBtn" class="btn btn-primary" style="width:120px">생성</span>
         </sec:authorize>
         </div>
     </div>
     
-    <!-- Public IP 정보 목록 그리드 -->
-    <div id="azure_publicIpGrid" style="width:100%; height:305px"></div>
+    <!-- Keypair 정보 목록 그리드 -->
+    <div id="azure_keypairGrid" style="width:100%; height:305px"></div>
 
-    <!-- Public IP 할당 팝업 -->
+    <!-- Keypair 할당 팝업 -->
     <div id="registPopupDiv" hidden="true">
-        <form id="azurePublicIPForm" action="POST" style="padding:5px 0 5px 0;margin:0;">
+        <form id="azureKeypairForm" action="POST" style="padding:5px 0 5px 0;margin:0;">
             <div class="panel panel-info" style="height: 350px; margin-top: 7px;"> 
-                <div class="panel-heading"><b>Azure Public IP 할당 정보</b></div>
+                <div class="panel-heading"><b>Azure Keypair 할당 정보</b></div>
                 <div class="panel-body" style="padding:20px 10px; height:340px; overflow-y:auto;">
                     <input type="hidden" name="accountId"/>
                     <div class="w2ui-field">
-                        <label style="width:36%;text-align: left; padding-left: 20px;">Public IP Name</label>
+                        <label style="width:36%;text-align: left; padding-left: 20px;">Keypair Name</label>
                         <div>
-                            <input name="publicIpName" type="text"   maxlength="100" style="width: 300px; margin-top: 1px;" placeholder="Network 태그 명을 입력하세요."/>
+                            <input name="keypairName" type="text"   maxlength="100" style="width: 300px; margin-top: 1px;" placeholder="Network 태그 명을 입력하세요."/>
                         </div>
                     </div>
                     <div class="w2ui-field">
@@ -350,7 +336,7 @@ td {
     </div>
     
     <div id="registPopupBtnDiv" hidden="true">
-         <button class="btn" id="registBtn" onclick="$('#azurePublicIPForm').submit();">확인</button>
+         <button class="btn" id="registBtn" onclick="$('#azureKeypairForm').submit();">확인</button>
          <button class="btn" id="popClose"  onclick="w2popup.close();">취소</button>
     </div>
     
@@ -378,28 +364,19 @@ td {
 <script>
 $(function() {
     
-    $("#azurePublicIPForm").validate({
+    $("#azureKeypairForm").validate({
         ignore : "",
         onfocusout: true,
         rules: {
-            publicIpName : {
+            keypairName : {
                 required : function(){
-                    return checkEmpty( $(".w2ui-msg-body input[name='publicIpName']").val() );
+                    return checkEmpty( $(".w2ui-msg-body input[name='keypairName']").val() );
                 }
             }, 
-            resourceGroupName: { 
-                required: function(){
-                    return checkEmpty( $(".w2ui-msg-body select[name='resourceGroupName']").val() );
-                }
-            } 
         }, messages: {
-        	publicIpName: { 
-                 required:  "Public IP Name" + text_required_msg
+        	keypairName: { 
+                 required:  "keypair Name" + text_required_msg
             }, 
-            resourceGroupName: { 
-                required:  "ResourceGroup Name "+text_required_msg
-                
-            }
         }, unhighlight: function(element) {
             setSuccessStyle(element);
         },errorPlacement: function(error, element) {
@@ -410,7 +387,7 @@ $(function() {
                 setInvalidHandlerStyle(errors, validator);
             }
         }, submitHandler: function (form) {
-            saveAzurePublicIpInfo();
+            saveAzureKeypairInfo();
         }
     });
 
