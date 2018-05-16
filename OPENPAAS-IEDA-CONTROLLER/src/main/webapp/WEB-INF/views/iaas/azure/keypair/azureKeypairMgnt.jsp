@@ -97,7 +97,7 @@ $(function() {
  * 기능 : doSearch
  *********************************************************/
 function doSearch() {
-    w2ui['azure_keypairGrid'].load("<c:url value='/azureMgnt/keypair/list/'/>"+accountId);
+    w2ui['azure_keypairGrid'].load("<c:url value='/azureMgnt/storageAccessKey/list/'/>"+accountId);
     doButtonStyle();
     accountId = "";
 }
@@ -116,7 +116,7 @@ function saveAzureKeypairInfo(){
     console.log(JSON.stringify(rgInfo)+"TEST TEST TEST Keypair");
     $.ajax({
         type : "POST",
-        url : "/azureMgnt/keypair/save",
+        url : "/azureMgnt/storageAccessKey/save",
         contentType : "application/json",
         async : true,
         data : JSON.stringify(rgInfo),
@@ -289,14 +289,14 @@ td {
     <div class="pdt20">
         <div class="title fl">Azure Keypair 목록</div>
         <div class="fr"> 
-        <sec:authorize access="hasAuthority('AZURE_KEYPAIR_CREATE')">
+        <sec:authorize access="hasAuthority('AZURE_PUBLIC_IP_CREATE')">
             <span id="addBtn" class="btn btn-primary" style="width:120px">생성</span>
         </sec:authorize>
         </div>
     </div>
     
     <!-- Keypair 정보 목록 그리드 -->
-    <div id="azure_keypairGrid" style="width:100%; height:305px"></div>
+    <div id="azure_keypairGrid" style="width:100%; height:605px"></div>
 
     <!-- Keypair 할당 팝업 -->
     <div id="registPopupDiv" hidden="true">
@@ -308,26 +308,7 @@ td {
                     <div class="w2ui-field">
                         <label style="width:36%;text-align: left; padding-left: 20px;">Keypair Name</label>
                         <div>
-                            <input name="keypairName" type="text"   maxlength="100" style="width: 300px; margin-top: 1px;" placeholder="Network 태그 명을 입력하세요."/>
-                        </div>
-                    </div>
-                    <div class="w2ui-field">
-                        <label style="width:36%;text-align: left; padding-left: 20px;">Resource Group</label>
-                         <div id="resourceGroupInfoDiv">
-                            <select id="resourceGroupInfo" name="resourceGroupName" onClick = "azureResourceGroupOnchange(this.value, 'selected')" class="select" style="width:300px; font-size: 15px; height: 32px;"></select>
-                        </div>
-                    </div>
-                    <div class="w2ui-field">
-                        <label style="width:36%;text-align: left; padding-left: 20px;">Location</label>
-                         <div id="locationInfoDiv">
-                         <div id="locationInfo" style="width:300px; font-size: 15px; height: 28px; border: 1px solid #ccc; border-radius:2px; padding-left:5px; line-height:28px; color:#777 !important;" ></div>
-                                <input id ="locationVal" name="location" hidden="true" readonly='readonly'  style="width:300px; font-size: 15px; height: 32px;"/> 
-                        </div>
-                    </div>
-                    <div class="w2ui-field">
-                        <label style="width:36%;text-align: left; padding-left: 20px;">Subscription</label>
-                        <div id="subscriptionInfoDiv">
-                            <div id="subscriptionInfo"><input style="width:300px;" placeholder="Loading..."/></div>
+                            <input name="keypairName" type="text"   maxlength="100" style="width: 300px; margin-top: 1px;" placeholder="Keypair 명을 입력하세요."/>
                         </div>
                     </div>
                 </div>

@@ -126,7 +126,7 @@ function unhover(event, val){
                     </li>
                 </sec:authorize>
                 <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCESS_KEY_MENU')">
-                    <li class="azureMgntDiv" onmouseover="hover(this,'elasticIP_c2');" onmouseout="unhover(this,'elasticIP_c1');" onclick="javascript:goPage('<c:url value="/azureMgnt/keypair"/>', 'Key Pair');">
+                    <li class="azureMgntDiv" onmouseover="hover(this,'elasticIP_c2');" onmouseout="unhover(this,'elasticIP_c1');" onclick="javascript:goPage('<c:url value="/azureMgnt/storageAccessKey"/>', 'Key Pair');">
                         <ul>
                             <li class="azure-li"><span class="azure-li-span1">Key Pair </span></li>
                             <li>
