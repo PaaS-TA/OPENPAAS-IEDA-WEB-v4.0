@@ -54,16 +54,9 @@ public class AzureKeypairMgntService {
         List<AzureKeypairMgntVO> list = new ArrayList<AzureKeypairMgntVO>();
         for (int i=0; i< results.size(); i++){
             String result = results.get(i);
-            if (result.contains(".pem")){
+            if (result.contains(".pem")||result.contains(".pub")){
                 AzureKeypairMgntVO azureVo = new AzureKeypairMgntVO();
                 azureVo.setKeypairName(result);
-                if(result.contains("private")){
-                    azureVo.setKeypairType("Private");
-                }else if(result.contains("public")){
-                    azureVo.setKeypairType("Public");
-                }else{
-                    azureVo.setKeypairType("-");
-                }
                 azureVo.setAccountId(accountId);
                 azureVo.setRecid(i);
                 list.add(azureVo);
@@ -88,12 +81,12 @@ public class AzureKeypairMgntService {
               KeyPair keypair = kepairGen.generateKeyPair();
               
               Key publicKey = keypair.getPublic();
-              FileOutputStream output = new FileOutputStream(LocalDirectoryConfiguration.getSshDir()+"/"+ keypairName+"-public.pem");
+              FileOutputStream output = new FileOutputStream(LocalDirectoryConfiguration.getSshDir()+"/"+ keypairName+".pub");
               output.write(publicKey.getEncoded());
               output.close();
               
               Key privateKey = keypair.getPrivate();
-              FileOutputStream output2 = new FileOutputStream(LocalDirectoryConfiguration.getSshDir()+"/"+ keypairName+"-private.pem");
+              FileOutputStream output2 = new FileOutputStream(LocalDirectoryConfiguration.getSshDir()+"/"+ keypairName+".pem");
               output2.write(privateKey.getEncoded());
               output2.close();
                 
@@ -103,15 +96,9 @@ public class AzureKeypairMgntService {
                 e.printStackTrace();
             }
         }catch (Exception e) {
-            String detailMessage = e.getMessage();
-            if(!detailMessage.equals("") && detailMessage != "null"){
-                throw new CommonException(
-                  detailMessage, detailMessage, HttpStatus.BAD_REQUEST);
-            }else{
-                throw new CommonException(
-                  message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
-            }
-            
+        	e.printStackTrace();
+            throw new CommonException(
+                    message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
         }
     }
     

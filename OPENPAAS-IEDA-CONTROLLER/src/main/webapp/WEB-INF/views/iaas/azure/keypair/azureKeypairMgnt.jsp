@@ -45,7 +45,6 @@ $(function() {
                            return record.keypairName;
                        }}
                    }
-                   , {field: 'keypairType', caption: 'Keypair Type', size: '50%', style: 'text-align:center'}
                    ],
         onSelect: function(event) {
             event.onComplete = function() {
