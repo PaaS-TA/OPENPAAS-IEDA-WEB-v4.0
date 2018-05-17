@@ -13,7 +13,6 @@ import java.util.Locale;
 
 import org.openpaas.ieda.azureMgnt.web.keypair.dao.AzureKeypairMgntVO;
 import org.openpaas.ieda.azureMgnt.web.keypair.dto.AzureKeypairMgntDTO;
-import org.openpaas.ieda.azureMgnt.web.publicIp.dto.AzurePublicIpMgntDTO;
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.iaasDashboard.web.account.dao.IaasAccountMgntVO;
@@ -49,31 +48,29 @@ public class AzureKeypairMgntService {
      * @return : List<AzurePublicIpMgntVO>
      ***************************************************/
     public List<AzureKeypairMgntVO> getAzureKeypairList(int accountId) {
-         //IaasAccountMgntVO vo = getAzureAccountInfo(principal, accountId);
-         
-         List<String> results = new ArrayList<String>();
-         results = getKeypairFileList("azure");
-         List<AzureKeypairMgntVO> list = new ArrayList<AzureKeypairMgntVO>();
-         for (int i=0; i< results.size(); i++){
-             String result = results.get(i);
-             if (result.contains(".pem")){
-                 AzureKeypairMgntVO azureVo = new AzureKeypairMgntVO();
-                 azureVo.setKeypairName(result);
-                 if(result.contains("private")){
-                     azureVo.setKeypairType("Private");
-                 }else if(result.contains("public")){
-                	 azureVo.setKeypairType("Public");
-                 }else{
-                	 azureVo.setKeypairType("-");
-                 }
-                 azureVo.setAccountId(accountId);
-                 azureVo.setRecid(i);
-                 list.add(azureVo);
-             }
-         }
-         return list;
+        
+        List<String> results = new ArrayList<String>();
+        results = getKeypairFileList("azure");
+        List<AzureKeypairMgntVO> list = new ArrayList<AzureKeypairMgntVO>();
+        for (int i=0; i< results.size(); i++){
+            String result = results.get(i);
+            if (result.contains(".pem")){
+                AzureKeypairMgntVO azureVo = new AzureKeypairMgntVO();
+                azureVo.setKeypairName(result);
+                if(result.contains("private")){
+                    azureVo.setKeypairType("Private");
+                }else if(result.contains("public")){
+                    azureVo.setKeypairType("Public");
+                }else{
+                    azureVo.setKeypairType("-");
+                }
+                azureVo.setAccountId(accountId);
+                azureVo.setRecid(i);
+                list.add(azureVo);
+            }
+        }
+        return list;
     }
-    
     
     /***************************************************
      * @project : 인프라 관리 대시보드
@@ -82,23 +79,23 @@ public class AzureKeypairMgntService {
      * @return : void
      ***************************************************/
     public void createKeypair(AzureKeypairMgntDTO dto) {
-    	String keypairName = dto.getKeypairName();
+        String keypairName = dto.getKeypairName();
         try{
             try {
               KeyPairGenerator kepairGen = KeyPairGenerator.getInstance("rsa");
               kepairGen.initialize(2048);
          
-	          KeyPair keypair = kepairGen.generateKeyPair();
-	          
-	          Key publicKey = keypair.getPublic();
-	          FileOutputStream output = new FileOutputStream(LocalDirectoryConfiguration.getSshDir()+"/"+ keypairName+"-public.pem");
-	          output.write(publicKey.getEncoded());
-	          output.close();
-	          
-	          Key privateKey = keypair.getPrivate();
-	          FileOutputStream output2 = new FileOutputStream(LocalDirectoryConfiguration.getSshDir()+"/"+ keypairName+"-private.pem");
-	          output2.write(privateKey.getEncoded());
-	          output2.close();
+              KeyPair keypair = kepairGen.generateKeyPair();
+              
+              Key publicKey = keypair.getPublic();
+              FileOutputStream output = new FileOutputStream(LocalDirectoryConfiguration.getSshDir()+"/"+ keypairName+"-public.pem");
+              output.write(publicKey.getEncoded());
+              output.close();
+              
+              Key privateKey = keypair.getPrivate();
+              FileOutputStream output2 = new FileOutputStream(LocalDirectoryConfiguration.getSshDir()+"/"+ keypairName+"-private.pem");
+              output2.write(privateKey.getEncoded());
+              output2.close();
                 
             
              } catch (NoSuchAlgorithmException e) {
@@ -120,7 +117,7 @@ public class AzureKeypairMgntService {
     
     /****************************************************************
      * @project :인프라 관리 대시보드
-     * @description : 로컬에서 Private Key 파일(.pem)  정보 목록 조회
+     * @description : 로컬에서 Public/Private Key 파일(.pem)  정보 목록 조회
      * @title : getKeypairFileList
      * @return : List<String>
     *****************************************************************/
@@ -142,7 +139,5 @@ public class AzureKeypairMgntService {
         }
         return localFiles;
     }
-    
-    
     
 }

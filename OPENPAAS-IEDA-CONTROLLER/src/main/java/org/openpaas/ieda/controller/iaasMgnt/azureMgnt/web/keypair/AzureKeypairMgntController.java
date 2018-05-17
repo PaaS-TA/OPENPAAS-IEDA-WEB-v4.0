@@ -1,6 +1,5 @@
 package org.openpaas.ieda.controller.iaasMgnt.azureMgnt.web.keypair;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
