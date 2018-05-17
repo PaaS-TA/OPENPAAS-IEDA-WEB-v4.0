@@ -34,6 +34,7 @@ $(function() {
                 selectColumn: false,
                 footer: true},
         style: 'text-align: center',
+        sortData: [{ field: 'keypairName', direction: 'desc' }],
         columns    : [
                      {field: 'recid',     caption: 'recid', hidden: true}
                    , {field: 'accountId',     caption: 'accountId', hidden: true}

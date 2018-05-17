@@ -50,8 +50,8 @@ public class AzureKeypairMgntController {
      * @return : ResponseEntity<?>
      ***************************************************/
     @RequestMapping(value="/azureMgnt/storageAccessKey/list/{accountId}", method=RequestMethod.GET)
-    public ResponseEntity<HashMap<String, Object>> getAzureKeypairInfoList(Principal principal, @PathVariable("accountId") int accountId){
-        List<AzureKeypairMgntVO> list = azureAzureKeypairMgntService.getAzureKeypairList(principal,accountId);
+    public ResponseEntity<HashMap<String, Object>> getAzureKeypairInfoList(@PathVariable("accountId") int accountId){
+        List<AzureKeypairMgntVO> list = azureAzureKeypairMgntService.getAzureKeypairList(accountId);
         HashMap<String, Object> map = new HashMap<String, Object>();
         if(list != null && list.size() != 0){
             map.put("total", list.size());

@@ -48,7 +48,7 @@ public class AzureKeypairMgntService {
      * @title : getAzureKeypairList
      * @return : List<AzurePublicIpMgntVO>
      ***************************************************/
-    public List<AzureKeypairMgntVO> getAzureKeypairList(Principal principal, int accountId) {
+    public List<AzureKeypairMgntVO> getAzureKeypairList(int accountId) {
          //IaasAccountMgntVO vo = getAzureAccountInfo(principal, accountId);
          
          List<String> results = new ArrayList<String>();
@@ -91,12 +91,12 @@ public class AzureKeypairMgntService {
 	          KeyPair keypair = kepairGen.generateKeyPair();
 	          
 	          Key publicKey = keypair.getPublic();
-	          FileOutputStream output = new FileOutputStream(LocalDirectoryConfiguration.getSshDir()+"/public"+ keypairName+".pem");
+	          FileOutputStream output = new FileOutputStream(LocalDirectoryConfiguration.getSshDir()+"/"+ keypairName+"-public.pem");
 	          output.write(publicKey.getEncoded());
 	          output.close();
 	          
 	          Key privateKey = keypair.getPrivate();
-	          FileOutputStream output2 = new FileOutputStream(LocalDirectoryConfiguration.getSshDir()+"/private"+ keypairName+".pem");
+	          FileOutputStream output2 = new FileOutputStream(LocalDirectoryConfiguration.getSshDir()+"/"+ keypairName+"-private.pem");
 	          output2.write(privateKey.getEncoded());
 	          output2.close();
                 
