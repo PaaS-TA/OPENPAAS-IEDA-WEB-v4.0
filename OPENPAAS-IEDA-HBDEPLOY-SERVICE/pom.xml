@@ -9,9 +9,9 @@
   </parent>
   <groupId>org.openpaas.ieda.hbdeploy</groupId>
   <artifactId>OPENPAAS-IEDA-HBDEPLOY-SERVICE</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+ <version>0.0.1-HBDEPLOY-SERVICE-SNAPSHOT</version>
   <name>OPENPAAS-IEDA-HBDEPLOY-SERVICE</name>
-  <url>http://maven.apache.org</url>
+  <packaging>jar</packaging>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -24,8 +24,12 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.openpaas.ieda.deploy</groupId>
+        <artifactId>OPENPAAS-IEDA-DEPLOY-SERVICE</artifactId>
+        <version>0.0.1-DEPLOY-SERVICE-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>

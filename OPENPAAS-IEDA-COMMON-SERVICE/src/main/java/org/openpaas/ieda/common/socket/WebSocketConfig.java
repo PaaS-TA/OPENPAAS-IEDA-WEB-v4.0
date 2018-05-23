@@ -42,6 +42,8 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
                                 , "/info/property/modify/socket"
                                 , "/deploy/servicePack/install/logs"
                                 , "/deploy/servicePack/delete/logs"
+                                , "/deploy/hbBootstrap/install/logs"
+                                , "/deploy/hbBootstrap/delete/logs"
                                 ); 
         config.setApplicationDestinationPrefixes("/app", "/send");
         config.setUserDestinationPrefix("/user");
@@ -73,6 +75,8 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
                             , "/info/property/modify/createProperty"
                             , "/deploy/servicePack/install/servicepackInstall"
                             , "/deploy/servicePack/delete/instance"
+                            , "/deploy/hbBootstrap/install/bootstrapInstall"
+                            , "/deploy/hbBootstrap/delete/instance"
                             ).withSockJS().setInterceptors(httpSessionIdHandshakeInterceptor());
 
     }

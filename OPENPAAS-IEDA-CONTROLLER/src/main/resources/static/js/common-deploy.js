@@ -1,14 +1,14 @@
 /*******************************************************************************
  * 설명 : 기본설치관리자 정보 조회
  ******************************************************************************/
-function getDefaultDirector(url) {
+function getDefaultDirector(url, type) {
     var isOk = true;
-    var directorInfoDiv = '<div class="title">설치 관리자</div>';
+    var directorInfoDiv = '<div class="title">디렉터 정보</div>';
     directorInfoDiv += '<table class="tbl1" border="1" cellspacing="0">';
-    directorInfoDiv += '<tr><th width="18%" class="th_fb">관리자 이름</th><td class="td_fb"><b id="directorName"></b></td>';
-    directorInfoDiv += '<th width="18%" class="th_fb">관리자 계정</th><td class="td_fb"><b id="userId"></b></td></tr>';
-    directorInfoDiv += '<tr><th width="18%" >관리자 URL</th><td><b id="directorUrl"></b></td>';
-    directorInfoDiv += '<th width="18%" >관리자 UUID</th><td ><b id="directorUuid"></b></td></tr></table>';
+    directorInfoDiv += '<tr><th width="18%" class="th_fb">디렉터 이름</th><td class="td_fb"><b id="directorName"></b></td>';
+    directorInfoDiv += '<th width="18%" class="th_fb">디렉터 계정</th><td class="td_fb"><b id="userId"></b></td></tr>';
+    directorInfoDiv += '<tr><th width="18%" >디렉터 URL</th><td><b id="directorUrl"></b></td>';
+    directorInfoDiv += '<th width="18%" >디렉터 UUID</th><td ><b id="directorUuid"></b></td></tr></table>';
 
     $.ajax({
         type : "GET",
@@ -16,12 +16,22 @@ function getDefaultDirector(url) {
         async : false,
         success : function(data) {
             if (!checkEmpty(data)) {
-                $("#isDefaultDirector").html(directorInfoDiv);
-                setDefaultDirectorInfo(data);
+                if(type!="hybrid"){
+                    $("#isDefaultDirector").html(directorInfoDiv);
+                    setDefaultDirectorInfo(data);
+                } else{
+                    $("#isDefaultDirector").html("");
+                }
                 isOk = data.connect;
             } else {
                 isOk = false;
-                var message = "기본 설치관리자가 존재하지 않습니다. 플랫폼설치 -> BOOSTRAP설치 메뉴를 이용해서 BOOTSTRAP 설치 후 설치관리자를 등록하세요.";
+                var message = "";
+                if(type!="hybrid"){
+                    var message = "기본 디렉터가 존재하지 않습니다. 플랫폼설치 -> BOOSTRAP설치 메뉴를 이용해서 BOOTSTRAP 설치 후 디렉터를 등록하세요.";
+                } else{
+                    var message = "디렉터가 존재하지 않습니다. 이기종 플랫폼설치 -> BOOSTRAP설치 메뉴를 이용해서 BOOTSTRAP 설치 후 디렉터를 등록하세요.";
+                }
+                
                 var errorDirectorDiv = '<div class="alert alert-danger" style="font-size:15px;text-align:center;"><strong>'
                     + message + '</strong></div>';
                 $("#isDefaultDirector").html(errorDirectorDiv);

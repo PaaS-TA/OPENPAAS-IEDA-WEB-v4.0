@@ -398,11 +398,11 @@ function saveOpenstackConfigInfo(){
     w2popup.lock(save_lock_msg, true);
     //Openstack 환경 설정 정보 등록
     configInfo = {
-            iaasType : "Openstack",
+            iaasType : "OPENSTACK",
             id : $(".w2ui-msg-body input[name='configId']").val(),
             iaasConfigAlias : $(".w2ui-msg-body input[name='iaasConfigAlias']").val(),
             accountId : $(".w2ui-msg-body select[name='accountName']").val(),
-            commonSecurityGroup : $(".w2ui-msg-body input[name='commonSecurityGroup']").val(),        
+            commonSecurityGroup : $(".w2ui-msg-body input[name='commonSecurityGroup']").val(),
             commonRegion : $(".w2ui-msg-body input[name='commonRegion']").val(),
             commonKeypairName : $(".w2ui-msg-body input[name='commonKeypairName']").val(),
             commonKeypairPath : $(".w2ui-msg-body input[name='commonKeypairPath']").val()
@@ -650,7 +650,7 @@ $(function() {
                         return false;
                     }
                 }, sqlInjection : function() {
-                	if($(".w2ui-msg-body input[name='openstackVersion']").val() == "V3"){
+                    if($(".w2ui-msg-body input[name='openstackVersion']").val() == "V3"){
                         return $(".w2ui-msg-body input[name='commonRegion']").val();
                     }
                 }

@@ -40,7 +40,7 @@
               <a href="javascript:;" data-toggle="collapse" data-target="#configMenu" ><i class="fa fa-fw fa fa-cog"></i> 환경설정 및 관리 <i class="fa fa-fw fa-caret-down"></i></a>
               <ul id="configMenu" class="collapse">
                   <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
-                      <li><a href="javascript:goPage('<c:url value="/config/director"/>', '디렉터 설정');">디렉터 설정</a></li>
+                      <li><a href="javascript:goPage('<c:url value="/config/hbDirector"/>', '디렉터 설정');">디렉터 설정</a></li>
                   </sec:authorize>
                   <sec:authorize access="hasAuthority('CONFIG_STEMCELL_MENU')">
                       <li><a href="javascript:goPage('<c:url value="/config/stemcell"/>', 'Public 스템셀 다운로드');">스템셀 관리</a></li>
@@ -57,10 +57,10 @@
                </ul>
            </li>
            <li>
-               <a href="javascript:;" data-toggle="collapse" data-target="#deployMenu" ><i class="fa fa-fw fa-spinner"></i> 플랫폼 설치 <i class="fa fa-fw fa-caret-down"></i></a>
+               <a href="javascript:;" data-toggle="collapse" data-target="#deployMenu" ><i class="fa fa-fw fa-spinner"></i>이기종 플랫폼 설치 <i class="fa fa-fw fa-caret-down"></i></a>
                <ul id="deployMenu" class="collapse">
                    <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/bootstrap"/>', 'BOOTSTRAP 설치');">BOOTSTRAP 설치</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap"/>', 'BOOTSTRAP 설치');">BOOTSTRAP 설치</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('DEPLOY_CF_MENU')">
                        <li><a href="javascript:goPage('<c:url value="/deploy/cf"/>', 'CF 설치');">CF 설치</a></li>

@@ -158,7 +158,7 @@ jobs:
     instances: (( merge || 1 ))
     networks:
       - name: cf1
-
+    
   - name: postgres_z1
     instances: (( merge ))
     networks:
