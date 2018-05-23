@@ -62,8 +62,8 @@ public class HbBootstrapDeployAsyncServiceUnitTest extends BaseHbDeployControlle
     ***************************************************/
     @Test
     public void testSaveDeployStatusBootStrapInfoNull(){
-    	HbBootstrapVO vo = null;
-    	mockHbBootstrapDeployAsyncService.saveDeployStatus(vo);
+        HbBootstrapVO vo = null;
+        mockHbBootstrapDeployAsyncService.saveDeployStatus(vo);
     }
     
 }

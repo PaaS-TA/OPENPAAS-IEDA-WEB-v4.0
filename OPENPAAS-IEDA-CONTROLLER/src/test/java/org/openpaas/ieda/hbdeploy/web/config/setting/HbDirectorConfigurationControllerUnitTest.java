@@ -108,13 +108,12 @@ public class HbDirectorConfigurationControllerUnitTest {
     public void testListDirector() throws Exception{
         List<HbDirectorConfigVO> resultList = setListDirector();
         when( mockHbDirectorConfigService.getDirectorList(anyString())).thenReturn(resultList);
-        mockMvc.perform(get( HB_DIRECTOR_LIST_URL ).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
+        mockMvc.perform(get( HB_DIRECTOR_LIST_URL, "private" ).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.records[0].iedaDirectorConfigSeq").value(1))
         .andExpect(jsonPath("$.records[0].recid").value(1))
         .andExpect(jsonPath("$.records[0].userId").value("admin"))
-        .andExpect(jsonPath("$.records[0].defaultYn").value("Y"))
         .andExpect(jsonPath("$.records[0].directorCpi").value("openstack-cpi"))
         .andExpect(jsonPath("$.records[0].directorName").value("my-bosh"))
         .andExpect(jsonPath("$.records[0].directorPort").value(25555))
