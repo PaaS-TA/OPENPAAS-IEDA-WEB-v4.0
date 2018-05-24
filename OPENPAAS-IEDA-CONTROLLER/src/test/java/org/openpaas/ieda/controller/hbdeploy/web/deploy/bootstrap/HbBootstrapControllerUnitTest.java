@@ -29,7 +29,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openpaas.ieda.common.BaseControllerUnitTest;
-import org.openpaas.ieda.deploy.web.deploy.bootstrap.dto.BootStrapDeployDTO;
 import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dao.HbBootstrapVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dto.HbBootStrapDeployDTO;
 import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dto.HbBootstrapListDTO;
@@ -142,7 +141,7 @@ public class HbBootstrapControllerUnitTest extends BaseControllerUnitTest {
     public void testGetHbBootstrapList() throws Exception{
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> Hybrid_Bootstrap 정보 목록 조회 Unit Test"); }
         List<HbBootstrapListDTO> expectBootstrapList = setBootstrapList();
-        when(mockHbBootstrapService.getBootstrapList()).thenReturn(expectBootstrapList);
+        when(mockHbBootstrapService.getHbBootstrapList()).thenReturn(expectBootstrapList);
         mockMvc.perform(get(HYBRID_BOOTSTRAP_LIST_URL).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.records[0].recid").value(expectBootstrapList.get(0).getRecid()))
@@ -198,7 +197,7 @@ public class HbBootstrapControllerUnitTest extends BaseControllerUnitTest {
     public void testGetHbBootstrapInfo() throws Exception{
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> Hybrid_Bootstrap 정보 목록 조회 Unit Test"); }
         HbBootstrapVO expectVo = setBootstrapInfo();
-        when(mockHbBootstrapService.getBootstrapInfo(anyInt(), anyString())).thenReturn(expectVo);
+        when(mockHbBootstrapService.getHbBootstrapInfo(anyInt(), anyString())).thenReturn(expectVo);
         mockMvc.perform(get(HYBIRD_BOOTSTRAP_INFO_URL,"1","openstack").contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(expectVo.getId()))
@@ -267,7 +266,7 @@ public class HbBootstrapControllerUnitTest extends BaseControllerUnitTest {
     public void testGetHbBootstrapInstallInfo() throws Exception{
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> Hybrid_Bootstrap 설치 상세 정보 조회 Unit Test"); }
         HbBootstrapVO expectVo = setBootstrapInfo();
-        when(mockHbBootstrapService.getBootstrapInstallInfo(anyString(), anyString())).thenReturn(expectVo);
+        when(mockHbBootstrapService.getHbBootstrapInstallInfo(anyString(), anyString())).thenReturn(expectVo);
         mockMvc.perform(get(HYBIRD_BOOTSTRAP_INSTALL_INFO_URL,"1","1").contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(expectVo.getId()))
@@ -489,7 +488,7 @@ public class HbBootstrapControllerUnitTest extends BaseControllerUnitTest {
     public void testGetDeployLogMsg() throws Exception{
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> 배포 파일 생성 Unit Test"); }
         HbBootstrapVO expectVo = setBootstrapInfo();
-        when(mockHbBootstrapService.getBootstrapInfo(anyInt(), anyString())).thenReturn(expectVo);
+        when(mockHbBootstrapService.getHbBootstrapInfo(anyInt(), anyString())).thenReturn(expectVo);
         mockMvc.perform(get(HYBRID_BOOTSTRAP_LOG_INFO_URL,1,"openstack").contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk());

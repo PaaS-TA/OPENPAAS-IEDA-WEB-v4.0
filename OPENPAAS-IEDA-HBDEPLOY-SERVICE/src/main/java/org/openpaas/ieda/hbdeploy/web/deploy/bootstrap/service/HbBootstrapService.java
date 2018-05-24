@@ -58,7 +58,7 @@ public class HbBootstrapService {
      * @title : bootstrapList
      * @return : List<BootstrapListDTO>
     ***************************************************/
-    public List<HbBootstrapListDTO> getBootstrapList() {
+    public List<HbBootstrapListDTO> getHbBootstrapList() {
         List<HbBootstrapVO> bootstrapConfigsList = bootStrapDao.selectBootstrapList();
         List<HbBootstrapListDTO> listDtos = new ArrayList<>();
         int recid =0;
@@ -109,7 +109,7 @@ public class HbBootstrapService {
      * @title : getBootstrapInfo
      * @return : BootstrapVO
     ***************************************************/
-    public HbBootstrapVO getBootstrapInfo(int id, String iaas) {
+    public HbBootstrapVO getHbBootstrapInfo(int id, String iaas) {
         HbBootstrapVO vo = bootStrapDao.selectBootstrapInfo(id, iaas.toLowerCase());
         if( vo == null ){
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
@@ -400,7 +400,7 @@ public class HbBootstrapService {
      * @title : getBootstrapInstallInfo
      * @return : Boolean
     ***************************************************/
-	public HbBootstrapVO getBootstrapInstallInfo(String privateBootstrapId, String publicBootStrapId) {
+	public HbBootstrapVO getHbBootstrapInstallInfo(String privateBootstrapId, String publicBootStrapId) {
         HbBootstrapVO vo = bootStrapDao.selectInstallBootstrapInfo(Integer.parseInt(privateBootstrapId), Integer.parseInt(publicBootStrapId));
         if( vo == null ){
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),

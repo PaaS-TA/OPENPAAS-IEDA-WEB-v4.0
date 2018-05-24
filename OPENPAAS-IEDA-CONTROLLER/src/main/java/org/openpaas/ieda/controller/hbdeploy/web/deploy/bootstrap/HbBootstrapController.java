@@ -70,7 +70,7 @@ public class HbBootstrapController extends BaseController {
     @RequestMapping(value = "/deploy/hbBootstrap/list", method = RequestMethod.GET)
     public ResponseEntity<HashMap<String, Object>> getHbBootstrapList() {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbbootstrap/list"); }
-        List<HbBootstrapListDTO> content = bootstrapService.getBootstrapList();
+        List<HbBootstrapListDTO> content = bootstrapService.getHbBootstrapList();
         HashMap<String, Object> result = new HashMap<String, Object>();
         int total = content != null ? content.size() : 0;
         result.put("records", content);
@@ -87,7 +87,7 @@ public class HbBootstrapController extends BaseController {
     @RequestMapping(value = "/deploy/hbBootstrap/install/detail/{id}/{iaas}", method = RequestMethod.GET)
     public ResponseEntity<HbBootstrapVO> getHbBootstrapInfo(@PathVariable int id, @PathVariable String iaas) {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbbootstrap/install/detail/"+id); }
-        HbBootstrapVO vo = bootstrapService.getBootstrapInfo(id, iaas);
+        HbBootstrapVO vo = bootstrapService.getHbBootstrapInfo(id, iaas);
         return new ResponseEntity<HbBootstrapVO>(vo, HttpStatus.OK);
     }
     
@@ -100,7 +100,7 @@ public class HbBootstrapController extends BaseController {
     @RequestMapping(value = "/deploy/hbBootstrap/install/hbDetail/{privateBootstrapId}/{publicBootStrapId}", method = RequestMethod.GET)
     public ResponseEntity<HbBootstrapVO> getHbBootstrapInstallInfo(@PathVariable String privateBootstrapId, @PathVariable String publicBootStrapId) {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbbootstrap/install/detail/"); }
-        HbBootstrapVO vo = bootstrapService.getBootstrapInstallInfo(privateBootstrapId, publicBootStrapId);
+        HbBootstrapVO vo = bootstrapService.getHbBootstrapInstallInfo(privateBootstrapId, publicBootStrapId);
         return new ResponseEntity<HbBootstrapVO>(vo, HttpStatus.OK);
     }
 
@@ -222,7 +222,7 @@ public class HbBootstrapController extends BaseController {
         if (LOGGER.isDebugEnabled()) { 
         LOGGER.debug("====================================> /deploy/hbbootstrap/list/"); 
     }
-        HbBootstrapVO vo = bootstrapService.getBootstrapInfo(id, iaas);
+        HbBootstrapVO vo = bootstrapService.getHbBootstrapInfo(id, iaas);
         return new ResponseEntity<String>(vo.getDeployLog(), HttpStatus.OK);
     }
 

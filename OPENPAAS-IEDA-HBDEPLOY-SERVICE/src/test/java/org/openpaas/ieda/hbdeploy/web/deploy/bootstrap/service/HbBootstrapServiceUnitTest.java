@@ -73,7 +73,7 @@ public class HbBootstrapServiceUnitTest extends BaseHbDeployControllerUnitTest{
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> Hybrid Bootstrap 목록 조회 Unit Test"); }
         List<HbBootstrapVO> list = setBootstrapList("openstack");
         when(mockHbBootstrapDAO.selectBootstrapList()).thenReturn(list);
-        List<HbBootstrapListDTO> result = mockHbBootstrapService.getBootstrapList();
+        List<HbBootstrapListDTO> result = mockHbBootstrapService.getHbBootstrapList();
         for( int i=0; i<result.size(); i++ ){
             assertEquals(list.size(), result.size());
             assertEquals(list.get(i).getId(), result.get(i).getId());
@@ -101,7 +101,7 @@ public class HbBootstrapServiceUnitTest extends BaseHbDeployControllerUnitTest{
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> Hybrid Bootstrap 정보 상세 조회 Unit Test"); }
         HbBootstrapVO vo = setBootstrapInfo("openstack");
         when(mockHbBootstrapDAO.selectBootstrapInfo(anyInt(), anyString())).thenReturn(vo);
-        HbBootstrapVO result = mockHbBootstrapService.getBootstrapInfo(1, "openstack");
+        HbBootstrapVO result = mockHbBootstrapService.getHbBootstrapInfo(1, "openstack");
         assertEquals(vo.getId(), result.getId());
         assertEquals(vo.getIaasType(), result.getIaasType());
         assertEquals(vo.getDeploymentName(), result.getDeploymentName());
@@ -143,7 +143,7 @@ public class HbBootstrapServiceUnitTest extends BaseHbDeployControllerUnitTest{
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> Hybrid Bootstrap 정보 상세 조회 Unit Test"); }
         when(mockHbBootstrapDAO.selectBootstrapInfo(anyInt(), anyString())).thenReturn(null);
         when(mockMessageSource.getMessage(any(), any(), any())).thenReturn("");
-        mockHbBootstrapService.getBootstrapInfo(1, "openstack");
+        mockHbBootstrapService.getHbBootstrapInfo(1, "openstack");
         verify(mockHbBootstrapDAO, times(1)).selectBootstrapInfo(1, "openstack");
         verifyNoMoreInteractions(mockHbBootstrapDAO);
     }
@@ -282,7 +282,7 @@ public class HbBootstrapServiceUnitTest extends BaseHbDeployControllerUnitTest{
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> Hybrid Bootstrap 설치 정보 조회 Unit Test)"); }
         HbBootstrapVO expectVo = setBootstrapInfo("openstack");
         when(mockHbBootstrapDAO.selectInstallBootstrapInfo(anyInt(), anyInt())).thenReturn(expectVo);
-        HbBootstrapVO resultVo = mockHbBootstrapService.getBootstrapInstallInfo("1", "1");
+        HbBootstrapVO resultVo = mockHbBootstrapService.getHbBootstrapInstallInfo("1", "1");
         assertEquals(expectVo.getBootstrapType(), resultVo.getBootstrapType());
         assertEquals(expectVo.getBoshPassword(), resultVo.getBoshPassword());
         assertEquals(expectVo.getBoshCpiRelease(), resultVo.getBoshCpiRelease());
@@ -308,7 +308,7 @@ public class HbBootstrapServiceUnitTest extends BaseHbDeployControllerUnitTest{
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> Hybrid Bootstrap 설치 정보 조회 expect Null point Unit Test)"); }
         when(mockMessageSource.getMessage(any(), any(), any())).thenReturn("");
         when(mockHbBootstrapDAO.selectInstallBootstrapInfo(anyInt(), anyInt())).thenReturn(null);
-        mockHbBootstrapService.getBootstrapInstallInfo("1", "1");
+        mockHbBootstrapService.getHbBootstrapInstallInfo("1", "1");
     }
     
     /****************************************************************
