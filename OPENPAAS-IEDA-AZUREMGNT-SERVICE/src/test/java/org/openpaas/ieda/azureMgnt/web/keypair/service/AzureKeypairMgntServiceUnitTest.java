@@ -1,10 +1,6 @@
 package org.openpaas.ieda.azureMgnt.web.keypair.service;
 
-import static org.junit.Assert.assertEquals;
-
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.ws.rs.core.Application;
 
@@ -15,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openpaas.ieda.azureMgnt.web.common.base.BaseAzureMgntControllerUnitTest;
-import org.openpaas.ieda.azureMgnt.web.keypair.dao.AzureKeypairMgntVO;
 import org.openpaas.ieda.azureMgnt.web.keypair.dto.AzureKeypairMgntDTO;
 import org.openpaas.ieda.iaasDashboard.web.common.service.CommonIaasService;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -45,33 +40,6 @@ private Principal principal = null;
         MockitoAnnotations.initMocks(this);
         principal = getLoggined();
     }
-    
-    /***************************************************
-     * @project : Azure 관리 대시보드
-     * @description : Azure Keypair 목록 조회 TEST
-     * @title : testGetAzureKeypairInfoList
-     * @return : void
-     ***************************************************/
-   /* @Test
-    public void testGetAzureKeypairInfoList(){
-    	List<String> Keypairlist = getResultKeypairListInfo();
-        List<AzureKeypairMgntVO> resultList = mockAzureKeypairMgntService.getAzureKeypairList(1);
-        assertEquals(resultList.size(), 14);
-        assertEquals(resultList.get(0).getKeypairName(), Keypairlist.get(0));
-    }*/
-    
-    /***************************************************
-     * @project : Azure 관리 대시보드
-     * @description : 해당 정보 목록 값 설정  
-     * @title : getResultKeypairListInfo
-     * @return : List<KeyPair>
-     ***************************************************/
-    /*public List<String> getResultKeypairListInfo(){
-    	List<String> list = new ArrayList<String>();
-    	String keyPair = "test-key-2.pem";
-    	list.add(keyPair);
-    	return list;
-    }*/
     
     /***************************************************
      * @project : 인프라 관리 대시보드
