@@ -33,7 +33,7 @@
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/deploy-content.css?ver=6'/>"/>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/progress-step.css?ver=2'/>"/> <!-- progress-step css -->
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-guide.css?ver=3'/>"/>
-<link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-init.css?ver=2'/>"/>
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-init.css?ver=4'/>"/>
 <!-- JAVA SCRIPT -->
 <!-- JQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -76,7 +76,7 @@ $(function() {
         name: 'layout',
         panels: [
              { type: 'top', style: pstyle, size: 71}
-            ,{ type: 'left', style: pstyle, size:275}
+            ,{ type: 'left', style: pstyle, size:256}
             ,{ type: 'main', style: pstyle, size:1599}
         ],  onError: function(event) {
         }        , onResize : function(event) {
@@ -86,7 +86,7 @@ $(function() {
     
     setLayoutContainerHeight();
         w2ui['layout'].load('top', 'hbTop');
-        w2ui['layout'].load('left', 'hbMenu');
+        w2ui['layout'].load('left', 'hbMenu2');
         w2ui['layout'].load('main', '/config/hbDirector');
 });
 

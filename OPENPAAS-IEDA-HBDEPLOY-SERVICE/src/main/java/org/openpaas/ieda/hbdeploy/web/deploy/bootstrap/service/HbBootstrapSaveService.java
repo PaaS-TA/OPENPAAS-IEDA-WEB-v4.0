@@ -61,7 +61,7 @@ public class HbBootstrapSaveService {
             int priPubBootstrapId = vo.getId();
             if("Openstack".equals(vo.getIaasType()) || "vSphere".equals(vo.getIaasType())) {
                 vo.setPrivateBootStrapId(String.valueOf(priPubBootstrapId));
-                if(dto.getPrivateDeploymentFileName() != null && dto.getPrivateDeploymentFileName().isEmpty()){
+                if(dto.getPrivateDeploymentFileName() == null || dto.getPrivateDeploymentFileName().isEmpty()){
                     bootstrapDao.insertHybridBootstrapMgntInfo(vo); // 초기 삽입 시 private만 들어 가도록
                 }
             }
@@ -80,7 +80,7 @@ public class HbBootstrapSaveService {
                 
             }
         }else{
-        	vo.setSetHybridDbTableName("ieda_"+dto.getBootstrapType()+"_bootstrap");
+            vo.setSetHybridDbTableName("ieda_"+dto.getBootstrapType()+"_bootstrap");
             bootstrapDao.updateBootStrapInfo(vo);
         }
         return vo;

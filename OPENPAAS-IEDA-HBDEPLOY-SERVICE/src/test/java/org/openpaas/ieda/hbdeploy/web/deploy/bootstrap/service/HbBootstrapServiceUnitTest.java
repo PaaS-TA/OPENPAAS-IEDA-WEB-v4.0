@@ -78,7 +78,6 @@ public class HbBootstrapServiceUnitTest extends BaseHbDeployControllerUnitTest{
             assertEquals(list.size(), result.size());
             assertEquals(list.get(i).getId(), result.get(i).getId());
             assertEquals(list.get(i).getHyPriId(), result.get(i).getHyPriId());
-            assertEquals(list.get(i).getHyPriBootstrapType(), result.get(i).getHyPriBootstrapType());
             assertEquals(list.get(i).getDeploymentFile(), result.get(i).getDeploymentFile());
             assertEquals(list.get(i).getHyPriDeploymentFile(), result.get(i).getHyPriDeploymentFile());
             assertEquals(list.get(i).getHyPriDeployStatus(), result.get(i).getHyPriDeployStatus());

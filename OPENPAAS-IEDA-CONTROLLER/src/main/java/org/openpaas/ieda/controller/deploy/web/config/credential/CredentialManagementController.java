@@ -38,6 +38,18 @@ public class CredentialManagementController {
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
+     * @description : 디렉터 인증서 관리 화면 이동
+     * @title : goCredentialManagement
+     * @return : String
+    *****************************************************************/
+    @RequestMapping(value="/config/credential2", method=RequestMethod.GET)
+    public String goCredentialManagement2() {
+        if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> /config/credential"); }
+        return "/deploy/config/credentialManagement2";
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
      * @description : 디렉터 인증서 목록 조회
      * @title : getDirectorCredentialList
      * @return : ResponseEntity<HashMap<String,Object>>

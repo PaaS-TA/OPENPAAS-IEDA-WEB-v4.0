@@ -3,7 +3,6 @@ package org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
-import org.openpaas.ieda.deploy.web.config.setting.dao.DirectorConfigVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dto.HbBootStrapDeployDTO;
 
 public interface HbBootstrapDAO {
@@ -48,14 +47,6 @@ public interface HbBootstrapDAO {
      * @return : void
     *****************************************************************/
     void deleteBootstrapInfo(@Param("dto")HbBootStrapDeployDTO.Delete dto);
-    
-    /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : 스냅샷 사용 여부
-     * @title : selectSnapshotInfo
-     * @return : int
-    *****************************************************************/
-    int selectSnapshotInfo( @Param("director")DirectorConfigVO  director);
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화

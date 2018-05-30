@@ -65,7 +65,24 @@
                 </li>
             </sec:authorize>
               <li><a href="javascript:goWindow('<c:url value="/platform"/>', 'IEDA-WEB');"><i class="fa fa-fw fa-cog"></i>PaaS-TA 설치 자동화</a></li>
-              <li><a href="javascript:goWindow('<c:url value="/hbFlatform"/>', 'HB-IEDA-WEB');"><i class="fa fa-fw fa-cogs"></i> 이기종 PaaS-TA 설치 자동화</a></li>
+              <li><a data-toggle="collapse" data-target="#adminMgnt"  href="javascript:goWindow('<c:url value="/hbFlatform"/>', 'HB-IEDA-WEB');"><i class="fa fa-fw fa-cogs"></i> 이종 PaaS-TA 설치 자동화</a></li>
+              
+              <li>
+              <a href="javascript:;" data-toggle="collapse" data-target="#hybird2" ><i class="fa fa-fw fa fa-cogs"></i> 이종 PaaS-TA 설치 자동화 <i class="fa fa-fw fa-caret-down"></i></a>
+                  <ul id="hybird2" class="collapse">
+                      <sec:authorize access="hasAuthority('ADMIN_CODE_MENU')">
+                          <li><a href="javascript:goPage('<c:url value="/admin/code"/>', 'Code MANAGEMENT');">AWS-OPENSTACK</a></li>
+                      </sec:authorize>
+                      <sec:authorize access="hasAuthority('ADMIN_ROLE_MENU')">
+                          <li><a href="javascript:goPage('<c:url value="/admin/role"/>', 'Openstack MANAGEMENT');">AZURE-OPENSTACK</a></li>
+                      </sec:authorize>
+                  </ul>
+              </li>
+              
+              
+              
+              <li><a href="javascript:goWindow('<c:url value="/hbFlatform"/>', 'HB-IEDA-WEB');"><i class="fa fa-fw fa-cogs"></i>Layout1</a></li>
+              <li><a href="javascript:goWindow('<c:url value="/hbFlatform2"/>', 'HB-IEDA-WEB');"><i class="fa fa-fw fa-cogs"></i>Layout2</a></li>
         </ul>
     </div>
 </div>
