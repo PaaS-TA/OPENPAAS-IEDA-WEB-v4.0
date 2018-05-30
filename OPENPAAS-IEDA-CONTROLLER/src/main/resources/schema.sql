@@ -542,7 +542,7 @@ CREATE TABLE ieda_hybrid_bootstrap
   create_date                           DATE         NOT NULL,
   update_user_id                        VARCHAR(255) NOT NULL,
   update_date                           DATE         NOT NULL,
-  PRIMARY KEY (`hybrid_bootstrap_id `)
+  PRIMARY KEY (`hybrid_bootstrap_id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 # HYBRID BOOTSTRAP

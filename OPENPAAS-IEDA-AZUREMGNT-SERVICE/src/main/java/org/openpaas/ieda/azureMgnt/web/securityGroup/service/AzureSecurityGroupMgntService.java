@@ -332,7 +332,7 @@ public class AzureSecurityGroupMgntService {
                  SecurityRuleProtocol protocol = null;
                  if(! "*".equals(port)){
                     protocol = SecurityRuleProtocol.TCP;
-                 }else{
+                 }else if("*".equals(port)){
                     protocol = SecurityRuleProtocol.ASTERISK;
                  }
                  securityRuleInner = securityRuleInner.withName(inboundName).withPriority(priority).withSourcePortRange(port).withDestinationPortRange("*").withProtocol(protocol).withSourceAddressPrefix("*").withDestinationAddressPrefix("*").withAccess(access).withDirection(direction);
