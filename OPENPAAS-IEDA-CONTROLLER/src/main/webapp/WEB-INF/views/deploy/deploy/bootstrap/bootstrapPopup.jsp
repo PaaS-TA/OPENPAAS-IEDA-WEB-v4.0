@@ -2092,10 +2092,10 @@ function popupClose() {
         </div>
         <div class="w2ui-page page-0" style="margin-top:15px;padding:0 3%;">
              <div class="panel panel-info" style="margin-bottom:20px;">
-                 <div  class="panel-heading" style="padding:5px 5% 10px 5%;"><b>네트워크 External</b설치관리></div>
+                 <div  class="panel-heading" style="padding:5px 5% 10px 5%;"><b>네트워크 External</b></div>
                  <div class="panel-body">
                      <div class="w2ui-field">
-                         <label style="text-align: left;width:36%;font-size:11px;"> IPs</label> 
+                         <label style="text-align: left;width:36%;font-size:11px;">설치관리 IPs</label> 
                          <div style="width: 60%">
                              <input name="publicStaticIp" type="text"  style="display:inline-block;width:70%;" placeholder="예) 10.0.0.20"/>
                          </div>

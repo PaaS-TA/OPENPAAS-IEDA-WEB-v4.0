@@ -405,7 +405,7 @@ function changeKeyPathStyle( showDiv, hideDiv ){
 function saveAzureConfigInfo(){
     w2popup.lock(save_lock_msg, true);
     configInfo = {
-             iaasType  : "azure"
+             iaasType  : "AZURE"
             ,id : $(".w2ui-msg-body input[name='configId']").val()
             ,iaasConfigAlias : $(".w2ui-msg-body input[name='iaasConfigAlias']").val()
             ,accountId : $(".w2ui-msg-body select[name='accountName']").val()

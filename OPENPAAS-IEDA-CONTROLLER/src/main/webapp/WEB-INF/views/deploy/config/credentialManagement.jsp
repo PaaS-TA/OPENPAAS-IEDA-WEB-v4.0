@@ -31,8 +31,8 @@ $(function(){
                { field: 'recid', hidden: true },
                { field: 'credentialName', caption: '디렉터 인증서 명', size:'25%', style:'text-align:center;' },
                { field: 'credentialKeyName', caption: '디렉터 인증서 파일 명', size:'50%', style:'text-align:center;' },
-               { field: 'directorPublicIp', caption: '설치 관리자 공인 IP', size:'50%', style:'text-align:center;'},
-               { field: 'directorPrivateIp', caption: '설치 관리자 내부 IP', size:'50%', style:'text-align:center;'},
+               { field: 'directorPublicIp', caption: 'BOOTSTRAP 공인 IP', size:'50%', style:'text-align:center;'},
+               { field: 'directorPrivateIp', caption: 'BOOTSTRAP 내부 IP', size:'50%', style:'text-align:center;'},
               ],
         onSelect : function(event) {
             event.onComplete = function() {
@@ -224,15 +224,15 @@ function clearMainPage() {
                        </div>
                    </div>
                    <div class="w2ui-field">
-                       <label style="width:33%;text-align: left;padding-left: 20px;">디렉터 공인 IPs</label>
+                       <label style="width:33%;text-align: left;padding-left: 20px;">BOOTSTRAP 공인 IPs</label>
                        <div>
-                           <input name="directorPublicIp" type="text" maxlength="100" style="width: 320px" placeholder="디렉터 공인 IPs를 하세요."/>
+                           <input name="directorPublicIp" type="text" maxlength="100" style="width: 320px" placeholder="BOOTSTRAP 공인 IPs를 하세요."/>
                        </div>
                    </div>
                    <div class="w2ui-field">
-                       <label style="width:33%;text-align: left;padding-left: 20px;">디렉터 내부 IPs</label>
+                       <label style="width:33%;text-align: left;padding-left: 20px;">BOOTSTRAP 내부 IPs</label>
                        <div>
-                           <input name="directorPrivateIp" type="text" maxlength="100" style="width: 320px" placeholder="디렉터 내부 IPs를 하세요."/>
+                           <input name="directorPrivateIp" type="text" maxlength="100" style="width: 320px" placeholder="BOOTSTRAP 내부 IPs를 하세요."/>
                        </div>
                    </div>
                    

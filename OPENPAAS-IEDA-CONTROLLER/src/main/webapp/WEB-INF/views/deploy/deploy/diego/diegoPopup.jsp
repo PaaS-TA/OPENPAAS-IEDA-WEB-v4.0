@@ -2035,7 +2035,7 @@ function gridReload() {
                         <input name="cfReleaseVersion" type="hidden"/>
                         <input name="cfKeyFile" type="hidden"/>
                     </div>
-                    <div class="w2ui-field" id="userAddSsh">
+                    <div class="w2ui-field" id="userAddSsh" style="display:none">
                         <label style="text-align: left; width: 40%; font-size:11px;">SSH Public-Key</label>
                         <div style="width: 60%;">
                             <textarea name="userAddSsh" style="float:left;width:80%; height:85px;resize:none;"rows=10; placeholder="SSH 공개 키를 입력하세요."></textarea>

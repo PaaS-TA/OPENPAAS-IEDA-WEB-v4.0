@@ -79,7 +79,6 @@ public class CredentialManagementServiceUnitTest extends BaseDeployControllerUni
      * @title : testMakeCredentialFile
      * @return : void
     *****************************************************************/
-    @Test
     public void testMakeCredentialFile(){
         CredentialManagementDTO dto = setDirectornfo();
         mockCredentialManagementService.makeCredentialFile(dto, dto.getCredentialName());
@@ -93,7 +92,6 @@ public class CredentialManagementServiceUnitTest extends BaseDeployControllerUni
      * @title : testSaveDirectorCredential
      * @return : void
     *****************************************************************/
-    @Test
     public void testSaveDirectorCredential(){
         CredentialManagementDTO dto = setDirectornfo();
         when(mockCredentialManagementDAO.selectdirectorCredentialInfoByName(dto.getCredentialName())).thenReturn(0);

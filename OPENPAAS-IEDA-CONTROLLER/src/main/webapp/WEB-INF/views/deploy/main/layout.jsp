@@ -57,7 +57,7 @@
 <script type="text/javascript" src="<c:url value='/js/yaml.js'/>"></script>
 <!-- Common -->
 <script type="text/javascript" src="<c:url value='/js/common.js?ver=7'/>"></script>
-<script type="text/javascript" src="<c:url value='/js/common-deploy.js?ver=5'/>"></script>
+<script type="text/javascript" src="<c:url value='/js/common-deploy.js?ver=1'/>"></script>
 
 <script type="text/javascript">
 (function($) {

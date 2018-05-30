@@ -10,61 +10,46 @@ var save_lock_msg='<spring:message code="common.save.data.lock"/>';//등록 중 
 var update_lock_msg='<spring:message code="common.update.data.lock"/>';//등록 중 입니다.
 var text_ip_msg = '<spring:message code="common.text.validate.ip.message"/>';
 var fadeOutTime = 3000;
+var directorType = "";
 $(function() {
 /********************************************************
- * 설명 :  설치관리자 목록 조회
+ * 설명 : Public 디렉터 목록 조회
  *********************************************************/
   $('#config_directorGrid').w2grid({
     name: 'config_directorGrid',
-    header: '<b>설치관리자 목록</b>',
+    header: '<b>디렉터 목록</b>',
      method: 'GET',
      multiSelect: false,
-    show: {    
+    show: {
             selectColumn: true,
             footer: true},
     style: 'text-align: center',
     columns:[
              {field: 'recid', caption: 'recid', hidden: true},
              {field: 'iedaDirectorConfigSeq', caption: '레코드키', hidden: true},
-             {field: 'defaultYn',     caption: '기본 관리자', size: '10%',
-                   render: function(record) {
-                       if ( record.defaultYn == 'Y' )
-                           return '<span class="btn btn-primary" style="width:70px">기본</span>';
-                       else
-                           return '';
-                   }
-                 },
+             {field: 'iaasType',caption: '인프라 환경', size: '10%'},
+             {field: 'directorType' ,caption: '디렉터 유형'      , size: '10%'},
              {field: 'directorCpi' ,caption: 'CPI'      , size: '10%'},
-             {field: 'directorName',caption: '관리자 이름', size: '10%'},
+             {field: 'directorName',caption: '디렉터 이름', size: '10%'},
              {field: 'userId'      ,caption: '계정'      , size: '10%'},
              {field: 'directorUrl' ,caption: 'URL'      , size: '30%',
                  render: function(record) {
                      return 'https://' + record.directorUrl + ':' + record.directorPort;
                      } 
              },
-             {field: 'directorUuid', caption: '관리자 UUID', size: '30%'}
+             {field: 'directorUuid', caption: '디렉터 UUID', size: '30%'}
              ],
     onSelect : function(event) {
         var grid = this;
         event.onComplete = function() {
             var sel = grid.getSelection();
             var record = grid.get(sel);
-            if ( record.defaultYn == 'Y' ) {
-                $('#setDefaultDirector').attr('disabled', true);
-            }
-            else {
-                $('#setDefaultDirector').attr('disabled', false);
-            }
-            
-            $('#updateSetting').attr('disabled', false);
             $('#deleteSetting').attr('disabled', false);
         }
     },
     onUnselect : function(event) {
         event.onComplete = function() {
-            $('#setDefaultDirector').attr('disabled', true);
             $('#deleteSetting').attr('disabled', true);
-            $('#updateSetting').attr('disabled', true);
         }
     }, 
     onLoad:function(event){
@@ -78,64 +63,76 @@ $(function() {
         
     }
 });
+
+
+  /********************************************************
+   * 설명 : Private 디렉터 목록 조회
+   *********************************************************/
+    $('#config_directorGrid2').w2grid({
+      name: 'config_directorGrid2',
+      header: '<b>디렉터 목록</b>',
+       method: 'GET',
+       multiSelect: false,
+      show: {
+              selectColumn: true,
+              footer: true},
+      style: 'text-align: center',
+      columns:[
+               {field: 'recid', caption: 'recid', hidden: true},
+               {field: 'iedaDirectorConfigSeq', caption: '레코드키', hidden: true},
+               {field: 'iaasType',caption: '인프라 환경', size: '10%'},
+               {field: 'directorType' ,caption: '디렉터 유형'      , size: '10%'},
+               {field: 'directorCpi' ,caption: 'CPI'      , size: '10%'},
+               {field: 'directorName',caption: '디렉터 이름', size: '10%'},
+               {field: 'userId'      ,caption: '계정'      , size: '10%'},
+               {field: 'directorUrl' ,caption: 'URL'      , size: '30%',
+                   render: function(record) {
+                       return 'https://' + record.directorUrl + ':' + record.directorPort;
+                       } 
+               },
+               {field: 'directorUuid', caption: '디렉터 UUID', size: '30%'}
+               ],
+      onSelect : function(event) {
+          var grid = this;
+          event.onComplete = function() {
+              var sel = grid.getSelection();
+              var record = grid.get(sel);
+              $('#deleteSetting2').attr('disabled', false);
+          }
+      },
+      onUnselect : function(event) {
+          event.onComplete = function() {
+              $('#deleteSetting2').attr('disabled', true);
+          }
+      }, 
+      onLoad:function(event){
+          if(event.xhr.status == 403){
+              location.href = "/abuse";
+              event.preventDefault();
+          }
+          getCredsKeyPathFileList();
+      },
+      onError: function(event) {
+          
+      }
+  });
       
  initView();
- /********************************************************
-  * 설명 :  기본 설치 관리자 설정
-  *********************************************************/
- $("#setDefaultDirector").click(function(){
-     if($("#setDefaultDirector").attr('disabled') == "disabled") return;
-     
-     var selected = w2ui['config_directorGrid'].getSelection();
-     if( selected.length == 0 ){
-         w2alert("선택된 정보가 없습니다.", "기본 설치 관리자 설정");
-         return;
-     }
-     else  if ( selected.length > 1 ){
-         w2alert("기본 설치 관리자 설정은 하나만 선택 가능합니다.", "기본 설치 관리자 설정");
-         return;
-     }
-     else{
-         var record = w2ui['config_directorGrid'].get(selected);
-         if( record.defaultYn == "Y" ){
-             //클릭시 버튼  Disable 다른 페이지 호출
-             w2alert("선택한 설치 관리자는 이미 기본 설치 관리자로 설정되어 있습니다.","기본 설치 관리자 설정");
-             return;
-         }
-         else{
-             w2confirm({
-                 title        : "<b>기본관리자 설정</b>",
-                 msg          : record.directorName + "를 " + "기본관리자로 설정하시겠습니까?",
-                 yes_text     : "확인",
-                 no_text      : "취소",
-                 yes_callBack : function(envent){
-                     w2ui['config_directorGrid'].lock("기본관리자 설정 중입니다.", {
-                         spinner: true, opacity : 1
-                     });
-                     registDefault(record.iedaDirectorConfigSeq, record.directorName);
-                     w2ui['config_directorGrid'].reset();
-                 },
-                 no_callBack  : function(envent){
-                     w2ui['config_directorGrid'].reset();
-                     doSearch();
-                 }
-             });
-         }
-     }
-});
+
      
  /********************************************************
-  * 설명 :  설정관리자 추가 버튼
+  * 설명 :  디렉터 추가 버튼
   *********************************************************/
 $("#addSetting").click(function(){
     w2popup.open({
-        title   : "<b>설치관리자 설정추가</b>",
+        title   : "<b>디렉터 설정 추가</b>",
         width   : 600,
         height  : 380,
         modal   : true,
         body    : $("#regPopupDiv").html(),
         buttons : $("#regPopupBtnDiv").html(),
         onOpen : function(event){
+            directorType = "public";
             getCredsKeyPathFileList();
         },
         onClose:function(event){
@@ -143,50 +140,49 @@ $("#addSetting").click(function(){
         }
     });
 });
-     
+ 
 /********************************************************
- * 설명 :  설정 관리자 수정 버튼
+ * 설명 :  디렉터 추가 버튼
  *********************************************************/
-$("#updateSetting").click(function(){
-    if($("#updateSetting").attr('disabled') == "disabled") return;
-    
-    var selected = w2ui['config_directorGrid'].getSelection();
-    
-    if( selected.length == 0 ){
-        w2alert("선택된 정보가 없습니다.", "설치 관리자 정보 수정");
-        return;
-    }
-    updateDirectorConfigPopup(w2ui['config_directorGrid'].get(selected));
+$("#addSetting2").click(function(){
+   w2popup.open({
+       title   : "<b>디렉터 설정 추가</b>",
+       width   : 600,
+       height  : 380,
+       modal   : true,
+       body    : $("#regPopupDiv").html(),
+       buttons : $("#regPopupBtnDiv").html(),
+       onOpen : function(event){
+           directorType = "private";
+           getCredsKeyPathFileList();
+       },
+       onClose:function(event){
+           doSearch();
+       }
+   });
 });
-    
 /********************************************************
- * 설명 :  설정관리자 삭제 버튼
+ * 설명 :  디렉터 삭제 버튼
  *********************************************************/
 $("#deleteSetting").click(function(){
     if($("#deleteSetting").attr('disabled') == "disabled") return;
     var selected = w2ui['config_directorGrid'].getSelection();
     
     if( selected.length == 0 ){
-        w2alert("선택된 정보가 없습니다.", "설치 관리자 삭제");
+        w2alert("선택된 정보가 없습니다.", "디렉터 삭제");
         return;
     }
     else {
         var record = w2ui['config_directorGrid'].get(selected);
         w2confirm({
-            title       : "<b>설치 관리자 삭제</b>",
-            msg         : "설치 관리자(" + record.directorName + ")를 삭제하시겠습니까?",
+            title       : "<b>디렉터 삭제</b>",
+            msg         : "디렉터(" + record.directorName + ")를 삭제하시겠습니까?",
             yes_text    : "확인",
             no_text     : "취소",
             yes_callBack: function(event){
                 // 디렉터 삭제
                 deleteDirector(record.iedaDirectorConfigSeq);
-                // 기본 관리자일 경우 
-                if ( record.defaultYn == "Y" ) {
-                    // 기본 설치 관리자 정보 조회
-                    $('.defaultDirector').text('');
-                }
                 w2ui['config_directorGrid'].clear();
-                
                 initView();
             },
             no_callBack    : function(){
@@ -195,16 +191,48 @@ $("#deleteSetting").click(function(){
             }
         });
     }
-});// 설정관리자 삭제 버튼 END
+});// 디렉터 삭제 버튼 END
+});
+
+/********************************************************
+ * 설명 :  디렉터 삭제 버튼
+ *********************************************************/
+$("#deleteSetting2").click(function(){
+    if($("#deleteSetting2").attr('disabled') == "disabled") return;
+    var selected = w2ui['config_directorGrid2'].getSelection();
+    
+    if( selected.length == 0 ){
+        w2alert("선택된 정보가 없습니다.", "디렉터 삭제");
+        return;
+    }
+    else {
+        var record = w2ui['config_directorGrid2'].get(selected);
+        w2confirm({
+            title       : "<b>디렉터 삭제</b>",
+            msg         : "디렉터(" + record.directorName + ")를 삭제하시겠습니까?",
+            yes_text    : "확인",
+            no_text     : "취소",
+            yes_callBack: function(event){
+                // 디렉터 삭제
+                deleteDirector(record.iedaDirectorConfigSeq);
+                w2ui['config_directorGrid2'].clear();
+                initView();
+            },
+            no_callBack    : function(){
+                w2ui['config_directorGrid2'].reset();
+                doSearch();
+            }
+        });
+    }
 });
 /********************************************************
  * 설명 : 목록 재조회
  * 기능 : initView
  *********************************************************/
 function initView() {
-    // 기본 설치 관리자 정보 조회
-     getDefaultDirector("<c:url value='/common/use/director'/>");
-    // 설치관리자 목록조회
+    // 기본 디렉터 정보 조회
+    getDefaultDirector("<c:url value='/common/use/hbDirector'/>", "hybrid");
+    // 디렉터 목록조회
     doSearch();
 }
 /********************************************************
@@ -212,7 +240,11 @@ function initView() {
  * 기능 : doSearch
  *********************************************************/
 function doSearch() {
-    w2ui['config_directorGrid'].load("<c:url value='/config/director/list'/>", doButtonStyle);
+    directortype = "";
+    w2ui['config_directorGrid'].clear();
+    w2ui['config_directorGrid2'].clear();
+    w2ui['config_directorGrid'].load("<c:url value='/config/hbDirector/list/public'/>", doButtonStyle);
+    w2ui['config_directorGrid2'].load("<c:url value='/config/hbDirector/list/private'/>", doButtonStyle);
 }
 /********************************************************
  * 설명 : 버튼 스타일 초기화
@@ -220,45 +252,27 @@ function doSearch() {
  *********************************************************/
 function doButtonStyle(){
     var girdTotal = w2ui['config_directorGrid'].records.length;
-    $('#setDefaultDirector').attr('disabled', true);
-    $('#updateSetting').attr('disabled', true);
     $('#deleteSetting').attr('disabled', true);
+    $('#deleteSetting2').attr('disabled', true);
 }
+
 /********************************************************
- * 설명 : 기본 설치 관리자 설정
- * 기능 : registDefault
- *********************************************************/
-function registDefault(seq, target){
-    $.ajax({
-        type : "PUT",
-        url : "/config/director/setDefault/"+seq,
-        contentType : "application/json",
-        success : function(data, status) {
-            w2alert("기본 설치 관리자를 \n" + target +"로 설정하였습니다.",  "기본 설치 관리자 설정", doSearch);
-            getDefaultDirector("<c:url value='/common/use/director'/>");
-        },
-        error : function(request, status, error) {
-            var errorResult = JSON.parse(request.responseText);
-            w2alert(errorResult.message, "기본 설치 관리자 설정");
-            doSearch();
-        }
-    });
-}
-/********************************************************
- * 설명 : 설치관리자 등록
+ * 설명 : 디렉터 등록
  * 기능 : registDirectorConfig
  *********************************************************/
 function registDirectorConfig(){
-     w2popup.lock(save_lock_msg, true);
+    console.log(directorType);
+    w2popup.lock(save_lock_msg, true);
     $.ajax({
         type : "POST",
-        url : "/config/director/add",
+        url : "/config/hbDirector/add",
         contentType : "application/json",
         //dataType: "json",
         async : true,
         data : JSON.stringify({
             directorUrl : $(".w2ui-msg-body input[name='ip']").val(),
             directorPort : parseInt($(".w2ui-msg-body input[name='port']").val()),
+            directorType : directorType,
             userId : $(".w2ui-msg-body input[name='user']").val(),
             userPassword : $(".w2ui-msg-body input[name='pwd']").val(),
             credentialFile : $(".w2ui-msg-body input[name=credsKeyPath]").val()
@@ -269,8 +283,8 @@ function registDirectorConfig(){
             w2popup.close();
             doSearch();
             
-            // 기본 설치 관리자 정보 조회
-             getDefaultDirector("<c:url value='/common/use/director'/>");
+            // 기본 디렉터 정보 조회
+            getDefaultDirector("<c:url value='/common/use/hbDirector'/>", "hybrid");
         },
         error : function(request, status, error) {
             // ajax가 실패할때 처리...
@@ -281,78 +295,16 @@ function registDirectorConfig(){
         }
     });
 }
+
+
 /********************************************************
- * 설명 : 설정관리자 수정 팝업
- * 기능 : updateDirectorConfigPopup
- *********************************************************/
-function updateDirectorConfigPopup(record) {
-             w2popup.open({
-                title     : "<b>설치관리자 정보수정</b>",
-                width     : 600,
-                height    : 350,
-                modal     : true,
-                body      : $("#regPopupDiv").html(),
-                buttons   : $("#updatePopupBtnDiv").html(),
-                onOpen    : function(event){
-                    event.onComplete = function(){
-                        $(".w2ui-msg-body input[name='seq']").val(record.iedaDirectorConfigSeq);
-                        $(".w2ui-msg-body input[name='ip']").val(record.directorUrl);
-                        $(".w2ui-msg-body input[name='ip']").attr("disabled", true);
-                        $(".w2ui-msg-body input[name='port']").val(record.directorPort);
-                        $(".w2ui-msg-body input[name='port']").attr("disabled", true);
-                        $(".w2ui-msg-body input[name='user']").val(record.userId);
-                        $(".w2ui-msg-body input[name='pwd']").val("");
-                        $(".w2ui-msg-body input[name='ip']").val();
-                    }
-                },onClose : function(event){
-                    w2ui['config_directorGrid'].reset();
-                    doSearch();
-                }
-            });
-}
-/********************************************************
- * 설명 : 설정관리자 수정 
- * 기능 : updateDirectorConfig
- *********************************************************/
-function updateDirectorConfig() {
-     w2popup.lock(update_lock_msg, true);
-    $.ajax({
-        type : "PUT",
-        url : "/config/director/update",
-        contentType : "application/json",
-        async : true,
-        data : JSON.stringify({
-            iedaDirectorConfigSeq : parseInt($(".w2ui-msg-body input[name='seq']").val()),
-            userId : $(".w2ui-msg-body input[name='user']").val(),
-            userPassword : $(".w2ui-msg-body input[name='pwd']").val()
-        }),
-        success : function(data, status) {
-            // ajax가 성공할때 처리...
-            w2popup.unlock();
-            w2popup.close();
-            w2ui['config_directorGrid'].reset();
-            doSearch();
-            
-            // 기본 설치 관리자 정보 조회
-             getDefaultDirector("<c:url value='/common/use/director'/>");
-        },
-        error : function(request, status, error) {
-            // ajax가 실패할때 처리...
-            w2popup.unlock();
-            var errorResult = JSON.parse(request.responseText);
-            w2alert(errorResult.message);
-            doSearch();
-        }
-    });
-}
-/********************************************************
- * 설명 : 설정관리자 삭제 
+ * 설명 : 디렉터 삭제 
  * 기능 : deleteDirector
  *********************************************************/
 function deleteDirector(seq){
     $.ajax({
         type : "DELETE",
-        url : "/config/director/delete/"+ seq,
+        url : "/config/hbDirector/delete/"+ seq,
         contentType : "application/json",
         success : function(data, status) {
             // ajax가 성공할때 처리...
@@ -362,7 +314,7 @@ function deleteDirector(seq){
         },
         error : function(request, status, error) {
             var errorResult = JSON.parse(request.responseText);
-            w2alert(errorResult.message, "설치 관리자 삭제");
+            w2alert(errorResult.message, "디렉터 삭제");
             doSearch();
         }
     });
@@ -377,6 +329,7 @@ function closew2ui(){
  *********************************************************/
 function clearMainPage() {
     $().w2destroy('config_directorGrid');
+    $().w2destroy('config_directorGrid2');
 }
 
 /******************************************************************
@@ -427,7 +380,7 @@ function uploadCredentialKey(){
             
     $.ajax({
         type : "POST",        
-        url : "/config/director/credskey/upload",
+        url : "/config/hbDirector/credskey/upload",
         enctype : 'multipart/formdata',
         dataType: "text",
         async : true,
@@ -438,7 +391,7 @@ function uploadCredentialKey(){
             registDirectorConfig();
         },
         error : function( e, status ) {
-            w2alert( "Credential Key 업로드에 실패 하였습니다.", "설치관리자 설정");
+            w2alert( "Credential Key 업로드에 실패 하였습니다.", "디렉터 설정");
         }
     });
 }
@@ -478,42 +431,49 @@ function credsChangeKeyPathStyle( showDiv, hideDiv ){
 </script>
 
 <div id="main">
-    <div class="page_site">환경설정 및 관리 > <strong>설치관리자 설정</strong></div>
+    <div class="page_site">환경설정 및 관리 > <strong>디렉터 설정</strong></div>
     
-    <!-- 설치 관리자 정보 -->
+    <!-- 디렉터 정보 -->
     <div id="isDefaultDirector"></div>
     
-    <!-- 설치관리자 목록-->
+    <!-- 디렉터 목록-->
     <div class="pdt20">
-        <div class="title fl">설치관리자 목록</div>
+        <div class="title fl">Public Cloud 디렉터 목록</div>
         <div class="fr"> 
         <!-- Btn -->
-        <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_SET')">
-        <span id="setDefaultDirector" class="btn btn-primary" style="width:180px" >기본 설치 관리자로 설정</span>
-        </sec:authorize>
-        <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_ADD')">
-        <span id="addSetting" class="btn btn-primary" style="width:130px" >설정 추가</span>
-        </sec:authorize>
-        <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_UPDATE')">
-        <!-- <span id="updateSetting" class="btn btn-info" style="width:130px" >설정 수정</span> -->
-        </sec:authorize>
-        <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_DELETE')">
-        <span id="deleteSetting" class="btn btn-danger" style="width:130px" >설정 삭제</span>
-        </sec:authorize>
+            <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_ADD')">
+            <span id="addSetting" class="btn btn-primary" style="width:130px" >설정 추가</span>
+            </sec:authorize>
+            <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_DELETE')">
+            <span id="deleteSetting" class="btn btn-danger" style="width:130px" >설정 삭제</span>
+            </sec:authorize>
         <!-- //Btn -->
         </div>
     </div>
+    <!-- 디렉터 목록 조회-->
+    <div id="config_directorGrid" style="width:100%; height:270px"></div>
     
-    <!-- 설치관리자 목록 조회-->
-    <div id="config_directorGrid" style="width:100%; height:610px"></div>    
+    <div class="pdt20">
+        <div class="title fl">Private Cloud 디렉터 정보</div>
+        <div class="fr"> 
+            <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_ADD')">
+            <span id="addSetting2" class="btn btn-primary" style="width:130px" >설정 추가</span>
+            </sec:authorize>
+            <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_DELETE')">
+            <span id="deleteSetting2" class="btn btn-danger" style="width:130px" >설정 삭제</span>
+        </sec:authorize>
+        </div>
+        <div id="config_directorGrid2" style="width:100%; height:270px"></div>
+    </div>
+    
 </div>
-<!-- 설치관리자 정보추가/수정 팝업 -->
+<!-- 디렉터 정보추가/수정 팝업 -->
 <div id="regPopupDiv" hidden="true">
     <form id="settingForm" action="POST">
         <input name="seq" type="hidden"/>
         <div class="w2ui-page page-0">
             <div class="panel panel-info" style="margin-top:5px;">
-                <div class="panel-heading"><b>설치관리자 정보</b></div>
+                <div class="panel-heading"><b>디렉터 정보</b></div>
                 <div class="panel-body" style="overflow-y:auto;height:240px;">
                     <div class="w2ui-field">
                         <label style="width:30%;text-align: left;padding-left: 20px;">디렉터 IP</label>
@@ -569,11 +529,6 @@ function credsChangeKeyPathStyle( showDiv, hideDiv ){
 
 <div id="regPopupBtnDiv" hidden="true">
     <button class="btn" id="registBtn" onclick="$('#settingForm').submit();">확인</button>
-    <button class="btn" id="popClose"  onclick="w2popup.close();">취소</button>
-</div>
-
-<div id="updatePopupBtnDiv" hidden="true">
-    <button class="btn" id="updateBtn" onclick="$('#settingForm').submit();">확인</button>
     <button class="btn" id="popClose"  onclick="w2popup.close();">취소</button>
 </div>
 

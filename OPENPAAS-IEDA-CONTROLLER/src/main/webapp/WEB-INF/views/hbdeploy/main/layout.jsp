@@ -56,8 +56,8 @@
 <script type="text/javascript" src="<c:url value='/js/stomp.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/yaml.js'/>"></script>
 <!-- Common -->
-<script type="text/javascript" src="<c:url value='/js/common.js?ver=7'/>"></script>
-<script type="text/javascript" src="<c:url value='/js/common-deploy.js?ver=5'/>"></script>
+<script type="text/javascript" src="<c:url value='/js/common.js?ver=5'/>"></script>
+<script type="text/javascript" src="<c:url value='/js/common-deploy.js?ver=4'/>"></script>
 
 <script type="text/javascript">
 (function($) {
@@ -87,7 +87,7 @@ $(function() {
     setLayoutContainerHeight();
         w2ui['layout'].load('top', 'hbTop');
         w2ui['layout'].load('left', 'hbMenu');
-        w2ui['layout'].load('main', 'main/hbDashboard');
+        w2ui['layout'].load('main', '/config/hbDirector');
 });
 
 function setLayoutContainerHeight(login){

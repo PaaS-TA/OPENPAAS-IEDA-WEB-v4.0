@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dao.HbBootstrapDAO">
+
+<resultMap id="bootstrap" type="org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dao.HbBootstrapVO">
+    <id property="hybridBootStrapId" column="HYBRID_BOOTSTRAP_ID"/>
+    
+    <result property="id" column="ID" />
+    <result property="iaasType" column="IAAS_TYPE"/>
+    <result property="publicBootStrapId" column="public_bootstrap_id"/>
+    <result property="privateBootStrapId" column="private_bootstrap_id"/>
+    <result property="iaasConfigId" column="CONFIG_ID"/>
+    <result property="bootstrapType" column="BOOTSTRAP_TYPE"/>
+    <result property="createUserId" column="CREATE_USER_ID"/>
+    <result property="createDate" column="CREATE_DATE" />
+    <result property="updateUserId" column="UPDATE_USER_ID"/>
+    <result property="updateDate" column="UPDATE_DATE" />
+    <result property="paastaMonitoringUse" column="PAASTA_MONITORING_USE" />
+    <result property="paastaMonitoringIp" column="PAASTA_MONITORING_IP" />
+    <result property="influxdbIp" column="influxdb_ip" />
+    <result property="paastaMonitoringRelease" column="PAASTA_MONITORING_RELEASE" />
+    <result property="deploymentName" column ="DEPLOYMENT_NAME"/>
+    <result property="directorName" column ="DIRECTOR_NAME"/>
+    <result property="credentialKeyName" column ="CREDENTIAL_KEY_NAME"/>
+    <result property="boshRelease" column ="BOSH_RELEASE"/>
+    <result property="boshCpiRelease" column ="BOSH_CPI_RELEASE"/>
+    <result property="osConfRelease" column ="OS_CONF_RELEASE"/>
+    <result property="snapshotSchedule" column ="SNAPSHOT_SCHEDULE"/>
+    <result property="enableSnapshots" column ="ENABLE_SNAPSHOTS"/>
+    <result property="privateStaticIp" column ="PRIVATE_STATIC_IP"/>
+    <result property="subnetId" column ="SUBNET_ID"/>
+    <result property="networkName" column ="NETWORK_NAME"/>
+    <result property="subnetRange" column ="SUBNET_RANGE"/>
+    <result property="subnetGateway" column ="SUBNET_GATEWAY"/>
+    <result property="subnetDns" column ="SUBNET_DNS"/>
+    <result property="ntp" column ="NTP"/>
+    <result property="publicStaticIp" column ="PUBLIC_STATIC_IP"/>
+    <result property="publicSubnetId" column ="PUBLIC_SUBNET_ID"/>
+    <result property="publicSubnetRange" column ="PUBLIC_SUBNET_RANGE"/>
+    <result property="publicSubnetGateway" column ="PUBLIC_SUBNET_GATEWAY"/>
+    <result property="publicSubnetDns" column ="PUBLIC_SUBNET_DNS"/>
+    <result property="stemcell" column ="STEMCELL"/>
+    <result property="cloudInstanceType" column ="CLOUD_INSTANCE_TYPE"/>
+    <result property="resourcePoolCpu" column ="RESOURCE_POOL_CPU"/>
+    <result property="resourcePoolRam" column ="RESOURCE_POOL_RAM"/>
+    <result property="resourcePoolDisk" column ="RESOURCE_POOL_DISK"/>
+    <result property="boshPassword" column ="BOSH_PASSWORD"/>
+    <result property="deploymentFile" column ="DEPLOYMENT_FILE"/>
+    <result property="deployStatus" column ="DEPLOY_STATUS"/>
+    <result property="deployLog" column ="DEPLOY_LOG"/>
+    
+    <result property="hyPriId" column="hypri_id" />
+    
+    <result property="hyPriIaasType" column="HYPRI_IAAS_TYPE"/>
+    <result property="hyPubIaasType" column="HYPUB_IAAS_TYPE"/>
+    
+    <result property="hyPriIaasConfigId" column="HYPRI_CONFIG_ID"/>
+    <result property="hyPriBootstrapType" column="HYPRI_BOOTSTRAP_TYPE"/>
+    <result property="hyPriCreateUserId" column="HYPRI_CREATE_USER_ID"/>
+    <result property="hyPriCreateDate" column="HYPRI_CREATE_DATE" />
+    <result property="hyPriUpdateUserId" column="HYPRI_UPDATE_USER_ID"/>
+    <result property="hyPriUpdateDate" column="HYPRI_UPDATE_DATE" />
+    <result property="hyPriPaastaMonitoringUse" column="HYPRI_PAASTA_MONITORING_USE" />
+    <result property="hyPriPaastaMonitoringIp" column="HYPRI_PAASTA_MONITORING_IP" />
+    <result property="hyPriInfluxdbIp" column="HYPRI_influxdb_ip" />
+    <result property="hyPriPaastaMonitoringRelease" column="HYPRI_PAASTA_MONITORING_RELEASE" />
+    <result property="hyPriDeploymentName" column ="HYPRI_DEPLOYMENT_NAME"/>
+    <result property="hyPriDirectorName" column ="HYPRI_DIRECTOR_NAME"/>
+    <result property="hyPriCredentialKeyName" column ="HYPRI_CREDENTIAL_KEY_NAME"/>
+    <result property="hyPriBoshRelease" column ="HYPRI_BOSH_RELEASE"/>
+    <result property="hyPriBoshCpiRelease" column ="HYPRI_BOSH_CPI_RELEASE"/>
+    <result property="hyPriOsConfRelease" column ="HYPRI_OS_CONF_RELEASE"/>
+    <result property="hyPriSnapshotSchedule" column ="HYPRI_SNAPSHOT_SCHEDULE"/>
+    <result property="hyPriEnableSnapshots" column ="HYPRI_ENABLE_SNAPSHOTS"/>
+    <result property="hyPriPrivateStaticIp" column ="HYPRI_PRIVATE_STATIC_IP"/>
+    <result property="hyPriSubnetId" column ="HYPRI_SUBNET_ID"/>
+    <result property="hyPriNetworkName" column ="HYPRI_NETWORK_NAME"/>
+    <result property="hyPriSubnetRange" column ="HYPRI_SUBNET_RANGE"/>
+    <result property="hyPriSubnetGateway" column ="HYPRI_SUBNET_GATEWAY"/>
+    <result property="hyPriSubnetDns" column ="HYPRI_SUBNET_DNS"/>
+    <result property="hyPriNtp" column ="HYPRI_NTP"/>
+    <result property="hyPriPublicStaticIp" column ="HYPRI_PUBLIC_STATIC_IP"/>
+    <result property="hyPriPublicSubnetId" column ="HYPRI_PUBLIC_SUBNET_ID"/>
+    <result property="hyPriPublicSubnetRange" column ="HYPRI_PUBLIC_SUBNET_RANGE"/>
+    <result property="hyPriPublicSubnetGateway" column ="HYPRI_PUBLIC_SUBNET_GATEWAY"/>
+    <result property="hyPriPublicSubnetDns" column ="HYPRI_PUBLIC_SUBNET_DNS"/>
+    <result property="hyPriStemcell" column ="HYPRI_STEMCELL"/>
+    <result property="hyPriCloudInstanceType" column ="HYPRI_CLOUD_INSTANCE_TYPE"/>
+    <result property="hyPriResourcePoolCpu" column ="HYPRI_RESOURCE_POOL_CPU"/>
+    <result property="hyPriResourcePoolRam" column ="HYPRI_RESOURCE_POOL_RAM"/>
+    <result property="hyPriResourcePoolDisk" column ="HYPRI_RESOURCE_POOL_DISK"/>
+    <result property="hyPriBoshPassword" column ="HYPRI_BOSH_PASSWORD"/>
+    <result property="hyPriDeploymentFile" column ="HYPRI_DEPLOYMENT_FILE"/>
+    <result property="hyPriDeployStatus" column ="HYPRI_DEPLOY_STATUS"/>
+    <result property="hyPriDeployLog" column ="HYPRI_DEPLOY_LOG"/>
+    
+    <collection property="iaasConfig"  ofType="org.openpaas.ieda.deploy.web.information.iassConfig.dao.IaasConfigMgntVO" javaType="String" >
+        <id property="id" column="IAAS_CONFIG_ID"/>
+        <result property="iaasConfigAlias" column="IAAS_CONFIG_ALIAS"/>
+        <result property="accountId" column="ACCOUNT_ID"/>
+        <result property="commonSecurityGroup" column ="COMMON_SECURITY_GROUP"/>
+        <result property="commonRegion" column="COMMON_REGION"/>
+        <result property="commonKeypairName" column ="COMMON_KEYPAIR_NAME"/>
+        <result property="commonKeypairPath" column ="COMMON_KEYPAIR_PATH"/>
+        <result property="commonAvailabilityZone" column="COMMON_AVAILABILITY_ZONE"/>
+        <result property="vsphereVcentDataCenterName" column="VSPHERE_VCENTER_DATACENTER_NAME"/>
+        <result property="vsphereVcenterVmFolder" column="VSPHERE_VCENTER_VM_FOLDER"/>
+        <result property="vsphereVcenterTemplateFolder" column="VSPHERE_VCENTER_TEMPLATE_FOLDER"/>
+        <result property="vsphereVcenterDatastore" column="VSPHERE_VCENTER_DATASTORE"/>
+        <result property="vsphereVcenterPersistentDatastore" column="VSPHERE_VCENTER_PERSISTENT_DATASTORE"/>
+        <result property="vsphereVcenterDiskPath" column="VSPHERE_VCENTER_DISK_PATH"/>
+        <result property="vsphereVcenterCluster" column="VSPHERE_VCENTER_CLUSTER"/>
+        <result property="googlePublicKey" column="GOOGLE_PUBLIC_KEY"/>
+        <result property="azureStorageAccountName" column="AZURE_STORAGEACCOUNT_NAME"/>
+        <result property="azureSshPublicKey" column="AZURE_SSHPUBLICKEY"/>
+        <result property="azureResourceGroup" column="AZURE_RESOURCEGROUP_NAME"/>
+    </collection>
+    <collection property="iaasAccount"  ofType="hashMap" javaType="String">
+        <id property="id" column="IAAS_ACCOUNT_ID"/>
+        <result property="iaasType" column="ACCOUNT_IAAS_TYPE"/>
+        <result property="accountName" column="ACCOUNT_NAME"/>
+        <result property="commonAccessEndpoint" column="COMMON_ACCESS_ENDPOINT"/>
+        <result property="commonAccessUser" column="COMMON_ACCESS_USER"/>
+        <result property="commonAccessSecret" column="COMMON_ACCESS_SECRET"/>
+        <result property="commonTenant" column="COMMON_TENANT"/>
+        <result property="commonProject" column="COMMON_PROJECT"/>
+        <result property="commonRegion" column="COMMON_Region"/>
+        <result property="googleJsonKey" column="GOOGLE_JSON_KEY"/>
+        <result property="openstackVersion" column="openstack_keystone_version"/>
+        <result property="openstackDomain" column="openstack_domain"/>
+        <result property="azureSubscriptionId" column="AZURE_SUBSCRIPTIONID"/>
+    </collection>
+</resultMap>
+
+<resultMap id="hybridBootstrapInfo" type="org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dao.HbBootstrapVO">
+    <result property="publicBootStrapId" column ="PUBLIC_BOOTSTRAP_ID"/>
+    <result property="privateBootStrapId" column ="PRIVATE_BOOTSTRAP_ID"/>
+    <result property="hybridBootStrapId" column ="HYBRID_BOOTSTRAP_ID"/>
+    <result property="createUserId" column="CREATE_USER_ID"/>
+    <result property="createDate" column="CREATE_DATE" />
+    <result property="updateUserId" column="UPDATE_USER_ID"/>
+    <result property="updateDate" column="UPDATE_DATE" />
+</resultMap>
+
+<select id="selectBootstrapList" resultMap="bootstrap">
+    /** ieda.deploy.deploy.bootstrap.selectBootstrapList  **/
+    Select  
+        bootstrapmgnt.hybrid_bootstrap_id as hybrid_bootstrap_id
+        ,bootstrapmgnt.public_bootstrap_id as public_bootstrap_id
+        ,bootstrapmgnt.private_bootstrap_id as private_bootstrap_id
+        ,bootstrap.id as id
+        ,bootstrap.iaas_type  as iaas_type
+        ,bootstrap.bootstrap_type  as bootstrap_type
+        ,bootstrap.bosh_cpi_release  as bosh_cpi_release
+        ,bootstrap.os_conf_release  as os_conf_release
+        ,bootstrap.bosh_password  as bosh_password
+        ,bootstrap.bootstrap_type  as bootstrapType
+        ,bootstrap.bosh_release  as bosh_release
+        ,bootstrap.cloud_instance_type  as cloud_instance_type
+        ,bootstrap.deploy_log  as deploy_log
+        ,bootstrap.deploy_status  as deploy_status
+        ,bootstrap.deployment_file  as deployment_file
+        ,bootstrap.deployment_name  as deployment_name
+        ,bootstrap.director_name  as director_name
+        ,bootstrap.credential_key_name  as credential_key_name
+        ,bootstrap.private_static_ip  as private_static_ip
+        ,bootstrap.public_static_ip  as public_static_ip
+        ,bootstrap.stemcell  as stemcell
+        ,bootstrap.network_name  as network_name
+        ,bootstrap.create_date  as create_date
+        ,bootstrap.update_date  as update_date
+        ,bootstrap.paasta_monitoring_use  as paasta_monitoring_use
+        ,bootstrap.paasta_monitoring_ip  as paasta_monitoring_ip
+        ,bootstrap.influxdb_ip  as influxdb_ip
+        ,bootstrap.paasta_monitoring_release  as paasta_monitoring_release
+        
+        ,bootstrap2.id as hypri_id
+        ,bootstrap2.iaas_type  as hypri_iaas_type
+        ,bootstrap2.bootstrap_type  as hypri_bootstrap_type
+        ,bootstrap2.bosh_cpi_release  as hypri_bosh_cpi_release
+        ,bootstrap2.os_conf_release  as hypri_os_conf_release
+        ,bootstrap2.bosh_password  as hypri_bosh_password
+        ,bootstrap2.bootstrap_type  as hypri_bootstrapType
+        ,bootstrap2.bosh_release  as hypri_bosh_release
+        ,bootstrap2.cloud_instance_type  as hypri_cloud_instance_type
+        ,bootstrap2.deploy_log  as hypri_deploy_log
+        ,bootstrap2.deploy_status  as hypri_deploy_status
+        ,bootstrap2.deployment_file  as hypri_deployment_file
+        ,bootstrap2.deployment_name  as hypri_deployment_name
+        ,bootstrap2.director_name  as hypri_director_name
+        ,bootstrap2.credential_key_name  as hypri_credential_key_name
+        ,bootstrap2.private_static_ip  as hypri_private_static_ip
+        ,bootstrap2.public_static_ip  as hypri_public_static_ip
+        ,bootstrap2.stemcell  as hypri_stemcell
+        ,bootstrap2.network_name  as hypri_network_name
+        ,bootstrap2.create_date  as hypri_create_date
+        ,bootstrap2.update_date  as hypri_update_date
+        ,bootstrap2.paasta_monitoring_use  as hypri_paasta_monitoring_use
+        ,bootstrap2.paasta_monitoring_ip  as hypri_paasta_monitoring_ip
+        ,bootstrap2.influxdb_ip  as hypri_influxdb_ip
+        ,bootstrap2.paasta_monitoring_release  as hypri_paasta_monitoring_release
+    From ieda_hybrid_bootstrap bootstrapmgnt
+    LEFT OUTER Join ieda_private_bootstrap bootstrap2
+        On bootstrapmgnt.private_bootstrap_id = bootstrap2.id
+    LEFT OUTER Join ieda_public_bootstrap bootstrap
+        On bootstrapmgnt.public_bootstrap_id = bootstrap.id
+</select>
+    
+<select id="selectBootstrapInfo" resultMap="bootstrap">
+    Select  bootstrap.id as id
+        ,bootstrapmanagement.hybrid_bootstrap_id  as hybrid_bootstrap_id  
+        ,bootstrapmanagement.public_bootstrap_id as public_bootstrap_id
+        ,bootstrapmanagement.private_bootstrap_id as private_bootstrap_id
+        ,bootstrap.iaas_config_id as config_id
+        ,bootstrap.bootstrap_type as bootstrap_type
+        ,bootstrap.iaas_type as iaas_type
+        ,bootstrap.bosh_cpi_release as bosh_cpi_release
+        ,bootstrap.os_conf_release as os_conf_release
+        ,bootstrap.bosh_password as bosh_password
+        ,bootstrap.bootstrap_type as bootstrapType
+        ,bootstrap.bosh_release as bosh_release
+        ,bootstrap.enable_snapshots as enable_snapshots
+        ,bootstrap.snapshot_schedule as snapshot_schedule
+        ,bootstrap.cloud_instance_type as cloud_instance_type
+        ,bootstrap.resource_pool_cpu as resource_pool_cpu
+        ,bootstrap.resource_pool_ram as resource_pool_ram
+        ,bootstrap.resource_pool_disk as resource_pool_disk
+        ,bootstrap.deploy_log as deploy_log
+        ,bootstrap.deploy_status as deploy_status
+        ,bootstrap.deployment_file as deployment_file
+        ,bootstrap.deployment_name as deployment_name
+        ,bootstrap.director_name as director_name
+        ,bootstrap.credential_key_name as credential_key_name
+        ,bootstrap.ntp as ntp
+        ,bootstrap.private_static_ip as private_static_ip
+        ,bootstrap.public_static_ip as public_static_ip
+        ,bootstrap.stemcell as stemcell
+        ,bootstrap.subnet_dns as subnet_dns
+        ,bootstrap.subnet_gateway as subnet_gateway
+        ,bootstrap.subnet_id as subnet_id
+        ,bootstrap.network_name as network_name
+        ,bootstrap.subnet_range as subnet_range
+        ,bootstrap.public_static_ip as public_static_ip
+        ,bootstrap.public_subnet_id as public_subnet_id
+        ,bootstrap.public_subnet_range as public_subnet_range
+        ,bootstrap.public_subnet_gateway as public_subnet_gateway
+        ,bootstrap.public_subnet_dns as public_subnet_dns
+        ,bootstrap.create_date as create_date
+        ,bootstrap.update_date as update_date
+        ,bootstrap.paasta_monitoring_use as paasta_monitoring_use
+        ,bootstrap.paasta_monitoring_ip as paasta_monitoring_ip
+        ,bootstrap.influxdb_ip as influxdb_ip
+        ,bootstrap.paasta_monitoring_release as paasta_monitoring_release
+        ,config.iaas_config_alias as iaas_config_alias
+        ,config.id as iaas_config_id
+        ,config.account_id as account_id
+        ,config.common_security_group as common_security_group
+        ,config.common_region as common_region
+        ,config.common_keypair_name as common_keypair_name
+        ,config.common_keypair_path as common_keypair_path
+        ,config.common_availability_zone as common_availability_zone
+        ,config.vsphere_vcenter_datacenter_name as vsphere_vcenter_datacenter_name
+        ,config.vsphere_vcenter_vm_folder as vsphere_vcenter_vm_folder
+        ,config.vsphere_vcenter_template_folder as vsphere_vcenter_template_folder
+        ,config.vsphere_vcenter_datastore as vsphere_vcenter_datastore
+        ,config.vsphere_vcenter_persistent_datastore as vsphere_vcenter_persistent_datastore
+        ,config.vsphere_vcenter_disk_path as vsphere_vcenter_disk_path
+        ,config.vsphere_vcenter_cluster as vsphere_vcenter_cluster
+        ,config.google_public_key as google_public_key
+        ,config.azure_resource_group as azure_ResourceGroup_Name 
+        ,config.azure_storage_account_name as azure_StorageAccount_Name
+        ,config.azure_ssh_public_key as azure_SshPublicKey
+        ,account.id as iaas_account_id
+        ,ifnull(account.common_access_endpoint, "") as common_access_endpoint
+        ,ifnull(account.common_access_user, "") as common_access_user
+        ,ifnull(account.common_access_secret, "") as common_access_secret
+        ,ifnull(account.openstack_domain, "") as openstack_domain
+        ,ifnull(account.common_tenant, "") as common_tenant
+        ,ifnull(account.common_project, "") as common_project
+        ,ifnull(account.google_json_key,"") as google_json_key
+        ,ifnull(account.openstack_keystone_version, "") as openstack_keystone_version
+        ,ifnull(account.azure_subscription_id,"") as azure_SubscriptionId
+    From ieda_hybrid_bootstrap bootstrapmanagement
+    <if test="iaas == 'aws' or  iaas == 'azure' or iaas == 'google'">
+         Left Join ieda_public_bootstrap bootstrap
+         On bootstrap.id = bootstrapmanagement.public_bootstrap_id
+    </if>
+    <if test="iaas == 'vsphere' or  iaas == 'openstack'">
+         Left Join ieda_private_bootstrap bootstrap
+         On bootstrap.id = bootstrapmanagement.private_bootstrap_id
+    </if>
+    Left Join ieda_iaas_config config
+    Left Join ieda_iaas_account account
+        On config.account_id = account.id
+        On bootstrap.iaas_config_id= config.id
+    Where bootstrap.iaas_type = #{iaas}
+        and bootstrap.id = #{id}
+</select>
+    
+<insert id="insertBootStrapInfo" useGeneratedKeys="true" keyColumn="id" keyProperty="bootstrap.id">
+    /** ieda.deploy.deploy.bootstrap.insertBootStrapInfo  **/
+    INSERT INTO ${bootstrap.setHybridDbTableName} (
+        id
+        ,iaas_type
+        ,iaas_config_id
+        ,bootstrap_type
+        ,create_date
+        ,create_user_id
+        ,update_user_id
+        ,update_date
+        ,paasta_monitoring_use
+        ,paasta_monitoring_ip
+        ,influxdb_ip
+        ,paasta_monitoring_release
+        ) 
+    VALUES(
+         <if test="bootstrap.testFlag != null">1</if>
+         <if test="bootstrap.testFlag == null">#{bootstrap.id}</if>
+        ,#{bootstrap.iaasType}
+        ,#{bootstrap.iaasConfigId}
+        ,#{bootstrap.bootstrapType}
+        ,now()
+        ,#{bootstrap.createUserId}
+        ,#{bootstrap.updateUserId}
+        ,now()
+        ,#{bootstrap.paastaMonitoringUse}
+        ,#{bootstrap.paastaMonitoringIp}
+        ,#{bootstrap.influxdbIp}
+        ,#{bootstrap.paastaMonitoringRelease}
+    )
+    <selectKey keyProperty="bootstrap.id" resultType="int" order="AFTER">
+        <if test="bootstrap.id != 1"> SELECT LAST_INSERT_ID(); </if>
+        <if test="bootstrap.id == 1"> SELECT 1 AS id from dual; </if>
+    </selectKey>
+</insert>
+    
+<update id="updateBootStrapInfo">
+/** ieda.deploy.deploy.bootstrap.updateBootStrapInfo **/
+    Update ${bootstrap.setHybridDbTableName} set
+        iaas_config_id = #{bootstrap.iaasConfigId}
+        ,bosh_cpi_release = #{bootstrap.boshCpiRelease}
+        ,bosh_password = #{bootstrap.boshPassword}
+        ,ntp= #{bootstrap.ntp}
+        ,bosh_release = #{bootstrap.boshRelease}
+        ,bootstrap_type = #{bootstrap.bootstrapType}
+        ,os_conf_release = #{bootstrap.osConfRelease}
+        ,snapshot_schedule = #{bootstrap.snapshotSchedule}
+        ,enable_snapshots = #{bootstrap.enableSnapshots}
+        ,cloud_instance_type = #{bootstrap.cloudInstanceType}
+        ,deploy_log = #{bootstrap.deployLog}
+        ,deploy_status = #{bootstrap.deployStatus}
+        ,deployment_file = #{bootstrap.deploymentFile}
+        ,deployment_name = #{bootstrap.deploymentName}
+        ,director_name = #{bootstrap.directorName}
+        ,credential_key_name = #{bootstrap.credentialKeyName}
+        ,stemcell= #{bootstrap.stemcell}
+        ,resource_pool_cpu = #{bootstrap.resourcePoolCpu}
+        ,resource_pool_ram = #{bootstrap.resourcePoolRam}
+        ,resource_pool_disk = #{bootstrap.resourcePoolDisk}
+        ,private_static_ip = #{bootstrap.privateStaticIp}
+        ,subnet_id= #{bootstrap.subnetId}
+        ,network_name = #{bootstrap.networkName}
+        ,subnet_range= #{bootstrap.subnetRange}
+        ,subnet_gateway= #{bootstrap.subnetGateway}
+        ,subnet_dns= #{bootstrap.subnetDns}
+        ,public_static_ip = #{bootstrap.publicStaticIp}
+        ,public_subnet_id= #{bootstrap.publicSubnetId}
+        ,public_subnet_range= #{bootstrap.publicSubnetRange}
+        ,public_subnet_gateway= #{bootstrap.publicSubnetGateway}
+        ,public_subnet_dns= #{bootstrap.publicSubnetDns}
+        ,update_user_id=#{bootstrap.updateUserId}
+        ,update_date= now()
+        ,paasta_monitoring_use=#{bootstrap.paastaMonitoringUse}
+        ,paasta_monitoring_ip=#{bootstrap.paastaMonitoringIp}
+        ,influxdb_ip=#{bootstrap.influxdbIp}
+        ,paasta_monitoring_release=#{bootstrap.paastaMonitoringRelease}
+    WHERE
+    id=#{bootstrap.id}
+</update>
+    
+<delete id="deleteBootstrapInfo">
+    /**ieda.deploy.deploy.deleteBootstrapInfo**/
+    Delete 
+    From ${dto.setHybridDbTableName}
+    <choose>
+    <when test="dto.bootstrapType == 'hybrid'">
+    Where hybrid_bootstrap_id=#{dto.id}
+    </when>
+    <otherwise>
+    Where id=#{dto.id}
+    </otherwise>
+    </choose>
+</delete>
+    
+<select id="selectSnapshotInfo" resultType="int">
+     Select count(if(snapshot_schedule='',null,snapshot_schedule)) as count   
+       From ieda_hybrid_bootstrap 
+     Where public_static_ip = #{director.directorUrl}
+        And director_name = (
+            Select director_name 
+              From ieda_director_config 
+             Where director_name = #{director.directorName} 
+               And director_cpi = #{director.directorCpi}
+               And director_url = #{director.directorUrl}
+        )
+</select>
+
+<insert id="insertHybridBootstrapMgntInfo">
+    INSERT INTO ieda_hybrid_bootstrap(
+         hybrid_bootstrap_id
+        ,public_bootstrap_id
+        ,private_bootstrap_id
+        ,create_user_id
+        ,create_date
+        ,update_user_id
+        ,update_date
+        ) VALUES (
+        #{bootstrap.hybridBootStrapId}
+        ,#{bootstrap.publicBootStrapId}
+        ,#{bootstrap.privateBootStrapId}
+        ,#{bootstrap.createUserId}
+        ,now()
+        ,#{bootstrap.updateUserId}
+        ,now()
+        )
+    <selectKey keyProperty="bootstrap.hybridBootStrapId" resultType="int" order="AFTER">
+        <if test="bootstrap.hybridBootStrapId != 1"> SELECT LAST_INSERT_ID(); </if>
+        <if test="bootstrap.hybridBootStrapId == 1"> SELECT 1 AS id from dual; </if>
+    </selectKey>
+</insert>
+
+<update id="updateHybridBootstrapMgntInfo">
+    UPDATE ieda_hybrid_bootstrap set
+        public_bootstrap_id = #{bootstrap.publicBootStrapId}
+        ,private_bootstrap_id = #{bootstrap.privateBootStrapId}
+        ,update_user_id = #{bootstrap.updateUserId}
+        ,update_date = now()
+    WHERE hybrid_bootstrap_id = #{bootstrap.hybridBootStrapId}
+</update>
+
+<select id="selectHbBootstrapMgntFromPrvateDeploymentFileName" resultMap="hybridBootstrapInfo">
+   select
+        hybrid_bootstrap_id,
+        public_bootstrap_id,
+        private_bootstrap_id,
+        create_user_id,
+        create_date,
+        update_user_id,
+        update_date
+    from ieda_hybrid_bootstrap
+    where private_bootstrap_id = (select id from ieda_private_bootstrap where deployment_file = #{deploymentFileName});
+</select>
+
+<select id="selectInstallBootstrapInfo" resultMap="bootstrap">
+    select
+        private.iaas_type as  hypri_iaas_type
+        ,private.id as hypri_id
+        ,private.bootstrap_type as hypri_bootstrap_type
+        ,private.deployment_file as hypri_deployment_File
+        ,public.iaas_type as hypub_iaas_type
+        ,public.id as id
+        ,public.bootstrap_type as bootstrap_type
+        ,public.deployment_file as deployment_File
+    from ieda_public_bootstrap public, ieda_private_bootstrap private
+    where public.id = #{publicBootStrapId}
+    and private.id = #{privateBootstrapId}
+</select>
+</mapper>

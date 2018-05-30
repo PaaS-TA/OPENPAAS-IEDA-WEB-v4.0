@@ -104,7 +104,7 @@ public class BootstrapDeleteDeployAsyncService{
                     saveDeployStatus(vo, principal);
                 }
                 
-                if ( "error".equalsIgnoreCase(status) || accumulatedLog.contains("fail") || accumulatedLog.contains("error") || accumulatedLog.contains("No deployment")) {
+                if ( "error".equalsIgnoreCase(status) || accumulatedLog.contains("fail") || accumulatedLog.contains("error") || accumulatedLog.contains("No deployment") || accumulatedLog.contains("Error")) {
                     status = "error";
                     vo.setDeployStatus(message.getMessage("common.deploy.status.failed", null, Locale.KOREA));
                     saveDeployStatus(vo, principal);
