@@ -65,14 +65,14 @@ $(function() {
     
     
     /********************************************************
-     * 설명 : Azure Keypair 할당 버튼 클릭
+     * 설명 : Azure Keypair 생성 버튼 클릭
     *********************************************************/
     $("#addBtn").click(function(){
        if($("#addBtn").attr('disabled') == "disabled") return;
        w2popup.open({
-           title   : "<b>Azure Keypair 할당</b>",
+           title   : "<b>Azure Keypair 생성</b>",
            width   : 580,
-           height  : 465,
+           height  : 230,
            modal   : true,
            body    : $("#registPopupDiv").html(),
            buttons : $("#registPopupBtnDiv").html(),
@@ -104,7 +104,7 @@ function doSearch() {
 
 
 /********************************************************
- * 설명 : Azure Keypair 할당 
+ * 설명 : Azure Keypair 생성  
  * 기능 : saveAzureKeypairInfo
  *********************************************************/
 function saveAzureKeypairInfo(){
@@ -266,6 +266,9 @@ td {
                         <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCOUNT_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/storageAccount"/>', 'Azure Storage Account');"> Storage Account 관리</a></li>
                         </sec:authorize>
+                        <sec:authorize access="hasAuthority('AZURE_PUBLIC_IP_MENU')">
+                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/publicIp"/>', 'Azure Public IP');">Public IP 관리</a></li>
+                        </sec:authorize>                        
                         <sec:authorize access="hasAuthority('AZURE_SECURITY_GROUP_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/securityGroup"/>', 'Azure Security Group');">Security Group 관리</a></li>
                         </sec:authorize>
@@ -298,12 +301,12 @@ td {
     <!-- Keypair 정보 목록 그리드 -->
     <div id="azure_keypairGrid" style="width:100%; height:605px"></div>
 
-    <!-- Keypair 할당 팝업 -->
+    <!-- Keypair 생성 팝업 -->
     <div id="registPopupDiv" hidden="true">
         <form id="azureKeypairForm" action="POST" style="padding:5px 0 5px 0;margin:0;">
-            <div class="panel panel-info" style="height: 350px; margin-top: 7px;"> 
-                <div class="panel-heading"><b>Azure Keypair 할당 정보</b></div>
-                <div class="panel-body" style="padding:20px 10px; height:340px; overflow-y:auto;">
+            <div class="panel panel-info" style="height: 120px; margin-top: 7px;"> 
+                <div class="panel-heading"><b>Azure Keypair 생성 정보</b></div>
+                <div class="panel-body" style="padding:20px 10px; height:100px; overflow-y:auto;">
                     <input type="hidden" name="accountId"/>
                     <div class="w2ui-field">
                         <label style="width:36%;text-align: left; padding-left: 20px;">Keypair Name</label>

@@ -131,8 +131,10 @@ $(function() {
            body    : $("#registPopupDiv").html(),
            buttons : $("#registPopupBtnDiv").html(),
            onOpen  : function () {
+        	   //w2popup.lock(detail_rg_lock_msg, true);
                setAzureSubscription();
                setAzureResourceGroupList();
+               //w2popup.unlock();
            },
            onClose : function(event){
             w2popup.unlock();
@@ -199,11 +201,9 @@ $(function() {
                   console.log(subnetsInfo.trim() +"TEST TEST TEST 2");
                   //subnet 중 gatewaysubnet이 존 재 할 경우 gatewaysubnet선택 옵션을 없애준다.
                   
-                  alert('aaa');
                   $(".w2ui-popup .w2ui-box1 .w2ui-msg-body #addSubnetForm .panel-info .w2ui-field #switchType #types #typeB").hide();
                   // $("div.w2ui-popup div.w2ui-box1 div.w2ui-msg-body form#addSubnetForm div.panel-info div.w2ui-field div#switchType div#types #typeB").hide();
                   //$("div.w2ui-popup div.w2ui-box1 div.w2ui-msg-body form#addSubnetForm div.panel-info div.w2ui-field div#switchType div#types .typeB").css('color', '#fff');
-                  //$(function(){});
                }
            },
            onClose : function(event){
@@ -232,7 +232,7 @@ $(function() {
              var record = w2ui['azure_subnetsGrid'].get(selected);
              w2confirm({
                  title   : "<b>Subnet 삭제</b>",
-                 msg     : "Virtual Network (" + record.subnetName +") 를<br/>"
+                 msg     : "Virtual Network Subnet (" + record.subnetName +") 를<br/>"
                                         +"<strong><font color='red'> 삭제 하시 겠습니까?</strong><red>"   ,
                  yes_text : "확인",
                  no_text : "취소",
@@ -350,6 +350,7 @@ function addNewSubnet(){
  * 설명 : 해당 Supscription 에 대한  Azure 리소스 그룹 목록 조회 기능
  *********************************************************/
  function setAzureResourceGroupList(){
+	 w2popup.lock('', true);
      accountId = $("select[name='accountId']").val();
      $.ajax({
             type : "GET",
@@ -371,7 +372,7 @@ function addNewSubnet(){
                     result = "<option value=''>리소스 그룹이 존재 하지 않습니다.</option>"
                 }
                 $("#resourceGroupInfoDiv #resourceGroupInfo").html(result);
-                
+                w2popup.unlock();
             },
             error : function(request, status, error) {
                 w2popup.unlock();
@@ -386,6 +387,7 @@ function addNewSubnet(){
  * 설명 : 해당 Network의 Azure Subscription 정보 조회 기능
  *********************************************************/
 function setAzureSubscription(){
+	 w2popup.lock('', true);
     accountId = $("select[name='accountId']").val();
     $.ajax({
            type : "GET",
@@ -399,6 +401,7 @@ function setAzureSubscription(){
                            result  += "<input name='' style='width: 300px;' value='"+data.subscriptionName+"' disabled/>";
                }
                $('#subscriptionInfoDiv #subscriptionInfo').html(result);
+               w2popup.unlock();
            },
            error : function(request, status, error) {
                w2popup.unlock();
@@ -551,7 +554,7 @@ td {
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/publicIp"/>', 'Azure Public IP');">Public IP 관리</a></li>
                         </sec:authorize>
                          <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCESS_KEY_MENU')">
-                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/keypairs"/>', 'Azure Key Pair');">Key Pair 관리</a></li>
+                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/storageAccessKey"/>', 'Azure Key Pair');">Key Pair 관리</a></li>
                         </sec:authorize>
                         <sec:authorize access="hasAuthority('AZURE_SECURITY_GROUP_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/securityGroup"/>', 'Azure Security Group');">Security Group 관리</a></li>
@@ -616,8 +619,8 @@ td {
                     <div class="w2ui-field">
                         <label style="width:36%;text-align: left; padding-left: 20px;">Location</label>
                          <div id="locationInfoDiv">
-                         <div id="locationInfo" style="width:300px; font-size: 15px; height: 28px; border: 1px solid #ccc; border-radius:2px; padding-left:5px; line-height:28px; color:#777 !important;" ></div>
-                                <input id ="locationVal" name="location" hidden="true" readonly='readonly'  style="width:300px; font-size: 15px; height: 32px;"/> 
+                         <div id="locationInfo" style="width:300px; font-size: 14px; height: 26px; border: 1px solid #ccc; border-radius:2px; padding-left:5px; line-height:26px; background-color: #eee; color:#777 !important;" >리소스 그룹의 리전 명</div>
+                                <input id ="locationVal" name="location" hidden="true" readonly='readonly' style="width:300px; font-size: 15px; height: 32px;"/> 
                         </div>
                     </div>
                     <div class="w2ui-field">

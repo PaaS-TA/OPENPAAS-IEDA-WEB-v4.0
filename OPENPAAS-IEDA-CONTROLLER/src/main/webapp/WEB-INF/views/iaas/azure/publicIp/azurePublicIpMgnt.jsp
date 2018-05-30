@@ -80,7 +80,7 @@ $(function() {
        w2popup.open({
            title   : "<b>Azure Public IP 할당</b>",
            width   : 580,
-           height  : 465,
+           height  : 365,
            modal   : true,
            body    : $("#registPopupDiv").html(),
            buttons : $("#registPopupBtnDiv").html(),
@@ -278,7 +278,7 @@ td {
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/storageAccount"/>', 'Azure Storage Account');"> Storage Account 관리</a></li>
                         </sec:authorize>
                          <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCESS_KEY_MENU')">
-                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/keypairs"/>', 'Azure Key Pair');">Key Pair 관리</a></li>
+                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/storageAccessKey"/>', 'Azure Key Pair');">Key Pair 관리</a></li>
                         </sec:authorize>
                         <sec:authorize access="hasAuthority('AZURE_SECURITY_GROUP_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/securityGroup"/>', 'Azure Security Group');">Security Group 관리</a></li>
@@ -304,7 +304,7 @@ td {
         <div class="title fl">Azure Public IP 목록</div>
         <div class="fr"> 
         <sec:authorize access="hasAuthority('AZURE_PUBLIC_IP_CREATE')">
-            <span id="addBtn" class="btn btn-primary" style="width:120px">생성</span>
+            <span id="addBtn" class="btn btn-primary" style="width:120px">IP 할당</span>
         </sec:authorize>
         </div>
     </div>
@@ -315,9 +315,9 @@ td {
     <!-- Public IP 할당 팝업 -->
     <div id="registPopupDiv" hidden="true">
         <form id="azurePublicIPForm" action="POST" style="padding:5px 0 5px 0;margin:0;">
-            <div class="panel panel-info" style="height: 350px; margin-top: 7px;"> 
+            <div class="panel panel-info" style="height: 250px; margin-top: 7px;"> 
                 <div class="panel-heading"><b>Azure Public IP 할당 정보</b></div>
-                <div class="panel-body" style="padding:20px 10px; height:340px; overflow-y:auto;">
+                <div class="panel-body" style="padding:20px 10px; height:240px; overflow-y:auto;">
                     <input type="hidden" name="accountId"/>
                     <div class="w2ui-field">
                         <label style="width:36%;text-align: left; padding-left: 20px;">Public IP Name</label>
@@ -334,7 +334,7 @@ td {
                     <div class="w2ui-field">
                         <label style="width:36%;text-align: left; padding-left: 20px;">Location</label>
                          <div id="locationInfoDiv">
-                         <div id="locationInfo" style="width:300px; font-size: 15px; height: 28px; border: 1px solid #ccc; border-radius:2px; padding-left:5px; line-height:28px; color:#777 !important;" ></div>
+                         <div id="locationInfo" style="width:300px; font-size: 15px; height: 26px; border: 1px solid #ccc; border-radius:2px; padding-left:5px; line-height:26px; background-color: #eee; color:#777 !important;" >리소스 그룹의 리전 명</div>
                                 <input id ="locationVal" name="location" hidden="true" readonly='readonly'  style="width:300px; font-size: 15px; height: 32px;"/> 
                         </div>
                     </div>

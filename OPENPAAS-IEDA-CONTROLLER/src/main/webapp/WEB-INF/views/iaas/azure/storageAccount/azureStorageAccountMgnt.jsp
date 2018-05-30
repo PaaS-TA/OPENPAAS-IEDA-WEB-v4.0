@@ -725,7 +725,7 @@ td {
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/publicIp"/>', 'Azure Public IP');">Public IP 관리</a></li>
                         </sec:authorize>
                          <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCESS_KEY_MENU')">
-                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/keypairs"/>', 'Azure Key Pair');">Key Pair 관리</a></li>
+                            <li><a href="javascript:goPage('<c:url value="/azureMgnt/storageAccessKey"/>', 'Azure Key Pair');">Key Pair 관리</a></li>
                         </sec:authorize>
                         <sec:authorize access="hasAuthority('AZURE_SECURITY_GROUP_MENU')">
                             <li><a href="javascript:goPage('<c:url value="/azureMgnt/securityGroup"/>', 'Azure Security Group');">Security Group 관리</a></li>
@@ -785,7 +785,7 @@ td {
                     <div class="w2ui-field">
                         <label style="width:36%;text-align: left; padding-left: 20px;">Location</label>
                          <div id="locationInfoDiv">
-                         <div id="locationInfo" style="width:300px; font-size: 15px; height: 28px; border: 1px solid #ccc; border-radius:2px; padding-left:5px; line-height:28px; color:#777 !important;" ></div>
+                         <div id="locationInfo" style="width:300px; font-size: 15px; height: 26px; border: 1px solid #ccc; border-radius:2px; padding-left:5px; line-height:26px; background-color: #eee; color:#777 !important;" >리소스 그룹의 리전 명</div>
                                 <input id ="locationVal" name="location" hidden="true" readonly='readonly'  style="width:300px; font-size: 15px; height: 32px;"/> 
                         </div>
                     </div>
@@ -896,7 +896,7 @@ td {
                     <div class="w2ui-field">
                         <label style="width:36%;text-align: left; padding-left: 20px;">Storage Table Name</label>
                         <div>
-                            <input name="tableName" type="text"   maxlength="100" style="width: 300px; margin-top: 1px;" placeholder="Table 명을 입력하세요."/>
+                            <input name="tableName" type="text"   maxlength="100" style="width: 300px; margin-top: 1px;" readonly='readonly' value="stemcells"/>
                         </div>
                     </div>
                     
