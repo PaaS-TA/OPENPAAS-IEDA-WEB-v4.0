@@ -639,6 +639,27 @@ CREATE TABLE ieda_public_bootstrap
   PRIMARY KEY (id)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
+CREATE TABLE ieda_hybrid_director_config
+(
+  ieda_director_config_seq          INT(11)  NOT NULL AUTO_INCREMENT,
+  current_deployment                VARCHAR(255),
+  director_cpi                      VARCHAR(255),
+  director_name                     VARCHAR(255),
+  director_port                     INT(11),
+  director_url                      VARCHAR(255),
+  director_uuid                     VARCHAR(255),
+  director_version                  VARCHAR(255),
+  user_id                           VARCHAR(255),
+  user_password                     VARCHAR(255),
+  create_user_id                    VARCHAR(255)  NOT NULL,
+  create_date                       DATE          NOT NULL,
+  update_user_id                    VARCHAR(255)  NOT NULL,
+  update_date                       DATE          NOT NULL,
+  credential_file                   VARCHAR(255),
+  director_type                       VARCHAR(100),
+  PRIMARY KEY (ieda_director_config_seq)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
 #Setting AUTO_INCREMENT
 ALTER TABLE ieda_role AUTO_INCREMENT=1000;
 ALTER TABLE ieda_common_code AUTO_INCREMENT=1000;
@@ -657,6 +678,7 @@ ALTER TABLE ieda_iaas_account AUTO_INCREMENT=1000;
 ALTER TABLE ieda_iaas_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_job_template AUTO_INCREMENT=1000;
 ALTER TABLE ieda_director_credential AUTO_INCREMENT=1000;
+ALTER TABLE ieda_hybrid_director_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_hybrid_bootstrap AUTO_INCREMENT=1000;
 ALTER TABLE ieda_private_bootstrap AUTO_INCREMENT=1000;
 ALTER TABLE ieda_public_bootstrap AUTO_INCREMENT=1000;
