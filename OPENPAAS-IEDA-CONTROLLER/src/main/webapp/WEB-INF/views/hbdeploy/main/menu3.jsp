@@ -40,7 +40,7 @@
               <a href="javascript:;" data-toggle="collapse" data-target="#configMenu" ><i class="fa fa-fw fa fa-cog"></i> 환경설정 및 관리 <i class="fa fa-fw fa-caret-down"></i></a>
               <ul id="configMenu" class="collapse">
                   <sec:authorize access="hasAuthority('CONFIG_STEMCELL_MENU')">
-                      <li><a href="javascript:goPage('<c:url value="/config/stemcell"/>', 'Public 스템셀 다운로드');">스템셀 관리</a></li>
+                      <li><a href="javascript:goPage('<c:url value="/config/hbstemcell"/>', 'Public 스템셀 다운로드');">스템셀 관리</a></li>
                   </sec:authorize>
                   <sec:authorize access="hasAuthority('CONFIG_RELEASE_MENU')">
                       <li><a href="javascript:goPage('<c:url value="/config/systemRelease"/>', 'System 릴리즈 관리');">릴리즈 관리</a></li>
