@@ -2,6 +2,8 @@ package org.openpaas.ieda.azureMgnt.web.securityGroup.dto;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.stereotype.Repository;
+@Repository
 public class AzureSecurityGroupMgntDTO {
     private Integer accountId; // 계정 아이디
     @NotNull

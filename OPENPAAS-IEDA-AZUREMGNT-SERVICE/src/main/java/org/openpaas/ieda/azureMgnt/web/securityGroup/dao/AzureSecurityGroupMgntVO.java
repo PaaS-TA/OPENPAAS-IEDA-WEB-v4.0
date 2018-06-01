@@ -2,6 +2,8 @@ package org.openpaas.ieda.azureMgnt.web.securityGroup.dao;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.stereotype.Repository;
+@Repository
 public class AzureSecurityGroupMgntVO {
 	@NotNull
 	private Integer recid;
