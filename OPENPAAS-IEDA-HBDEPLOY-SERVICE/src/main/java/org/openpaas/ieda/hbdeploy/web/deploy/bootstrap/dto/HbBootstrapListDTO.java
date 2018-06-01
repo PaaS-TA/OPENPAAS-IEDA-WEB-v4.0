@@ -55,7 +55,6 @@ public class HbBootstrapListDTO {
     private String hyPriDeployLog; //배포로그
     private Date hyPriCreateDate; // 생성일자
     private Date hyPriUpdateDate; // 수정일자
-    private String hyPriBootstrapType;
     
     
     public Integer getRecid() {
@@ -361,12 +360,6 @@ public class HbBootstrapListDTO {
     }
     public void setHyPriUpdateDate(Date hyPriUpdateDate) {
         this.hyPriUpdateDate = hyPriUpdateDate;
-    }
-    public String getHyPriBootstrapType() {
-        return hyPriBootstrapType;
-    }
-    public void setHyPriBootstrapType(String hyPriBootstrapType) {
-        this.hyPriBootstrapType = hyPriBootstrapType;
     }
     public String getHyPubIaas() {
         return hyPubIaas;

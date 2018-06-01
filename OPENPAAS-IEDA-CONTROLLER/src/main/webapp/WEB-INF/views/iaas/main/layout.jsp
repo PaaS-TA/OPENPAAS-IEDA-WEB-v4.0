@@ -27,9 +27,9 @@
 <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <!--     Bootstrap Core & Custom CSS -->
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/default.css'/>"/>
-<link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-guide.css?ver=4'/>"/>
-<link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-content.css?ver=5'/>"/>
-<link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-init.css?ver=3'/>"/>
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-guide.css?ver=5'/>"/>
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-content.css?ver=1'/>"/>
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-init.css?ver=5'/>"/>
 
 <!-- JQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -72,7 +72,7 @@ $(function() {
         name: 'layout',
         panels: [
              { type: 'top', style: pstyle, size: 71}
-            ,{ type: 'left', style: pstyle, size:256}
+            ,{ type: 'left', style: pstyle, size:275}
             ,{ type: 'main', style: pstyle, size:1620}
         ],  onError: function(event) {
         }, onResize : function(event) {

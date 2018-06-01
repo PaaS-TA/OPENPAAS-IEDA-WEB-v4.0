@@ -144,7 +144,7 @@ $(function() {
             yes_text     : "확인",
             no_text      : "취소",
             yes_callBack : function(){
-                 //DIego 사용 여부
+                //DIego 사용 여부
                 diegoUse = $(".w2ui-msg-body input:radio[name='diegoSelect']:checked").val();
                 if( iaas == "") {
                     selectIaas(); return;

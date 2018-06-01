@@ -32,7 +32,7 @@
 #main .iaasTotalResourceUsageDiv .totalResourceUsage-ul-Div  > li:nth-of-type(2) {vertical-align: middle;font-size: 50px;width: 68%;}
 #main .iaasTotalResourceUsageDiv .totalResourceUsage-ul-Div  > li:nth-of-type(2) > span { display:inline-block; }
 #iaasResourceUsageWrap { display: block;float: left; width:100% }
-#iaasResourceUsageWrap .iaasResourceUsageDiv { background-color:#fff; width: 405px; float:left; border-radius: 10px; height: 453px; border: 2px solid; margin-right: 70px !important;cursor:pointer;}    
+#iaasResourceUsageWrap .iaasResourceUsageDiv { background-color:#fff; width: 405px; float:left; border-radius: 10px; height: 453px; border: 2px solid; margin-right: 20px !important;cursor:pointer;}    
 #iaasResourceUsageWrap .iaasResourceUsageDiv > ul { text-overflow: ellipsis;overflow: hidden;height: 100%; }
 #iaasResourceUsageWrap .iaasResourceUsageDiv > ul > li:nth-of-type(1) { border-bottom: 1px dashed #979797 }
 #iaasResourceUsageWrap .iaasResourceUsageDiv > ul > li > ul { margin:60px 20px 10px 20px }

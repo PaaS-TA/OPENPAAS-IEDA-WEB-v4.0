@@ -46,7 +46,7 @@ public class HbBootstrapController extends BaseController {
     @RequestMapping(value = "/deploy/hbBootstrap", method = RequestMethod.GET)
     public String goHbBootstrap() {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/Hbbootstrap"); }
-        return "/hbdeploy/deploy/bootstrap/hbBootstrap";
+        return "/hbdeploy/deploy/bootstrap/hbBootstrap2";
     }
 
     /***************************************************

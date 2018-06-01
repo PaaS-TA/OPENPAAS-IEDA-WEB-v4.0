@@ -16,12 +16,7 @@ input.radio{vertical-align:middle}
 
 #layout_layout_panel_main { display: block;left: 256px;top: 72px;width:1599px; height: 900px; }
 /* 왼쪽 메뉴*/
-#left{  
-    float:left;
-    width:255px;
-    min-height:820px;
-    background-color:#2c3248;
-}
+
 
 #main{
     position:absolute;

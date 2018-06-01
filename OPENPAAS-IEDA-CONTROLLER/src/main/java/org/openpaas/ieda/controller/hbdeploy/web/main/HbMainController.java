@@ -18,7 +18,18 @@ public class HbMainController {
     ***************************************************/
     @RequestMapping(value="/hbFlatform", method=RequestMethod.GET)
     public String goLayout(){ 
-        return "/hbdeploy/main/layout";
+        return "/hbdeploy/main/layout2";
+    }
+    
+    /***************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : 메인 화면을 호출하 이동
+     * @title : goLayout
+     * @return : String
+    ***************************************************/
+    @RequestMapping(value="/hbFlatform2", method=RequestMethod.GET)
+    public String goLayout2(){ 
+        return "/hbdeploy/main/layout3";
     }
     
     /***************************************************
@@ -41,7 +52,19 @@ public class HbMainController {
     ***************************************************/
     @RequestMapping(value="/hbMenu", method=RequestMethod.GET)
     public String goMenu() {
-        return "/hbdeploy/main/menu";
+        return "/hbdeploy/main/menu2";
+    }
+    
+    
+    /***************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : 메인의 menu 화면 호출 
+     * @title : goMenu
+     * @return : String
+    ***************************************************/
+    @RequestMapping(value="/hbMenu2", method=RequestMethod.GET)
+    public String goMenu2() {
+        return "/hbdeploy/main/menu3";
     }
 
 }
