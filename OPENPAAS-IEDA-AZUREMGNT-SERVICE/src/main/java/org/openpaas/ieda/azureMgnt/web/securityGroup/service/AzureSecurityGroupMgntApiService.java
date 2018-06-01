@@ -68,8 +68,8 @@ public class AzureSecurityGroupMgntApiService {
    
    /****************************************************************
     * @project : Azure 인프라 관리 대시보드
-    * @description : Azure API를 통해  SecurityGroup 생성 실제 API 호출
-    * @title : createAzureSecurityGroup성FromAzure
+    * @description : Azure API를 통해  SecurityGroup InboundRules생성 실제 API 호출
+    * @title : createAzureSecurityGroupInboundRulesFromAzure
     * @return : void
    *****************************************************************/   
     public SecurityRuleInner createAzureSecurityGroupInboundRulesFromAzure(IaasAccountMgntVO vo, AzureSecurityGroupMgntDTO dto, SecurityRuleInner securityRuleInner ){
