@@ -50,13 +50,25 @@ public class StemcellManagementController extends BaseController {
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
+     * @description : 이종 스템셀 관리 화면 이동
+     * @title : goHbStemcellManagement
+     * @return : String
+    *****************************************************************/
+    @RequestMapping(value="/config/hbstemcell", method=RequestMethod.GET)
+    public String goHbStemcellManagement() {
+        if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> /config/hbstemcell"); }
+        return "/hbdeploy/config/hbStemcellManagement";
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
      * @description : 스템셀 목록 조회
      * @title : getPublicStemcells
      * @return : ResponseEntity<HashMap<String,Object>>
     *****************************************************************/
     @RequestMapping(value="/config/stemcell/list", method=RequestMethod.GET)
     public ResponseEntity<HashMap<String, Object>> getStemcellList() {
-        if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> /config/stemcell/lis"); }
+        if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> /config/stemcell/list"); }
         HashMap<String, Object> list = new HashMap<String, Object>();
         
         List<StemcellManagementVO> stemcellList = service.getPublicStemcellList();
