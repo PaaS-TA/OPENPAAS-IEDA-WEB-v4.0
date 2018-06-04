@@ -102,307 +102,307 @@ public class AzureNetworkMgntServiceUnitTest extends BaseAzureMgntControllerUnit
     public List<Network> getResultNetworkListInfo () {
         List<Network> networkList = new ArrayList<Network>();
         Network network = new Network() {
-			
-			@Override
-			public Update update() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public Observable<Network> refreshAsync() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public Network refresh() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public VirtualNetworkInner inner() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public NetworkManager manager() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public String resourceGroupName() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public String name() {
-				// TODO Auto-generated method stub
-				return "test-networkName";
-			}
-			
-			@Override
-			public String id() {
-				// TODO Auto-generated method stub
-				return "test-networkId";
-			}
-			
-			@Override
-			public String key() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public String type() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public Map<String, String> tags() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public String regionName() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public Region region() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public Map<String, Subnet> subnets() {
-				HashMap<String, Subnet> a = new HashMap<String, Subnet>();
-				Subnet subnet = new Subnet() {
-					@Override
-					public Network parent() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public String name() {
-						// TODO Auto-generated method stub
-						return "test-subnetName";
-					}
-					
-					@Override
-					public String key() {
-						// TODO Auto-generated method stub
-						return "lee";
-					}
-					
-					@Override
-					public SubnetInner inner() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public String routeTableId() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public String networkSecurityGroupId() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public int networkInterfaceIPConfigurationCount() {
-						// TODO Auto-generated method stub
-						return 0;
-					}
-					
-					@Override
-					public Collection<NicIPConfiguration> listNetworkInterfaceIPConfigurations() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public Set<String> listAvailablePrivateIPAddresses() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public RouteTable getRouteTable() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public NetworkSecurityGroup getNetworkSecurityGroup() {
-						NetworkSecurityGroup sg = new NetworkSecurityGroup() {
-							
-							@Override
-							public List<Subnet> listAssociatedSubnets() {
-								// TODO Auto-generated method stub
-								return null;
-							}
-							
-							@Override
-							public com.microsoft.azure.management.network.NetworkSecurityGroup.Update update() {
-								// TODO Auto-generated method stub
-								return null;
-							}
-							
-							@Override
-							public Observable<NetworkSecurityGroup> refreshAsync() {
-								// TODO Auto-generated method stub
-								return null;
-							}
-							
-							@Override
-							public NetworkSecurityGroup refresh() {
-								// TODO Auto-generated method stub
-								return null;
-							}
-							
-							@Override
-							public NetworkSecurityGroupInner inner() {
-								// TODO Auto-generated method stub
-								return null;
-							}
-							
-							@Override
-							public NetworkManager manager() {
-								// TODO Auto-generated method stub
-								return null;
-							}
-							
-							@Override
-							public String resourceGroupName() {
-								// TODO Auto-generated method stub
-								return null;
-							}
-							
-							@Override
-							public String name() {
-								// TODO Auto-generated method stub
-								return "test-securityGroupName";
-							}
-							
-							@Override
-							public String id() {
-								// TODO Auto-generated method stub
-								return null;
-							}
-							
-							@Override
-							public String key() {
-								// TODO Auto-generated method stub
-								return null;
-							}
-							
-							@Override
-							public String type() {
-								// TODO Auto-generated method stub
-								return null;
-							}
-							
-							@Override
-							public Map<String, String> tags() {
-								// TODO Auto-generated method stub
-								return null;
-							}
-							
-							@Override
-							public String regionName() {
-								// TODO Auto-generated method stub
-								return null;
-							}
-							
-							@Override
-							public Region region() {
-								// TODO Auto-generated method stub
-								return null;
-							}
-							
-							@Override
-							public Map<String, NetworkSecurityRule> securityRules() {
-								// TODO Auto-generated method stub
-								return null;
-							}
-							
-							@Override
-							public Set<String> networkInterfaceIds() {
-								// TODO Auto-generated method stub
-								return null;
-							}
-							
-							@Override
-							public Map<String, NetworkSecurityRule> defaultSecurityRules() {
-								// TODO Auto-generated method stub
-								return null;
-							}
-						};
-						return sg;
-					}
-					
-					@Override
-					public Set<NicIPConfiguration> getNetworkInterfaceIPConfigurations() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public String addressPrefix() {
-						// TODO Auto-generated method stub
-						return "10.10.1.0/24";
-					}
-				};
-				a.put("test-subnetName", subnet);
-				return a;
-			}
-			
-			@Override
-			public NetworkPeerings peerings() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public boolean isPrivateIPAddressInNetwork(String ipAddress) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-			@Override
-			public boolean isPrivateIPAddressAvailable(String ipAddress) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-			@Override
-			public List<String> dnsServerIPs() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public List<String> addressSpaces() {
-				// TODO Auto-generated method stub
-				List<String> space = new ArrayList<String>();
-				
-				space.add("10.10.0.0/16");
-				return space;
-			}
-		};
+            
+            @Override
+            public Update update() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public Observable<Network> refreshAsync() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public Network refresh() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public VirtualNetworkInner inner() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public NetworkManager manager() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public String resourceGroupName() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public String name() {
+                // TODO Auto-generated method stub
+                return "test-networkName";
+            }
+            
+            @Override
+            public String id() {
+                // TODO Auto-generated method stub
+                return "test-networkId";
+            }
+            
+            @Override
+            public String key() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public String type() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public Map<String, String> tags() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public String regionName() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public Region region() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public Map<String, Subnet> subnets() {
+                HashMap<String, Subnet> a = new HashMap<String, Subnet>();
+                Subnet subnet = new Subnet() {
+                    @Override
+                    public Network parent() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public String name() {
+                        // TODO Auto-generated method stub
+                        return "test-subnetName";
+                    }
+                    
+                    @Override
+                    public String key() {
+                        // TODO Auto-generated method stub
+                        return "lee";
+                    }
+                    
+                    @Override
+                    public SubnetInner inner() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public String routeTableId() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public String networkSecurityGroupId() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public int networkInterfaceIPConfigurationCount() {
+                        // TODO Auto-generated method stub
+                        return 0;
+                    }
+                    
+                    @Override
+                    public Collection<NicIPConfiguration> listNetworkInterfaceIPConfigurations() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public Set<String> listAvailablePrivateIPAddresses() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public RouteTable getRouteTable() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public NetworkSecurityGroup getNetworkSecurityGroup() {
+                        NetworkSecurityGroup sg = new NetworkSecurityGroup() {
+                            
+                            @Override
+                            public List<Subnet> listAssociatedSubnets() {
+                                // TODO Auto-generated method stub
+                                return null;
+                            }
+                            
+                            @Override
+                            public com.microsoft.azure.management.network.NetworkSecurityGroup.Update update() {
+                                // TODO Auto-generated method stub
+                                return null;
+                            }
+                            
+                            @Override
+                            public Observable<NetworkSecurityGroup> refreshAsync() {
+                                // TODO Auto-generated method stub
+                                return null;
+                            }
+                            
+                            @Override
+                            public NetworkSecurityGroup refresh() {
+                                // TODO Auto-generated method stub
+                                return null;
+                            }
+                            
+                            @Override
+                            public NetworkSecurityGroupInner inner() {
+                                // TODO Auto-generated method stub
+                                return null;
+                            }
+                            
+                            @Override
+                            public NetworkManager manager() {
+                                // TODO Auto-generated method stub
+                                return null;
+                            }
+                            
+                            @Override
+                            public String resourceGroupName() {
+                                // TODO Auto-generated method stub
+                                return null;
+                            }
+                            
+                            @Override
+                            public String name() {
+                                // TODO Auto-generated method stub
+                                return "test-securityGroupName";
+                            }
+                            
+                            @Override
+                            public String id() {
+                                // TODO Auto-generated method stub
+                                return null;
+                            }
+                            
+                            @Override
+                            public String key() {
+                                // TODO Auto-generated method stub
+                                return null;
+                            }
+                            
+                            @Override
+                            public String type() {
+                                // TODO Auto-generated method stub
+                                return null;
+                            }
+                            
+                            @Override
+                            public Map<String, String> tags() {
+                                // TODO Auto-generated method stub
+                                return null;
+                            }
+                            
+                            @Override
+                            public String regionName() {
+                                // TODO Auto-generated method stub
+                                return null;
+                            }
+                            
+                            @Override
+                            public Region region() {
+                                // TODO Auto-generated method stub
+                                return null;
+                            }
+                            
+                            @Override
+                            public Map<String, NetworkSecurityRule> securityRules() {
+                                // TODO Auto-generated method stub
+                                return null;
+                            }
+                            
+                            @Override
+                            public Set<String> networkInterfaceIds() {
+                                // TODO Auto-generated method stub
+                                return null;
+                            }
+                            
+                            @Override
+                            public Map<String, NetworkSecurityRule> defaultSecurityRules() {
+                                // TODO Auto-generated method stub
+                                return null;
+                            }
+                        };
+                        return sg;
+                    }
+                    
+                    @Override
+                    public Set<NicIPConfiguration> getNetworkInterfaceIPConfigurations() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public String addressPrefix() {
+                        // TODO Auto-generated method stub
+                        return "10.10.1.0/24";
+                    }
+                };
+                a.put("test-subnetName", subnet);
+                return a;
+            }
+            
+            @Override
+            public NetworkPeerings peerings() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public boolean isPrivateIPAddressInNetwork(String ipAddress) {
+                // TODO Auto-generated method stub
+                return false;
+            }
+            
+            @Override
+            public boolean isPrivateIPAddressAvailable(String ipAddress) {
+                // TODO Auto-generated method stub
+                return false;
+            }
+            
+            @Override
+            public List<String> dnsServerIPs() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public List<String> addressSpaces() {
+                // TODO Auto-generated method stub
+                List<String> space = new ArrayList<String>();
+                
+                space.add("10.10.0.0/16");
+                return space;
+            }
+        };
         networkList.add(network);
         return networkList;
     }
@@ -427,8 +427,8 @@ public class AzureNetworkMgntServiceUnitTest extends BaseAzureMgntControllerUnit
         assertEquals(resultList.get(0).getSubnetAddressRangeCidr(), subnetList.get(0).addressPrefix());
         assertEquals(resultList.get(0).getSubnetAddressesCnt().toString(), "251");
         assertEquals(resultList.get(0).getSecurityGroupName(), subnetList.get(0).getNetworkSecurityGroup().name());
-        
     }
+    
     /***************************************************
      * @project : Azure 관리 대시보드
      * @description : 해당 NETWORK 에 대한 Subnets 정보 목록 값 설정  
@@ -438,193 +438,194 @@ public class AzureNetworkMgntServiceUnitTest extends BaseAzureMgntControllerUnit
     public List<Subnet> getResultSubnetListInfo(){
         List<Subnet> subnetList = new ArrayList<Subnet>();
         Subnet subnet = new Subnet() {
-			
-			@Override
-			public Network parent() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public String name() {
-				// TODO Auto-generated method stub
-				return "test-subnetName";
-			}
-			
-			@Override
-			public String key() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public SubnetInner inner() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public String routeTableId() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public String networkSecurityGroupId() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public int networkInterfaceIPConfigurationCount() {
-				// TODO Auto-generated method stub
-				return 0;
-			}
-			
-			@Override
-			public Collection<NicIPConfiguration> listNetworkInterfaceIPConfigurations() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public Set<String> listAvailablePrivateIPAddresses() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public RouteTable getRouteTable() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public NetworkSecurityGroup getNetworkSecurityGroup() {
-				// TODO Auto-generated method stub
-				NetworkSecurityGroup sg = new NetworkSecurityGroup() {
-					
-					@Override
-					public List<Subnet> listAssociatedSubnets() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public Update update() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public Observable<NetworkSecurityGroup> refreshAsync() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public NetworkSecurityGroup refresh() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public NetworkSecurityGroupInner inner() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public NetworkManager manager() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public String resourceGroupName() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public String name() {
-						// TODO Auto-generated method stub
-						return "test-securityGroupName";
-					}
-					
-					@Override
-					public String id() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public String key() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public String type() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public Map<String, String> tags() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public String regionName() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public Region region() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public Map<String, NetworkSecurityRule> securityRules() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public Set<String> networkInterfaceIds() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public Map<String, NetworkSecurityRule> defaultSecurityRules() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-				};
-				
-				return sg;
-			}
-			
-			@Override
-			public Set<NicIPConfiguration> getNetworkInterfaceIPConfigurations() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public String addressPrefix() {
-				// TODO Auto-generated method stub
-				return "10.10.1.0/24";
-			}
-		};
-		subnetList.add(subnet);
+            
+            @Override
+            public Network parent() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public String name() {
+                // TODO Auto-generated method stub
+                return "test-subnetName";
+            }
+            
+            @Override
+            public String key() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public SubnetInner inner() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public String routeTableId() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public String networkSecurityGroupId() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public int networkInterfaceIPConfigurationCount() {
+                // TODO Auto-generated method stub
+                return 0;
+            }
+            
+            @Override
+            public Collection<NicIPConfiguration> listNetworkInterfaceIPConfigurations() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public Set<String> listAvailablePrivateIPAddresses() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public RouteTable getRouteTable() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public NetworkSecurityGroup getNetworkSecurityGroup() {
+                // TODO Auto-generated method stub
+                NetworkSecurityGroup sg = new NetworkSecurityGroup() {
+                    
+                    @Override
+                    public List<Subnet> listAssociatedSubnets() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public Update update() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public Observable<NetworkSecurityGroup> refreshAsync() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public NetworkSecurityGroup refresh() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public NetworkSecurityGroupInner inner() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public NetworkManager manager() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public String resourceGroupName() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public String name() {
+                        // TODO Auto-generated method stub
+                        return "test-securityGroupName";
+                    }
+                    
+                    @Override
+                    public String id() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public String key() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public String type() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public Map<String, String> tags() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public String regionName() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public Region region() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public Map<String, NetworkSecurityRule> securityRules() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public Set<String> networkInterfaceIds() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                    
+                    @Override
+                    public Map<String, NetworkSecurityRule> defaultSecurityRules() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                };
+                
+                return sg;
+            }
+            
+            @Override
+            public Set<NicIPConfiguration> getNetworkInterfaceIPConfigurations() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public String addressPrefix() {
+                // TODO Auto-generated method stub
+                return "10.10.1.0/24";
+            }
+        };
+        subnetList.add(subnet);
         return subnetList;
     }
+    
     /***************************************************
      * @project : 인프라 관리 대시보드
      * @description : Azure Network 생성 TEST
@@ -649,7 +650,7 @@ public class AzureNetworkMgntServiceUnitTest extends BaseAzureMgntControllerUnit
         getAzureAccountInfo();
         AzureNetworkMgntDTO dto = setAzureNetworkInfo();
         mockAzureNetworkMgntService.deleteNetworkInfo(dto, principal);
-        }
+    }
     
     /***************************************************
      * @project : 인프라 관리 대시보드
@@ -742,8 +743,8 @@ public class AzureNetworkMgntServiceUnitTest extends BaseAzureMgntControllerUnit
         assertEquals(resultList.get(0).getResourceGroupName(), list.get(0).getResourceGroupName());
         assertEquals(resultList.get(0).getResourceGroupId(), list.get(0).getResourceGroupId());
         assertEquals(resultList.get(0).getLocation(), list.get(0).getLocation());
-        
     }
+    
     /***************************************************
      * @project : 인프라 관리 대시보드
      * @description : Azure ResourceGroup 정보 조회 값 설정
@@ -760,6 +761,7 @@ public class AzureNetworkMgntServiceUnitTest extends BaseAzureMgntControllerUnit
         list.add(vo);
         return list;
     }
+    
     /***************************************************
      * @project : 인프라 관리 대시보드
      * @description : Azure 구독 정보 조회 TEST
@@ -790,6 +792,3 @@ public class AzureNetworkMgntServiceUnitTest extends BaseAzureMgntControllerUnit
         return vo;
     }
 }
-
-
-

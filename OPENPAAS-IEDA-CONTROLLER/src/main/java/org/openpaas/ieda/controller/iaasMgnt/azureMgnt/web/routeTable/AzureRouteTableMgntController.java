@@ -95,7 +95,7 @@ public class AzureRouteTableMgntController {
     @RequestMapping(value="/azureMgnt/routeTable/delete", method=RequestMethod.DELETE)
     public ResponseEntity<?> deleteAzureRouteTable(@RequestBody AzureRouteTableMgntDTO dto, Principal principal){
         if (LOG.isInfoEnabled()) {
-               LOG.info("================================================> Azure Route Table 삭");
+               LOG.info("================================================> Azure Route Table 삭제 ");
         }
         azureRouteTableMgntService.deleteAzureRouteTable(dto, principal);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -103,14 +103,14 @@ public class AzureRouteTableMgntController {
     
     /***************************************************
      * @project : AZURE 인프라 관리 대시보드
-     * @description : AZURE Subnet associate
+     * @description : AZURE Subnet Associate
      * @title : associateAzureSubnet
      * @return : ResponseEntity<?>
      ***************************************************/
     @RequestMapping(value="/azureMgnt/routeTable/subnet/save", method=RequestMethod.POST)
     public ResponseEntity<?> associateAzureSubnet(@RequestBody AzureRouteTableMgntDTO dto, Principal principal){
         if (LOG.isInfoEnabled()) {
-               LOG.info("================================================> Azure Subnet associate");
+               LOG.info("================================================> Azure Subnet Associate");
         }
         azureRouteTableMgntService.associateAzureSubnet(dto, principal);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -119,13 +119,13 @@ public class AzureRouteTableMgntController {
     /***************************************************
      * @project : AZURE 인프라 관리 대시보드
      * @description : AZURE Subnet disassociate
-     * @title : deleteAzureRouteTable
+     * @title : disassociateAzureSubnet
      * @return : ResponseEntity<?>
      ***************************************************/
     @RequestMapping(value="/azureMgnt/routeTable/subnet/delete", method=RequestMethod.DELETE)
     public ResponseEntity<?> disassociateAzureSubnet(@RequestBody AzureRouteTableMgntDTO dto, Principal principal){
         if (LOG.isInfoEnabled()) {
-               LOG.info("================================================> Azure Route Table 삭");
+               LOG.info("================================================> Azure Subnet Disassociate");
         }
         azureRouteTableMgntService.disassociateAzureSubnet(dto, principal);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

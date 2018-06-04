@@ -214,6 +214,7 @@ public class AzureRouteTableMgntService {
         List<String> list = azureRouteTableMgntApiService.getAzureSubnetNameListFromAzure(vo, resourceGroupName, networkName);
         return list;
     }
+    
     /***************************************************
      * @project : 인프라 관리 대시보드
      * @description : Azure 구독 명 조회
@@ -225,4 +226,5 @@ public class AzureRouteTableMgntService {
         String subscriptionName = commonIaasService.getSubscriptionNameFromAzure(vo, subscriptionId);
         return subscriptionName;
     }
+    
 }

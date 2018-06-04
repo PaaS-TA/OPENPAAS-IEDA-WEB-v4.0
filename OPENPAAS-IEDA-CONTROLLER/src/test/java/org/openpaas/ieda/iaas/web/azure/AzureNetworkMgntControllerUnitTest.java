@@ -1,7 +1,6 @@
 package org.openpaas.ieda.iaas.web.azure;
 
 import static org.mockito.Matchers.any;
-
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -61,6 +60,7 @@ public class AzureNetworkMgntControllerUnitTest {
     //final static String NETWORK_SUBNETS_ADD_URL = "/azureMgnt/subnet/save";
     final static String AZURE_RESOURCE_GROUP_LIST_URL = "/azureMgnt/resourceGroup/list/groupInfo/{accountId}";
     final static String AZURE_SUBSCRIPTION_LIST_URL = "/azureMgnt/network/list/subscriptionInfo/{accountId}";
+    
     /***************************************************
      * @project : Azure 관리 대시보드
      * @description : 하나의 메소드가 실행되기전 호출
