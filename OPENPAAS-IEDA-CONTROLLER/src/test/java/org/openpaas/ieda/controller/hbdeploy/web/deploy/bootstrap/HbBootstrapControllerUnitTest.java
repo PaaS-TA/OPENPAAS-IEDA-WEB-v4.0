@@ -109,7 +109,7 @@ public class HbBootstrapControllerUnitTest extends BaseControllerUnitTest {
      * @title : testGoBootstrap
      * @return : void
     *****************************************************************/
-    @Test
+    //@Test
     public void testGoBootstrap() throws Exception{
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> Hybrid_Bootstrap 설치 화면 이동 Unit Test"); }
         mockMvc.perform(get(HYBRID_BOOTSTRAP_VIEW_URL).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
