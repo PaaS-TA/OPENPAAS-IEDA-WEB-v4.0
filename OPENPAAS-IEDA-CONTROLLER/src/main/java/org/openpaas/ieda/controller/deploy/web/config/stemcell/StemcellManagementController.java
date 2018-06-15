@@ -1,6 +1,7 @@
 package org.openpaas.ieda.controller.deploy.web.config.stemcell;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,7 +25,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import com.amazonaws.services.s3.event.S3EventNotification.ResponseElementsEntity;
 
 
 @Controller
@@ -141,4 +145,34 @@ public class StemcellManagementController extends BaseController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description :  IaaS 별 스템셀 목록 조회
+     * @title : getStemcellListDetail
+     * @return : ResponseEntity<HashMap<String,Object>>
+    *****************************************************************/
+    @RequestMapping(value="/config/stemcell/list/{iaas}", method=RequestMethod.GET)
+    public ResponseEntity<HashMap<String, Object>> getStemcellListDetail(@PathVariable String iaas) {
+        if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> /config/stemcell/list/"+iaas); }
+        HashMap<String, Object> list = new HashMap<String, Object>();
+        List<StemcellManagementVO> stemcellList = service.getLocalStemcellList(iaas);
+        list.put("records", stemcellList);
+        return new ResponseEntity<HashMap<String,Object>>(list, HttpStatus.OK);
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description :  멀티 딜리트
+     * @title : publicStemcellMultiDelete
+     * @return : ResponseEntity<?>
+    *****************************************************************/
+    @RequestMapping(value="/config/stemcell/Muldelete",  method=RequestMethod.DELETE)
+    public ResponseEntity<?> publicStemcellMultiDelete(@RequestBody ArrayList<StemcellManagementDTO.Delete> list){
+        if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> /config/stemcell/deletePublicStemcell"); }
+        for(int i=0;i<list.size();i++){
+            service.deletePublicStemcell(list.get(i));
+        }
+        
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

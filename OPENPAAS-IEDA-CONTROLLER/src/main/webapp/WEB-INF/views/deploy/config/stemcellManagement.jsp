@@ -219,7 +219,7 @@ function setCommonCode(url, id) {
  * 기능 : setLightCheckbox
  **************************************************************/
 function setLightCheckbox(iaasValue){
-    if(iaasValue == "AWS" || iaasValue == "GOOGLE" || iaasValue == "AZURE"){
+    if(iaasValue == "AWS" || iaasValue == "GOOGLE"){
         if($('.w2ui-msg-body input:radio[name=fileType]:input[value=version]').is(':checked')==true){
             $('.w2ui-msg-body input:checkbox[name=light]').attr("disabled", false);
         }
@@ -292,8 +292,7 @@ function setRegistType(value){
             $('.w2ui-msg-body input:text[name=stemcellPathUrl]').val("");
             $('.w2ui-msg-body input:text[name=stemcellPathFileName]').val("");
             if($(".w2ui-msg-body select[name='iaasList']").val()=="AWS" || 
-               $(".w2ui-msg-body select[name='iaasList']").val()=="GOOGLE" || 
-               $(".w2ui-msg-body select[name='iaasList']").val()=="AZURE"){
+               $(".w2ui-msg-body select[name='iaasList']").val()=="GOOGLE"){
                     $('.w2ui-msg-body input:checkbox[name=light]').attr("disabled", false);
             }
             $(".w2ui-msg-body input[name=stemcellPathFileName]").parent().parent().find("p").remove();
@@ -689,7 +688,7 @@ function initView() {
                             <span id="lightVerChk">
                                 <label style="position: absolute; margin-left: 10px;" >
                                    <input name="light" type="checkbox" value="true" disabled />&nbsp;Light 유형
-                                   <span style="display: inline-block;color:gray;font-size:12px;width: 100%;">(AWS/GCP/AZURE)</span>
+                                   <span style="display: inline-block;color:gray;font-size:12px;width: 100%;">(AWS/GCP)</span>
                                 </label>
                             </span>
                         </div>
