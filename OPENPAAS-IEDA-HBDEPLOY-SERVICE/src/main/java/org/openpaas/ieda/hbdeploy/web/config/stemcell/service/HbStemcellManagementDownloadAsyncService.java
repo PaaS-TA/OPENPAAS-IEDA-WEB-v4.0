@@ -1,4 +1,4 @@
-package org.openpaas.ieda.deploy.web.config.stemcell.service;
+package org.openpaas.ieda.hbdeploy.web.config.stemcell.service;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,9 +16,11 @@ import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.common.web.security.SessionInfoDTO;
 import org.openpaas.ieda.deploy.web.common.service.CommonDeployUtils;
-import org.openpaas.ieda.deploy.web.config.stemcell.dao.StemcellManagementDAO;
 import org.openpaas.ieda.deploy.web.config.stemcell.dao.StemcellManagementVO;
-import org.openpaas.ieda.deploy.web.config.stemcell.dto.StemcellManagementDTO;
+import org.openpaas.ieda.hbdeploy.web.config.stemcell.dto.HbStemcellManagementDTO;
+import org.openpaas.ieda.deploy.web.config.stemcell.service.StemcellManagementDownloadAsyncService;
+import org.openpaas.ieda.hbdeploy.web.config.stemcell.dao.HbStemcellManagementDAO;
+import org.openpaas.ieda.hbdeploy.web.config.stemcell.dao.HbStemcellManagementVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +29,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 @Service
-public class StemcellManagementDownloadAsyncService {
+public class HbStemcellManagementDownloadAsyncService {
     
     @Autowired private SimpMessagingTemplate messagingTemplate;
-    @Autowired private StemcellManagementDAO dao;
+    @Autowired private HbStemcellManagementDAO dao;
     @Autowired private MessageSource message;
     
     final private static Logger LOGGER = LoggerFactory.getLogger(StemcellManagementDownloadAsyncService.class);
@@ -40,7 +41,7 @@ public class StemcellManagementDownloadAsyncService {
     final private static String LOCK_DIR=LocalDirectoryConfiguration.getLockDir();
     final private static String TMPDIRECTORY = LocalDirectoryConfiguration.getTmpDir();
     final private static String STEMCELL_DIR = LocalDirectoryConfiguration.getStemcellDir();
-    final private static String MESSAGE_ENDPOINT = "/config/stemcell/regist/download/logs";
+    final private static String MESSAGE_ENDPOINT_HB = "/config/hbstemcell/regist/download/logs";
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
@@ -48,7 +49,7 @@ public class StemcellManagementDownloadAsyncService {
      * @title : saveStemcellDownLoadStatus
      * @return : void
     *****************************************************************/
-    public void saveStemcellDownLoadStatus(StemcellManagementDTO.Regist dto, StemcellManagementVO result, Principal principal, Boolean downloadResult) {
+    public void saveStemcellDownLoadStatus(HbStemcellManagementDTO.Regist dto, StemcellManagementVO result, Principal principal, Boolean downloadResult) {
         //1. 저장된 스템셀 정보 조회
         String status = "";
         File tmpFile = new File(TMPDIRECTORY+ SEPARATOR + result.getStemcellFileName());
@@ -85,7 +86,7 @@ public class StemcellManagementDownloadAsyncService {
                         message.getMessage("common.conflict.file.message", null, Locale.KOREA), HttpStatus.CONFLICT);
             }finally{
                 deleteLockFile("done",result.getStemcellFileName());
-                messagingTemplate.convertAndSendToUser(principal.getName() ,MESSAGE_ENDPOINT, dto.getId()+"/done");
+                messagingTemplate.convertAndSendToUser(principal.getName() ,MESSAGE_ENDPOINT_HB, dto.getId()+"/done");
             }
         }
     }
@@ -95,8 +96,8 @@ public class StemcellManagementDownloadAsyncService {
     * @title : getStemcellInfo
     * @return : StemcellManagementVO
     ***************************************************/
-    public StemcellManagementVO getStemcellInfo(StemcellManagementDTO.Regist dto){
-        StemcellManagementVO result = dao.selectPublicStemcellById(dto.getId());
+    public HbStemcellManagementVO getStemcellInfo(HbStemcellManagementDTO.Regist dto){
+        HbStemcellManagementVO result = dao.selectHybridStemcellById(dto.getId());
         if(result == null || StringUtils.isEmpty(result.getStemcellFileName())){
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
                     message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
@@ -110,7 +111,7 @@ public class StemcellManagementDownloadAsyncService {
     * @title : doWgetStemcellDownload
     * @return : void
     ***************************************************/
-    public void doWgetStemcellDownload(StemcellManagementDTO.Regist dto, Principal principal){
+    public void doWgetStemcellDownload(HbStemcellManagementDTO.Regist dto, Principal principal){
         Boolean downloadInfo = false;
         InputStream inputStream = null;
         BufferedReader bufferedReader = null;
@@ -125,11 +126,11 @@ public class StemcellManagementDownloadAsyncService {
             inputStream = process.getInputStream();
             bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
             //2.2 실행 출력하는 로그를 읽어온다.
-            while ((info = bufferedReader.readLine()) != null){ 
+            while ((info = bufferedReader.readLine()) != null){
                 Pattern pattern = Pattern.compile("\\d+\\%");
                 Matcher m = pattern.matcher(info);
                 if(m.find()){
-                    messagingTemplate.convertAndSendToUser(principal.getName() ,MESSAGE_ENDPOINT, result.getId()+"/"+m.group());
+                    messagingTemplate.convertAndSendToUser(principal.getName() ,MESSAGE_ENDPOINT_HB, result.getId()+"/"+m.group());
                     if( m.group().equals("100%") ){
                         downloadInfo = true;
                         break;
@@ -156,15 +157,15 @@ public class StemcellManagementDownloadAsyncService {
      * @title : savePublicStemcell
      * @return : void
     *****************************************************************/
-    public void saveDownloadStemcellInfo(StemcellManagementDTO.Regist dto, Principal principal) {
+    public void saveDownloadStemcellInfo(HbStemcellManagementDTO.Regist dto, Principal principal) {
         SessionInfoDTO sessionInfo = new SessionInfoDTO(principal);
-        StemcellManagementVO result = dao.selectPublicStemcellById(dto.getId());
+        StemcellManagementVO result = dao.selectHybridStemcellById(dto.getId());
         
         if(result != null){
             dto.setStemcellFileName(result.getStemcellFileName());
             dto.setStemcellSize(result.getSize());
             dto.setUpdateUserId(sessionInfo.getUserId());
-            dao.updatePublicStemcellById(dto);
+            dao.updateHybridStemcellById(dto);
         }
     }
     
@@ -176,7 +177,7 @@ public class StemcellManagementDownloadAsyncService {
      * @return : void
     *****************************************************************/
     @Async
-    public void stemcellDownloadAsync(StemcellManagementDTO.Regist dto, Principal principal) {
+    public void stemcellDownloadAsync(HbStemcellManagementDTO.Regist dto, Principal principal) {
         doWgetStemcellDownload(dto, principal);
     }
     

@@ -29,6 +29,7 @@ var iaas_type_code = '<spring:message code="common.code.iaasType.code.parent"/>'
 var os_version_code = '<spring:message code="common.code.osVersion.code.subGroup"/>';//201
 var text_required_msg='<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
 var text_injection_msg='<spring:message code="common.text.validate.sqlInjection.message"/>';//입력하신 값은 입력하실 수 없습니다.
+var hybrid_iaas_code = 110;
 
 $(function() {
     $('#config_awsStemcellsGrid').w2grid({
@@ -175,8 +176,8 @@ $(function() {
  * 기능 : doSearch
  ********************************************************/
 function doSearch(){
-    w2ui['config_awsStemcellsGrid'].load('/config/stemcell/list/aws');
-    w2ui['config_openstackStemcellsGrid'].load('/config/stemcell/list/openstack');
+    w2ui['config_awsStemcellsGrid'].load('/config/hbstemcell/list/aws');
+    w2ui['config_openstackStemcellsGrid'].load('/config/hbstemcell/list/openstack');
 }
 /********************************************************
  * 설명 : 정보 조회
@@ -305,7 +306,9 @@ function setCommonCode(url, id) {
                 });
                 iaasListSelect="<select style='width:60%' name ='iaasList' onchange='setLightCheckbox(this.value);'>";
                  for(var i=0; i<stemcellArray.length; i++){
-                     iaasListSelect+="<option value="+stemcellArray[i]+">"+stemcellArray[i]+"</option>";
+                     if(stemcellArray[i] == 'OPENSTACK' || stemcellArray[i] == 'AWS'){
+                         iaasListSelect+="<option value="+stemcellArray[i]+">"+stemcellArray[i]+"</option>";
+                     }
                  }
                  iaasListSelect+="</select'>";
                  $(".w2ui-msg-body #iaasListDiv").html(iaasListSelect);
@@ -441,7 +444,7 @@ function setRegistType(value){
      //레코드 정보
      for(var i=0;i<record.length;i++){
         recordName += record[i].stemcellFileName+'<br/>';
-        if ( record[i].StemcellFileName  && record[i].downloadStatus != "DOWNLOADING" ){
+        if ( record[i].downloadStatus != "DOWNLOADING" ){
             message = "스템셀 (파일명 : " + recordName + ") " + delete_confirm_msg;
         }else{
             message = "현재 다운로드 중입니다. <br/> 스템셀 (파일명 : " + recordName + ")" + delete_confirm_msg;
@@ -501,7 +504,7 @@ function setRegistType(value){
      lock( '등록 중입니다.', true);
      $.ajax({
          type : "POST",
-         url : "/config/stemcell/regist/savestemcell/N",
+         url : "/config/hbstemcell/regist/savestemcell/N",
          contentType : "application/json",
          async : true,
          data : JSON.stringify(stemcellInfo),
@@ -551,7 +554,7 @@ function setRegistType(value){
      
      $.ajax({
          type     :'POST',
-         url      : '/config/stemcell/regist/upload',
+         url      : '/config/hbstemcell/regist/upload',
          enctype  : 'multipart/form-data',
          dataType : "text",
          async    : true,
@@ -601,15 +604,16 @@ function setRegistType(value){
  var fail_count = 0;
  function stemcellFileDownload(stemcellInfo){
      lock( '다운로드 중입니다.', true);
-     var socket = new SockJS("<c:url value='/config/stemcell/regist/stemcellDownloading'/>");
-     downloadClient = Stomp.over(socket); 
+     var socket = new SockJS("<c:url value='/config/hbstemcell/regist/stemcellDownloading'/>");
+     downloadClient = Stomp.over(socket);
+     console.log(downloadClient);
      var status = 0;
      
      var downloadPercentage = 0;
      downloadClient.heartbeat.outgoing = 50000;
      downloadClient.heartbeat.incoming = 0;
      downloadClient.connect({}, function(frame) {
-         downloadClient.subscribe('/user/config/stemcell/regist/download/logs', function(data){
+         downloadClient.subscribe('/user/config/hbstemcell/regist/download/logs', function(data){
              w2popup.unlock();
              status = data.body.split('/')[1]; //recid/percent 중 percent
              id = data.body.split('/')[0]; //recid/percent 중 recid
@@ -651,12 +655,12 @@ function setRegistType(value){
                  doSearch();
              }
          });
-         downloadClient.send("<c:url value='/send/config/stemcell/regist/stemcellDownloading'/>", {}, JSON.stringify(stemcellInfo));
+         downloadClient.send("<c:url value='/send/config/hbstemcell/regist/stemcellDownloading'/>", {}, JSON.stringify(stemcellInfo));
      }, function(frame){
          fail_count ++;
          downloadClient.disconnect();
          if( fail_count < 10 ){
-             socketDwonload(stemcellInfo);    
+            stemcellFileDownload(stemcellInfo);    
          }else{
              w2alert("스템셀 다운로드에 실패하였습니다. ", "스템셀 다운로드")
              fail_count = 0;
@@ -674,7 +678,7 @@ function setRegistType(value){
  function deletePop(record){
      $.ajax({
          type : "DELETE",
-         url : "/config/stemcell/Muldelete",
+         url : "/config/hbstemcell/Muldelete",
          contentType : "application/json",
          async : true,
          data : JSON.stringify(record),
@@ -900,7 +904,7 @@ $(function() {
             
             $.ajax({
                 type : "POST",
-                url : "/config/stemcell/regist/info/N",
+                url : "/config/hbstemcell/regist/info/N",
                 contentType : "application/json",
                 async : true,
                 data : JSON.stringify(stemcellInfo),
