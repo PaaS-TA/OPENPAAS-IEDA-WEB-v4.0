@@ -140,11 +140,11 @@ public class AuthManagementController extends BaseController {
      * @title : saveRoleDetail
      * @return : ResponseEntity<?>
     ***************************************************/
-    @RequestMapping(value="/admin/role/detail/update/{roleId}" , method = RequestMethod.POST)
+    @RequestMapping(value="/admin/role/detail/update/{roleId}" , method = RequestMethod.DELETE)
     public ResponseEntity<?> saveRoleDetail(@PathVariable int roleId,@RequestBody @Valid AuthManagementDTO.Regist dto){
         if (LOGGER.isInfoEnabled()) {LOGGER.info("================================================> 권한 상세 등록 요청");}
         service.saveRoleDetail(roleId,dto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
 }

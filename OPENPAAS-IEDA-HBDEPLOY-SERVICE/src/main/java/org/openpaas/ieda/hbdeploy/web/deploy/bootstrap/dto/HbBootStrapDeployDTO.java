@@ -3,56 +3,6 @@ package org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dto;
 import javax.validation.constraints.NotNull;
 
 public class HbBootStrapDeployDTO{
-    
-    public static class IaasConfig{
-        private String id;
-        @NotNull
-        private String iaasType;
-        @NotNull
-        private String iaasConfigId;
-        private String testFlag;
-        @NotNull
-        private String bootstrapType;
-        private String privateDeploymentFileName;
-        
-        public String getId() {
-            return id;
-        }
-        public String getIaasType() {
-            return iaasType;
-        }
-        public String getIaasConfigId() {
-            return iaasConfigId;
-        }
-        public void setId(String id) {
-            this.id = id;
-        }
-        public void setIaasType(String iaasType) {
-            this.iaasType = iaasType;
-        }
-        public void setIaasConfigId(String iaasConfigId) {
-            this.iaasConfigId = iaasConfigId;
-        }
-        public String getTestFlag() {
-            return testFlag;
-        }
-        public void setTestFlag(String testFlag) {
-            this.testFlag = testFlag;
-        }
-        public String getBootstrapType() {
-            return bootstrapType;
-        }
-        public void setBootstrapType(String bootstrapType) {
-            this.bootstrapType = bootstrapType;
-        }
-        public String getPrivateDeploymentFileName() {
-            return privateDeploymentFileName;
-        }
-        public void setPrivateDeploymentFileName(String privateDeploymentFileName) {
-            this.privateDeploymentFileName = privateDeploymentFileName;
-        }
-    }
-    
     public static class Default{
         @NotNull
         private String id; //id
@@ -384,7 +334,7 @@ public class HbBootStrapDeployDTO{
     }
     
     public static class Delete{
-    	
+        
         private String iaasType; //Iaas
         @NotNull
         private String id; //id

@@ -1,7 +1,5 @@
 package org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.service;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.Locale;
 
@@ -24,67 +22,6 @@ public class HbBootstrapSaveService {
     @Autowired private MessageSource message;
     @Autowired private HbBootstrapDAO bootstrapDao;
     
-    /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : 인프라 환경 설정 정보 등록/수정
-     * @title : saveIaasConfigInfo
-     * @return : BootstrapVO
-     * @throws NoSuchAlgorithmException 
-     * @throws InterruptedException 
-     * @throws IOException 
-    *****************************************************************/
-    @Transactional
-    public HbBootstrapVO saveIaasConfigInfo(HbBootStrapDeployDTO.IaasConfig dto, Principal principal) {
-        HbBootstrapVO vo = null;
-        HbBootstrapVO hybridvo = null;
-        if( StringUtils.isEmpty(dto.getId())){
-            vo = new HbBootstrapVO();
-            vo.setIaasType(dto.getIaasType());
-            vo.setCreateUserId(principal.getName());
-            vo.setTestFlag(dto.getTestFlag());
-            vo.setBootstrapType(dto.getBootstrapType());
-        }else{
-            vo = bootstrapDao.selectBootstrapInfo(Integer.parseInt(dto.getId()), dto.getIaasType().toLowerCase());
-        }
-        
-        if( vo != null ){
-            vo.setIaasConfigId(Integer.parseInt(dto.getIaasConfigId()));
-            vo.setUpdateUserId(principal.getName());
-        }else{
-            throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
-                    message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
-        }
-        String HybridBootstrapDbTableName = "ieda_"+dto.getBootstrapType()+"_bootstrap";
-        vo.setSetHybridDbTableName(HybridBootstrapDbTableName);
-        if( StringUtils.isEmpty(dto.getId()) ){
-            bootstrapDao.insertBootStrapInfo(vo); // bootstrap insert 시 select primary key value가 자동적으로 vo에 저장
-            int priPubBootstrapId = vo.getId();
-            if("Openstack".equals(vo.getIaasType()) || "vSphere".equals(vo.getIaasType())) {
-                vo.setPrivateBootStrapId(String.valueOf(priPubBootstrapId));
-                if(dto.getPrivateDeploymentFileName() == null || dto.getPrivateDeploymentFileName().isEmpty()){
-                    bootstrapDao.insertHybridBootstrapMgntInfo(vo); // 초기 삽입 시 private만 들어 가도록
-                }
-            }
-            else {
-                // bootstrap Openstack 정보 저장 후 AWS 정보 저장 할 경우 공통적으로 사용 하는 Key를 만들기 어려워 private cloud BOOTSTRAP에 고유 배포 파일 명으로 Select
-                hybridvo = bootstrapDao.selectHbBootstrapMgntFromPrvateDeploymentFileName(dto.getPrivateDeploymentFileName()); 
-                if( hybridvo == null ){
-                    throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
-                            message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
-                }
-                hybridvo.setPublicBootStrapId(String.valueOf(priPubBootstrapId));
-                vo.setPublicBootStrapId(String.valueOf(priPubBootstrapId));
-                vo.setPrivateBootStrapId(hybridvo.getPrivateBootStrapId());
-                bootstrapDao.updateHybridBootstrapMgntInfo(hybridvo);
-                vo.setHybridBootStrapId(hybridvo.getHybridBootStrapId());
-                
-            }
-        }else{
-            vo.setSetHybridDbTableName("ieda_"+dto.getBootstrapType()+"_bootstrap");
-            bootstrapDao.updateBootStrapInfo(vo);
-        }
-        return vo;
-    }
     /***************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description : 기본 정보 저장

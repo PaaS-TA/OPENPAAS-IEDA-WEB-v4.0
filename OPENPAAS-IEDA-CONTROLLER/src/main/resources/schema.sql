@@ -660,6 +660,21 @@ CREATE TABLE ieda_hybrid_director_config
   PRIMARY KEY (ieda_director_config_seq)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
+CREATE TABLE ieda_bootstrap_cpi_config
+(
+  id                                    INT(11)      NOT NULL auto_increment,
+  iaas_type                             VARCHAR(100) NOT NULL,
+  cpi_name                              VARCHAR(100)  NOT NULL,
+  iaas_config_id                        INT(255) NOT NULL,
+  create_user_id                        VARCHAR(255) NOT NULL,
+  create_date                           DATE         NOT NULL,
+  update_user_id                        VARCHAR(255) NOT NULL,
+  update_date                           DATE         NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
+
+
 #Setting AUTO_INCREMENT
 ALTER TABLE ieda_role AUTO_INCREMENT=1000;
 ALTER TABLE ieda_common_code AUTO_INCREMENT=1000;

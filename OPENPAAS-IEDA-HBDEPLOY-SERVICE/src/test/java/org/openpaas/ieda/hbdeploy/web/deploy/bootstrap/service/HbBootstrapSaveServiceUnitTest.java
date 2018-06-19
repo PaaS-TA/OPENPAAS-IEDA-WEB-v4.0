@@ -51,26 +51,6 @@ public class HbBootstrapSaveServiceUnitTest extends BaseHbDeployControllerUnitTe
     
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : Google 환경 설정 정보 저장
-     * @title : testSaveIaasConfigInfoFromInsertCase
-     * @return : void
-    *****************************************************************/
-    @Test
-    public void testSaveIaasConfigInfoFromInsertCase(){
-        HbBootStrapDeployDTO.IaasConfig dto = setIaasConfigInfo("update");
-        HbBootstrapVO vo = setBootstrapVOInfoFromGoogle("insert");
-        when(mockHbBootstrapDAO.selectBootstrapInfo(anyInt(), anyString())).thenReturn(vo);
-        
-        when(mockHbBootstrapDAO.insertBootStrapInfo(vo)).thenReturn(1);
-        
-        HbBootstrapVO result = mockHbBootstrapSaveService.saveIaasConfigInfo(dto, principal);
-        assertEquals(result.getIaasType(), vo.getIaasType());
-        assertEquals(result.getCreateUserId(), result.getCreateUserId());
-        assertEquals(result.getUpdateUserId(), result.getUpdateUserId());
-    }
-    
-    /****************************************************************
-     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : 기본 정보 저장
      * @title : testSaveDefaultInfoFromUpdate
      * @return : void
@@ -314,29 +294,6 @@ public class HbBootstrapSaveServiceUnitTest extends BaseHbDeployControllerUnitTe
         dto.getNtp();
         dto.getEnableSnapshots();
         dto.getSnapshotSchedule();
-        
-        return dto;
-    }
-    
-    /****************************************************************
-     * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : 환경 설정 정보 설정
-     * @title : setIaasConfigInfo
-     * @return : BootStrapDeployDTO.IaasConfig
-    *****************************************************************/
-    public HbBootStrapDeployDTO.IaasConfig setIaasConfigInfo(String type){
-    	HbBootStrapDeployDTO.IaasConfig dto = new HbBootStrapDeployDTO.IaasConfig();
-        if( type.equalsIgnoreCase("update") ){
-            dto.setId("1");
-        }
-        dto.setIaasType("Google");
-        dto.setIaasConfigId("1");
-        dto.setTestFlag("Y");
-        dto.setIaasType("openstack");
-        dto.getId();
-        dto.getIaasType();
-        dto.getIaasConfigId();
-        dto.getTestFlag();
         
         return dto;
     }
