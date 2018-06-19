@@ -54,18 +54,6 @@ public class StemcellManagementController extends BaseController {
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
-     * @description : 이종 스템셀 관리 화면 이동
-     * @title : goHbStemcellManagement
-     * @return : String
-    *****************************************************************/
-    @RequestMapping(value="/config/hbstemcell", method=RequestMethod.GET)
-    public String goHbStemcellManagement() {
-        if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> /config/hbstemcell"); }
-        return "/hbdeploy/config/hbStemcellManagement";
-    }
-    
-    /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
      * @description : 스템셀 목록 조회
      * @title : getPublicStemcells
      * @return : ResponseEntity<HashMap<String,Object>>
@@ -160,19 +148,4 @@ public class StemcellManagementController extends BaseController {
         return new ResponseEntity<HashMap<String,Object>>(list, HttpStatus.OK);
     }
     
-    /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description :  멀티 딜리트
-     * @title : publicStemcellMultiDelete
-     * @return : ResponseEntity<?>
-    *****************************************************************/
-    @RequestMapping(value="/config/stemcell/Muldelete",  method=RequestMethod.DELETE)
-    public ResponseEntity<?> publicStemcellMultiDelete(@RequestBody ArrayList<StemcellManagementDTO.Delete> list){
-        if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> /config/stemcell/deletePublicStemcell"); }
-        for(int i=0;i<list.size();i++){
-            service.deletePublicStemcell(list.get(i));
-        }
-        
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }
