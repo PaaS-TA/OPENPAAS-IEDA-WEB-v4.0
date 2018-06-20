@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dao.HbBootstrapDefaultConfigDAO">
+
+<resultMap id="bootstrapDefault" type="org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dao.HbBootstrapDefaultConfigVO">
+    <id property="id" column="id" />
+    <result property="recid" column="id"/>
+    <result property="iaasType" column="IAAS_TYPE"/>
+    <result property="defaultConfigName" column="DEFAULT_CONFIG_NAME"/>
+    <result property="paastaMonitoringUse" column="PAASTA_MONITORING_USE" />
+    <result property="paastaMonitoringIp" column="PAASTA_MONITORING_IP" />
+    <result property="influxdbIp" column="INFLUXDB_IP" />
+    <result property="paastaMonitoringRelease" column="PAASTA_MONITORING_RELEASE" />
+    <result property="deploymentName" column ="DEPLOYMENT_NAME"/>
+    <result property="directorName" column ="DIRECTOR_NAME"/>
+    <result property="credentialKeyName" column ="CREDENTIAL_KEY_NAME"/>
+    <result property="boshRelease" column ="BOSH_RELEASE"/>
+    <result property="boshCpiRelease" column ="BOSH_CPI_RELEASE"/>
+    <result property="osConfRelease" column ="OS_CONF_RELEASE"/>
+    <result property="snapshotSchedule" column ="SNAPSHOT_SCHEDULE"/>
+    <result property="enableSnapshots" column ="ENABLE_SNAPSHOTS"/>
+    <result property="createUserId" column ="CREATE_USER_ID"/>
+    <result property="createDate" column ="CREATE_DATE"/>
+    <result property="updateUserId" column ="UPDATE_USER_ID"/>
+    <result property="updateDate" column ="UDATE_DATE"/>
+</resultMap>
+
+<select id = "selectBootstrapDefaultConfigInfoList" resultMap="bootstrapDefault">
+    select 
+        id
+        ,iaas_type
+        ,default_config_name
+        ,deployment_name
+        ,director_name
+        ,ntp
+        ,credential_key_name
+        ,boshRelease
+        ,bosh_cpi_release
+        ,enable_snapshots
+        ,snapshot_schedule
+        ,paasta_monitoring_use
+        ,paasta_monitoring_ip
+        ,influxdb_ip
+        ,paasta_monitoring_release
+    from ieda_bootstrap_default_config
+    ORDER BY id;
+</select>
+
+<insert id="insertBootstrapDefaultConfigInfo">
+    INSERT INTO ieda_bootstrap_default_config(
+         iaas_type
+        ,default_config_name
+        ,deployment_name
+        ,director_name
+        ,ntp
+        ,credential_key_name
+        ,boshRelease
+        ,bosh_cpi_release
+        ,enable_snapshots
+        ,snapshot_schedule
+        ,paasta_monitoring_use
+        ,paasta_monitoring_ip
+        ,influxdb_ip
+        ,paasta_monitoring_release
+        ,create_user_id
+        ,create_date
+        ,update_user_id
+        ,update_date
+        ) VALUES (
+        #{default.iaasType}
+        ,#{default.defaultConfigName}
+        ,#{default.deploymentName}
+        ,#{default.directorName}
+        ,#{default.ntp}
+        ,#{default.credentialKeyName}
+        ,#{default.boshRelease}
+        ,#{default.boshCpiRelease}
+        ,#{default.enableSnapshots}
+        ,#{default.snapshotSchedule}
+        ,#{default.paastaMonitoringUse}
+        ,#{default.paastaMonitoringIp}
+        ,#{default.influxdbIp}
+        ,#{default.paastaMonitoringRelease}
+        ,#{default.createUserId}
+        ,now()
+        ,#{default.updateUserId}
+        ,now()
+        )
+</insert>
+
+<update id="updateBootstrapDefaultConfigInfo">
+    UPDATE ieda_bootstrap_default_config set
+        iaas_type = #{default.iaasType}
+        ,default_config_name = #{default.defaultConfigName}
+        ,deployment_name = #{default.deploymentName}
+        ,director_name = #{default.directorName}
+        ,credential_key_name = #{default.credentialKeyName}
+        ,boshRelease = #{default.boshRelease}
+        ,ntp = #{default.ntp}
+        ,bosh_cpi_release = #{default.boshCpiRelease}
+        ,enable_snapshots = #{default.enableSnapshots}
+        ,snapshot_schedule = #{default.snapshotSchedule}
+        ,paasta_monitoring_use = #{default.paastaMonitoringUse}
+        ,paasta_monitoring_ip = #{default.paastaMonitoringIp}
+        ,influxdb_ip = #{default.influxdbIp}
+        ,paasta_monitoring_release = #{default.paastaMonitoringRelease}
+        ,iaas_type = #{default.iaasType}
+        ,update_user_id = #{default.updateUserId}
+        ,update_date = now()
+    WHERE id = #{default.id}
+</update>
+
+<select id="selectBootstrapDefaultConfigInfo" resultMap="bootstrapDefault">
+    select 
+        id
+        ,iaas_type
+        ,default_config_name
+        ,deployment_name
+        ,director_name
+        ,ntp
+        ,credential_key_name
+        ,boshRelease
+        ,bosh_cpi_release
+        ,enable_snapshots
+        ,snapshot_schedule
+        ,paasta_monitoring_use
+        ,paasta_monitoring_ip
+        ,influxdb_ip
+        ,paasta_monitoring_release
+        ,create_user_id 
+        ,create_date 
+        ,update_user_id
+        ,update_date
+    from ieda_bootstrap_default_config
+    where id = #{id}
+</select> 
+
+<delete id = "deleteBootstrapDefaultConfigInfo">
+    delete from 
+        ieda_bootstrap_default_config
+    where
+        id = #{default.id}
+    and
+        default_config_name = #{default.defaultConfigName}
+</delete>
+
+<select id = "selectBootstrapDefaultConfigByName" resultType="int">
+    select
+        count(*)
+    from
+        ieda_bootstrap_default_config
+    where
+        default_config_name = #{defaultConfigName}
+</select>
+
+</mapper>
