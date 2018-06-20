@@ -92,7 +92,7 @@ public class HbStemcellManagementServiceUnitTest extends BaseHbDeployControllerU
     @Test
     public void testGetHybridStemcellListFromNullStatusCase(){
         List<HbStemcellManagementVO> stemcellList = getStemcellReturnListInfo("null");
-        when(mockHbStemcelldao.selectHybridStemcellList("aws").thenReturn(stemcellList));
+        when(mockHbStemcelldao.selectHybridStemcellList("aws")).thenReturn(stemcellList);
         List<HbStemcellManagementVO> result = mockHbStemcellService.getHybridStemcellList("aws");
         assertEquals(result.size(), 1);
         assertEquals(result.get(0).getStemcellUrl(), stemcellList.get(0).getStemcellUrl());
