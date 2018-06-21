@@ -26,7 +26,6 @@ public class HbBootstrapDefaultConfigDTO {
     private String paastaMonitoringIp; //PaaS-TA 모니터링 사용시 ingrestorIP
     private String influxdbIp;
     private String paastaMonitoringRelease; //PaaS-TA 모니터링 사용시 릴리즈
-    private String osConfRelease;
     private String iaasType;
     private String defaultConfigName;
     
@@ -107,12 +106,6 @@ public class HbBootstrapDefaultConfigDTO {
     }
     public void setPaastaMonitoringRelease(String paastaMonitoringRelease) {
         this.paastaMonitoringRelease = paastaMonitoringRelease;
-    }
-    public String getOsConfRelease() {
-        return osConfRelease;
-    }
-    public void setOsConfRelease(String osConfRelease) {
-        this.osConfRelease = osConfRelease;
     }
     public String getIaasType() {
         return iaasType;

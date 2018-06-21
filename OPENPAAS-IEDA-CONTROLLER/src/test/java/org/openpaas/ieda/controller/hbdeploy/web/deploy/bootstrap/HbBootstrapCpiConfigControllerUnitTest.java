@@ -72,7 +72,7 @@ public class HbBootstrapCpiConfigControllerUnitTest extends BaseControllerUnitTe
     public void MockitoAnnotations() throws Exception{
         mockMvc.perform(get(BOOTSTRAP_CPI_CONFIG_VIEW_URL).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
         .andExpect(status().isOk())
-        .andExpect(view().name("/hbdeploy/deploy/bootstrap/hbBootstrapCpiManagement"));
+        .andExpect(view().name("/hbdeploy/deploy/bootstrap/hbBootstrapCpiConfig"));
     }
     
     /****************************************************************

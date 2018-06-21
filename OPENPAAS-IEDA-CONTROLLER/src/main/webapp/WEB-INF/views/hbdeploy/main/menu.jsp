@@ -57,7 +57,7 @@
                        <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap/cpiConfig"/>', 'CF 설치');">CPI 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/config/credential"/>', 'DIEGO 설치');">NETWROK 정보 관리</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap/networkConfig"/>', 'DIEGO 설치');">NETWROK 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
                         <li><a href="javascript:goPage('<c:url value="/config/credential"/>', '디렉터 인증서 관리');">디렉터 인증서 관리</a></li>

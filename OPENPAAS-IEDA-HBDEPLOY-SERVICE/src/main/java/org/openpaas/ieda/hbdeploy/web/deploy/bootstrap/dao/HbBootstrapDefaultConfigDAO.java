@@ -53,5 +53,5 @@ public interface HbBootstrapDefaultConfigDAO {
      * @title : selectBootstrapDefaultfconfigByName
      * @return : void
     *****************************************************************/
-	int selectBootstrapDefaultConfigByName(@Param("defaultConfigName")String cpiName);
+	int selectBootstrapDefaultConfigByName(@Param("defaultConfigName")String defaultConfigName);
 }
