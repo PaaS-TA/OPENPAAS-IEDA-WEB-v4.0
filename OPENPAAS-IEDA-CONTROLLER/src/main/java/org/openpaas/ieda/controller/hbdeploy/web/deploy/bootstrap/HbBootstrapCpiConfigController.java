@@ -76,7 +76,7 @@ public class HbBootstrapCpiConfigController extends BaseController {
      * @title : deleteCpiConfigInfo
      * @return : ResponseEntity<BootstrapVO>
     *****************************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/deleteConfigInfo", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/deploy/hbBootstrap/deleteCpiConfigInfo", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteCpiConfigInfo(@RequestBody HbBootstrapCpiConfigDTO dto, Principal principal) {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/deleteConfigInfo"); }
         service.deleteCpiConfigInfo(dto, principal);

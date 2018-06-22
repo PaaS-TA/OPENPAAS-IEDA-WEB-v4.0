@@ -15,9 +15,11 @@
 var text_required_msg = '<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
 var text_injection_msg='<spring:message code="common.text.validate.sqlInjection.message"/>';//입력하신 값은 입력하실 수 없습니다.
 var select_required_msg='<spring:message code="common.select.vaildate.required.message"/>';//을(를) 선택하세요.
-var iaasConfigInfo = "";//인프라 환경 설정 정ㅈ보
+var text_cidr_msg='<spring:message code="common.text.validate.cidr.message"/>';//CIDR 대역을 확인 하세요.
+var text_ip_msg = '<spring:message code="common.text.validate.ip.message"/>';//IP을(를) 확인 하세요.
+var networkConfigInfo = "";//네트워크 정보
 var iaas = "";
-var cpiLayout = {
+var networkLayout = {
         layout2: {
             name: 'layout2',
             padding: 4,
@@ -27,11 +29,11 @@ var cpiLayout = {
             ]
         },
         /********************************************************
-         *  설명 : 디렉터 인증서 Grid
+         *  설명 : 네트워크 정보 목록 Grid
         *********************************************************/
         grid: {
-            name: 'cpi_GroupGrid',
-            header: '<b>CPI 정보</b>',
+            name: 'network_GroupGrid',
+            header: '<b>Network 정보</b>',
             method: 'GET',
                 multiSelect: false,
             show: {
@@ -40,7 +42,7 @@ var cpiLayout = {
             style: 'text-align: center',
             columns:[
                    { field: 'recid', hidden: true },
-                   { field: 'cpiName', caption: 'CPI 정보 별칭', size:'50%', style:'text-align:center;' },
+                   { field: 'networkConfigName', caption: 'CPI 정보 별칭', size:'50%', style:'text-align:center;' },
                    { field: 'iaasType', caption: '인프라 환경 타입', size:'50%', style:'text-align:center;' ,render: function(record){ 
                        if(record.iaasType.toLowerCase() == "aws"){
                            return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
@@ -48,27 +50,16 @@ var cpiLayout = {
                            return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
                        }
                    }},
-                   { field: 'iaasConfigAlias', caption: '인프라 환경 설정 별칭', size:'50%', style:'text-align:center;'},
-                   { field: 'commonAccessUser', caption: '인프라 사용자 명', size:'60%', style:'text-align:center;'},
-                   { field: 'commonSecurityGroup', caption: '보안 그룹', size:'50%', style:'text-align:center;'},
-                   { field: 'commonAvailabilityZone', caption: '가용 영역', size:'50%', style:'text-align:center;',render: function(record){ 
-                       if(record.iaasType.toLowerCase() == "aws"){
-                           return record.commonAvailabilityZone;
-                       }else if (record.iaasType.toLowerCase() == "openstack"){
-                           if(record.openstackVersion == "v2"){
-                               return record.commonTenant;
-                           } else if (record.openstackVersion == "v3") {
-                               return record.commonProject;
-                           }
-                       }
-                   }},
-                   { field: 'commonKeypairName', caption: 'Key Pair 명', size:'50%', style:'text-align:center;'},
-                   { field: 'commonKeypairPath', caption: 'Key Pair Path', size:'50%', style:'text-align:center;'}
+                   { field: 'publicStaticIp', caption: '디렉터 Public IP', size:'50%', style:'text-align:center;'},
+                   { field: 'privateStaticIp', caption: '디렉터 Private IP', size:'60%', style:'text-align:center;'},
+                   { field: 'subnetId', caption: '서브넷 아이디', size:'50%', style:'text-align:center;'},
+                   { field: 'subnetRange', caption: '서브넷 범위', size:'50%', style:'text-align:center;'},
+                   { field: 'subnetDns', caption: 'DNS 주소', size:'50%', style:'text-align:center;'}
                   ],
             onSelect : function(event) {
                 event.onComplete = function() {
                     $('#deleteBtn').attr('disabled', false);
-                    settingCpiInfo();
+                    settingNetworkInfo();
                     return;
                 }
             },
@@ -118,30 +109,30 @@ var cpiLayout = {
 }
 
 $(function(){
-    $('#cpi_GroupGrid').w2layout(cpiLayout.layout2);
-    w2ui.layout2.content('left', $().w2grid(cpiLayout.grid));
+    $('#network_GroupGrid').w2layout(networkLayout.layout2);
+    w2ui.layout2.content('left', $().w2grid(networkLayout.grid));
     w2ui['layout2'].content('main', $('#regPopupDiv').html());
     doSearch();
     
     $("#deleteBtn").click(function(){
         if($("#deleteBtn").attr('disabled') == "disabled") return;
-        var selected = w2ui['cpi_GroupGrid'].getSelection();
+        var selected = w2ui['network_GroupGrid'].getSelection();
         if( selected.length == 0 ){
-            w2alert("선택된 정보가 없습니다.", "디렉터 인증서 삭제");
+            w2alert("선택된 정보가 없습니다.", "네트워크 삭제");
             return;
         }
         else {
-            var record = w2ui['cpi_GroupGrid'].get(selected);
+            var record = w2ui['network_GroupGrid'].get(selected);
             w2confirm({
-                title        : "CPI 정보",
-                msg            : "CPI ("+record.cpiName + ")을 삭제하시겠습니까?",
+                title        : "네트워크 정보",
+                msg            : "네트워크 정보 ("+record.networkConfigName + ")을 삭제하시겠습니까?",
                 yes_text    : "확인",
                 no_text        : "취소",
                 yes_callBack: function(event){
-                    deleteBootstrapCpiConfigInfo(record.recid, record.cpiName);
+                    deleteBootstrapNetworkConfigInfo(record.recid, record.networkConfigName);
                 },
                 no_callBack    : function(){
-                    w2ui['cpi_GroupGrid'].clear();
+                    w2ui['network_GroupGrid'].clear();
                     doSearch();
                 }
             });
@@ -149,132 +140,41 @@ $(function(){
     });
 });
 
-
 /********************************************************
- * 설명 : 인프라 환경 설정 별칭 목록 조회
- * 기능 : getIaasConfigAliasList
+ * 설명 : 네트워크 수정 정보 설정
+ * 기능 : settingNetworkInfo
  *********************************************************/
-function getIaasConfigAliasList(iaasType){
-    $("input[name=commonAccessUser]").val("");
-    $("input[name=commonSecurityGroup]").val("");
-    $("input[name=commonAvailabilityZone]").val("");
-    $("input[name=commonKeypairName]").val("");
-    $("input[name=commonKeypairPath]").val("");
-    if(iaasType==""){
-        w2alert("클라우드 인프라 환경을 선택하세요.");
-        $("select[name=iaasConfigId]").html("<option value='' >인프라 환경 별칭을 선택하세요.</option>");
-        $("select[name=iaasConfigId]").attr("disabled", "disabled");
-        return;
-    }
-    iaas = iaasType;
-    $.ajax({
-        type :"GET",
-        url :"/common/deploy/list/iaasConfig/"+iaas, 
-        contentType :"application/json",
-        success :function(data, status) {
-            $("select[name=iaasConfigId]").html("<option value='' >인프라 환경 별칭을 선택하세요.</option>");
-            if($("select[name=iaasConfigId]").attr("disabled") == "disabled"){
-                $("select[name=iaasConfigId]").removeAttr("disabled");
-            }
-            if( !checkEmpty(data) ){
-                var options= "";
-                for( var i=0; i<data.length; i++ ){
-                    if( data[i].id == iaasConfigInfo.iaasConfigId ){
-                        options+= "<option value='"+data[i].id+"' selected>"+data[i].iaasConfigAlias+"</option>";
-                        settingIaasConfigInfo(data[i].id);
-                    }else{
-                        options+= "<option value='"+data[i].id+"'>"+data[i].iaasConfigAlias+"</option>";
-                    }
-                }
-                $("select[name=iaasConfigId]").append(options);
-                
-            }
-        },
-        error :function(request, status, error) {
-            var errorResult = JSON.parse(request.responseText);
-            w2alert(errorResult.message, "인프라 환경설정 정보 목록 조회");
-        }
-    });
-}
-
-
-/********************************************************
- * 설명 : 인프라 환경 설정 별칭 선택 시 정보 설정
- * 기능 : settingIaasConfigInfo
- *********************************************************/
-function settingIaasConfigInfo(val){
-    if( !checkEmpty(val) ){
-         $.ajax({
-            type :"GET",
-            url :"/common/deploy/list/iaasConfig/"+iaas+"/"+val, 
-            contentType :"application/json",
-            success :function(data, status) {
-                if( !checkEmpty(data) ){
-                    $("input[name=commonAccessUser]").val(data.commonAccessUser);
-                    $("input[name=commonSecurityGroup]").val(data.commonSecurityGroup);
-                    $("input[name=commonKeypairName]").val(data.commonKeypairName);
-                    $("input[name=commonKeypairPath]").val(data.commonKeypairPath);
-                    if( data.openstackKeystoneVersion == "v2" ){
-                        $("input[name=commonAvailabilityZone]").val(data.commonTenant);
-                    }else if(data.openstackKeystoneVersion == "v3" ){
-                        $("input[name=commonAvailabilityZone]").val(data.commonProject);
-                    } else {
-                        $("input[name=commonAvailabilityZone]").val(data.commonAvailabilityZone);
-                    }
-                }
-            },
-            error :function(request, status, error) {
-                var errorResult = JSON.parse(request.responseText);
-                w2alert(errorResult.message, "인프라 환경설정 정보 목록 조회");
-            }
-        });
-    }else{
-        var div = iaas+"InfoDiv";
-        var elements = $("div#"+div).find("input");
-        for( var i=0; i<elements.length; i++ ){
-            $(".w2ui-msg-body input[name='"+elements[i].name+"']" ).val("");
-        }
-        var textarea = $("div#"+div).find("textarea"); 
-        if( textarea.length >0 ) $(".w2ui-msg-body textarea[name='"+textarea[0].name+"']" ).val("");
-    }
-}
-
-/********************************************************
- * 설명 : CPI 수정 정보 설정
- * 기능 : settingCpiInfo
- *********************************************************/
-function settingCpiInfo(){
-    var selected = w2ui['cpi_GroupGrid'].getSelection();
-    var record = w2ui['cpi_GroupGrid'].get(selected);
+function settingNetworkInfo(){
+    var selected = w2ui['network_GroupGrid'].getSelection();
+    var record = w2ui['network_GroupGrid'].get(selected);
     if(record == null) {
         w2alert("CPI 정보 설정 중 에러가 발생 했습니다.");
         return;
     }
     iaas = record.iaasType;
-    $("select[name=iaasConfigId]").removeAttr("disabled");
-    getIaasConfigAliasList(iaas);
-    iaasConfigInfo = {
-        iaasConfigId : record.iaasConfigId
-    }
-    $("input[name=cpiInfoId]").val(record.cpiInfoId);
-    $("input[name=cpiConfigName]").val(record.cpiName);
+    $("input[name=networkInfoId]").val(record.recid);
+    $("input[name=networkConfigName]").val(record.networkConfigName);
+    $("input[name=subnetId]").val(record.subnetId);
+    $("input[name=privateStaticIp]").val(record.privateStaticIp);
+    $("input[name=subnetRange]").val(record.subnetRange);
+    $("input[name=subnetGateway]").val(record.subnetGateway);
+    $("input[name=subnetDns]").val(record.subnetDns);
+    $("input[name=publicStaticIp]").val(record.publicStaticIp);
     $("select[name=iaasType]").val(record.iaasType);
     $("select[name=iaasConfigId]").val(record.iaasConfigAlias);
-    settingIaasConfigInfo(record.iaasConfigId);
 }
 
 /********************************************************
- * 설명 : 인증서 목록 조회
+ * 설명 : 네트워크 정보 목록 조회
  * 기능 : doSearch
  *********************************************************/
 function doSearch() {
-    iaasConfigInfo="";//인프라 환경 설정 정ㅈ보
+    networkConfigInfo="";//네트워크 정보
     iaas = "";
     resetForm();
     
-    w2ui['cpi_GroupGrid'].clear();
-    //w2ui['regPopupDiv'].clear();
-    w2ui['cpi_GroupGrid'].load('/deploy/hbBootstrap/cpiConfigList');
+    w2ui['network_GroupGrid'].clear();
+    w2ui['network_GroupGrid'].load('/deploy/hbBootstrap/networkConfigList');
     doButtonStyle(); 
 }
 
@@ -287,50 +187,55 @@ function doButtonStyle() {
 }
 
 /********************************************************
- * 설명 : CPI 정보 등록
- * 기능 : registBootstrapCpiConfigInfo
+ * 설명 : 네트워크 정보 등록
+ * 기능 : registBootstrapNetworkConfigInfo
  *********************************************************/
-function registBootstrapCpiConfigInfo(){
+function registBootstrapNetworkConfigInfo(){
     w2popup.lock("등록 중입니다.", true);
-    iaasConfigInfo = {
-            cpiInfoId:    $("input[name=cpiInfoId]").val(),
-            iaasType     : iaas,
-            iaasConfigId : $("select[name=iaasConfigId]").val(),
-            cpiName      : $("input[name=cpiConfigName]").val()
+    networkConfigInfo = {
+            id                     : $("input[name=networkInfoId]").val(),
+            iaasType               : $("select[name=iaasType]").val(),
+            publicStaticIp         : $("input[name=publicStaticIp]").val(),
+            privateStaticIp        : $("input[name=privateStaticIp]").val(),
+            subnetId               : $("input[name=subnetId]").val(),
+            subnetRange            : $("input[name=subnetRange]").val(),
+            subnetGateway          : $("input[name=subnetGateway]").val(),
+            subnetDns              : $("input[name=subnetDns]").val(),
+            networkConfigName      : $("input[name=networkConfigName]").val()
     }
     $.ajax({
         type : "PUT",
-        url : "/deploy/hbBootstrap/saveCpiConfigInfo",
+        url : "/deploy/hbBootstrap/saveNetworkConfigInfo",
         contentType : "application/json",
         async : true,
-        data : JSON.stringify(iaasConfigInfo),
+        data : JSON.stringify(networkConfigInfo),
         success : function(data, status) {
             doSearch();
         },
         error : function( e, status ) {
             w2popup.unlock();
             var errorResult = JSON.parse(e.responseText);
-            w2alert(errorResult.message, "CPI 정보 저장");
+            w2alert(errorResult.message, "네투워크 정보 저장");
         }
     });
 }
 
 /********************************************************
- * 설명 : CPI 정보 삭제
- * 기능 : deleteBootstrapCpiConfigInfo
+ * 설명 : 네트워크 정보 삭제
+ * 기능 : deleteBootstrapNetworkConfigInfo
  *********************************************************/
-function deleteBootstrapCpiConfigInfo(id, cpiName){
+function deleteBootstrapNetworkConfigInfo(id, networkConfigName){
     w2popup.lock("삭제 중입니다.", true);
-    iaasConfigInfo = {
-        cpiInfoId : id,
-        cpiName : cpiName
+    networkInfo = {
+        id : id,
+        networkConfigName : networkConfigName
     }
     $.ajax({
         type : "DELETE",
-        url : "/deploy/hbBootstrap/deleteCpiConfigInfo",
+        url : "/deploy/hbBootstrap/deleteNetworkConfigInfo",
         contentType : "application/json",
         async : true,
-        data : JSON.stringify(iaasConfigInfo),
+        data : JSON.stringify(networkInfo),
         success : function(status) {
             w2popup.unlock();
             w2popup.close();
@@ -364,27 +269,26 @@ function lock (msg) {
  *********************************************************/
 function clearMainPage() {
     $().w2destroy('layout2');
-    $().w2destroy('cpi_GroupGrid');
+    $().w2destroy('network_GroupGrid');
 }
 /********************************************************
- * 설명 : CPI 정보 리셋
+ * 설명 : 네트워크 정보 리셋
  * 기능 : resetForm
  *********************************************************/
 function resetForm(status){
     $(".panel-body").find("p").remove();
     $(".panel-body").children().children().children().css("borderColor", "#bbb");
-    $("input[name=commonAccessUser]").val("");
-    $("input[name=commonSecurityGroup]").val("");
-    $("input[name=commonAvailabilityZone]").val("");
-    $("input[name=commonKeypairName]").val("");
-    $("input[name=commonKeypairPath]").val("");
-    $("input[name=cpiConfigName]").val("");
+    $("input[name=networkConfigName]").val("");
+    $("input[name=subnetId]").val("");
+    $("input[name=privateStaticIp]").val("");
+    $("input[name=subnetRange]").val("");
+    $("input[name=subnetGateway]").val("");
+    $("input[name=subnetDns]").val("");
     $("select[name=iaasType]").val("");
-    $("select[name=iaasConfigId]").html("<option value='' >인프라 환경 별칭을 선택하세요.</option>");
-    $("input[name=cpiInfoId]").val("");
-    $("select[name=iaasConfigId]").attr("disabled", "disabled");
+    $("input[name=networkInfoId]").val("");
+    $("input[name=publicStaticIp]").val("");
     if(status=="reset"){
-        w2ui['cpi_GroupGrid'].clear();
+        w2ui['network_GroupGrid'].clear();
         doSearch();
     }
     document.getElementById("settingForm").reset();
@@ -392,27 +296,27 @@ function resetForm(status){
 
 </script>
 <div id="main">
-    <div class="page_site">이종 BOOTSTRAP 설치 > <strong>CPI 정보 관리</strong></div>
+    <div class="page_site">이종 BOOTSTRAP 설치 > <strong>Network 정보 관리</strong></div>
     <!-- 사용자 목록-->
     <div class="pdt20">
-        <div class="title fl"> CPI 정보 목록</div>
+        <div class="title fl"> 네트워크 정보 목록</div>
     </div>
-    <div id="cpi_GroupGrid" style="width:100%;  height:700px;"></div>
+    <div id="network_GroupGrid" style="width:100%;  height:700px;"></div>
 
 </div>
 
 
 <div id="regPopupDiv" hidden="true" >
     <form id="settingForm" action="POST" >
-    <input type="hidden" name="cpiInfoId" />
+    <input type="hidden" name="networkInfoId" />
         <div class="w2ui-page page-0" style="">
            <div class="panel panel-default">
-               <div class="panel-heading"><b>CPI 정보</b></div>
+               <div class="panel-heading"><b>네트워크 정보</b></div>
                <div class="panel-body" style="height:615px; overflow-y:auto;">
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">CPI 정보 별칭</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;">네트워크 정보 별칭</label>
                        <div>
-                           <input class="form-control" name = "cpiConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="CPI 별칭을 입력 하세요."/>
+                           <input class="form-control" name = "networkConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="네트워크 별칭을 입력 하세요."/>
                        </div>
                    </div>
                    
@@ -427,43 +331,42 @@ function resetForm(status){
                        </div>
                    </div>
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">인프라 환경 별칭</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;">디렉터 Public IP</label>
                        <div>
-                           <select class="form-control" disabled="disabled"  name="iaasConfigId"  onchange="settingIaasConfigInfo(this.value);" style="width: 320px; margin-left: 20px;">
-                               <option value="" >인프라 환경 별칭을 선택하세요.</option>
-                           </select>
+                           <input class="form-control" name="publicStaticIp" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="디렉터 Public IP를 입력하세요."/>
                        </div>
                    </div>
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">인프라 사용자</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;">디렉터 Private IP</label>
                        <div>
-                           <input class="form-control" readonly   name="commonAccessUser" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="인프라 환경 아이디를 입력하세요."/>
+                           <input class="form-control"  name="privateStaticIp" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="디렉터 Private IP를 입력하세요."/>
                        </div>
                    </div>
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">보안 그룹</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;">서브넷 아이디</label>
                        <div>
-                           <input class="form-control"  name="commonSecurityGroup" type="text" readonly maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="보안 그룹을 입력하세요."/>
+                           <input class="form-control"  name="subnetId" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="서브넷 아이디를 입력하세요."/>
                        </div>
                    </div>
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">가용 영역</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;">서브넷 범위</label>
                        <div>
-                           <input class="form-control"  name="commonAvailabilityZone" type="text" readonly maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="가용 영역을 입력하세요."/>
+                           <input class="form-control" name="subnetRange" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="서브넷 범위를 입력하세요."/>
                        </div>
                    </div>
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">Private Key Name</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;">서브넷 게이트웨이</label>
                        <div>
-                           <input class="form-control" name="commonKeypairName" type="text" readonly maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="Key Pair 명을 입력하세요."/>
+                           <input class="form-control" name="subnetGateway" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="서브넷 게이트웨이를 입력하세요."/>
                        </div>
                    </div>
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">Private Key Path</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;">DNS 주소</label>
                        <div>
-                           <input class="form-control" name="commonKeypairPath" type="text" readonly maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="Key path를 입력하세요."/>
+                           <input class="form-control" name="subnetDns" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="DNS 주소를 입력하세요."/>
                        </div>
                    </div>
+                   
                </div>
            </div>
         </div>
@@ -476,47 +379,113 @@ function resetForm(status){
 </div>
 <script>
 $(function() {
-    $.validator.addMethod("sqlInjection", function(value, element, params) {
-        return checkInjectionBlacklist(params);
-    },text_injection_msg);
+    $.validator.addMethod( "ipv4", function( value, element, params ) {
+        return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(params);
+    }, text_ip_msg );
+    
+    $.validator.addMethod( "ipv4Range", function( value, element, params ) {
+        return /^((\b|\.)(0|1|2(?!5(?=6|7|8|9)|6|7|8|9))?\d{1,2}){4}(-((\b|\.)(0|1|2(?!5(?=6|7|8|9)|6|7|8|9))?\d{1,2}){4}|\/((0|1|2|3(?=1|2))\d|\d))\b$/.test(params);
+    }, text_ip_msg );
+    
     
     $("#settingForm").validate({
         ignore : [],
         //onfocusout: function(element) {$(element).valid()},
         rules: {
-            cpiConfigName : {
+            subnetId : {
                 required : function(){
-                    return checkEmpty( $("input[name='cpiConfigName']").val() );
-                }, sqlInjection : function(){
-                    return $("input[name='cpiConfigName']").val();
+                    return checkEmpty( $("input[name='subnetId']").val() );
                 }
-            },
-            iaasType : {
-                required : function(){
+            }, networkConfigName: { 
+                required: function(){
+                    return checkEmpty( $("input[name='networkName']").val() );
+                }
+            }, iaasType: { 
+                required: function(){
                     return checkEmpty( $("select[name='iaasType']").val() );
                 }
-            },
-            iaasConfigId : {
-                required : function(){
-                    return checkEmpty( $("select[name='iaasConfigId']").val() );
+            }, privateStaticIp: { 
+                required: function(){
+                    return checkEmpty( $("input[name='privateStaticIp']").val() );
+                },ipv4 : function(){
+                    return $("input[name='privateStaticIp']").val()
+                }
+            }, publicStaticIp: { 
+                required: function(){
+                    return checkEmpty( $("input[name='publicStaticIp']").val() );
+                },ipv4 : function(){
+                    return $("input[name='publicStaticIp']").val()
+                }
+            }, subnetRange: { 
+                required: function(){
+                    return checkEmpty( $("input[name='subnetRange']").val() );
+                },ipv4Range : function(){
+                    return $("input[name='subnetRange']").val()
+                }
+            }, subnetGateway: { 
+                required: function(){
+                    return checkEmpty( $("input[name='subnetGateway']").val() );
+                },ipv4 : function(){
+                    return $("input[name='subnetGateway']").val()
+                }
+            }, subnetDns: { 
+                required: function(){
+                    return checkEmpty( $("input[name='subnetDns']").val() );
+                },ipv4  : function(){ 
+                    if( $("input[name='subnetDns']").val().indexOf(",") > -1 ){
+                        var list = ($("input[name='subnetDns']").val()).split(",");
+                        var flag = true;
+                        for( var i=0; i<list.length; i++ ){
+                            var val = validateIpv4(list[i].trim());
+                            if( !val ) flag = false;
+                        }
+                        if( !flag ) return "";
+                        else return list[0].trim();
+                    }else{
+                        return $("input[name='subnetDns']").val();
+                    }
                 }
             }
         }, messages: {
-            cpiConfigName: { required:  "CPI 정보 별칭" + text_required_msg },
-            iaasType: {  required:  "클라우드 인프라 환경" + select_required_msg},
-            iaasConfigId: {  required:  "인프라 환경 별칭" + select_required_msg}
+            subnetId: { 
+                required:  "서브넷 아이디"+text_required_msg
+            }, networkConfigName: { 
+                required:  "네트워크 별칭"+text_required_msg
+            }, privateStaticIp: { 
+                required:  "디렉터 Private IP"+text_required_msg
+                ,ipv4 : text_ip_msg
+            }, publicStaticIp: { 
+                required:  "디렉터 Public IP" + text_required_msg
+                ,ipv4 : text_ip_msg
+            }, subnetRange: { 
+                required:  "서브넷 범위"+select_required_msg
+                ,ipv4 : text_cidr_msg
+            }, subnetGateway: { 
+                required:  "서브넷 게이트웨이"+text_required_msg
+                ,ipv4 : text_ip_msg
+            }, subnetDns: { 
+                required:  "DNS 주소"+text_required_msg
+                ,ipv4 : text_ip_msg
+            }, iaasType: { 
+                required:  "클라우드 인프라 환경 타입"+select_required_msg,
+            }
         }, unhighlight: function(element) {
             setHybridSuccessStyle(element);
         },errorPlacement: function(error, element) {
-            //do nothingalert("1");
+            //do nothing
         }, invalidHandler: function(event, validator) {
             var errors = validator.numberOfInvalids();
             if (errors) {
                 setHybridInvalidHandlerStyle(errors, validator);
             }
         }, submitHandler: function (form) {
-            registBootstrapCpiConfigInfo();
+        	registBootstrapNetworkConfigInfo();
         }
     });
 });
+
+function validateIpv4(params){
+    return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(params);
+}
+
 </script>
