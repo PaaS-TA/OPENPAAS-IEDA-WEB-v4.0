@@ -46,19 +46,7 @@ public class HbBootstrapController extends BaseController {
     @RequestMapping(value = "/deploy/hbBootstrap", method = RequestMethod.GET)
     public String goHbBootstrap() {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/Hbbootstrap"); }
-        return "/hbdeploy/deploy/bootstrap/hbBootstrap2";
-    }
-
-    /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : Bootstrap 설치 화면 이동
-     * @title : goBootstrapPopup
-     * @return : String
-    ***************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/install/bootstrapPopup", method = RequestMethod.GET)
-    public String goHbBootstrapPopup() {
-        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbbootstrap/install/bootstrapPopup"); }
-        return "/hbdeploy/deploy/bootstrap/hbBootstrapPopup";
+        return "/hbdeploy/deploy/bootstrap/hbBootstrap";
     }
 
     /***************************************************
@@ -104,19 +92,6 @@ public class HbBootstrapController extends BaseController {
         return new ResponseEntity<HbBootstrapVO>(vo, HttpStatus.OK);
     }
 
-    
-    /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : 인프라 환경 설정 정보 등록/수정
-     * @title : saveIaasConfigInfo
-     * @return : ResponseEntity<BootstrapVO>
-    *****************************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/install/setIaasConfigInfo", method = RequestMethod.PUT)
-    public ResponseEntity<HbBootstrapVO> saveIaasConfigInfo(@RequestBody HbBootStrapDeployDTO.IaasConfig dto, Principal principal) {
-        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbbootstrap/install/setIaasConfigInfo"); }
-        HbBootstrapVO config = saveService.saveIaasConfigInfo(dto, principal);
-        return new ResponseEntity<>(config, HttpStatus.OK);
-    }
     
     /***************************************************
      * @project : Paas 플랫폼 설치 자동화

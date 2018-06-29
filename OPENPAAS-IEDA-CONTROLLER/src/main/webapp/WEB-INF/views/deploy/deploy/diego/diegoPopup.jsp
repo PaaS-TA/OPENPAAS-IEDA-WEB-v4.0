@@ -667,13 +667,13 @@ function createKeyConfirm(){
      }
      
      w2confirm({
-        width        : 350,
-        height       : 180,
-        title        : '<b>Key 생성 여부</b>',
-        msg          : message,
-        modal        : true,
-        yes_text     : "확인",
-        no_text      : "취소",
+         width          : 350,
+         height         : 180,
+         title          : '<b>Key 생성 여부</b>',
+         msg            : message,
+         modal          : true,
+         yes_text       : "확인",
+         no_text        : "취소",
         yes_callBack : function(){
             createKey();
         },
@@ -694,6 +694,7 @@ function createKey(){
             platform : "diego", //cf -> 1, diego -> 2, cf&diego -> 3
             version : defaultInfo.diegoReleaseVersion
     }
+    console.log("1");
     $.ajax({
         type : "POST",
         url : "/common/deploy/key/createKey",
@@ -1180,8 +1181,9 @@ function resourcePopup(div, height) {
             	console.log(defaultInfo);
                 if( menu == "cfDiego" || defaultInfo.cfReleaseVersion > 271 || defaultInfo.cfReleaseVersion == "3.0" || defaultInfo.cfReleaseVersion == "3.1" ){
                     $('.w2ui-msg-body #keyBtn').css("display","none");
-                    diegoKeyFile = defaultInfo.cfKeyFile;
-                    console.log(diegoKeyFile);
+                    $('.w2ui-msg-body #keyBtn').css("display","block");
+                    //diegoKeyFile = defaultInfo.cfKeyFile;
+                    //console.log(diegoKeyFile);
                     
                 } else {
                     $('.w2ui-msg-body #keyBtn').css("display","block");
@@ -2494,7 +2496,7 @@ function gridReload() {
                 </div>
             </div>
             <div class="w2ui-buttons">
-                <button class="btn" style="display:none; float: right; margin-top:10px;" id="keyBtn" onclick="createKeyConfirm();" >Key 생성</button>
+                 <span class="btn btn-info btn-sm" style="float: right; margin-top:10px;"  onclick="createKeyConfirm();">Key 생성</span>
             </div>
         </div>
         <div class="w2ui-buttons" id="resourceInfoButtons" hidden="true">
@@ -2633,7 +2635,7 @@ function gridReload() {
                 </div>
             </div>
             <div class="w2ui-buttons">
-                <button class="btn" style="display:none; float: right; margin-bottom:10px;" id="keyBtn" onclick="createKeyConfirm();" >Key 생성</button>
+                <span class="btn btn-info btn-sm" style="float: right; margin-top:10px;"  onclick="createKeyConfirm();">Key 생성</span>
             </div>
         </div>
         <div class="w2ui-buttons" id="vSphereResourceInfoButtons" hidden="true">

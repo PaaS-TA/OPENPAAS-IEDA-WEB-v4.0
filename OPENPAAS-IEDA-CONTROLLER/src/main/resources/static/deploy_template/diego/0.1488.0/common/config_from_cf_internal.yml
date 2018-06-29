@@ -33,7 +33,7 @@ config_from_cf:
     tls:
       ca_cert: (( properties.loggregator.tls.ca_cert ))
   metron_endpoint:
-    shared_secret: (( properties.metron_endpoint.shared_secret ))
+    shared_secret: (( properties.metron_endpoint.shared_secret || nil ))
   metron_agent:
     dropsonde_incoming_port: (( properties.metron_agent.dropsonde_incoming_port ))
     protocols: (( properties.metron_agent.protocols ))

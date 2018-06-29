@@ -1,15 +1,4 @@
 property_overrides:
-  etcd:
-    require_ssl: true
-    peer_require_ssl: true
-    ca_cert: (( diego-certs.etcd-ca-cert ))
-    server_cert: (( diego-certs.etcd-server-cert ))
-    server_key: (( diego-certs.etcd-server-key ))
-    client_cert: (( diego-certs.etcd-client-cert ))
-    client_key: (( diego-certs.etcd-client-key ))
-    peer_ca_cert: (( diego-certs.peer-ca-cert ))
-    peer_cert: (( diego-certs.peer-cert ))
-    peer_key: (( diego-certs.peer-key ))
   bbs:
     active_key_label: key1
     encryption_keys:
@@ -104,9 +93,6 @@ release_versions:
   diego:
     name: (( meta.diego-release-name ))
     version: (( meta.diego-release-version ))
-  etcd:
-    name: (( meta.etcd-release-name ))
-    version: (( meta.etcd-release-version ))
   garden-linux:
     name: (( meta.garden-linux-release-name ))
     version: (( meta.garden-linux-release-version ))

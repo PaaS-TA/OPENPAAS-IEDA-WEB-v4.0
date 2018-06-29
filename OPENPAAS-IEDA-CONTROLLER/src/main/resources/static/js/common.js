@@ -252,14 +252,34 @@ function gbConverter(value){
      var $element = $(".w2ui-msg-body "+tag+"[name='"+name+"']");
      
      if( $element.parent().parent().find("p").length == 0 ){
-    	 $element.css("borderColor", "#bbb");  
+         $element.css("borderColor", "#bbb");  
      }else{
-    	 $element.parent().parent().find("p").hide('fast', function(){
-    		 $element.parent().find("p").remove();
+         $element.parent().parent().find("p").hide('fast', function(){
+             $element.parent().find("p").remove();
              $element.css("borderColor", "#bbb");  
          });
      }
  }
+ 
+ /*******************************************************************************
+  * 설명 : 유효성 성공한 Element 스타일 설정
+  * 기능 : setSuccessStyle
+  ******************************************************************************/
+ function setHybridSuccessStyle(label){
+     var name = $(label).attr("name");
+     var tag = $(label).prop("tagName").toLowerCase();
+     var $element = $(tag+"[name='"+name+"']");
+     
+     if( $element.parent().parent().find("p").length == 0 ){
+         $element.css("borderColor", "#bbb");  
+     }else{
+         $element.parent().parent().find("p").hide('fast', function(){
+             $element.parent().find("p").remove();
+             $element.css("borderColor", "#bbb");  
+         });
+     }
+ }
+ 
  
  /*******************************************************************************
   * 설명 : 유효성 체크 스타일 설정
@@ -273,16 +293,16 @@ function gbConverter(value){
          var $element = $(".w2ui-msg-body "+tag+"[name='"+name+"'] " );
          $element.removeClass("error");
           if( $element.parent().find("p").length == 0  || 
-        		  ( $element.parent().find("input:text").length ==2 && $element.parent().find("p").length == 1) ){
+                  ( $element.parent().find("input:text").length ==2 && $element.parent().find("p").length == 1) ){
               if( tag == 'textarea' || tag == 'select' ){
                   $element.parent().append("<p style='color:red;'>"+validator.errorList[i].message+"</p>");
               }else{ //input
                   if( tag == "input" && $element.parent().find("p").length == 0){
-                	  if( $element.parent().find("input:text").length == 2 ){
-//                		  $element.parent().append("<p style='color:red; margin-left:100px;'>"+validator.errorList[i].message+"</p>");
-                	  }else{
-                		  $element.parent().append("<p style='color:red;'>"+validator.errorList[i].message+"</p>");
-                	  }
+                      if( $element.parent().find("input:text").length == 2 ){
+//                          $element.parent().append("<p style='color:red; margin-left:100px;'>"+validator.errorList[i].message+"</p>");
+                      }else{
+                          $element.parent().append("<p style='color:red;'>"+validator.errorList[i].message+"</p>");
+                      }
                   }
               }
               $element.css("borderColor","red");
@@ -297,6 +317,44 @@ function gbConverter(value){
           }
      }
  }
+ 
+ /*******************************************************************************
+  * 설명 : 유효성 체크 스타일 설정
+  * 기능 : setInvalidHandlerStyle
+  ******************************************************************************/
+ function setHybridInvalidHandlerStyle(errors, validator){
+     $("input[name='"+validator.errorList[0].element.name+"'] " ).focus();
+     for( var i=0; i < errors; i++ ){
+         var name = validator.errorList[i].element.name;
+         var tag = (validator.errorList[i].element.tagName).toLowerCase();
+         var $element = $(tag+"[name='"+name+"'] " );
+         $element.removeClass("error");
+          if( $element.parent().find("p").length == 0  || 
+                  ( $element.parent().find("input:text").length ==2 && $element.parent().find("p").length == 1) ){
+              if( tag == 'textarea' || tag == 'select' ){
+                  $element.parent().append("<p style='color:red; margin-left:50px;'>"+validator.errorList[i].message+"</p>");
+              }else{ //input
+                  if( tag == "input" && $element.parent().find("p").length == 0){
+                      if( $element.parent().find("input:text").length == 2 ){
+                          $element.parent().append("<p style='color:red; margin-left:50px;'>"+validator.errorList[i].message+"</p>");
+                      }else{
+                          $element.parent().append("<p style='color:red; margin-left:50px;'>"+validator.errorList[i].message+"</p>");
+                      }
+                  }
+              }
+              $element.css("borderColor","red");
+              
+          }else{
+              if( tag == 'textarea' || tag == 'select' ){
+                  $element.parent().find("p").replaceWith("<p style='color:red; margin-left:50px;'>"+validator.errorList[i].message+"</p>");
+              }else{
+                  $element.parent().find("p").replaceWith("<p style='color:red; margin-left:50px;'>"+validator.errorList[i].message+"</p>");
+              }
+              
+          }
+     }
+ }
+ 
  
  /********************************************************
   * 기능 : setDefaultIaasAccountList
@@ -411,7 +469,7 @@ function setAccountInfo(val, iaas){
     }
     $('#doSearch').attr('disabled', false);
     if(iaas == "aws")
-    	setDefaultAwsRegion();
+        setDefaultAwsRegion();
     
     setDefaultIaasAccount("noPopup", iaas);
 }

@@ -1,6 +1,7 @@
 package org.openpaas.ieda.controller.deploy.web.config.stemcell;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,7 +25,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import com.amazonaws.services.s3.event.S3EventNotification.ResponseElementsEntity;
 
 
 @Controller
@@ -46,18 +50,6 @@ public class StemcellManagementController extends BaseController {
     public String goStemcellManagement() {
         if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> /config/stemcell"); }
         return "/deploy/config/stemcellManagement";
-    }
-    
-    /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : 이종 스템셀 관리 화면 이동
-     * @title : goHbStemcellManagement
-     * @return : String
-    *****************************************************************/
-    @RequestMapping(value="/config/hbstemcell", method=RequestMethod.GET)
-    public String goHbStemcellManagement() {
-        if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> /config/hbstemcell"); }
-        return "/hbdeploy/config/hbStemcellManagement";
     }
     
     /****************************************************************
@@ -139,6 +131,21 @@ public class StemcellManagementController extends BaseController {
         service.deletePublicStemcell(dto);
         
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description :  IaaS 별 스템셀 목록 조회
+     * @title : getStemcellListDetail
+     * @return : ResponseEntity<HashMap<String,Object>>
+    *****************************************************************/
+    @RequestMapping(value="/config/stemcell/list/{iaas}", method=RequestMethod.GET)
+    public ResponseEntity<HashMap<String, Object>> getStemcellListDetail(@PathVariable String iaas) {
+        if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> /config/stemcell/list/"+iaas); }
+        HashMap<String, Object> list = new HashMap<String, Object>();
+        List<StemcellManagementVO> stemcellList = service.getLocalStemcellList(iaas);
+        list.put("records", stemcellList);
+        return new ResponseEntity<HashMap<String,Object>>(list, HttpStatus.OK);
     }
     
 }

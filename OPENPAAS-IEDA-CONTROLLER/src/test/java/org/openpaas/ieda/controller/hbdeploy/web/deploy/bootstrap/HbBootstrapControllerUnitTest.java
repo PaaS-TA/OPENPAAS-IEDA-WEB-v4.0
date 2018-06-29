@@ -109,7 +109,7 @@ public class HbBootstrapControllerUnitTest extends BaseControllerUnitTest {
      * @title : testGoBootstrap
      * @return : void
     *****************************************************************/
-    @Test
+    //@Test
     public void testGoBootstrap() throws Exception{
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> Hybrid_Bootstrap 설치 화면 이동 Unit Test"); }
         mockMvc.perform(get(HYBRID_BOOTSTRAP_VIEW_URL).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
@@ -117,19 +117,6 @@ public class HbBootstrapControllerUnitTest extends BaseControllerUnitTest {
         .andExpect(view().name("/hbdeploy/deploy/bootstrap/hbBootstrap"));
     }
     
-    /****************************************************************
-     * @project : Paas 이종 클라우드 플랫폼 설치 자동화
-     * @description : Hybrid_Bootstrap 설치 팝업 화면 이동 Unit Test
-     * @title : testGoHbBootstrapPopup
-     * @return : void
-    *****************************************************************/
-    @Test
-    public void testGoHbBootstrapPopup() throws Exception{
-        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> Hybrid_Bootstrap 설치 팝업 화면 이동 Unit Test"); }
-        mockMvc.perform(get(HYBRID_BOOTSTRAP_POP_VIEW_URL).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
-        .andExpect(status().isOk())
-        .andExpect(view().name("/hbdeploy/deploy/bootstrap/hbBootstrapPopup"));
-    }
     
     /****************************************************************
      * @project : Paas 이종 클라우드 플랫폼 설치 자동화
@@ -323,25 +310,6 @@ public class HbBootstrapControllerUnitTest extends BaseControllerUnitTest {
         .andExpect(jsonPath("$.hyPriCloudInstanceType").value(expectVo.getCloudInstanceType()))
         .andExpect(jsonPath("$.hyPriBoshPassword").value(expectVo.getBoshPassword()))
         .andExpect(jsonPath("$.hyPriDeploymentFile").value(expectVo.getDeploymentFile()));
-    }
-    
-    /****************************************************************
-     * @project : Paas 이종 클라우드 플랫폼 설치 자동화
-     * @description : 인프라 환경 설정 정보 등록/수정 Unit Test
-     * @title : testSaveIaasConfigInfo
-     * @return : void
-    *****************************************************************/
-    @Test
-    public void testSaveIaasConfigInfo() throws Exception{
-        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> 인프라 환경 설정 정보 등록/수정 Unit Test"); }
-        String requestJson = mapper.writeValueAsString(setIaasConfigInfo());
-        when(mockHbBootstrapSaveService.saveIaasConfigInfo(any(), any())).thenReturn(setBootstrapInfo());
-        mockMvc.perform(put(HYBRID_SAVE_IAASCONFIG_INFO_URL).contentType(MediaType.APPLICATION_JSON).content(requestJson))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(jsonPath("$.iaasConfigId").value(1))
-            .andExpect(jsonPath("$.iaasType").value("Openstack"))
-            .andExpect(jsonPath("$.id").value(1));
     }
     
     /****************************************************************
@@ -574,19 +542,6 @@ public class HbBootstrapControllerUnitTest extends BaseControllerUnitTest {
         return defaultInfo;
     }
     
-    /****************************************************************
-     * @project : Paas 이종 클라우드 플랫폼 설치 자동화
-     * @description : 인프라 환경 설정 정보 설정
-     * @title : setIaasConfigInfo
-     * @return : BootStrapDeployDTO.IaasConfig
-    *****************************************************************/
-    public HbBootStrapDeployDTO.IaasConfig setIaasConfigInfo(){
-        HbBootStrapDeployDTO.IaasConfig configInfo = new HbBootStrapDeployDTO.IaasConfig();
-        configInfo.setIaasConfigId("1");
-        configInfo.setIaasType("Openstack");
-        return configInfo; 
-    }
-
     /****************************************************************
      * @project : Paas 이종 클라우드 플랫폼 설치 자동화
      * @description : Hybrid_Bootstrap 상세 정보 조회 정보 설정

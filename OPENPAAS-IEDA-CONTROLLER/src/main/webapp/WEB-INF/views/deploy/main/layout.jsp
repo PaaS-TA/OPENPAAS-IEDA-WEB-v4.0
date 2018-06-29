@@ -76,7 +76,7 @@ $(function() {
         name: 'layout',
         panels: [
              { type: 'top', style: pstyle, size: 71}
-            ,{ type: 'left', style: pstyle, size:275}
+             ,{ type: 'left', style: pstyle, size:256}
             ,{ type: 'main', style: pstyle, size:1599}
         ],  onError: function(event) {
         }        , onResize : function(event) {

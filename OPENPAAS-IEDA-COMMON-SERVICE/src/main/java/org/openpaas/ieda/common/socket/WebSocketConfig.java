@@ -19,6 +19,8 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
         config.enableSimpleBroker( "/socket"
                                 , "/config/stemcell/regist/socket/logs"
                                 , "/config/stemcell/regist/download/logs"
+                                , "/config/hbstemcell/regist/socket/logs"
+                                , "/config/hbstemcell/regist/download/logs"
                                 , "/config/systemRelease/regist/socket/logs"
                                 , "/config/systemRelease/regist/download/logs"
                                 , "/deploy/bootstrap/install/logs"
@@ -53,6 +55,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint( "/config/stemcell/regist/stemcellDownloading"
+                            , "/config/hbstemcell/regist/stemcellDownloading"
                             , "/config/systemRelease/regist/download/releaseDownloading"
                             , "/deploy/bootstrap/install/bootstrapInstall"
                             , "/deploy/bootstrap/delete/instance"

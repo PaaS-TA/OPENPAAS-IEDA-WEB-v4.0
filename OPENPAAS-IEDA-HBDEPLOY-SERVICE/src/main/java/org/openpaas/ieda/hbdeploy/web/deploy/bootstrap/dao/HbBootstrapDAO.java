@@ -8,7 +8,7 @@ import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dto.HbBootStrapDeployDTO;
 public interface HbBootstrapDAO {
     
     /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : Bootstrap 전체 목록 조회
      * @title : selectBootstrapList
      * @return : List<BootstrapVO>
@@ -17,7 +17,7 @@ public interface HbBootstrapDAO {
     
     /****************************************************************
      * @param iaas 
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : Bootstrap 상세조회
      * @title : selectBootstrapInfo
      * @return : BootstrapVO
@@ -25,7 +25,7 @@ public interface HbBootstrapDAO {
     HbBootstrapVO selectBootstrapInfo(@Param("id")int id, @Param("iaas")String iaas);
     
     /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : BootStrap 정보 저장
      * @title : insertBootStrapInfo
      * @return : int
@@ -33,7 +33,7 @@ public interface HbBootstrapDAO {
     int insertBootStrapInfo(@Param("bootstrap")HbBootstrapVO vo);
     
     /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : BootStrap 정보 수정
      * @title : updateBootStrapInfo
      * @return : int
@@ -41,7 +41,7 @@ public interface HbBootstrapDAO {
     int updateBootStrapInfo(@Param("bootstrap")HbBootstrapVO vo);
     
     /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : BootStrap 정보 삭제
      * @title : deleteBootstrapInfo
      * @return : void
@@ -49,7 +49,7 @@ public interface HbBootstrapDAO {
     void deleteBootstrapInfo(@Param("dto")HbBootStrapDeployDTO.Delete dto);
     
     /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : 이종 클라우드 bootstrap 관리 디비 정보 삽입
      * @title : insertHybridBootstrapMgntInfo
      * @return : void
@@ -58,7 +58,7 @@ public interface HbBootstrapDAO {
     
     
     /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : 이종 클라우드 bootstrap 관리 디비 정보 수정
      * @title : updateHybridBootstrapMgntInfo
      * @return : void
@@ -66,18 +66,18 @@ public interface HbBootstrapDAO {
     void updateHybridBootstrapMgntInfo(@Param("bootstrap") HbBootstrapVO vo);
     
     /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : 이종 클라우드 bootstrap 관리 디비 정보 수정
      * @title : updateHybridBootstrapMgntInfo
      * @return : void
     *****************************************************************/
-	HbBootstrapVO selectHbBootstrapMgntFromPrvateDeploymentFileName(@Param("deploymentFileName") String privateDeploymentFileName);
-	
+    HbBootstrapVO selectHbBootstrapMgntFromPrvateDeploymentFileName(@Param("deploymentFileName") String privateDeploymentFileName);
+    
     /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : hybridboostrap 설치 정보 조회
      * @title : selectInstallBootstrapInfo
      * @return : Boolean
     ***************************************************/
-	HbBootstrapVO selectInstallBootstrapInfo(@Param("privateBootstrapId") int privateBootstrapId,@Param("publicBootStrapId") int publicBootStrapId);
+    HbBootstrapVO selectInstallBootstrapInfo(@Param("privateBootstrapId") int privateBootstrapId,@Param("publicBootStrapId") int publicBootStrapId);
 }

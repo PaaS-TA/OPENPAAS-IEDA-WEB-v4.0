@@ -29,6 +29,7 @@ var iaas_type_code = '<spring:message code="common.code.iaasType.code.parent"/>'
 var os_version_code = '<spring:message code="common.code.osVersion.code.subGroup"/>';//201
 var text_required_msg='<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
 var text_injection_msg='<spring:message code="common.text.validate.sqlInjection.message"/>';//입력하신 값은 입력하실 수 없습니다.
+var hybrid_iaas_code = 110;
 
 $(function() {
     $('#config_awsStemcellsGrid').w2grid({
@@ -66,14 +67,27 @@ $(function() {
         ],
         onSelect: function(event) {
             event.onComplete = function() {
+                var selected = w2ui['config_openstackStemcellsGrid'].getSelection();
+                var record = w2ui['config_openstackStemcellsGrid'].get(selected);
+                if(record != null){
+                    $('#doDelete').attr('disabled', false);
+                }else {
+                    $('#doDelete').attr('disabled', false);
+                }
                 $('#doregist').attr('disabled', false);
-                $('#doDelete').attr('disabled', false);
             }
         },
         onUnselect: function(event) {
             event.onComplete = function() {
+                var selected = w2ui['config_openstackStemcellsGrid'].getSelection();
+                var record = w2ui['config_openstackStemcellsGrid'].get(selected);
+                if(record != null){
+                    $('#doDelete').attr('disabled', false);
+                }else{
+                    $('#doDelete').attr('disabled', true);
+                }
                 $('#doRegist').attr('disabled', false);
-                $('#doDelete').attr('disabled', true);
+                
             }
         }, onLoad:function(event){
             if(event.xhr.status == 403){
@@ -121,15 +135,27 @@ $(function() {
         ],
         onSelect: function(event) {
             event.onComplete = function() {
-                    $('#doregist').attr('disabled', false);
+                var selected = w2ui['config_awsStemcellsGrid'].getSelection();
+                var record = w2ui['config_awsStemcellsGrid'].get(selected);
+                if(record != null){
                     $('#doDelete').attr('disabled', false);
+                }else {
+                    $('#doDelete').attr('disabled', false);
+                }
+                $('#doregist').attr('disabled', false);
             }
         },
         onUnselect: function(event) {
-            var grid = this;
             event.onComplete = function() {
+                var selected = w2ui['config_awsStemcellsGrid'].getSelection();
+                var record = w2ui['config_awsStemcellsGrid'].get(selected);
+                if(record != null){
+                    $('#doDelete').attr('disabled', false);
+                }else{
+                    $('#doDelete').attr('disabled', true);
+                }
                 $('#doRegist').attr('disabled', false);
-                $('#doDelete').attr('disabled', true);
+                
             }
         }, onLoad:function(event){
             if(event.xhr.status == 403){
@@ -150,8 +176,8 @@ $(function() {
  * 기능 : doSearch
  ********************************************************/
 function doSearch(){
-    w2ui['config_awsStemcellsGrid'].load('/config/stemcell/list');
-    w2ui['config_openstackStemcellsGrid'].load('/config/stemcell/list');
+    w2ui['config_awsStemcellsGrid'].load('/config/hbstemcell/list/aws');
+    w2ui['config_openstackStemcellsGrid'].load('/config/hbstemcell/list/openstack');
 }
 /********************************************************
  * 설명 : 정보 조회
@@ -190,7 +216,7 @@ function lock(msg) {
  * 기능 : setstemcellFilePath
  *********************************************************/
 function setstemcellFilePath(fileInput){
-	console.log(fileInput);
+    console.log(fileInput);
     var file = fileInput.files;
     alert("1");
     var files = $('.w2ui-msg-body #stemcellPathFile')[0].files;
@@ -280,7 +306,9 @@ function setCommonCode(url, id) {
                 });
                 iaasListSelect="<select style='width:60%' name ='iaasList' onchange='setLightCheckbox(this.value);'>";
                  for(var i=0; i<stemcellArray.length; i++){
-                     iaasListSelect+="<option value="+stemcellArray[i]+">"+stemcellArray[i]+"</option>";
+                     if(stemcellArray[i] == 'OPENSTACK' || stemcellArray[i] == 'AWS'){
+                         iaasListSelect+="<option value="+stemcellArray[i]+">"+stemcellArray[i]+"</option>";
+                     }
                  }
                  iaasListSelect+="</select'>";
                  $(".w2ui-msg-body #iaasListDiv").html(iaasListSelect);
@@ -310,7 +338,7 @@ function setCommonCode(url, id) {
  * 기능 : setLightCheckbox
  **************************************************************/
 function setLightCheckbox(iaasValue){
-    if(iaasValue == "AWS" || iaasValue == "GOOGLE" || iaasValue == "AZURE"){
+    if(iaasValue == "AWS" || iaasValue == "GOOGLE"){
         if($('.w2ui-msg-body input:radio[name=fileType]:input[value=version]').is(':checked')==true){
             $('.w2ui-msg-body input:checkbox[name=light]').attr("disabled", false);
         }
@@ -383,8 +411,7 @@ function setRegistType(value){
             $('.w2ui-msg-body input:text[name=stemcellPathUrl]').val("");
             $('.w2ui-msg-body input:text[name=stemcellPathFileName]').val("");
             if($(".w2ui-msg-body select[name='iaasList']").val()=="AWS" || 
-               $(".w2ui-msg-body select[name='iaasList']").val()=="GOOGLE" || 
-               $(".w2ui-msg-body select[name='iaasList']").val()=="AZURE"){
+               $(".w2ui-msg-body select[name='iaasList']").val()=="GOOGLE"){
                     $('.w2ui-msg-body input:checkbox[name=light]').attr("disabled", false);
             }
             $(".w2ui-msg-body input[name=stemcellPathFileName]").parent().parent().find("p").remove();
@@ -400,22 +427,34 @@ function setRegistType(value){
   **************************************************************/
  $('#doDelete').click(function(){
      if($("#doDelete").attr('disabled') == "disabled") return;
-     var selected = w2ui['config_awsStemcellsGrid'].getSelection();
-     var record = w2ui['config_awsStemcellsGrid'].get(selected);
-     if (record == null){
-        selected = w2ui['config_openstackStemcellsGrid'].getSelection();
-        record = w2ui['config_openstackStemcellsGrid'].get(selected);
+     //스템셀 선택
+     var record = new Array();
+     var awsSelected = w2ui['config_awsStemcellsGrid'].getSelection();
+     var openstackSelected = w2ui['config_openstackStemcellsGrid'].getSelection();
+     if (awsSelected == ""){
+         record.push(w2ui['config_openstackStemcellsGrid'].get(openstackSelected)) ;
+     }else if (openstackSelected == "") {
+         record.push(w2ui['config_awsStemcellsGrid'].get(awsSelected)) ;
+     }else{
+         record.push(w2ui['config_awsStemcellsGrid'].get(awsSelected));
+         record.push(w2ui['config_openstackStemcellsGrid'].get(openstackSelected));
      }
      var message = "";
-    
-     if ( record.stemcellFileName  && record.downloadStatus != "DOWNLOADING" ){
-         message = "스템셀 (파일명 : " + record.stemcellFileName + ") " + delete_confirm_msg;
-     }else{
-         message = "현재 다운로드 중입니다. <br/> 스템셀 (파일명 : " + record.stemcellFileName + ")" + delete_confirm_msg;
+     var recordName = "";
+     //레코드 정보
+     for(var i=0;i<record.length;i++){
+        recordName += record[i].stemcellFileName+'<br/>';
+        if ( record[i].downloadStatus != "DOWNLOADING" ){
+            message = "스템셀 (파일명 : " + recordName + ") " + delete_confirm_msg;
+        }else{
+            message = "현재 다운로드 중입니다. <br/> 스템셀 (파일명 : " + recordName + ")" + delete_confirm_msg;
+        }
      }
      w2confirm({
          title        : "<b>스템셀 삭제</b>",
          msg          : message,
+         width   : 550,
+         height  : 250,
          yes_text     : "확인",
          yes_callBack : function(event){
              deletePop(record);
@@ -465,7 +504,7 @@ function setRegistType(value){
      lock( '등록 중입니다.', true);
      $.ajax({
          type : "POST",
-         url : "/config/stemcell/regist/savestemcell/N",
+         url : "/config/hbstemcell/regist/savestemcell/N",
          contentType : "application/json",
          async : true,
          data : JSON.stringify(stemcellInfo),
@@ -515,7 +554,7 @@ function setRegistType(value){
      
      $.ajax({
          type     :'POST',
-         url      : '/config/stemcell/regist/upload',
+         url      : '/config/hbstemcell/regist/upload',
          enctype  : 'multipart/form-data',
          dataType : "text",
          async    : true,
@@ -565,15 +604,16 @@ function setRegistType(value){
  var fail_count = 0;
  function stemcellFileDownload(stemcellInfo){
      lock( '다운로드 중입니다.', true);
-     var socket = new SockJS("<c:url value='/config/stemcell/regist/stemcellDownloading'/>");
-     downloadClient = Stomp.over(socket); 
+     var socket = new SockJS("<c:url value='/config/hbstemcell/regist/stemcellDownloading'/>");
+     downloadClient = Stomp.over(socket);
+     console.log(downloadClient);
      var status = 0;
      
      var downloadPercentage = 0;
      downloadClient.heartbeat.outgoing = 50000;
      downloadClient.heartbeat.incoming = 0;
      downloadClient.connect({}, function(frame) {
-         downloadClient.subscribe('/user/config/stemcell/regist/download/logs', function(data){
+         downloadClient.subscribe('/user/config/hbstemcell/regist/download/logs', function(data){
              w2popup.unlock();
              status = data.body.split('/')[1]; //recid/percent 중 percent
              id = data.body.split('/')[0]; //recid/percent 중 recid
@@ -595,11 +635,19 @@ function setRegistType(value){
                  $("#isExisted_" + id).parent().html(completeButton);
                  
                  var flag = true;
-                 w2ui['config_opStemcellsGrid'].records.map(function(obj) {
-                     if( id != obj.id && obj.downloadStatus.toUpperCase() == "DOWNLOADING" ){
-                         flag= false;
-                     }
+                 if(stemcellInfo.iaasType == "aws"){
+                     w2ui['config_awsStemcellsGrid'].records.map(function(obj) {
+                         if( id != obj.id && obj.downloadStatus.toUpperCase() == "DOWNLOADING" ){
+                             flag= false;
+                         }
                  });
+                 }else{
+                     w2ui['config_openstackStemcellsGrid'].records.map(function(obj) {
+                         if( id != obj.id && obj.downloadStatus.toUpperCase() == "DOWNLOADING" ){
+                             flag= false;
+                         }
+                 });
+                 }
                  if(downloadClient != "" && flag ){
                      downloadClient.disconnect();
                      downloadClient = "";
@@ -607,12 +655,12 @@ function setRegistType(value){
                  doSearch();
              }
          });
-         downloadClient.send("<c:url value='/send/config/stemcell/regist/stemcellDownloading'/>", {}, JSON.stringify(stemcellInfo));
+         downloadClient.send("<c:url value='/send/config/hbstemcell/regist/stemcellDownloading'/>", {}, JSON.stringify(stemcellInfo));
      }, function(frame){
          fail_count ++;
          downloadClient.disconnect();
          if( fail_count < 10 ){
-             socketDwonload(stemcellInfo);    
+            stemcellFileDownload(stemcellInfo);    
          }else{
              w2alert("스템셀 다운로드에 실패하였습니다. ", "스템셀 다운로드")
              fail_count = 0;
@@ -628,20 +676,15 @@ function setRegistType(value){
   * 기능 : deletePop
   **************************************************************/
  function deletePop(record){
-     var requestParameter = {
-             id : record.id,
-             stemcellFileName : record.stemcellFileName
-     };
-     
      $.ajax({
          type : "DELETE",
-         url : "/config/stemcell/delete",
+         url : "/config/hbstemcell/Muldelete",
          contentType : "application/json",
          async : true,
-         data : JSON.stringify(requestParameter),
+         data : JSON.stringify(record),
          success : function(data, status) {
              if( downloadClient != ""){
-             	console.log(downloadClient);
+                 console.log(downloadClient);
                  downloadClient.disconnect();
                  downloadClient = "";
              }
@@ -755,7 +798,7 @@ function setRegistType(value){
                             <span id="lightVerChk">
                                 <label style="position: absolute; margin-left: 10px;" >
                                    <input name="light" type="checkbox" value="true" disabled />&nbsp;Light 유형
-                                   <span style="display: inline-block;color:gray;font-size:12px;width: 100%;">(AWS/GCP/AZURE)</span>
+                                   <span style="display: inline-block;color:gray;font-size:12px;width: 100%;">(AWS/GCP)</span>
                                 </label>
                             </span>
                         </div>
@@ -861,7 +904,7 @@ $(function() {
             
             $.ajax({
                 type : "POST",
-                url : "/config/stemcell/regist/info/N",
+                url : "/config/hbstemcell/regist/info/N",
                 contentType : "application/json",
                 async : true,
                 data : JSON.stringify(stemcellInfo),
