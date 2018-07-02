@@ -63,10 +63,10 @@ public class HbBootstrapNetworkConfigController extends BaseController {
      * @return : ResponseEntity<BootstrapVO>
     *****************************************************************/
     @RequestMapping(value = "/deploy/hbBootstrap/saveNetworkConfigInfo", method = RequestMethod.PUT)
-    public ResponseEntity<HbBootstrapNetworkConfigVO> saveNetworkConfigInfo(@RequestBody HbBootstrapNetworkConfigDTO dto, Principal principal) {
+    public ResponseEntity<?> saveNetworkConfigInfo(@RequestBody HbBootstrapNetworkConfigDTO dto, Principal principal) {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/saveNetworkConfigInfo"); }
-        HbBootstrapNetworkConfigVO config = service.saveNetworkConfigInfo(dto, principal);
-        return new ResponseEntity<>(config, HttpStatus.CREATED);
+        service.saveNetworkConfigInfo(dto, principal);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
     
     
