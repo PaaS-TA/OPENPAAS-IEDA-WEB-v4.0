@@ -95,11 +95,11 @@ public class HbBootstrapDefaultConfigServiceUnitTest extends BaseHbDeployControl
     /***************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
      * @description : 기본 목록 정보 삽입 중 이미 등록 한 기본 정보 중복이 존재 할 경우 Unit Test
-     * @title : testInsertCpiConfigInfoConflictCpiConfigName
+     * @title : testInsertDefaultConfigInfoConflictCpiConfigName
      * @return : void
     ***************************************************/
     @Test(expected=CommonException.class)
-    public void testInsertCpiConfigInfoConflictCpiConfigName(){
+    public void testInsertDefaultConfigInfoConflictCpiConfigName(){
         HbBootstrapDefaultConfigDTO dto = setDefaultConfigInfo("insert");
         when(mockHbBootstrapDefaultConfigDAO.selectBootstrapDefaultConfigByName(anyString())).thenReturn(1);
         mockHbBootstrapDefaultConfigService.saveDefaultConfigInfo(dto, principal);
@@ -107,12 +107,12 @@ public class HbBootstrapDefaultConfigServiceUnitTest extends BaseHbDeployControl
     
     /***************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : CPI 목록 정보 수정 Unit Test
-     * @title : testInsertCpiConfigInfo
+     * @description : 기본 목록 정보 수정 Unit Test
+     * @title : testUpdateDefaultConfigInfo
      * @return : void
     ***************************************************/
     @Test
-    public void testUpdateCpiConfigInfo(){
+    public void testUpdateDefaultConfigInfo(){
         HbBootstrapDefaultConfigDTO dto = setDefaultConfigInfo("update");
         when(mockHbBootstrapDefaultConfigDAO.selectBootstrapDefaultConfigByName(anyString())).thenReturn(0);
         when(mockHbBootstrapDefaultConfigDAO.selectBootstrapDefaultConfigInfo(anyInt(), anyString())).thenReturn(expectDefailtConfigInfo(""));
@@ -121,18 +121,24 @@ public class HbBootstrapDefaultConfigServiceUnitTest extends BaseHbDeployControl
     
     /***************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : CPI 목록 정보 수정 Config Name이 존재 할 경우 Unit Test
-     * @title : testUpdateCpiConfigInfoConflictCpiConfigName
+     * @description : 기본 목록 정보 수정 Config Name이 존재 할 경우 Unit Test
+     * @title : testUpdateDefaultConfigInfoConflictCpiConfigName
      * @return : void
     ***************************************************/
     @Test(expected=CommonException.class)
-    public void testUpdateCpiConfigInfoConflictCpiConfigName(){
+    public void testUpdateDefaultConfigInfoConflictCpiConfigName(){
         HbBootstrapDefaultConfigDTO dto = setDefaultConfigInfo("update");
         when(mockHbBootstrapDefaultConfigDAO.selectBootstrapDefaultConfigByName(anyString())).thenReturn(1);
         when(mockHbBootstrapDefaultConfigDAO.selectBootstrapDefaultConfigInfo(anyInt(), anyString())).thenReturn(expectDefailtConfigInfo("conflict"));
         mockHbBootstrapDefaultConfigService.saveDefaultConfigInfo(dto, principal);
     }
     
+    /***************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : Default 정보 설정 값
+     * @title : expectDefailtConfigInfo
+     * @return : void
+    ***************************************************/
     private HbBootstrapDefaultConfigVO expectDefailtConfigInfo(String type) {
         HbBootstrapDefaultConfigVO vo = new HbBootstrapDefaultConfigVO();
         vo.setIaasType("Openstack");
@@ -177,24 +183,24 @@ public class HbBootstrapDefaultConfigServiceUnitTest extends BaseHbDeployControl
 
     /***************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : CPI 목록 정보 삭제 Unit Test
-     * @title : testDeleteCpiConfigInfo
+     * @description : 기본 목록 정보 삭제 Unit Test
+     * @title : testDeleteDefaultConfigInfo
      * @return : void
     ***************************************************/
     @Test
-    public void testDeleteCpiConfigInfo(){
+    public void testDeleteDefaultConfigInfo(){
         HbBootstrapDefaultConfigDTO dto = setDefaultConfigInfo("update");
         mockHbBootstrapDefaultConfigService.deleteDefaultConfigInfo(dto, principal);
     }
     
     /***************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : CPI 목록 정보 삭제 아이디 값이 없을 경우 Unit Test
-     * @title : testDeleteCpiConfigInfoIdEmpty
+     * @description : 기본 목록 정보 삭제 아이디 값이 없을 경우 Unit Test
+     * @title : testDeleteDefaultConfigInfoIdEmpty
      * @return : void
     ***************************************************/
     @Test(expected=CommonException.class)
-    public void testDeleteCpiConfigInfoIdEmpty(){
+    public void testDeleteDefaultConfigInfoIdEmpty(){
         HbBootstrapDefaultConfigDTO dto = setDefaultConfigInfo("insert");
         mockHbBootstrapDefaultConfigService.deleteDefaultConfigInfo(dto, principal);
     }
@@ -202,8 +208,8 @@ public class HbBootstrapDefaultConfigServiceUnitTest extends BaseHbDeployControl
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
      * @description : Hybrid_Bootstrap 기본 정보 목록 결과 값 설정
-     * @title : expectCpiConfigList
-     * @return : List<HbBootstrapCpiConfigVO>
+     * @title : expectDefaultConfigList
+     * @return : List<HbBootstrapDefaultConfigVO>
     *****************************************************************/
     private List<HbBootstrapDefaultConfigVO> expectDefaultConfigList() {
         List<HbBootstrapDefaultConfigVO> list = new ArrayList<HbBootstrapDefaultConfigVO>();
@@ -248,8 +254,8 @@ public class HbBootstrapDefaultConfigServiceUnitTest extends BaseHbDeployControl
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
      * @description : Hybrid_Bootstrap 기본 정보 저장 결과 값 설정
-     * @title : expectCpiConfigList
-     * @return : List<HbBootstrapCpiConfigVO>
+     * @title : setDefaultConfigInfo
+     * @return : HbBootstrapDefaultConfigDTO
     *****************************************************************/
     private HbBootstrapDefaultConfigDTO setDefaultConfigInfo(String type) {
         HbBootstrapDefaultConfigDTO dto = new HbBootstrapDefaultConfigDTO();

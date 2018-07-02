@@ -42,7 +42,7 @@ var networkLayout = {
             style: 'text-align: center',
             columns:[
                    { field: 'recid', hidden: true },
-                   { field: 'networkConfigName', caption: 'CPI 정보 별칭', size:'50%', style:'text-align:center;' },
+                   { field: 'networkConfigName', caption: '네트워크 정보 별칭', size:'50%', style:'text-align:center;' },
                    { field: 'iaasType', caption: '인프라 환경 타입', size:'50%', style:'text-align:center;' ,render: function(record){ 
                        if(record.iaasType.toLowerCase() == "aws"){
                            return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";

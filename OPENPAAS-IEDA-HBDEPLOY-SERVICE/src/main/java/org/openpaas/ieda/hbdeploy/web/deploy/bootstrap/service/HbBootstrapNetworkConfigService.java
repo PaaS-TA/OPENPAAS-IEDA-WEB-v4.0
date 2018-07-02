@@ -40,7 +40,7 @@ public class HbBootstrapNetworkConfigService {
      * @return : HbBootstrapCpiVO
     *****************************************************************/
     @Transactional
-    public HbBootstrapNetworkConfigVO saveNetworkConfigInfo(HbBootstrapNetworkConfigDTO dto, Principal principal) {
+    public void saveNetworkConfigInfo(HbBootstrapNetworkConfigDTO dto, Principal principal) {
         HbBootstrapNetworkConfigVO vo = null;
         int count = bootstrapNetworkDao.selectBootstrapNetworkConfigByName(dto.getNetworkConfigName());
         if( StringUtils.isEmpty(dto.getId())){
@@ -74,7 +74,6 @@ public class HbBootstrapNetworkConfigService {
         }else{
         	bootstrapNetworkDao.updateBootStrapNetworkConfigInfo(vo);
         }
-        return vo;
     }
 
     /****************************************************************

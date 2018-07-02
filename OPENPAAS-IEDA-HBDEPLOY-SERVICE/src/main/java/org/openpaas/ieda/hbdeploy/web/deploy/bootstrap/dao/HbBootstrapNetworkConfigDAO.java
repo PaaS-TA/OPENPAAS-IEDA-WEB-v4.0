@@ -45,7 +45,7 @@ public interface HbBootstrapNetworkConfigDAO {
      * @title : saveCpiInfo
      * @return : HbBootstrapCpiVO
     *****************************************************************/
-    void deleteBootStrapNetworkConfigInfo(@Param("network")HbBootstrapNetworkConfigDTO vo);
+    void deleteBootStrapNetworkConfigInfo(@Param("network")HbBootstrapNetworkConfigDTO dto);
     
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
