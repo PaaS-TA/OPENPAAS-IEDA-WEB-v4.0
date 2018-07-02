@@ -96,9 +96,15 @@ public class AzureKeypairMgntService {
                 e.printStackTrace();
             }
         }catch (Exception e) {
-        	e.printStackTrace();
-            throw new CommonException(
-                    message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+            String detailMessage = e.getMessage();
+            if(!detailMessage.equals("") && detailMessage != null){
+                throw new CommonException(
+                  detailMessage, detailMessage, HttpStatus.BAD_REQUEST);
+            }else{
+                e.printStackTrace();
+                throw new CommonException(
+                        message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+            }
         }
     }
     

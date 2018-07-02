@@ -87,8 +87,14 @@ public class OpenstackNetworkMgntService {
         try{
             networkApiVo = openstackNetworkMgntApiService.getOpenstackNetworkDetailInfoApiFromOpenstack(vo, networkId);
         }catch (Exception e) {
-            throw new CommonException(
-                    message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+            String detailMessage = e.getMessage();
+            if(!detailMessage.equals("") && detailMessage != null){
+                throw new CommonException(
+                  detailMessage, detailMessage, HttpStatus.BAD_REQUEST);
+            }else{
+                throw new CommonException(
+                        message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+            }
         }
         OpenstackNetworkMgntVO networkVo = new OpenstackNetworkMgntVO();
         networkVo.setNetworkId(networkApiVo.getId());
@@ -144,8 +150,14 @@ public class OpenstackNetworkMgntService {
         try{
             openstackNetworkMgntApiService.saveOpenstackNetworkInfoApiFromOpenstack(vo, dto, ipVersion);
         }catch (Exception e) {
-            throw new CommonException(
-                    message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), e.getMessage(), HttpStatus.BAD_REQUEST);
+            String detailMessage = e.getMessage();
+            if(!detailMessage.equals("") && detailMessage != null){
+                throw new CommonException(
+                  detailMessage, detailMessage, HttpStatus.BAD_REQUEST);
+            }else{
+                throw new CommonException(
+                        message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
         }
     }
     
@@ -176,8 +188,14 @@ public class OpenstackNetworkMgntService {
         try {
             apiSubnetList = openstackNetworkMgntApiService.getOpenstackSubnetInfoListApiFromOpenstack(vo, networkId);
         } catch (Exception e) {
-            throw new CommonException(
-                    message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+            String detailMessage = e.getMessage();
+            if(!detailMessage.equals("") && detailMessage != null){
+                throw new CommonException(
+                  detailMessage, detailMessage, HttpStatus.BAD_REQUEST);
+            }else{
+                throw new CommonException(
+                        message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+            }
         }
         List<OpenstackNetworkMgntVO> resultList = new ArrayList<OpenstackNetworkMgntVO>();
         OpenstackNetworkMgntVO subnetVo = null;
@@ -254,8 +272,14 @@ public class OpenstackNetworkMgntService {
         try{
             openstackNetworkMgntApiService.saveOpenstackSubnetkInfoApiFromOpenstack(vo, dto, ipVersion);
         }catch (Exception e) {
+        	String detailMessage = e.getMessage();
+            if(!detailMessage.equals("") && detailMessage != null){
+                throw new CommonException(
+                  detailMessage, detailMessage, HttpStatus.BAD_REQUEST);
+            }else{
             throw new CommonException(
                     message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
         }
     }
     /***************************************************
