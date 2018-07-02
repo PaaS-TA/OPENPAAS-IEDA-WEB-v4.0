@@ -131,12 +131,20 @@ public class AwsNatGatewayMgntService {
      * @return : String
      ***************************************************/
     public void allocateNewElasticIp(AwsNatGatewayMgntDTO dto, Principal principal){
-    
-        IaasAccountMgntVO vo =  getAwsAccountInfo(principal,dto.getAccountId());
+        IaasAccountMgntVO vo =  getAwsAccountInfo(principal, dto.getAccountId());
         Region region = getAwsRegionInfo(dto.getRegion());
-        awsNatGatewayMgntApiService.allocateNewElasticIpFromAws(vo, region);
-   
-    
+        try{
+            awsNatGatewayMgntApiService.allocateNewElasticIpFromAws(vo, region);
+        }catch (Exception e) {
+            String detailMessage = e.getMessage();
+            if(!detailMessage.equals("") && detailMessage != null){
+                throw new CommonException(
+                  detailMessage, detailMessage, HttpStatus.BAD_REQUEST);
+            }else{
+                throw new CommonException(
+                        message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+            }
+        }
     }
     
     /***************************************************
@@ -144,43 +152,42 @@ public class AwsNatGatewayMgntService {
      * @description : AWS VPC 생성
      * @title : saveAwsVpcInfo
      * @return : void
-     ***************************************************/
-     public void saveAwsNatGatewayInfo(AwsNatGatewayMgntDTO dto, Principal principal) {
-         IaasAccountMgntVO vo =  getAwsAccountInfo(principal, dto.getAccountId());
-         Region region = getAwsRegionInfo(dto.getRegion());
-         try{
-             awsNatGatewayMgntApiService.createAwsNatGatewayApiFromAws(vo, region.getName(),dto);
-         }catch (Exception e) {
-             String detailMessage = e.getMessage();
-             if(!detailMessage.equals("") && detailMessage != null){
-                 throw new CommonException(
-                   detailMessage, detailMessage, HttpStatus.BAD_REQUEST);
-             }else{
-                 throw new CommonException(
-                         message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
-             }
-         }
-     }
+    ***************************************************/
+    public void saveAwsNatGatewayInfo(AwsNatGatewayMgntDTO dto, Principal principal) {
+        IaasAccountMgntVO vo =  getAwsAccountInfo(principal, dto.getAccountId());
+        Region region = getAwsRegionInfo(dto.getRegion());
+        try{
+            awsNatGatewayMgntApiService.createAwsNatGatewayApiFromAws(vo, region.getName(),dto);
+        }catch (Exception e) {
+            String detailMessage = e.getMessage();
+            if(!detailMessage.equals("") && detailMessage != null){
+                throw new CommonException(
+                  detailMessage, detailMessage, HttpStatus.BAD_REQUEST);
+            }else{
+                throw new CommonException(
+                  message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+            }
+        }
+    }
     
     /***************************************************
      * @project : AWS 인프라 관리 대시보드
      * @description : AWS 계정 정보가 실제 존재 하는지 확인 및 상세 조회
      * @title : getAwsAccountInfo
      * @return : IaasAccountMgntVO
-     ***************************************************/
-     public IaasAccountMgntVO getAwsAccountInfo(Principal principal, int accountId){
-         return commonIaasService.getIaaSAccountInfo(principal, accountId, "aws");
-     }
+    ***************************************************/
+    public IaasAccountMgntVO getAwsAccountInfo(Principal principal, int accountId){
+        return commonIaasService.getIaaSAccountInfo(principal, accountId, "aws");
+    }
      
-     /***************************************************
+    /***************************************************
      * @project : AWS 인프라 관리 대시보드
      * @description : AWS 리전 명 조회
      * @title : getAwsRegionInfo
      * @return : Region
-     ***************************************************/
-     public Region getAwsRegionInfo(String regionName) {
-         return commonIaasService.getAwsRegionInfo(regionName);
-     }
-     
+    ***************************************************/
+    public Region getAwsRegionInfo(String regionName) {
+        return commonIaasService.getAwsRegionInfo(regionName);
+    }
     
 }

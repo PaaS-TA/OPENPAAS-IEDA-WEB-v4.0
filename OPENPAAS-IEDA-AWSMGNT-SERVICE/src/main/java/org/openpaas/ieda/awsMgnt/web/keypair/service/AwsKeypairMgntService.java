@@ -69,12 +69,16 @@ public class AwsKeypairMgntService {
                 //문자열 데이터를 파일에 쓴다.
                 IOUtils.write(content, response.getOutputStream(), "UTF-8");
             } catch (IOException e) {
+                 String detailMessage = e.getMessage();
+                 if(!detailMessage.equals("") && detailMessage != null){
+                     throw new CommonException(
+                     detailMessage, detailMessage, HttpStatus.BAD_REQUEST);
+                 }else{
                 throw new CommonException(
-                        message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.INTERNAL_SERVER_ERROR);
+                    message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.INTERNAL_SERVER_ERROR);
+                }
             }
-            
     }
-    
 
     /***************************************************
     * @project : AWS 인프라 관리 대시보드

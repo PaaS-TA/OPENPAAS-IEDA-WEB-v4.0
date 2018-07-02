@@ -4,12 +4,16 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openpaas.ieda.awsMgnt.web.elasticIp.dao.AwsElasticIpMgntVO;
+import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.iaasDashboard.web.account.dao.IaasAccountMgntVO;
 import org.openpaas.ieda.iaasDashboard.web.common.service.CommonIaasService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.regions.Region;
@@ -21,6 +25,7 @@ import com.amazonaws.services.ec2.model.NetworkInterface;
 public class AwsElasticIpMgntService {
     @Autowired AwsElasticIpMgntApiService awsElasticIpMgntApiService;
     @Autowired CommonIaasService commonIaasService;
+    @Autowired MessageSource message;
     
     /***************************************************
     * @project : AWS 인프라 관리 대시보드
@@ -109,8 +114,21 @@ public class AwsElasticIpMgntService {
          
          IaasAccountMgntVO vo =  getAwsAccountInfo(principal, accountId);
          Region region = getAwsRegionInfo(regionName);
-         String elasticIp = awsElasticIpMgntApiService.allocateElasticIpFromAws(vo, region);
-         return elasticIp;
+         try{
+	         String elasticIp = awsElasticIpMgntApiService.allocateElasticIpFromAws(vo, region);
+	         return elasticIp;
+	         
+	     }catch (Exception e) {
+	         String detailMessage = e.getMessage();
+	         if(!detailMessage.equals("") && detailMessage != null){
+	             throw new CommonException(
+	               detailMessage, detailMessage, HttpStatus.BAD_REQUEST);
+	         }else{
+	             throw new CommonException(
+	                     message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+	         }
+	     }
+        
      }
      
     
