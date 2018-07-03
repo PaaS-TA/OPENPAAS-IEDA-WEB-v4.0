@@ -4,12 +4,16 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import org.openpaas.ieda.awsMgnt.web.subnet.dao.AwsSubnetMgntVO;
 import org.openpaas.ieda.awsMgnt.web.subnet.dto.AwsSubnetMgntDTO;
+import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.iaasDashboard.web.account.dao.IaasAccountMgntVO;
 import org.openpaas.ieda.iaasDashboard.web.common.service.CommonIaasService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.regions.Region;
@@ -22,6 +26,7 @@ public class AwsSubnetMgntService {
 
     @Autowired AwsSubnetMgntApiService awsSubnetMgntApiService;
     @Autowired CommonIaasService commonIaasService;
+    @Autowired MessageSource message;
     
     /***************************************************
     * @param region 
@@ -147,7 +152,18 @@ public class AwsSubnetMgntService {
     public void saveAwsSubnetInfo(AwsSubnetMgntDTO dto, Principal principal){
         IaasAccountMgntVO vo =  getAwsAccountInfo( principal, dto.getAccountId());
         Region region = getAwsRegionInfo(dto.getRegion());
-        awsSubnetMgntApiService.saveSubnetFromAws(vo, dto, region);
+        try{
+            awsSubnetMgntApiService.saveSubnetFromAws(vo, dto, region);
+        } catch (Exception e) {
+            String detailMessage = e.getMessage();
+            if(!detailMessage.equals("") && detailMessage != null){
+                throw new CommonException(
+                  detailMessage, detailMessage, HttpStatus.BAD_REQUEST);
+            }else{
+                throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
+                        message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+            }
+        }
     }
    
     /***************************************************
@@ -155,13 +171,24 @@ public class AwsSubnetMgntService {
      * @description : AWS Subnet 삭제
      * @title :  deleteAwsSubnetInfo
      * @return : void
-     ***************************************************/
-     public void deleteAwsSubnetInfo(AwsSubnetMgntDTO dto, Principal principal) {
-         IaasAccountMgntVO vo =  getAwsAccountInfo(principal, dto.getAccountId());
-         Region region = getAwsRegionInfo(dto.getRegion());
-         awsSubnetMgntApiService.deleteSubnetInfoFromAws(vo, dto, region);
-     }
-     
+    ***************************************************/
+    public void deleteAwsSubnetInfo(AwsSubnetMgntDTO dto, Principal principal) {
+        IaasAccountMgntVO vo =  getAwsAccountInfo(principal, dto.getAccountId());
+        Region region = getAwsRegionInfo(dto.getRegion());
+        try{
+             awsSubnetMgntApiService.deleteSubnetInfoFromAws(vo, dto, region);
+        } catch (Exception e) {
+            String detailMessage = e.getMessage();
+            if(!detailMessage.equals("") && detailMessage != null){
+                throw new CommonException(
+                  detailMessage, detailMessage, HttpStatus.BAD_REQUEST);
+            }else{
+                throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
+                        message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+            }
+        }
+    }
+    
     /***************************************************
      * @project : 인프라 관리 대시보드
      * @description : AWS 계정 정보가 실제 존재 하는지 확인 및 상세 조회

@@ -117,19 +117,6 @@ public class HbBootstrapControllerUnitTest extends BaseControllerUnitTest {
         .andExpect(view().name("/hbdeploy/deploy/bootstrap/hbBootstrap"));
     }
     
-    /****************************************************************
-     * @project : Paas 이종 클라우드 플랫폼 설치 자동화
-     * @description : Hybrid_Bootstrap 설치 팝업 화면 이동 Unit Test
-     * @title : testGoHbBootstrapPopup
-     * @return : void
-    *****************************************************************/
-    @Test
-    public void testGoHbBootstrapPopup() throws Exception{
-        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> Hybrid_Bootstrap 설치 팝업 화면 이동 Unit Test"); }
-        mockMvc.perform(get(HYBRID_BOOTSTRAP_POP_VIEW_URL).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
-        .andExpect(status().isOk())
-        .andExpect(view().name("/hbdeploy/deploy/bootstrap/hbBootstrapPopup"));
-    }
     
     /****************************************************************
      * @project : Paas 이종 클라우드 플랫폼 설치 자동화

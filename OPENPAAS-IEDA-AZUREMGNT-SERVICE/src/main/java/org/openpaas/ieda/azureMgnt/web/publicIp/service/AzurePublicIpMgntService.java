@@ -71,7 +71,7 @@ public class AzurePublicIpMgntService {
     public void createPublicIp(AzurePublicIpMgntDTO dto, Principal principal) {
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, dto.getAccountId());
         try{
-        	azurePublicIpMgntApiService.createAzurePublicIpFromAzure(vo, dto);
+            azurePublicIpMgntApiService.createAzurePublicIpFromAzure(vo, dto);
         }catch (Exception e) {
             String detailMessage = e.getMessage();
             if(!detailMessage.equals("") && detailMessage != "null"){

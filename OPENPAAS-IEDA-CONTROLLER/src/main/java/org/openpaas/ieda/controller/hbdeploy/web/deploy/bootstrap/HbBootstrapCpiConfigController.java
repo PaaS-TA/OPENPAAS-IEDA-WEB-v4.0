@@ -32,8 +32,8 @@ public class HbBootstrapCpiConfigController extends BaseController {
     ***************************************************/
     @RequestMapping(value = "/deploy/hbBootstrap/cpiConfig", method = RequestMethod.GET)
     public String goCpiConfig() {
-        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/bootstrapCpiManagement"); }
-        return "/hbdeploy/deploy/bootstrap/hbBootstrapCpiManagement";
+        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/cpiConfig"); }
+        return "/hbdeploy/deploy/bootstrap/hbBootstrapCpiConfig";
     }
     
     /****************************************************************
@@ -44,7 +44,7 @@ public class HbBootstrapCpiConfigController extends BaseController {
     *****************************************************************/
     @RequestMapping(value = "/deploy/hbBootstrap/cpiConfigList", method = RequestMethod.GET)
     public ResponseEntity<HashMap<String, Object>> getCpiConfigInfoList() {
-        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbbootstrap/install/setIaasConfigInfo"); }
+        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/cpiConfigList"); }
         List<HbBootstrapCpiConfigVO> cpiConfigList = service.getCpiConfigInfoList();
         HashMap<String, Object> list = new HashMap<String, Object>();
         int size =0;
@@ -64,7 +64,7 @@ public class HbBootstrapCpiConfigController extends BaseController {
     *****************************************************************/
     @RequestMapping(value = "/deploy/hbBootstrap/saveCpiConfigInfo", method = RequestMethod.PUT)
     public ResponseEntity<HbBootstrapCpiConfigVO> saveCpiConfigInfo(@RequestBody HbBootstrapCpiConfigDTO dto, Principal principal) {
-        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbbootstrap/install/setIaasConfigInfo"); }
+        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/saveCpiConfigInfo"); }
         HbBootstrapCpiConfigVO config = service.saveCpiConfigInfo(dto, principal);
         return new ResponseEntity<>(config, HttpStatus.CREATED);
     }
@@ -76,9 +76,9 @@ public class HbBootstrapCpiConfigController extends BaseController {
      * @title : deleteCpiConfigInfo
      * @return : ResponseEntity<BootstrapVO>
     *****************************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/deleteConfigInfo", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/deploy/hbBootstrap/deleteCpiConfigInfo", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteCpiConfigInfo(@RequestBody HbBootstrapCpiConfigDTO dto, Principal principal) {
-        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbbootstrap/install/setIaasConfigInfo"); }
+        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/deleteConfigInfo"); }
         service.deleteCpiConfigInfo(dto, principal);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

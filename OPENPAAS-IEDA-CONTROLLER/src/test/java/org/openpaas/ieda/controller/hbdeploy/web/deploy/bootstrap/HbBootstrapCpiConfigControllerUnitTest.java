@@ -48,7 +48,7 @@ public class HbBootstrapCpiConfigControllerUnitTest extends BaseControllerUnitTe
     final static String BOOTSTRAP_CPI_CONFIG_VIEW_URL = "/deploy/hbBootstrap/cpiConfig";
     final static String BOOTSTRAP_CPI_CONFIG_INFO_LIST_URL = "/deploy/hbBootstrap/cpiConfigList";
     final static String BOOTSTRAP_CPI_CONFIG_INFO_SAVE_URL = "/deploy/hbBootstrap/saveCpiConfigInfo";
-    final static String BOOTSTRAP_CPI_CONFIG_INFO_DELETE_URL = "/deploy/hbBootstrap/deleteConfigInfo";
+    final static String BOOTSTRAP_CPI_CONFIG_INFO_DELETE_URL = "/deploy/hbBootstrap/deleteCpiConfigInfo";
     
     /****************************************************************
      * @project : Paas 이종 클라우드 플랫폼 설치 자동화
@@ -72,7 +72,7 @@ public class HbBootstrapCpiConfigControllerUnitTest extends BaseControllerUnitTe
     public void MockitoAnnotations() throws Exception{
         mockMvc.perform(get(BOOTSTRAP_CPI_CONFIG_VIEW_URL).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
         .andExpect(status().isOk())
-        .andExpect(view().name("/hbdeploy/deploy/bootstrap/hbBootstrapCpiManagement"));
+        .andExpect(view().name("/hbdeploy/deploy/bootstrap/hbBootstrapCpiConfig"));
     }
     
     /****************************************************************

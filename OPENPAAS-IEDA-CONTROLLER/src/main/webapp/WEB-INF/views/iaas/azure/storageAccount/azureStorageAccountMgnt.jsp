@@ -829,14 +829,12 @@ td {
         <div class="title fl">Azure Tables 정보 목록</div>
     </div>
     <div class="fr">
-        <span id="addTableBtn" class="btn btn-primary" style="width:120px">Table 추가</span> 
-        <span id="deleteTableBtn" class="btn btn-danger" style="width:120px">Table 삭제</span>
-        <%-- <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCOUNT_TABLE_CREATE')">
-            <span id="addTableBtn" class="btn btn-primary" style="width:120px">Table 추가</span>
-            </sec:authorize>
+        <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCOUNT_TABLE_CREATE')">
+          <span id="addTableBtn" class="btn btn-primary" style="width:120px">Table 추가</span> 
+        </sec:authorize>
         <sec:authorize access="hasAuthority('AZURE_STORAGE_ACCOUNT_TABLE_DELETE')">
-            <span id="deleteTableBtn" class="btn btn-danger" style="width:120px">Table 삭제</span>
-        </sec:authorize> --%>
+          <span id="deleteTableBtn" class="btn btn-danger" style="width:120px">Table 삭제</span>
+        </sec:authorize>
     </div>
     
     <div id="azure_tablesGrid" style="width:100%; min-height:200px; top:0px;"></div>

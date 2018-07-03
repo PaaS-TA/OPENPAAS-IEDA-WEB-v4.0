@@ -75,12 +75,12 @@ public class DiegoSaveService {
         vo.setOsConfReleaseVersion(dto.getOsConfReleaseVersion());
         
         //배포 명 중복 검사
-/*        int count = diegoDao.selectDiegoDeploymentNameDuplication(vo.getIaasType(), vo.getDeploymentName(), vo.getId());
+        int count = diegoDao.selectDiegoDeploymentNameDuplication(vo.getIaasType(), vo.getDeploymentName(), vo.getId());
         if( count > 0 ){
             throw new CommonException(setMessageSourceValue("common.conflict.exception.code"), 
                     setMessageSourceValue("common.conflict.deployment.name.message"), HttpStatus.CONFLICT);
         }
-        */
+        
         if( StringUtils.isEmpty(dto.getId()) ) { 
             diegoDao.insertDiegoDefaultInfo(vo);//저장
         }else{  

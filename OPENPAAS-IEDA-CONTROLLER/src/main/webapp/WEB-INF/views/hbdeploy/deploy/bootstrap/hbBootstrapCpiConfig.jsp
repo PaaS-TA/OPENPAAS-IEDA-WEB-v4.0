@@ -40,7 +40,7 @@ var cpiLayout = {
             style: 'text-align: center',
             columns:[
                    { field: 'recid', hidden: true },
-                   { field: 'cpiName', caption: 'CPI 별칭', size:'50%', style:'text-align:center;' },
+                   { field: 'cpiName', caption: 'CPI 정보 별칭', size:'50%', style:'text-align:center;' },
                    { field: 'iaasType', caption: '인프라 환경 타입', size:'50%', style:'text-align:center;' ,render: function(record){ 
                        if(record.iaasType.toLowerCase() == "aws"){
                            return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
@@ -327,7 +327,7 @@ function deleteBootstrapCpiConfigInfo(id, cpiName){
     }
     $.ajax({
         type : "DELETE",
-        url : "/deploy/hbBootstrap/deleteConfigInfo",
+        url : "/deploy/hbBootstrap/deleteCpiConfigInfo",
         contentType : "application/json",
         async : true,
         data : JSON.stringify(iaasConfigInfo),
@@ -371,6 +371,8 @@ function clearMainPage() {
  * 기능 : resetForm
  *********************************************************/
 function resetForm(status){
+    $(".panel-body").find("p").remove();
+    $(".panel-body").children().children().children().css("borderColor", "#bbb");
     $("input[name=commonAccessUser]").val("");
     $("input[name=commonSecurityGroup]").val("");
     $("input[name=commonAvailabilityZone]").val("");
@@ -390,7 +392,7 @@ function resetForm(status){
 
 </script>
 <div id="main">
-    <div class="page_site">이종 BOOTSTRAP > <strong>CPI 정보 관리</strong></div>
+    <div class="page_site">이종 BOOTSTRAP 설치 > <strong>CPI 정보 관리</strong></div>
     <!-- 사용자 목록-->
     <div class="pdt20">
         <div class="title fl"> CPI 정보 목록</div>
@@ -479,7 +481,7 @@ $(function() {
     },text_injection_msg);
     
     $("#settingForm").validate({
-    	ignore : [],
+        ignore : [],
         //onfocusout: function(element) {$(element).valid()},
         rules: {
             cpiConfigName : {
@@ -504,7 +506,7 @@ $(function() {
             iaasType: {  required:  "클라우드 인프라 환경" + select_required_msg},
             iaasConfigId: {  required:  "인프라 환경 별칭" + select_required_msg}
         }, unhighlight: function(element) {
-        	setHybridSuccessStyle(element);
+            setHybridSuccessStyle(element);
         },errorPlacement: function(error, element) {
             //do nothingalert("1");
         }, invalidHandler: function(event, validator) {
