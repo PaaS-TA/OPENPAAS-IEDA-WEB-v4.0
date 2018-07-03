@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 @Service
 public class HbBootstrapResourceConfigService {
 	
@@ -42,7 +41,8 @@ public class HbBootstrapResourceConfigService {
     public void saveResourceConfigInfo(HbBootstrapResourceConfigDTO dto, Principal principal) {
         HbBootstrapResourceConfigVO vo = null;
         int count = bootstrapResourceDao.selectBootstrapResourceConfigByName(dto.getResourceConfigName());
-        if( StringUtils.isEmpty(dto.getId())){
+        if(dto.getId() == null){
+        //if( StringUtils.isEmpty(dto.getId().toString())){
             vo = new HbBootstrapResourceConfigVO();
             vo.setCreateUserId(principal.getName());
             if(count > 0){
@@ -65,14 +65,13 @@ public class HbBootstrapResourceConfigService {
             vo.setCreateDate(vo.getCreateDate());
             vo.setUpdateUserId(principal.getName());
         }
-        if( StringUtils.isEmpty(dto.getId()) ){
+        if( dto.getId() == null ){
+        //if( StringUtils.isEmpty(dto.getId().toString())){
         	bootstrapResourceDao.insertBootStrapResourceConfigInfo(vo);
         }else{
         	bootstrapResourceDao.updateBootStrapResourceConfigInfo(vo);
         }
     }
-    
-    
     
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
@@ -81,7 +80,7 @@ public class HbBootstrapResourceConfigService {
      * @return : void
     *****************************************************************/
     public void deleteResourceConfigInfo(HbBootstrapResourceConfigDTO dto, Principal principal) {
-        if(dto.getId() == null || dto.getId().toString().isEmpty()){
+        if(dto.getId()  == null || dto.getId().toString().isEmpty()){
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
                     message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
         }
