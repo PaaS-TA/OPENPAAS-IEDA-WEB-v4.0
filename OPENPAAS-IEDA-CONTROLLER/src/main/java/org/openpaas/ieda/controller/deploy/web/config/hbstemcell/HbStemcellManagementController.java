@@ -29,11 +29,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class HybridStemcellManagementController {
+public class HbStemcellManagementController {
 
     @Autowired private HbStemcellManagementService service;
     @Autowired private StemcellManagementUploadService uploadService;
-    @Autowired private HbStemcellManagementDownloadAsyncService donwonloadService;
+    @Autowired private HbStemcellManagementDownloadAsyncService downloadService;
 
     private final static Logger LOGGER = LoggerFactory.getLogger(StemcellManagementController.class);
     
@@ -51,12 +51,12 @@ public class HybridStemcellManagementController {
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
-     * @description : IaaS 별 스템셀 목록 조회
+     * @description : IaaS 별 이종 스템셀 목록 조회
      * @title : getStemcellListDetail
      * @return : ResponseEntity<HashMap<String,Object>>
     *****************************************************************/
     @RequestMapping(value="/config/hbstemcell/list/{iaas}", method=RequestMethod.GET)
-    public ResponseEntity<HashMap<String, Object>> getStemcellListDetail(@PathVariable String iaas) {
+    public ResponseEntity<HashMap<String, Object>> getHybridStemcellListDetail(@PathVariable String iaas) {
         if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> /config/stemcell/list/"+iaas); }
         HashMap<String, Object> list = new HashMap<String, Object>();
         List<HbStemcellManagementVO> stemcellList = service.getHybridStemcellList(iaas);
@@ -66,12 +66,12 @@ public class HybridStemcellManagementController {
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
-     * @description : 이종 스템셀 입력 정보
+     * @description : 이종 스템셀 입력 정보 저장 및 다운로드
      * @title : savePublicStemcellInfo
      * @return : ResponseEntity<StemcellManagementVO>
     *****************************************************************/
     @RequestMapping(value="/config/hbstemcell/regist/info/{testFlag}",  method=RequestMethod.POST)
-    public ResponseEntity<StemcellManagementVO> savePublicStemce저장llInfo(@RequestBody StemcellManagementDTO.Regist dto, @PathVariable String testFlag, Principal principal ){
+    public ResponseEntity<StemcellManagementVO> saveHybridStemcellInfo(@RequestBody StemcellManagementDTO.Regist dto, @PathVariable String testFlag, Principal principal ){
         
         if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> /config/stemcell/regist/info/"+testFlag); }
         StemcellManagementVO result = null;
@@ -85,12 +85,12 @@ public class HybridStemcellManagementController {
     }
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
-     * @description : 멀티 딜리트
+     * @description : Hybrid 스템셀 다중 삭제
      * @title : publicStemcellMultiDelete
      * @return : ResponseEntity<?>
     *****************************************************************/
     @RequestMapping(value="/config/hbstemcell/Muldelete",  method=RequestMethod.DELETE)
-    public ResponseEntity<?> publicStemcellMultiDelete(@RequestBody ArrayList<StemcellManagementDTO.Delete> list){
+    public ResponseEntity<?> HybridStemcellMultiDelete(@RequestBody ArrayList<HbStemcellManagementDTO.Delete> list){
         if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> /config/stemcell/deletePublicStemcell"); }
         for(int i=0;i<list.size();i++){
             service.deleteHybridStemcell(list.get(i));
@@ -107,24 +107,10 @@ public class HybridStemcellManagementController {
     *****************************************************************/
     @MessageMapping("/config/hbstemcell/regist/stemcellDownloading")
     @SendTo("/config/hbstemcell/regist/socket/logs")
-    public ResponseEntity<?> doHybridStemcellDonwload(@RequestBody @Valid HbStemcellManagementDTO.Regist dto, Principal principal){
+    public ResponseEntity<?> doHybridStemcellDownload(@RequestBody @Valid HbStemcellManagementDTO.Regist dto, Principal principal){
         
         if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> /config/hbstemcell/regist/stemcellDownloading"); }
-        donwonloadService.stemcellDownloadAsync(dto, principal);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-    
-    /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : 스템셀 파일 및 정보 삭제
-     * @title : publicStemcellDelete
-     * @return : ResponseEntity<?>
-    *****************************************************************/
-    @RequestMapping(value="/config/hbstemcell/delete",  method=RequestMethod.DELETE)
-    public ResponseEntity<?> publicStemcellDelete(@RequestBody StemcellManagementDTO.Delete dto ){
-        if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> /config/stemcell/deletePublicStemcell"); }
-        service.deleteHybridStemcell(dto);
-        
+        downloadService.stemcellDownloadAsync(dto, principal);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     

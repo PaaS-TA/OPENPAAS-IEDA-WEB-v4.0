@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.openpaas.ieda.deploy.web.config.systemRelease.dao.ReleaseManagementDAO">
-    <resultMap id="releaseManagement" type="org.openpaas.ieda.deploy.web.config.systemRelease.dao.ReleaseManagementVO">
+<mapper namespace="org.openpaas.ieda.hbdeploy.web.config.release.dao.HbReleaseManagementDAO">
+    <resultMap id="releaseManagement" type="org.openpaas.ieda.hbdeploy.web.config.release.dao.HbReleaseManagementVO">
         <id property="id" column="ID" />
         <result property="recid" column="ID"/>
         <result property="releaseName" column ="RELEASE_NAME"/>
@@ -15,10 +15,10 @@
         <result property="downloadLink" column ="DOWNLOAD_LINK"/>
         <result property="createDate" column="CREATE_DATE"/>
         <result property="updateDate" column="UPDATE_DATE"/>
-        <result property="iaas" column="IAAS"/>
+        <result property="iaasType" column="IAAS"/> 
     </resultMap>
     
-    <select id="selectSystemReleaseList" resultMap="releaseManagement">
+    <select id="selectHybridReleaseList" resultMap="releaseManagement">
         /** ReleaseManagement.findAllOrderByReleaseTypeDesc **/
         Select 
             id,
@@ -31,12 +31,14 @@
             create_user_id,
             create_date,
             update_user_id,
-            update_date 
-        From ieda_system_releases 
+            update_date,
+            iaas 
+        From ieda_system_releases
+        where iaas = #{iaasType}
         order by release_Type desc
     </select>
     
-    <select id="selectSystemRelease" resultMap="releaseManagement">
+    <select id="selectHybridRelease" resultMap="releaseManagement">
         /** ReleaseManagement.findOne **/
         Select 
             id,
@@ -49,12 +51,13 @@
             create_user_id,
             create_date,
             update_user_id,
-            update_date 
+            update_date,
+            iaas 
         From ieda_system_releases 
         where release_filename = #{fileName}
     </select>
     
-    <select id="selectSystemReleaseById" resultMap="releaseManagement">
+    <select id="selectHybridReleaseById" resultMap="releaseManagement">
         /** ReleaseManagement.findOneById **/
         Select 
             id,
@@ -68,13 +71,14 @@
             create_user_id,
             create_date,
             update_user_id,
-            update_date 
+            update_date,
+            iaas 
         From ieda_system_releases 
         where id = #{id}
     </select>
     
-    <insert id="insertSystemRelease" useGeneratedKeys="true" keyColumn="id" keyProperty="release.id">
-        /** ReleaseManagement.systemReleaseSave **/
+    <insert id="insertHybridRelease" useGeneratedKeys="true" keyColumn="id" keyProperty="release.id">
+        /** ReleaseManagement.HybridReleaseSave **/
         INSERT INTO ieda_system_releases(
             <if test="release.id != null">
                 id,
@@ -104,15 +108,16 @@
             ,now()
             ,#{release.updateUserId}
             ,now()
-            ,#{release.iaasType})
+            ,#{release.iaasType}
+            )
         <selectKey keyProperty="release.id" resultType="int" order="AFTER">
             <if test="release.id != null"> SELECT 1 AS id from dual; </if>
             <if test="release.id == null"> SELECT LAST_INSERT_ID(); </if>
         </selectKey>
     </insert>
     
-    <update id="updateSystemRelease">
-        /** ReleaseManagement.systemReleaseUpdate **/
+    <update id="updateHybridRelease">
+        /** ReleaseManagement.HybridReleaseUpdate **/
         update ieda_system_releases set
              release_name = #{release.releaseName}
             ,release_type = #{release.releaseType}
@@ -125,8 +130,8 @@
         where id = #{release.id}
     </update>
     
-    <update id="updateSystemReleaseById">
-        /** ReleaseManagement.systemReleaseUpdateById **/
+    <update id="updateHybridReleaseById">
+        /** ReleaseManagement.HybridReleaseUpdateById **/
         update ieda_system_releases set
             <if test="release.releaseSize != null">
                 size = #{release.releaseSize},
@@ -141,8 +146,8 @@
     </update>
     
     
-    <delete id="deleteSystemRelase">
-        /** ReleaseManagement.systemRelaseDelete **/
+    <delete id="deleteHybridRelease">
+        /** ReleaseManagement.HybridRelaseDelete **/
         DELETE FROM ieda_system_releases
         WHERE id = #{release.id}
         AND release_filename = #{release.releaseFileName}
