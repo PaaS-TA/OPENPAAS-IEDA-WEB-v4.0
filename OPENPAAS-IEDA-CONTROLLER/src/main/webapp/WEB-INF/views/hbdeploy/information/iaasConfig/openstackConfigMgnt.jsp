@@ -325,7 +325,7 @@ function setupOpenstackVersion(data){
 function doSearch() {
     $("#deleteConfigBtn").attr('disabled', true);
     $("#updateConfigBtn").attr('disabled', true);
-    w2ui['openstack_configGrid'].load( "<c:url value='/info/iaasConfig/openstack/list'/>", "", function(event) {});
+    w2ui['openstack_configGrid'].load( "<c:url value='/info/hbIaasConfig/openstack/list'/>", "", function(event) {});
 }
 
 /********************************************************
@@ -336,7 +336,7 @@ function setOpenstackConfigInfo( id ){
      w2popup.lock( search_lock_msg, true);
     $.ajax({
         type : "GET",
-        url : "/info/iaasConfig/openstack/save/detail/"+id,
+        url : "/info/hbIaasConfig/openstack/save/detail/"+id,
         contentType : "application/json",
         dataType : "json",
         success : function(data, status) {
@@ -409,7 +409,7 @@ function saveOpenstackConfigInfo(){
     }
     $.ajax({
         type : "PUT",
-        url : "/info/iaasConfig/openstack/save",
+        url : "/info/hbIaasConfig/openstack/save",
         contentType : "application/json",
         async : true,
         data : JSON.stringify(configInfo),
@@ -441,7 +441,7 @@ function deleteOpenstackConfigInfo(record){
      w2popup.lock(delete_lock_msg, true);
      $.ajax({
              type : "DELETE",
-             url : "/info/iaasConfig/openstack/delete",
+             url : "/info/hbIaasConfig/openstack/delete",
              contentType : "application/json",
              dataType: "json",
              async : true,
@@ -497,19 +497,8 @@ $(window).resize(function() {
                 </a>
                 <ul class="dropdown-menu alert-dropdown">
                     <sec:authorize access="hasAuthority('INFO_IAASCONFIG_AWS_LIST')">
-                        <li><a href="javascript:goPage('<c:url value="/info/iaasConfig/aws"/>', 'AWS 관리');">AWS</a></li>
+                        <li><a href="javascript:goPage('<c:url value="/info/hbIaasConfig/aws"/>', 'AWS 관리');">AWS</a></li>
                     </sec:authorize>
-                    <sec:authorize access="hasAuthority('INFO_IAASCONFIG_GOOGLE_LIST')">
-                        <li><a href="javascript:goPage('<c:url value="/info/iaasConfig/google"/>', 'Google 관리');">Google</a></li>
-                    </sec:authorize>
-                    <sec:authorize
-                        access="hasAuthority('INFO_IAASCONFIG_VSPHERE_LIST')">
-                        <li><a href="javascript:goPage('<c:url value="/info/iaasConfig/vSphere"/>', 'vSphere 관리');">vSphere</a></li>
-                    </sec:authorize>
-                    <sec:authorize access="hasAuthority('INFO_IAASCONFIG_AZURE_LIST')">
-                        <li><a href="javascript:goPage('<c:url value="/info/iaasConfig/azure"/>', 'vSphere 관리');">Azure</a></li>
-                    </sec:authorize>
-                    
                 </ul>
             </div>
         </div>

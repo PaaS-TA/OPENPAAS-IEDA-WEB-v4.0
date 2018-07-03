@@ -1,4 +1,4 @@
-package org.openpaas.ieda.controller.deploy.web.config.hbstemcell;
+package org.openpaas.ieda.controller.hbdeploy.web.config.hbstemcell;
 
 import java.security.Principal;
 import java.util.ArrayList;
