@@ -131,6 +131,7 @@ CREATE TABLE ieda_system_releases
   create_date                       DATE          NOT NULL,
   update_user_id                    VARCHAR(255)  NOT NULL,
   update_date                       DATE          NOT NULL,
+  iaas                              VARCHAR(255),
   primary key(id)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
@@ -673,48 +674,6 @@ CREATE TABLE ieda_bootstrap_cpi_config
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-CREATE TABLE ieda_bootstrap_default_config
-(
-  id                                    INT(11)      NOT NULL auto_increment,
-  iaas_type                             VARCHAR(100) NOT NULL,
-  default_config_name                   VARCHAR(100)  NOT NULL,
-  deployment_name                       VARCHAR(100),
-  director_name                         VARCHAR(100),
-  ntp                                   VARCHAR(100),
-  credential_key_name                   VARCHAR(100) NOT NULL,
-  boshRelease                           VARCHAR(100) NOT NULL,
-  bosh_cpi_release                      VARCHAR(100),
-  enable_snapshots                      VARCHAR(100),
-  snapshot_schedule                     VARCHAR(100),
-  paasta_monitoring_use                 VARCHAR(100) NULL,
-  paasta_monitoring_ip                  VARCHAR(100) NULL,
-  influxdb_ip                           VARCHAR(100) NULL,
-  paasta_monitoring_release             VARCHAR(100) NULL,
-  create_user_id                        VARCHAR(255) NOT NULL,
-  create_date                           DATE         NOT NULL,
-  update_user_id                        VARCHAR(255) NOT NULL,
-  update_date                           DATE         NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
-
-CREATE TABLE ieda_bootstrap_network_config
-(
-  id                                    INT(11)      NOT NULL auto_increment,
-  iaas_type                             VARCHAR(100) NOT NULL,
-  network_config_name                   VARCHAR(100) NOT NULL,
-  subnet_id                             VARCHAR(100) NOT NULL,
-  private_static_ip                     VARCHAR(100) NOT NULL,
-  subnet_range                          VARCHAR(100) NOT NULL,
-  subnet_gateway                        VARCHAR(100) NOT NULL,
-  subnet_dns                            VARCHAR(100) NOT NULL,
-  public_static_ip                      VARCHAR(100) NOT NULL,
-  create_user_id                        VARCHAR(255) NOT NULL,
-  create_date                           DATE         NOT NULL,
-  update_user_id                        VARCHAR(255) NOT NULL,
-  update_date                           DATE         NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
-
 
 
 #Setting AUTO_INCREMENT
@@ -739,7 +698,3 @@ ALTER TABLE ieda_hybrid_director_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_hybrid_bootstrap AUTO_INCREMENT=1000;
 ALTER TABLE ieda_private_bootstrap AUTO_INCREMENT=1000;
 ALTER TABLE ieda_public_bootstrap AUTO_INCREMENT=1000;
-ALTER TABLE ieda_bootstrap_cpi_config AUTO_INCREMENT=1000;
-ALTER TABLE ieda_bootstrap_default_config AUTO_INCREMENT=1000;
-ALTER TABLE ieda_bootstrap_network_config AUTO_INCREMENT=1000;
-
