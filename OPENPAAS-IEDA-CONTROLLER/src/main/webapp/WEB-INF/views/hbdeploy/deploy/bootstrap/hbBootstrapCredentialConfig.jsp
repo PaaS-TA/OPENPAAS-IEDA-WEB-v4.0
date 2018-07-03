@@ -1,8 +1,8 @@
 <%
 /* =================================================================
- * 작성일 : 2018.06
+ * 작성일 : 2018.07
  * 작성자 : 이동현
- * 상세설명 : CPI 인증서 관리 화면
+ * 상세설명 :  디렉터 인증서 관리 화면
  * =================================================================
  */ 
 %>
@@ -12,12 +12,14 @@
 <%@ taglib prefix="spring" uri = "http://www.springframework.org/tags" %>
 
 <script type="text/javascript">
+var save_lock_msg = '<spring:message code="common.save.data.lock"/>';//등록 중 입니다.
 var text_required_msg = '<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
 var text_injection_msg='<spring:message code="common.text.validate.sqlInjection.message"/>';//입력하신 값은 입력하실 수 없습니다.
 var select_required_msg='<spring:message code="common.select.vaildate.required.message"/>';//을(를) 선택하세요.
-var iaasConfigInfo = "";//인프라 환경 설정 정ㅈ보
+var text_ip_msg = '<spring:message code="common.text.validate.ip.message"/>';//IP을(를) 확인 하세요.
+var credentialConfigInfo = "";//Credentail 정보
 var iaas = "";
-var cpiLayout = {
+var credentialLayout = {
         layout2: {
             name: 'layout2',
             padding: 4,
@@ -27,11 +29,11 @@ var cpiLayout = {
             ]
         },
         /********************************************************
-         *  설명 : 디렉터 인증서 Grid
+         *  설명 : 네트워크 정보 목록 Grid
         *********************************************************/
         grid: {
-            name: 'cpi_GroupGrid',
-            header: '<b>CPI 정보</b>',
+            name: 'credential_GroupGrid',
+            header: '<b>디렉터 인증서 정보</b>',
             method: 'GET',
                 multiSelect: false,
             show: {
@@ -40,7 +42,7 @@ var cpiLayout = {
             style: 'text-align: center',
             columns:[
                    { field: 'recid', hidden: true },
-                   { field: 'cpiName', caption: 'CPI 정보 별칭', size:'50%', style:'text-align:center;' },
+                   { field: 'credentialConfigName', caption: '디렉터 인증서 별칭', size:'50%', style:'text-align:center;' },
                    { field: 'iaasType', caption: '인프라 환경 타입', size:'50%', style:'text-align:center;' ,render: function(record){ 
                        if(record.iaasType.toLowerCase() == "aws"){
                            return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
@@ -48,27 +50,15 @@ var cpiLayout = {
                            return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
                        }
                    }},
-                   { field: 'iaasConfigAlias', caption: '인프라 환경 설정 별칭', size:'50%', style:'text-align:center;'},
-                   { field: 'commonAccessUser', caption: '인프라 사용자 명', size:'60%', style:'text-align:center;'},
-                   { field: 'commonSecurityGroup', caption: '보안 그룹', size:'50%', style:'text-align:center;'},
-                   { field: 'commonAvailabilityZone', caption: '가용 영역', size:'50%', style:'text-align:center;',render: function(record){ 
-                       if(record.iaasType.toLowerCase() == "aws"){
-                           return record.commonAvailabilityZone;
-                       }else if (record.iaasType.toLowerCase() == "openstack"){
-                           if(record.openstackVersion == "v2"){
-                               return record.commonTenant;
-                           } else if (record.openstackVersion == "v3") {
-                               return record.commonProject;
-                           }
-                       }
-                   }},
-                   { field: 'commonKeypairName', caption: 'Key Pair 명', size:'50%', style:'text-align:center;'},
-                   { field: 'commonKeypairPath', caption: 'Key Pair Path', size:'50%', style:'text-align:center;'}
+                   { field: 'credentialConfigName', caption: '디렉터 인증서 명', size:'50%', style:'text-align:center;'},
+                   { field: 'credentialKeyName', caption: '디렉터 인증서 파일 명', size:'60%', style:'text-align:center;'},
+                   { field: 'directorPublicIp', caption: '디렉터 Public IP', size:'50%', style:'text-align:center;'},
+                   { field: 'directorPrivateIp', caption: '디렉터 Private IP', size:'50%', style:'text-align:center;'}
                   ],
             onSelect : function(event) {
                 event.onComplete = function() {
                     $('#deleteBtn').attr('disabled', false);
-                    settingCpiInfo();
+                    settingCredentialInfo();
                     return;
                 }
             },
@@ -118,30 +108,31 @@ var cpiLayout = {
 }
 
 $(function(){
-    $('#cpi_GroupGrid').w2layout(cpiLayout.layout2);
-    w2ui.layout2.content('left', $().w2grid(cpiLayout.grid));
+    
+    $('#credential_GroupGrid').w2layout(credentialLayout.layout2);
+    w2ui.layout2.content('left', $().w2grid(credentialLayout.grid));
     w2ui['layout2'].content('main', $('#regPopupDiv').html());
     doSearch();
     
     $("#deleteBtn").click(function(){
         if($("#deleteBtn").attr('disabled') == "disabled") return;
-        var selected = w2ui['cpi_GroupGrid'].getSelection();
+        var selected = w2ui['credential_GroupGrid'].getSelection();
         if( selected.length == 0 ){
             w2alert("선택된 정보가 없습니다.", "디렉터 인증서 삭제");
             return;
         }
         else {
-            var record = w2ui['cpi_GroupGrid'].get(selected);
+            var record = w2ui['credential_GroupGrid'].get(selected);
             w2confirm({
-                title        : "CPI 정보",
-                msg            : "CPI ("+record.cpiName + ")을 삭제하시겠습니까?",
+                title        : "디렉터 인증서 정보",
+                msg            : "디렉터 인증서 정보 ("+record.credentialConfigName + ")을 삭제하시겠습니까?",
                 yes_text    : "확인",
                 no_text        : "취소",
                 yes_callBack: function(event){
-                    deleteBootstrapCpiConfigInfo(record.recid, record.cpiName);
+                    deleteBootstrapcredentialConfigInfo(record.recid, record.credentialConfigName);
                 },
                 no_callBack    : function(){
-                    w2ui['cpi_GroupGrid'].clear();
+                    w2ui['credential_GroupGrid'].clear();
                     doSearch();
                 }
             });
@@ -149,132 +140,110 @@ $(function(){
     });
 });
 
-
 /********************************************************
- * 설명 : 인프라 환경 설정 별칭 목록 조회
- * 기능 : getIaasConfigAliasList
+ * 설명 : 네트워크 목록 조회
+ * 기능 : settingNetworkConfigInfo
  *********************************************************/
-function getIaasConfigAliasList(iaasType){
-    $("input[name=commonAccessUser]").val("");
-    $("input[name=commonSecurityGroup]").val("");
-    $("input[name=commonAvailabilityZone]").val("");
-    $("input[name=commonKeypairName]").val("");
-    $("input[name=commonKeypairPath]").val("");
+function settingNetworkConfigInfo(iaasType){
+    $("input[name=directorPublicIp]").val("");
+    $("input[name=directorPrivateIp]").val("");
+    $("select[name=networkConfigInfo]").removeAttr("disabled");
+    $("select[name=networkConfigInfo]").html("<option value='' >네트워크 별칭을 선택하세요.</option>");
     if(iaasType==""){
-        w2alert("클라우드 인프라 환경을 선택하세요.");
         $("select[name=iaasConfigId]").html("<option value='' >인프라 환경 별칭을 선택하세요.</option>");
-        $("select[name=iaasConfigId]").attr("disabled", "disabled");
+        $("select[name=networkConfigInfo]").attr("disabled", "disabled");
         return;
     }
-    iaas = iaasType;
     $.ajax({
         type :"GET",
-        url :"/common/deploy/list/iaasConfig/"+iaas, 
+        url :"/deploy/hbBootstrap/credential/networkList/"+iaasType+"", 
         contentType :"application/json",
         success :function(data, status) {
-            $("select[name=iaasConfigId]").html("<option value='' >인프라 환경 별칭을 선택하세요.</option>");
-            if($("select[name=iaasConfigId]").attr("disabled") == "disabled"){
-                $("select[name=iaasConfigId]").removeAttr("disabled");
-            }
             if( !checkEmpty(data) ){
-                var options= "";
-                for( var i=0; i<data.length; i++ ){
-                    if( data[i].id == iaasConfigInfo.iaasConfigId ){
-                        options+= "<option value='"+data[i].id+"' selected>"+data[i].iaasConfigAlias+"</option>";
-                        settingIaasConfigInfo(data[i].id);
-                    }else{
-                        options+= "<option value='"+data[i].id+"'>"+data[i].iaasConfigAlias+"</option>";
+                var options = "";
+                for(var i=0; i<data.length; i++) {
+                    if(data[i].id == credentialConfigInfo.networkConfigId) {
+                        options+= "<option value='"+data[i].id+"' selected>"+data[i].networkConfigName+"</option>";
+                        getNetworkConfigInfo(data[i].id, iaas);
+                    } else {
+                        options+= "<option value='"+data[i].id+"'>"+data[i].networkConfigName+"</option>";
                     }
                 }
-                $("select[name=iaasConfigId]").append(options);
-                
+                $("select[name=networkConfigInfo]").append(options);
             }
         },
         error :function(request, status, error) {
             var errorResult = JSON.parse(request.responseText);
-            w2alert(errorResult.message, "인프라 환경설정 정보 목록 조회");
+            w2alert(errorResult.message, "네트워크 별칭 정보 목록 조회");
         }
     });
 }
 
-
 /********************************************************
- * 설명 : 인프라 환경 설정 별칭 선택 시 정보 설정
- * 기능 : settingIaasConfigInfo
+ * 설명 : 네트워크 정보 디렉터 IP 정보 설정
+ * 기능 : getNetworkConfigInfo
  *********************************************************/
-function settingIaasConfigInfo(val){
-    if( !checkEmpty(val) ){
-         $.ajax({
+function getNetworkConfigInfo(val){
+    if(val != ""){
+        iaas =  $("select[name=iaasType]").val();
+        $.ajax({
             type :"GET",
-            url :"/common/deploy/list/iaasConfig/"+iaas+"/"+val, 
+            url :"/deploy/hbBootstrap/credential/networkInfo/"+val+"/"+iaas+"", 
             contentType :"application/json",
             success :function(data, status) {
                 if( !checkEmpty(data) ){
-                    $("input[name=commonAccessUser]").val(data.commonAccessUser);
-                    $("input[name=commonSecurityGroup]").val(data.commonSecurityGroup);
-                    $("input[name=commonKeypairName]").val(data.commonKeypairName);
-                    $("input[name=commonKeypairPath]").val(data.commonKeypairPath);
-                    if( data.openstackKeystoneVersion == "v2" ){
-                        $("input[name=commonAvailabilityZone]").val(data.commonTenant);
-                    }else if(data.openstackKeystoneVersion == "v3" ){
-                        $("input[name=commonAvailabilityZone]").val(data.commonProject);
-                    } else {
-                        $("input[name=commonAvailabilityZone]").val(data.commonAvailabilityZone);
-                    }
+                    $("input[name=directorPublicIp]").val(data.publicStaticIp);
+                    $("input[name=directorPrivateIp]").val(data.privateStaticIp);
                 }
             },
             error :function(request, status, error) {
                 var errorResult = JSON.parse(request.responseText);
-                w2alert(errorResult.message, "인프라 환경설정 정보 목록 조회");
+                w2alert(errorResult.message, "네트워크 별칭 정보 목록 조회");
             }
         });
-    }else{
-        var div = iaas+"InfoDiv";
-        var elements = $("div#"+div).find("input");
-        for( var i=0; i<elements.length; i++ ){
-            $(".w2ui-msg-body input[name='"+elements[i].name+"']" ).val("");
-        }
-        var textarea = $("div#"+div).find("textarea"); 
-        if( textarea.length >0 ) $(".w2ui-msg-body textarea[name='"+textarea[0].name+"']" ).val("");
+    } else {
+        $("input[name=networkConfigInfo]").val("");
+        $("input[name=directorPublicIp]").val("");
+        $("input[name=directorPrivateIp]").val("");
     }
 }
 
 /********************************************************
- * 설명 : CPI 수정 정보 설정
- * 기능 : settingCpiInfo
+ * 설명 : 인증서 수정 정보 설정
+ * 기능 : settingCredentialInfo
  *********************************************************/
-function settingCpiInfo(){
-    var selected = w2ui['cpi_GroupGrid'].getSelection();
-    var record = w2ui['cpi_GroupGrid'].get(selected);
+function settingCredentialInfo(){
+    var selected = w2ui['credential_GroupGrid'].getSelection();
+    var record = w2ui['credential_GroupGrid'].get(selected);
     if(record == null) {
-        w2alert("CPI 정보 설정 중 에러가 발생 했습니다.");
+        w2alert("디렉터 인증서 정보 설정 중 에러가 발생 했습니다.");
         return;
     }
     iaas = record.iaasType;
-    $("select[name=iaasConfigId]").removeAttr("disabled");
-    getIaasConfigAliasList(iaas);
-    iaasConfigInfo = {
-        iaasConfigId : record.iaasConfigId
-    }
-    $("input[name=cpiInfoId]").val(record.cpiInfoId);
-    $("input[name=cpiConfigName]").val(record.cpiName);
+    $("input[name=credentialInfoId]").val(record.recid);
+    $("input[name=credentialConfigName]").val(record.credentialConfigName);
+    $("input[name=credentialKeyName]").val(record.credentialKeyName);
+    $("input[name=directorPrivateIp]").val(record.directorPrivateIp);
+    $("input[name=directorPublicIp]").val(record.directorPublicIp);
     $("select[name=iaasType]").val(record.iaasType);
-    $("select[name=iaasConfigId]").val(record.iaasConfigAlias);
-    settingIaasConfigInfo(record.iaasConfigId);
+    
+    credentialConfigInfo = {
+        networkConfigId : record.networkConfigName
+    }
+    settingNetworkConfigInfo(iaas);
+    
 }
 
 /********************************************************
- * 설명 : 인증서 목록 조회
+ * 설명 : 인증서 정보 목록 조회
  * 기능 : doSearch
  *********************************************************/
 function doSearch() {
-    iaasConfigInfo="";//인프라 환경 설정 정ㅈ보
+    credentialConfigInfo="";//네트워크 정보
     iaas = "";
     resetForm();
-    
-    w2ui['cpi_GroupGrid'].clear();
-    //w2ui['regPopupDiv'].clear();
-    w2ui['cpi_GroupGrid'].load('/deploy/hbBootstrap/cpi/list');
+    w2ui['credential_GroupGrid'].clear();
+    w2ui['credential_GroupGrid'].load('/deploy/hbBootstrap/credential/list');
     doButtonStyle(); 
 }
 
@@ -287,50 +256,53 @@ function doButtonStyle() {
 }
 
 /********************************************************
- * 설명 : CPI 정보 등록
- * 기능 : registBootstrapCpiConfigInfo
+ * 설명 : 인증서 정보 등록
+ * 기능 : registBootstrapCredentialConfigInfo
  *********************************************************/
-function registBootstrapCpiConfigInfo(){
-    w2popup.lock("등록 중입니다.", true);
-    iaasConfigInfo = {
-            cpiInfoId:    $("input[name=cpiInfoId]").val(),
-            iaasType     : iaas,
-            iaasConfigId : $("select[name=iaasConfigId]").val(),
-            cpiName      : $("input[name=cpiConfigName]").val()
+function registBootstrapCredentialConfigInfo(){
+    credentialConfigInfo = {
+            id                     : $("input[name=credentialInfoId]").val(),
+            iaasType               : $("select[name=iaasType]").val(),
+            networkConfigName      : $("select[name=networkConfigInfo]").val(),
+            credentialConfigName   : $("input[name=credentialConfigName]").val(),
+            directorPublicIp       : $("input[name=directorPublicIp]").val(),
+            directorPrivateIp      : $("input[name=directorPrivateIp]").val()
     }
     $.ajax({
         type : "PUT",
-        url : "/deploy/hbBootstrap/cpi/save",
+        url : "/deploy/hbBootstrap/credential/save",
         contentType : "application/json",
         async : true,
-        data : JSON.stringify(iaasConfigInfo),
+        data : JSON.stringify(credentialConfigInfo),
         success : function(data, status) {
+            w2utils.unlock($("#layout_layout_panel_main"));
+            w2alert("디렉터 인증서 파일 명은 <b><font color='red'>"+credentialConfigInfo.credentialConfigName+"-cred.yml</font></b> 입니다.");
             doSearch();
         },
         error : function( e, status ) {
-            w2popup.unlock();
+            w2utils.unlock($("#layout_layout_panel_main"));
             var errorResult = JSON.parse(e.responseText);
-            w2alert(errorResult.message, "CPI 정보 저장");
+            w2alert(errorResult.message, "디렉터 인증서 정보 저장");
         }
     });
 }
 
 /********************************************************
- * 설명 : CPI 정보 삭제
- * 기능 : deleteBootstrapCpiConfigInfo
+ * 설명 : 인증서 정보 삭제
+ * 기능 : deleteBootstrapcredentialConfigInfo
  *********************************************************/
-function deleteBootstrapCpiConfigInfo(id, cpiName){
+function deleteBootstrapcredentialConfigInfo(id, credentialConfigName){
     w2popup.lock("삭제 중입니다.", true);
-    iaasConfigInfo = {
-        cpiInfoId : id,
-        cpiName : cpiName
+    credentialInfo = {
+        id : id,
+        credentialConfigName: credentialConfigName
     }
     $.ajax({
         type : "DELETE",
-        url : "/deploy/hbBootstrap/cpi/delete",
+        url : "/deploy/hbBootstrap/credential/delete",
         contentType : "application/json",
         async : true,
-        data : JSON.stringify(iaasConfigInfo),
+        data : JSON.stringify(credentialInfo),
         success : function(status) {
             w2popup.unlock();
             w2popup.close();
@@ -364,27 +336,25 @@ function lock (msg) {
  *********************************************************/
 function clearMainPage() {
     $().w2destroy('layout2');
-    $().w2destroy('cpi_GroupGrid');
+    $().w2destroy('credential_GroupGrid');
 }
 /********************************************************
- * 설명 : CPI 정보 리셋
+ * 설명 : 인증서 정보 리셋
  * 기능 : resetForm
  *********************************************************/
 function resetForm(status){
+    credentialConfigInfo = "";
     $(".panel-body").find("p").remove();
     $(".panel-body").children().children().children().css("borderColor", "#bbb");
-    $("input[name=commonAccessUser]").val("");
-    $("input[name=commonSecurityGroup]").val("");
-    $("input[name=commonAvailabilityZone]").val("");
-    $("input[name=commonKeypairName]").val("");
-    $("input[name=commonKeypairPath]").val("");
-    $("input[name=cpiConfigName]").val("");
+    $("input[name=credentialConfigName]").val("");
+    $("input[name=directorPublicIp]").val("");
+    $("input[name=directorPrivateIp]").val("");
+    $("input[name=credentialInfoId]").val("");
     $("select[name=iaasType]").val("");
-    $("select[name=iaasConfigId]").html("<option value='' >인프라 환경 별칭을 선택하세요.</option>");
-    $("input[name=cpiInfoId]").val("");
-    $("select[name=iaasConfigId]").attr("disabled", "disabled");
+    $("select[name=networkConfigInfo]").attr("disabled", "disabled");
+    $("select[name=networkConfigInfo]").html("<option value='' >네트워크 별칭을 선택하세요.</option>");
     if(status=="reset"){
-        w2ui['cpi_GroupGrid'].clear();
+        w2ui['credential_GroupGrid'].clear();
         doSearch();
     }
     document.getElementById("settingForm").reset();
@@ -392,34 +362,33 @@ function resetForm(status){
 
 </script>
 <div id="main">
-    <div class="page_site">이종 BOOTSTRAP 설치 > <strong>CPI 정보 관리</strong></div>
+    <div class="page_site">이종 BOOTSTRAP 설치 > <strong>디렉터 인증서 관리</strong></div>
     <!-- 사용자 목록-->
     <div class="pdt20">
-        <div class="title fl"> CPI 정보 목록</div>
+        <div class="title fl"> 디렉터 인증서 목록</div>
     </div>
-    <div id="cpi_GroupGrid" style="width:100%;  height:700px;"></div>
+    <div id="credential_GroupGrid" style="width:100%;  height:700px;"></div>
 
 </div>
 
 
 <div id="regPopupDiv" hidden="true" >
     <form id="settingForm" action="POST" >
-    <input type="hidden" name="cpiInfoId" />
+    <input type="hidden" name="credentialInfoId" />
         <div class="w2ui-page page-0" style="">
            <div class="panel panel-default">
-               <div class="panel-heading"><b>CPI 정보</b></div>
+               <div class="panel-heading"><b>디렉터 인증서 정보</b></div>
                <div class="panel-body" style="height:615px; overflow-y:auto;">
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">CPI 정보 별칭</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;">디렉터 인증서 별칭</label>
                        <div>
-                           <input class="form-control" name = "cpiConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="CPI 별칭을 입력 하세요."/>
+                           <input class="form-control" name = "credentialConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="디렉터 인증서 별칭을 입력 하세요."/>
                        </div>
                    </div>
-                   
                    <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;">클라우드 인프라 환경</label>
                        <div>
-                           <select class="form-control" onchange="getIaasConfigAliasList(this.value);" name="iaasType" style="width: 320px; margin-left: 20px;">
+                           <select class="form-control" onchange ="settingNetworkConfigInfo(this.value);" name="iaasType" style="width: 320px; margin-left: 20px;">
                                <option value="">인프라 환경을 선택하세요.</option>
                                <option value="aws">AWS</option>
                                <option value="openstack">Openstack</option>
@@ -427,41 +396,23 @@ function resetForm(status){
                        </div>
                    </div>
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">인프라 환경 별칭</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;">네트워크 별칭</label>
                        <div>
-                           <select class="form-control" disabled="disabled"  name="iaasConfigId"  onchange="settingIaasConfigInfo(this.value);" style="width: 320px; margin-left: 20px;">
-                               <option value="" >인프라 환경 별칭을 선택하세요.</option>
+                           <select disabled="disabled" class="form-control" onchange="getNetworkConfigInfo(this.value);" name="networkConfigInfo" style="width: 320px; margin-left: 20px;">
+                               <option value="">네트워크 별칭을 선택하세요.</option>
                            </select>
                        </div>
                    </div>
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">인프라 사용자</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;">디렉터 Public IP</label>
                        <div>
-                           <input class="form-control" readonly   name="commonAccessUser" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="인프라 환경 아이디를 입력하세요."/>
+                           <input class="form-control"  readonly name="directorPublicIp" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="디렉터 Public IP를 입력하세요."/>
                        </div>
                    </div>
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">보안 그룹</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;">디렉터 Private IP</label>
                        <div>
-                           <input class="form-control"  name="commonSecurityGroup" type="text" readonly maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="보안 그룹을 입력하세요."/>
-                       </div>
-                   </div>
-                   <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">가용 영역</label>
-                       <div>
-                           <input class="form-control"  name="commonAvailabilityZone" type="text" readonly maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="가용 영역을 입력하세요."/>
-                       </div>
-                   </div>
-                   <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">Private Key Name</label>
-                       <div>
-                           <input class="form-control" name="commonKeypairName" type="text" readonly maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="Key Pair 명을 입력하세요."/>
-                       </div>
-                   </div>
-                   <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">Private Key Path</label>
-                       <div>
-                           <input class="form-control" name="commonKeypairPath" type="text" readonly maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="Key path를 입력하세요."/>
+                           <input class="form-control" readonly  name="directorPrivateIp" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="디렉터 Private IP를 입력하세요."/>
                        </div>
                    </div>
                </div>
@@ -480,15 +431,33 @@ $(function() {
         return checkInjectionBlacklist(params);
     },text_injection_msg);
     
+    $.validator.addMethod( "ipv4", function( value, element, params ) {
+        return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(params);
+    }, "Please enter a valid IP v4 address." );
+
     $("#settingForm").validate({
-        ignore : [],
-        //onfocusout: function(element) {$(element).valid()},
+        ignore : "",
+        //onfocusout: true,
         rules: {
-            cpiConfigName : {
+            directorPublicIp : {
                 required : function(){
-                    return checkEmpty( $("input[name='cpiConfigName']").val() );
+                    return checkEmpty( $("input[name='directorPublicIp']").val() );
+                },  ipv4 : function(){
+                    return $("input[name='directorPublicIp']").val();
+                }
+            },
+            directorPrivateIp : {
+                required : function(){
+                    return checkEmpty( $("input[name='directorPrivateIp']").val() );
+                },  ipv4 : function(){
+                    return $("input[name='directorPrivateIp']").val();
+                }
+            },
+            credentialConfigName : {
+                required : function(){
+                    return checkEmpty( $("input[name='credentialConfigName']").val() );
                 }, sqlInjection : function(){
-                    return $("input[name='cpiConfigName']").val();
+                    return $("input[name='credentialConfigName']").val();
                 }
             },
             iaasType : {
@@ -496,27 +465,36 @@ $(function() {
                     return checkEmpty( $("select[name='iaasType']").val() );
                 }
             },
-            iaasConfigId : {
+            networkConfigInfo : {
                 required : function(){
-                    return checkEmpty( $("select[name='iaasConfigId']").val() );
+                    return checkEmpty( $("select[name='networkConfigInfo']").val() );
                 }
-            }
+            },
         }, messages: {
-            cpiConfigName: { required:  "CPI 정보 별칭" + text_required_msg },
-            iaasType: {  required:  "클라우드 인프라 환경" + select_required_msg},
-            iaasConfigId: {  required:  "인프라 환경 별칭" + select_required_msg}
+            credentialConfigName: { required:  "디렉터 인증서 별칭" + text_required_msg },
+            directorPublicIp: {  required:  "디렉터 Public IP" + text_required_msg , ipv4: text_ip_msg},
+            directorPrivateIp: {  required:  "디렉터 Private IP" + text_required_msg , ipv4: text_ip_msg},
+            networkConfigInfo: {  required:  "네트워크 별칭" + text_required_msg },
+            iaasType: {  required:  "클라우드 인프라 환경" + text_required_msg }
+            
         }, unhighlight: function(element) {
             setHybridSuccessStyle(element);
         },errorPlacement: function(error, element) {
-            //do nothingalert("1");
+            //do nothing
         }, invalidHandler: function(event, validator) {
             var errors = validator.numberOfInvalids();
             if (errors) {
                 setHybridInvalidHandlerStyle(errors, validator);
             }
         }, submitHandler: function (form) {
-            registBootstrapCpiConfigInfo();
+            w2utils.lock($("#layout_layout_panel_main"), save_lock_msg, true);
+            registBootstrapCredentialConfigInfo();
         }
     });
 });
+
+function validateIpv4(params){
+    return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(params);
+}
+
 </script>

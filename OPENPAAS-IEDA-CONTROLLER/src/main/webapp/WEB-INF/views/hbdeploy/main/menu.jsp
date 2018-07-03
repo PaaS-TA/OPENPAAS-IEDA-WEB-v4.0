@@ -46,7 +46,7 @@
                       <li><a href="javascript:goPage('<c:url value="/config/hbRelease"/>', 'System 릴리즈 관리');">릴리즈 관리</a></li>
                   </sec:authorize>
                   <sec:authorize access="hasAuthority('INFO_IAASCONFIG_MENU')">
-                        <li><a href="javascript:goPage('<c:url value="/info/iaasConfig"/>', '인프라 환경 설정 관리');">인프라 환경 설정 관리</a></li>
+                        <li><a href="javascript:goPage('<c:url value="/info/hbIaasConfig"/>', '인프라 환경 설정 관리');">인프라 환경 설정 관리</a></li>
                   </sec:authorize>
                </ul>
            </li>
@@ -60,7 +60,7 @@
                        <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap/networkConfig"/>', 'NETWROK 정보 관리');">NETWROK 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
-                        <li><a href="javascript:goPage('<c:url value="/config/credential"/>', '디렉터 인증서 관리');">디렉터 인증서 관리</a></li>
+                        <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap/credentialConfig"/>', '디렉터 인증서 관리');">디렉터 인증서 관리</a></li>
                    </sec:authorize>
                   <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
                        <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap/defaultConfig"/>', '기본 정보 관리');">기본 정보 관리</a></li>

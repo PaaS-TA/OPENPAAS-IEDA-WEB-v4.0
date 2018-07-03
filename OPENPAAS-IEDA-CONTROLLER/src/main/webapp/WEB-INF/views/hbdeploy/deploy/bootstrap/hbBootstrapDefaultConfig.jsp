@@ -264,7 +264,7 @@ function getLocalPaasTAMonitoringReleaseList(type){
 function getCredentialList(){
     $.ajax({
         type : "GET",
-        url : "/common/deploy/creds/list",
+        url : "/common/deploy/hybridCreds/list",
         contentType : "application/json",
         async : true,
         success : function(data, status) {
@@ -398,7 +398,7 @@ function doSearch() {
     
     w2ui['default_GroupGrid'].clear();
     //w2ui['regPopupDiv'].clear();
-    w2ui['default_GroupGrid'].load('/deploy/hbBootstrap/defaultConfigList');
+    w2ui['default_GroupGrid'].load('/deploy/hbBootstrap/default/list');
     doButtonStyle(); 
 }
 
@@ -446,7 +446,7 @@ function registBootstrapDefaultConfigInfo(){
     }
     $.ajax({
         type : "PUT",
-        url : "/deploy/hbBootstrap/saveDefaultConfigInfo",
+        url : "/deploy/hbBootstrap/default/save",
         contentType : "application/json",
         async : true,
         data : JSON.stringify(boshInfo),
@@ -522,7 +522,7 @@ function deleteBootstrapDefaultConfigInfo(id, defaultConfigName){
     }
     $.ajax({
         type : "DELETE",
-        url : "/deploy/hbBootstrap/deleteDefaultConfigInfo",
+        url : "/deploy/hbBootstrap/default/delete",
         contentType : "application/json",
         async : true,
         data : JSON.stringify(boshInfo),

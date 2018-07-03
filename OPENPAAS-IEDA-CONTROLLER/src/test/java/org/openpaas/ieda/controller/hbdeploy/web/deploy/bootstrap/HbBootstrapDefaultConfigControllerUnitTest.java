@@ -45,9 +45,9 @@ public class HbBootstrapDefaultConfigControllerUnitTest extends BaseControllerUn
     
     
     final static String BOOTSTRAP_DEFAULT_CONFIG_VIEW_URL = "/deploy/hbBootstrap/defaultConfig";
-    final static String BOOTSTRAP_DEFAULT_CONFIG_INFO_LIST_URL = "/deploy/hbBootstrap/defaultConfigList";
-    final static String BOOTSTRAP_DEFAULT_CONFIG_INFO_SAVE_URL = "/deploy/hbBootstrap/saveDefaultConfigInfo";
-    final static String BOOTSTRAP_DEFAULT_CONFIG_INFO_DELETE_URL = "/deploy/hbBootstrap/deleteDefaultConfigInfo";
+    final static String BOOTSTRAP_DEFAULT_CONFIG_INFO_LIST_URL = "/deploy/hbBootstrap/default/list";
+    final static String BOOTSTRAP_DEFAULT_CONFIG_INFO_SAVE_URL = "/deploy/hbBootstrap/default/save";
+    final static String BOOTSTRAP_DEFAULT_CONFIG_INFO_DELETE_URL = "/deploy/hbBootstrap/default/delete";
     
     /****************************************************************
      * @project : Paas 이종 클라우드 플랫폼 설치 자동화

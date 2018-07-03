@@ -42,7 +42,7 @@ public class HbBootstrapCpiConfigController extends BaseController {
      * @title : selectCpiConfigInfoList
      * @return : ResponseEntity<BootstrapVO>
     *****************************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/cpiConfigList", method = RequestMethod.GET)
+    @RequestMapping(value = "/deploy/hbBootstrap/cpi/list", method = RequestMethod.GET)
     public ResponseEntity<HashMap<String, Object>> getCpiConfigInfoList() {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/cpiConfigList"); }
         List<HbBootstrapCpiConfigVO> cpiConfigList = service.getCpiConfigInfoList();
@@ -62,7 +62,7 @@ public class HbBootstrapCpiConfigController extends BaseController {
      * @title : saveCpiConfigInfo
      * @return : ResponseEntity<BootstrapVO>
     *****************************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/saveCpiConfigInfo", method = RequestMethod.PUT)
+    @RequestMapping(value = "/deploy/hbBootstrap/cpi/save", method = RequestMethod.PUT)
     public ResponseEntity<HbBootstrapCpiConfigVO> saveCpiConfigInfo(@RequestBody HbBootstrapCpiConfigDTO dto, Principal principal) {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/saveCpiConfigInfo"); }
         HbBootstrapCpiConfigVO config = service.saveCpiConfigInfo(dto, principal);
@@ -76,7 +76,7 @@ public class HbBootstrapCpiConfigController extends BaseController {
      * @title : deleteCpiConfigInfo
      * @return : ResponseEntity<BootstrapVO>
     *****************************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/deleteCpiConfigInfo", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/deploy/hbBootstrap/cpi/delete", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteCpiConfigInfo(@RequestBody HbBootstrapCpiConfigDTO dto, Principal principal) {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/deleteConfigInfo"); }
         service.deleteCpiConfigInfo(dto, principal);

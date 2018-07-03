@@ -27,7 +27,7 @@ public class HbBootstrapNetworkConfigController extends BaseController {
     /***************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
      * @description : Hybrid Bootstrap 네트워크 정보 화면 이동
-     * @title : goBootstrap
+     * @title : goNetworkConfig
      * @return : String
     ***************************************************/
     @RequestMapping(value = "/deploy/hbBootstrap/networkConfig", method = RequestMethod.GET)
@@ -38,11 +38,11 @@ public class HbBootstrapNetworkConfigController extends BaseController {
     
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : CPI 목록 정보 조회
+     * @description : Network 목록 정보 조회
      * @title : selectNetworkConfigInfoList
-     * @return : ResponseEntity<BootstrapVO>
+     * @return : ResponseEntity<HashMap<String, Object>>
     *****************************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/networkConfigList", method = RequestMethod.GET)
+    @RequestMapping(value = "/deploy/hbBootstrap/network/list", method = RequestMethod.GET)
     public ResponseEntity<HashMap<String, Object>> getNetworkConfigInfoList() {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/NetworkConfigList"); }
         List<HbBootstrapNetworkConfigVO> NetworkConfigList = service.getNetworkConfigInfoList();
@@ -58,11 +58,11 @@ public class HbBootstrapNetworkConfigController extends BaseController {
     
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : CPI 정보 등록/수정
+     * @description : Network 정보 등록/수정
      * @title : saveNetworkConfigInfo
-     * @return : ResponseEntity<BootstrapVO>
+     * @return : ResponseEntity<?>
     *****************************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/saveNetworkConfigInfo", method = RequestMethod.PUT)
+    @RequestMapping(value = "/deploy/hbBootstrap/network/save", method = RequestMethod.PUT)
     public ResponseEntity<?> saveNetworkConfigInfo(@RequestBody HbBootstrapNetworkConfigDTO dto, Principal principal) {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/saveNetworkConfigInfo"); }
         service.saveNetworkConfigInfo(dto, principal);
@@ -72,11 +72,11 @@ public class HbBootstrapNetworkConfigController extends BaseController {
     
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : CPI 정보 삭제
+     * @description : Network 정보 삭제
      * @title : deleteNetworkConfigInfo
-     * @return : ResponseEntity<BootstrapVO>
+     * @return : ResponseEntity<?>
     *****************************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/deleteNetworkConfigInfo", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/deploy/hbBootstrap/network/delete", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteNetworkConfigInfo(@RequestBody HbBootstrapNetworkConfigDTO dto, Principal principal) {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/deleteConfigInfo"); }
         service.deleteNetworkConfigInfo(dto, principal);

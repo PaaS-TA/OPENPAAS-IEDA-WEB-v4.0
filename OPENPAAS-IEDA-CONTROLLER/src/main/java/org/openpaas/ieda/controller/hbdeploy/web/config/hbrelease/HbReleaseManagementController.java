@@ -1,4 +1,4 @@
-package org.openpaas.ieda.controller.deploy.web.config.hbrelease;
+package org.openpaas.ieda.controller.hbdeploy.web.config.hbrelease;
 
 import java.security.Principal;
 import java.util.ArrayList;

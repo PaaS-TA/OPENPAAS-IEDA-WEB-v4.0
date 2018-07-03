@@ -690,6 +690,22 @@ CREATE TABLE ieda_bootstrap_resource_config
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
+CREATE TABLE ieda_bootstrap_credential_config
+(
+  id                                    INT(11)      NOT NULL auto_increment,
+  iaas_type                             VARCHAR(100),
+  director_credential_name              VARCHAR(100),
+  network_config_name                   VARCHAR(100),
+  director_credential_key_name          VARCHAR(100),
+  director_public_ip                    VARCHAR(100),
+  director_private_ip                   VARCHAR(100),
+  create_user_id                        VARCHAR(255) NOT NULL,
+  create_date                           DATE         NOT NULL,
+  update_user_id                        VARCHAR(255) NOT NULL,
+  update_date                           DATE         NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
 
 #Setting AUTO_INCREMENT
 ALTER TABLE ieda_role AUTO_INCREMENT=1000;
@@ -713,11 +729,9 @@ ALTER TABLE ieda_hybrid_director_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_hybrid_bootstrap AUTO_INCREMENT=1000;
 ALTER TABLE ieda_private_bootstrap AUTO_INCREMENT=1000;
 ALTER TABLE ieda_public_bootstrap AUTO_INCREMENT=1000;
-<<<<<<< HEAD
+ALTER TABLE ieda_bootstrap_credential_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_bootstrap_cpi_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_bootstrap_default_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_bootstrap_network_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_bootstrap_resource_config AUTO_INCREMENT=1000;
 
-=======
->>>>>>> 6dd7f8e7ae3deb230ea524f8097d046f42dc1430
