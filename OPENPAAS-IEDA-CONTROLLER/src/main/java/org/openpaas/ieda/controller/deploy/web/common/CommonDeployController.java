@@ -142,6 +142,19 @@ public class CommonDeployController {
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
+     * @description :  Hybrid Credential Key 파일  정보 목록 조회 
+     * @title : getCredentialKeyPathFileList
+     * @return : ResponseEntity<List<String>>
+    *****************************************************************/
+    @RequestMapping(value="/common/deploy/hybridCreds/list", method=RequestMethod.GET)
+    public ResponseEntity<List<String>> getHybridCredentialKeyPathFileList(){
+        if(LOGGER.isInfoEnabled()){ LOGGER.debug("====================================> Hybrid Credential Key 파일  정보 목록 조회 요청"); }
+        List<String> credsKeyPathFileList = commonService.getHybridCredentialName();
+        return new ResponseEntity<List<String>>(credsKeyPathFileList, HttpStatus.OK);
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
      * @description : 배포파일 정보 조회
      * @title : getBoshAwsDeployInfo
      * @return : ResponseEntity<String>

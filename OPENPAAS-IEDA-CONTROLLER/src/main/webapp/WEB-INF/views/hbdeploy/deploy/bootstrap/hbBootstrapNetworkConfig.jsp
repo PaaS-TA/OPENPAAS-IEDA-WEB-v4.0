@@ -174,7 +174,7 @@ function doSearch() {
     resetForm();
     
     w2ui['network_GroupGrid'].clear();
-    w2ui['network_GroupGrid'].load('/deploy/hbBootstrap/networkConfigList');
+    w2ui['network_GroupGrid'].load('/deploy/hbBootstrap/network/list');
     doButtonStyle(); 
 }
 
@@ -205,7 +205,7 @@ function registBootstrapNetworkConfigInfo(){
     }
     $.ajax({
         type : "PUT",
-        url : "/deploy/hbBootstrap/saveNetworkConfigInfo",
+        url : "/deploy/hbBootstrap/network/save",
         contentType : "application/json",
         async : true,
         data : JSON.stringify(networkConfigInfo),
@@ -215,7 +215,7 @@ function registBootstrapNetworkConfigInfo(){
         error : function( e, status ) {
             w2popup.unlock();
             var errorResult = JSON.parse(e.responseText);
-            w2alert(errorResult.message, "네투워크 정보 저장");
+            w2alert(errorResult.message, "네트워크 정보 저장");
         }
     });
 }
@@ -232,7 +232,7 @@ function deleteBootstrapNetworkConfigInfo(id, networkConfigName){
     }
     $.ajax({
         type : "DELETE",
-        url : "/deploy/hbBootstrap/deleteNetworkConfigInfo",
+        url : "/deploy/hbBootstrap/network/delete",
         contentType : "application/json",
         async : true,
         data : JSON.stringify(networkInfo),

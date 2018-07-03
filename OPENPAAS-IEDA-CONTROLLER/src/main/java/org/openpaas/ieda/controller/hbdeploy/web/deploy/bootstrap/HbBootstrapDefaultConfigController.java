@@ -43,7 +43,7 @@ public class HbBootstrapDefaultConfigController extends BaseController {
      * @title : getDefaultConfigInfoList
      * @return : ResponseEntity
     *****************************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/defaultConfigList", method = RequestMethod.GET)
+    @RequestMapping(value = "/deploy/hbBootstrap/default/list", method = RequestMethod.GET)
     public ResponseEntity<HashMap<String, Object>> getDefaultConfigInfoList() {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/defaultConfigList"); }
         List<HbBootstrapDefaultConfigVO> defaultConfigList = service.getDefaultConfigInfoList();
@@ -63,7 +63,7 @@ public class HbBootstrapDefaultConfigController extends BaseController {
      * @title : saveDefaultConfigInfo
      * @return : ResponseEntity
     *****************************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/saveDefaultConfigInfo", method = RequestMethod.PUT)
+    @RequestMapping(value = "/deploy/hbBootstrap/default/save", method = RequestMethod.PUT)
     public ResponseEntity<?> saveDefaultConfigInfo(@RequestBody HbBootstrapDefaultConfigDTO dto, Principal principal) {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/saveDefaultConfigInfo"); }
         service.saveDefaultConfigInfo(dto, principal);
@@ -77,7 +77,7 @@ public class HbBootstrapDefaultConfigController extends BaseController {
      * @title : deleteDefaultConfigInfo
      * @return : ResponseEntity<BootstrapVO>
     *****************************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/deleteDefaultConfigInfo", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/deploy/hbBootstrap/default/delete", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteDefaultConfigInfo(@RequestBody HbBootstrapDefaultConfigDTO dto, Principal principal) {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/deleteDefaultConfigInfo"); }
         service.deleteDefaultConfigInfo(dto, principal);

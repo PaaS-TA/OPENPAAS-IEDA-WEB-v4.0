@@ -60,7 +60,7 @@
                        <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap/networkConfig"/>', 'NETWROK 정보 관리');">NETWROK 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
-                        <li><a href="javascript:goPage('<c:url value="/config/credential"/>', '디렉터 인증서 관리');">디렉터 인증서 관리</a></li>
+                        <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap/credentialConfig"/>', '디렉터 인증서 관리');">디렉터 인증서 관리</a></li>
                    </sec:authorize>
                   <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
                        <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap/defaultConfig"/>', '기본 정보 관리');">기본 정보 관리</a></li>
