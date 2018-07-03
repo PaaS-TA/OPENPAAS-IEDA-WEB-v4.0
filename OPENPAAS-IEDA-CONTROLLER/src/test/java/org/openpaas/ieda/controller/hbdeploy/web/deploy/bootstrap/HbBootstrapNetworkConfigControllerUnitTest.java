@@ -45,9 +45,9 @@ public class HbBootstrapNetworkConfigControllerUnitTest extends BaseControllerUn
     
     
     final static String BOOTSTRAP_NETWORK_CONFIG_VIEW_URL = "/deploy/hbBootstrap/networkConfig";
-    final static String BOOTSTRAP_NETWORK_CONFIG_INFO_LIST_URL = "/deploy/hbBootstrap/networkConfigList";
-    final static String BOOTSTRAP_NETWORK_CONFIG_INFO_SAVE_URL = "/deploy/hbBootstrap/saveNetworkConfigInfo";
-    final static String BOOTSTRAP_NETWORK_CONFIG_INFO_DELETE_URL = "/deploy/hbBootstrap/deleteNetworkConfigInfo";
+    final static String BOOTSTRAP_NETWORK_CONFIG_INFO_LIST_URL = "/deploy/hbBootstrap/network/list";
+    final static String BOOTSTRAP_NETWORK_CONFIG_INFO_SAVE_URL = "/deploy/hbBootstrap/network/save";
+    final static String BOOTSTRAP_NETWORK_CONFIG_INFO_DELETE_URL = "/deploy/hbBootstrap/network/delete";
     
     /****************************************************************
      * @project : Paas 이종 클라우드 플랫폼 설치 자동화

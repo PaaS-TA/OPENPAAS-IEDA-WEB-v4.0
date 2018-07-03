@@ -57,16 +57,16 @@
                        <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap/cpiConfig"/>', 'CF 설치');">CPI 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap/networkConfig"/>', 'DIEGO 설치');">NETWROK 정보 관리</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap/networkConfig"/>', 'NETWROK 정보 관리');">NETWROK 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
-                        <li><a href="javascript:goPage('<c:url value="/config/credential"/>', '디렉터 인증서 관리');">디렉터 인증서 관리</a></li>
+                        <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap/credentialConfig"/>', '디렉터 인증서 관리');">디렉터 인증서 관리</a></li>
                    </sec:authorize>
                   <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap/defaultConfig"/>', 'CF 설치');">기본 정보 관리</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap/defaultConfig"/>', '기본 정보 관리');">기본 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/config/credential"/>', 'CF & DIEGO 통합 설치');">리소스 정보 관리</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap/resourceConfig"/>', '리소스 정보 관리');">리소스 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
                        <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap"/>', 'BOOTSTRAP 설치');">이기종 BOOTSTRAP 설치</a></li>

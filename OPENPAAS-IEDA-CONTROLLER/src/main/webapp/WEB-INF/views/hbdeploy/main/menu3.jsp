@@ -63,7 +63,7 @@
                        <li><a href="javascript:goPage('<c:url value="/config/credential2"/>', 'DIEGO 설치');">NETWROK 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('DEPLOY_CF_DIEGO_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/config/credential2"/>', 'CF & DIEGO 통합 설치');">리소스 정보 관리</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap/resourceConfig"/>', 'CF & DIEGO 통합 설치');">리소스 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('INFO_IAASCONFIG_MENU')">
                         <li><a href="javascript:goPage('<c:url value="/config/credential2"/>', '디렉터 인증서 관리');">디렉터 인증서 관리</a></li>

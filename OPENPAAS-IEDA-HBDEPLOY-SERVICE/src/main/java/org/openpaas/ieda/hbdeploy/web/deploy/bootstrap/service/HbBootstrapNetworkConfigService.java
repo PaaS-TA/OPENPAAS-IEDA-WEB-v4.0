@@ -18,7 +18,7 @@ import org.springframework.util.StringUtils;
 
 @Service
 public class HbBootstrapNetworkConfigService {
-	
+    
     @Autowired private MessageSource message;
     @Autowired private HbBootstrapNetworkConfigDAO bootstrapNetworkDao;
     
@@ -70,9 +70,9 @@ public class HbBootstrapNetworkConfigService {
             vo.setUpdateUserId(principal.getName());
         }
         if( StringUtils.isEmpty(dto.getId()) ){
-        	bootstrapNetworkDao.insertBootStrapNetworkConfigInfo(vo);
+            bootstrapNetworkDao.insertBootStrapNetworkConfigInfo(vo);
         }else{
-        	bootstrapNetworkDao.updateBootStrapNetworkConfigInfo(vo);
+            bootstrapNetworkDao.updateBootStrapNetworkConfigInfo(vo);
         }
     }
 
@@ -89,5 +89,27 @@ public class HbBootstrapNetworkConfigService {
         }
         bootstrapNetworkDao.deleteBootStrapNetworkConfigInfo(dto);
         
+    }
+    
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : Network 정보 상세 조회
+     * @title : deleteNetworkConfigInfo
+     * @return : void
+    *****************************************************************/
+    public HbBootstrapNetworkConfigVO getNetworkConfigInfo(String networkId, String iaasType) {
+        HbBootstrapNetworkConfigVO vo = bootstrapNetworkDao.selectBootstrapNetworkConfigInfo(Integer.parseInt(networkId), iaasType.toUpperCase());
+        return vo;
+    }
+    
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : 인프라 환경 별 Network 목록 정보 조회
+     * @title : getNetworkConfigInfoList
+     * @return : void
+    *****************************************************************/
+    public List<HbBootstrapNetworkConfigVO> getNetworkConfigInfoList(String iaasType) {
+        List<HbBootstrapNetworkConfigVO> list = bootstrapNetworkDao.selectBootstrapNetworkConfigInfoListByIaasType(iaasType.toUpperCase());
+        return list;
     }
 }
