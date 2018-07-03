@@ -422,7 +422,7 @@ function setRegistType(value){
         w2alert(errorResult, "잘못 된 요청 입니다.");
     }
 }
- /**************************************************************z
+ /**************************************************************
   * 설명 : 스템셀 삭제 버튼 클릭
   **************************************************************/
  $('#doDelete').click(function(){
@@ -432,9 +432,10 @@ function setRegistType(value){
      var awsSelected = w2ui['config_awsStemcellsGrid'].getSelection();
      var openstackSelected = w2ui['config_openstackStemcellsGrid'].getSelection();
      if (awsSelected == ""){
-         record.push(w2ui['config_openstackStemcellsGrid'].get(openstackSelected)) ;
+         record.push(w2ui['config_openstackStemcellsGrid'].get(openstackSelected));
+         console.log(record);
      }else if (openstackSelected == "") {
-         record.push(w2ui['config_awsStemcellsGrid'].get(awsSelected)) ;
+         record.push(w2ui['config_awsStemcellsGrid'].get(awsSelected));
      }else{
          record.push(w2ui['config_awsStemcellsGrid'].get(awsSelected));
          record.push(w2ui['config_openstackStemcellsGrid'].get(openstackSelected));

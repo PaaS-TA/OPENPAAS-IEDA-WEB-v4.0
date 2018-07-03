@@ -1,14 +1,11 @@
 <%
 /* =================================================================
- * 작성일 : 2016-09
- * 작성자 : 지향은
- * 상세설명 : 릴리즈 관리
+ * 작성일 : 2018-06
+ * 작성자 : 배병욱
+ * 상세설명 : Hybrid 릴리즈 관리
  * =================================================================
  * 수정일         작성자             내용     
  * ------------------------------------------------------------------
- * 2016.12       지향은        화면 개선 및 코드 버그 수정
- * 2017.05       이동현        화면 개선 및 코드 버그 수정
- * 2017.08       지향은        Google 클라우드 추가
  * =================================================================
  */ 
 %>
@@ -31,112 +28,275 @@ var progressBarDiv = '<div class="progress">';
 var IAAS_TYPE_CODE='<spring:message code="common.code.iaasType.code.parent"/>';//100
 var text_required_msg='<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
 var text_injection_msg='<spring:message code="common.text.validate.sqlInjection.message"/>';//입력하신 값은 입력하실 수 없습니다.
+var delete_confirm_msg = '<spring:message code="common.popup.delete.message"/>';//을(를) 삭제하시겠습니까?
 $(function() {
-    /********************************************************
-     * 설명 :  릴리즈 목록 조회 Grid 생성
-     *********************************************************/
-    $('#config_releaseGrid').w2grid({
-        name: 'config_releaseGrid',
-        header: '<b>릴리즈 등록</b>',
-        method: 'GET',
-        multiSelect: false,
-        show: {    selectColumn: true, footer: true},
-        style: 'text-align:center',
-        columns:[
-             {field: 'recid', caption: 'recid', hidden: true}
-            ,{field: 'id', caption: 'id', hidden: true}
-            ,{field: 'releaseName', caption: '릴리즈 명', size: '15%', style:'text-align:left; padding-left:10px' }            
-            ,{field: 'releaseType', caption: '릴리즈 유형', size: '10%'}
-            ,{field: 'releaseFileName', caption: '릴리즈 파일명', size: '20%', style:'text-align:left;  padding-left:10px'}
-            ,{field: 'releaseSize', caption: '릴리즈 파일 크기', size: '7%'}
-            ,{field: 'downloadStatus', caption: '다운로드 여부', size: '10%',
-                render: function(record) {
-                    if ( record.downloadStatus == 'DOWNLOADED'  ){
-                        return '<div class="btn btn-success btn-xs" id= "downloaded_'+record.id+'" style="width:100px;">Downloaded</div>';
-                    }else if(record.downloadStatus == 'DOWNLOADING'){
-                        return '<div class="btn btn-info btn-xs" id= "downloading_'+record.id+'" style="width:100px;">Downloading</div>';
-                    } else{
-                        return '<div class="btn" id="isExisted_'+record.id+'" style="position: relative;width:100px;"></div>';
-                    }
+/********************************************************
+ * 설명 :  릴리즈 목록 조회 Grid 생성
+ *********************************************************/
+$('#config_releaseGrid').w2grid({
+    name: 'config_releaseGrid',
+    header: '<b>릴리즈 등록</b>',
+    method: 'GET',
+    multiSelect: false,
+    show: {    selectColumn: true, footer: true},
+    style: 'text-align:center',
+    columns:[
+         {field: 'recid', caption: 'recid', hidden: true}
+        ,{field: 'id', caption: 'id', hidden: true}
+        ,{field: 'releaseName', caption: '릴리즈 명', size: '15%', style:'text-align:left; padding-left:10px' }            
+        ,{field: 'releaseType', caption: '릴리즈 유형', size: '10%'}
+        ,{field: 'releaseFileName', caption: '릴리즈 파일명', size: '20%', style:'text-align:left;  padding-left:10px'}
+        ,{field: 'releaseSize', caption: '릴리즈 파일 크기', size: '7%'}
+        ,{field: 'downloadStatus', caption: '다운로드 여부', size: '10%',
+            render: function(record) {
+                if ( record.downloadStatus == 'DOWNLOADED'  ){
+                    return '<div class="btn btn-success btn-xs" id= "downloaded_'+record.id+'" style="width:100px;">Downloaded</div>';
+                }else if(record.downloadStatus == 'DOWNLOADING'){
+                    return '<div class="btn btn-info btn-xs" id= "downloading_'+record.id+'" style="width:100px;">Downloading</div>';
+                } else{
+                    return '<div class="btn" id="isExisted_'+record.id+'" style="position: relative;width:100px;"></div>';
                 }
             }
-        ],
-        onSelect : function(event) {
-            event.onComplete = function() {
+        }
+    ],
+    onSelect : function(event) {
+        event.onComplete = function() {
+            var selected = w2ui['config_AwsReleaseGrid'].getSelection();
+            var recordAws = w2ui['config_AwsReleaseGrid'].get(selected);
+            selected = w2ui['config_OpenstackReleaseGrid'].getSelection();
+            var recordOpenstack = w2ui['config_OpenstackReleaseGrid'].get(selected);
+            if(recordAws != null || recordOpenstack != null ){
                 $('#doDelete').attr('disabled', false);
-                return;
+            }else {
+                $('#doDelete').attr('disabled', false);
             }
-        },
-        onUnselect: function(event) {
-            event.onComplete = function() {
+            $('#doregist').attr('disabled', false);
+        }
+    },
+    onUnselect: function(event) {
+        event.onComplete = function() {
+            var selected = w2ui['config_AwsReleaseGrid'].getSelection();
+            var recordAws = w2ui['config_AwsReleaseGrid'].get(selected);
+            selected = w2ui['config_OpenstackReleaseGrid'].getSelection();
+            var recordOpenstack = w2ui['config_OpenstackReleaseGrid'].get(selected);
+            if(recordAws != null || recordOpenstack != null ){
+                $('#doDelete').attr('disabled', false);
+            }else{
                 $('#doDelete').attr('disabled', true);
             }
-        },onLoad:function(event){
-            if(event.xhr.status == 403){
-                location.href = "/abuse";
-                event.preventDefault();
+            $('#doRegist').attr('disabled', false);
+        }
+    },onLoad:function(event){
+        if(event.xhr.status == 403){
+            location.href = "/abuse";
+            event.preventDefault();
+        }
+    },
+    onError : function(event) {
+    }
+});
+
+$('#config_AwsReleaseGrid').w2grid({
+    name: 'config_AwsReleaseGrid',
+    header: '<b>릴리즈 등록</b>',
+    method: 'GET',
+    multiSelect: false,
+    show: {    selectColumn: true, footer: true},
+    style: 'text-align:center',
+    columns:[
+         {field: 'recid', caption: 'recid', hidden: true}
+        ,{field: 'id', caption: 'id', hidden: true}
+        ,{field: 'releaseName', caption: '릴리즈 명', size: '15%', style:'text-align:left; padding-left:10px' }            
+        ,{field: 'releaseType', caption: '릴리즈 유형', size: '10%'}
+        ,{field: 'releaseFileName', caption: '릴리즈 파일명', size: '20%', style:'text-align:left;  padding-left:10px'}
+        ,{field: 'releaseSize', caption: '릴리즈 파일 크기', size: '7%'}
+        ,{field: 'downloadStatus', caption: '다운로드 여부', size: '10%',
+            render: function(record) {
+                if ( record.downloadStatus == 'DOWNLOADED'  ){
+                    return '<div class="btn btn-success btn-xs" id= "downloaded_'+record.id+'" style="width:100px;">Downloaded</div>';
+                }else if(record.downloadStatus == 'DOWNLOADING'){
+                    return '<div class="btn btn-info btn-xs" id= "downloading_'+record.id+'" style="width:100px;">Downloading</div>';
+                } else{
+                    return '<div class="btn" id="isExisted_'+record.id+'" style="position: relative;width:100px;"></div>';
+                }
             }
-        },
-        onError : function(event) {
+        }
+    ],
+    onSelect : function(event) {
+        event.onComplete = function() {
+            var selected = w2ui['config_releaseGrid'].getSelection();
+            var recordAws = w2ui['config_releaseGrid'].get(selected);
+            selected = w2ui['config_OpenstackReleaseGrid'].getSelection();
+            var recordOpenstack = w2ui['config_OpenstackReleaseGrid'].get(selected);
+            if(recordAws != null || recordOpenstack != null ){
+                $('#doDelete').attr('disabled', false);
+            }else {
+                $('#doDelete').attr('disabled', false);
+            }
+            $('#doregist').attr('disabled', false);
+        }
+    },
+    onUnselect: function(event) {
+        event.onComplete = function() {
+            var selected = w2ui['config_releaseGrid'].getSelection();
+            var recordAws = w2ui['config_releaseGrid'].get(selected);
+            selected = w2ui['config_OpenstackReleaseGrid'].getSelection();
+            var recordOpenstack = w2ui['config_OpenstackReleaseGrid'].get(selected);
+            if(recordAws != null || recordOpenstack != null ){
+                $('#doDelete').attr('disabled', false);
+            }else{
+                $('#doDelete').attr('disabled', true);
+            }
+            $('#doRegist').attr('disabled', false);
+        }
+    },onLoad:function(event){
+        if(event.xhr.status == 403){
+            location.href = "/abuse";
+            event.preventDefault();
+        }
+    },
+    onError : function(event) {
+    }
+});
+
+$('#config_OpenstackReleaseGrid').w2grid({
+    name: 'config_OpenstackReleaseGrid',
+    header: '<b>릴리즈 등록</b>',
+    method: 'GET',
+    multiSelect: false,
+    show: {    selectColumn: true, footer: true},
+    style: 'text-align:center',
+    columns:[
+         {field: 'recid', caption: 'recid', hidden: true}
+        ,{field: 'id', caption: 'id', hidden: true}
+        ,{field: 'releaseName', caption: '릴리즈 명', size: '15%', style:'text-align:left; padding-left:10px' }            
+        ,{field: 'releaseType', caption: '릴리즈 유형', size: '10%'}
+        ,{field: 'releaseFileName', caption: '릴리즈 파일명', size: '20%', style:'text-align:left;  padding-left:10px'}
+        ,{field: 'releaseSize', caption: '릴리즈 파일 크기', size: '7%'}
+        ,{field: 'downloadStatus', caption: '다운로드 여부', size: '10%',
+            render: function(record) {
+                if ( record.downloadStatus == 'DOWNLOADED'  ){
+                    return '<div class="btn btn-success btn-xs" id= "downloaded_'+record.id+'" style="width:100px;">Downloaded</div>';
+                }else if(record.downloadStatus == 'DOWNLOADING'){
+                    return '<div class="btn btn-info btn-xs" id= "downloading_'+record.id+'" style="width:100px;">Downloading</div>';
+                } else{
+                    return '<div class="btn" id="isExisted_'+record.id+'" style="position: relative;width:100px;"></div>';
+                }
+            }
+        }
+    ],
+    onSelect : function(event) {
+        event.onComplete = function() {
+            var selected = w2ui['config_releaseGrid'].getSelection();
+            var recordAws = w2ui['config_releaseGrid'].get(selected);
+            selected = w2ui['config_AwsReleaseGrid'].getSelection();
+            var recordOpenstack = w2ui['config_AwsReleaseGrid'].get(selected);
+            if(recordAws != null || recordOpenstack != null ){
+                $('#doDelete').attr('disabled', false);
+            }else {
+                $('#doDelete').attr('disabled', false);
+            }
+            $('#doregist').attr('disabled', false);
+        }
+    },
+    onUnselect: function(event) {
+        event.onComplete = function() {
+            var selected = w2ui['config_releaseGrid'].getSelection();
+            var recordAws = w2ui['config_releaseGrid'].get(selected);
+            selected = w2ui['config_AwsReleaseGrid'].getSelection();
+            var recordOpenstack = w2ui['config_AwsReleaseGrid'].get(selected);
+            if(recordAws != null || recordOpenstack != null ){
+                $('#doDelete').attr('disabled', false);
+            }else{
+                $('#doDelete').attr('disabled', true);
+            }
+            $('#doRegist').attr('disabled', false);
+        }
+    },onLoad:function(event){
+        if(event.xhr.status == 403){
+            location.href = "/abuse";
+            event.preventDefault();
+        }
+    },
+    onError : function(event) {
+    }
+});
+
+/********************************************************
+ * 설명 :  릴리즈 등록 팝업
+ *********************************************************/
+$("#doRegist").click(function(){
+    w2popup.open({
+        title   : "<b>릴리즈 등록</b>",
+        width   : 635,
+        height  : 505,
+        modal   : true,
+        body    : $("#regPopupDiv").html(),
+        buttons : $("#regPopupBtnDiv").html(),
+        onClose : function(event){
+            doSearch();
         }
     });
+    $('.w2ui-msg-body input:radio[name=fileType]:input[value=version]').attr("checked", true);    
+    $('.w2ui-msg-body input:text[name=releasePathVersion]').attr("readonly", false);
+    //릴리즈 유형 조회
+    $('[data-toggle="popover"]').popover();
+    //릴리즈 버전 정보
+    $(".release-info").attr('data-content', "http://bosh.io/releases");
+    //릴리즈 타입 셀렉트
+    getReleaseTypes();
+    //다른 곳 클릭 시 popover hide 이벤트
+    $('.w2ui-popup').on('click', function (e) {
+        $('[data-toggle="popover"]').each(function () {
+            //the 'is' for buttons that trigger popups
+            //the 'has' for icons within a button that triggers a popup
+            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                $(this).popover('hide');
+            }
+        });
+    });
+});
     
-    /********************************************************
-     * 설명 :  릴리즈 등록 팝업
-     *********************************************************/
-     $("#doRegist").click(function(){
-         w2popup.open({
-             title   : "<b>릴리즈 등록</b>",
-             width   : 635,
-             height  : 505,
-             modal   : true,
-             body    : $("#regPopupDiv").html(),
-             buttons : $("#regPopupBtnDiv").html(),
-             onClose : function(event){
-                 doSearch();
-             }
-         });
-         $('.w2ui-msg-body input:radio[name=fileType]:input[value=version]').attr("checked", true);    
-         $('.w2ui-msg-body input:text[name=releasePathVersion]').attr("readonly", false);
-         //릴리즈 유형 조회
-         $('[data-toggle="popover"]').popover();
-          //스템셀 버전 정보
-          $(".release-info").attr('data-content', "http://bosh.io/releases");
-          getReleaseTypes();
-          //다른 곳 클릭 시 popover hide 이벤트
-          $('.w2ui-popup').on('click', function (e) {
-              $('[data-toggle="popover"]').each(function () {
-                  //the 'is' for buttons that trigger popups
-                  //the 'has' for icons within a button that triggers a popup
-                  if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-                      $(this).popover('hide');
-                  }
-              });
-          });
-     });
-    
-    /********************************************************
-     * 설명 :  릴리즈 삭제 팝업
-     *********************************************************/
+/********************************************************
+ * 설명 :  릴리즈 삭제 팝업
+ *********************************************************/
     $("#doDelete").click(function(){
         if($("#deleteBtn").attr('disabled') == "disabled"){
             return;
         }
+        var record = new Array();
         var selected = w2ui['config_releaseGrid'].getSelection();
-        var record = w2ui['config_releaseGrid'].get(selected);
-        var message = "";
+        var awsSelected = w2ui['config_AwsReleaseGrid'].getSelection();
+        var openstackSelected = w2ui['config_OpenstackReleaseGrid'].getSelection();
         
-        if ( record.releaseFileName )
-            message = "릴리즈 (파일명 : " + record.releaseFileName + ")를 삭제하시겠습니까?";
-        else
-            message = "선택된 릴리즈를 삭제하시겠습니까?";
+        record.push(w2ui['config_releaseGrid'].get(selected));
+        record.push(w2ui['config_AwsReleaseGrid'].get(awsSelected));
+        record.push(w2ui['config_OpenstackReleaseGrid'].get(openstackSelected));
+        
+        record = record.filter(function (n){
+            return n != null;
+        });
+        
+        var message = "";
+        var recordName = "";
+        //레코드 정보
+        for(var i=0;i<record.length;i++){
+           recordName += record[i].releaseFileName+'<br/>';
+           if ( record[i].downloadStatus != "DOWNLOADING" ){
+               message = "릴리즈 (파일명 : " + recordName + ") " + delete_confirm_msg;
+           }else{
+               message = "현재 다운로드 중입니다. <br/> 스템셀 (파일명 : " + recordName + ")" + delete_confirm_msg;
+           }
+        }
         
         w2confirm({
             title     : "릴리즈 삭제",
             msg        : message,
             yes_text: "확인",
             yes_callBack : function(event){
-                    deletePop(record);
+                console.log(record);
+                /* deletePop(record); */
+                deleteRelease(record);
             },
             no_text : "취소",
             no_callBack    : function(){
@@ -168,7 +328,7 @@ function getReleaseTypes() {
                     releaseTyps.push(obj);
                 });
             }
-            releaseTypeList="<select style='width:60%' onchange='setiaasType(this.value);' name = 'releaseType'>";
+            releaseTypeList="<select style='width:60%' onChange=setiaasType(this.value) name='releaseType'>";
             for(var i = 0; i<releaseTyps.length; i++){
                 releaseTypeList+="<option value="+releaseTyps[i]+">"+releaseTyps[i]+"</option>";
             }
@@ -189,7 +349,7 @@ function getReleaseTypes() {
 function setiaasType(releaseType){
     var iaasTypeList = "";
     if(releaseType.toUpperCase()=="BOSH_CPI"){
-    	$(".w2ui-msg-body #releasePathVersion").attr("disabled", false);
+        $(".w2ui-msg-body #releasePathVersion").attr("disabled", false);
         $(".w2ui-msg-body #releasePathVersion").val("");
         $(".w2ui-msg-body select[name='releaseIaasType']").attr("readonly", false);
         $.ajax({
@@ -217,10 +377,10 @@ function setiaasType(releaseType){
             }
         });
     }else if( releaseType.toUpperCase()=="ETC" ){
-    	$(".w2ui-msg-body #releasePathVersion").attr("disabled", true);
-    	$(".w2ui-msg-body #releasePathVersion").val("버전을 통한 릴리즈 다운로드는 이용하실 수 없습니다.");
+        $(".w2ui-msg-body #releasePathVersion").attr("disabled", true);
+        $(".w2ui-msg-body #releasePathVersion").val("버전을 통한 릴리즈 다운로드는 이용하실 수 없습니다.");
     }else{
-    	$(".w2ui-msg-body #releasePathVersion").attr("disabled", false);
+        $(".w2ui-msg-body #releasePathVersion").attr("disabled", false);
         $(".w2ui-msg-body #releasePathVersion").val("");
         $(".w2ui-msg-body #iaasTypeListDiv").html("<select disabled='disabled' style = 'width:60%'><option selected='selected' disabled='disabled' value='' style='color:red'>BOSH_CPI 일 경우 선택 가능 합니다.</option></select>");
     }
@@ -281,6 +441,8 @@ function initView() {
     downloadStatus = "";
     doSearch();
     w2ui['config_releaseGrid'].selectNone();
+    w2ui['config_AwsReleaseGrid'].selectNone();
+    w2ui['config_OpenstackReleaseGrid'].selectNone();
     $('#doDelete').attr('disabled', true);
     
 }
@@ -290,8 +452,10 @@ function initView() {
  * 기능 : doSearch
  *********************************************************/
 function doSearch() {
-    w2ui['config_releaseGrid'].load('/config/systemRelease/list');
-    $("#iaasTypeListDiv").html("<select disabled='disabled' style = 'width:60%'><option selected='selected' disabled='disabled' value='' style='color:red'>BOSH_CPI 일 경우 선택 가능 합니다.</option></select>");
+    w2ui['config_releaseGrid'].load('/config/hbRelease/list/common');
+    w2ui['config_AwsReleaseGrid'].load('/config/hbRelease/list/aws');
+    w2ui['config_OpenstackReleaseGrid'].load('/config/hbRelease/list/openstack');
+    $("#iaasTypeListDiv").html("<select style = 'width:60%' disabled='disabled' ><option selected='selected' disabled='disabled' value='' style='color:red'>BOSH_CPI 일 경우 선택 가능 합니다.</option></select>");
 }
 
 /********************************************************
@@ -349,7 +513,6 @@ function releaseRegist(){
     if(releaseInfo.iaasType == null){
         releaseInfo.iaasType = "COMMON";
     }
-    console.log(releaseInfo);
     releaseInfoSave(releaseInfo);
 }
 
@@ -380,7 +543,7 @@ function releaseInfoSave(releaseInfo){
     lock( '등록 중입니다.', true);
     $.ajax({
         type : "POST",
-        url : "/config/systemRelease/regist",
+        url : "/config/hbRelease/regist",
         contentType : "application/json",
         async : true,
         data : JSON.stringify(releaseInfo),
@@ -392,7 +555,7 @@ function releaseInfoSave(releaseInfo){
             if(releaseInfo.fileType == 'file'){
                 releaseFileUpload(releaseInfo);
             }else{
-                socketDwonload(releaseInfo);
+                socketDownload(releaseInfo);
             }
         }, error : function(request, status, error) {
             w2popup.unlock();
@@ -405,34 +568,30 @@ function releaseInfoSave(releaseInfo){
 
 /********************************************************
  * 설명 : 릴리즈 다운로드
- * 기능 : socketDwonload
+ * 기능 : socketDownload
  *********************************************************/
 var fail_count = 0;
-function socketDwonload(releaseInfo){
+function socketDownload(releaseInfo){
     lock( '다운로드 중입니다.', true);
     
-    var socket = new SockJS("<c:url value='/config/systemRelease/regist/download/releaseDownloading'/>");
+    var socket = new SockJS("<c:url value='/config/hbRelease/regist/download/hbReleaseDownloading'/>");
     downloadClient = Stomp.over(socket);
-    console.log(downloadClient);
     var status = 0;
     
     var downloadPercentage = 0;
     downloadClient.heartbeat.outgoing = 50000;
     downloadClient.heartbeat.incoming = 0;
     downloadClient.connect({}, function(frame) {
-        downloadClient.subscribe('/user/config/systemRelease/regist/download/logs', function(data){
+        downloadClient.subscribe('/user/config/hbRelease/regist/download/logs', function(data){
             w2popup.unlock();
-             
             status = data.body.split('/')[1]; //recid/percent 중 percent
             id = data.body.split('/')[0]; //recid/percent 중 recid
-            
             if( releaseInfo.downloadStatus == 'DOWNLOADING' &&  downloadStatus == ""){
                 downloadStatus ="PROCESSING";
-                $("#downloading_"+ id).wrap('<div class="btn" id="isExisted_'+ id+'" style="position: relative;width:100px;"></div>');
+                $("#downloading_"+id).wrap('<div class="btn" id="isExisted_'+ id+'" style="position: relative;width:100px;"></div>');
                 $("#downloading_"+id).remove();
                 $("#isExisted_" + id).html(progressBarDiv);
             }
-            
             console.log("### Download Status ::: " + status.split("%")[0]);
             
             if ( Number(status.split("%")[0]) < 100 ) {
@@ -441,11 +600,25 @@ function socketDwonload(releaseInfo){
                 downloadStatus = '';
                 $("#isExisted_" + id).parent().html(completeButton);
                 var flag = true;
-                w2ui['config_releaseGrid'].records.map(function(obj) {
-                    if( id != obj.id && obj.downloadStatus.toUpperCase() == "DOWNLOADING" ){
-                        flag= false;
-                    }
-                });
+                if(releaseInfo.iaasType == "aws"){
+                    w2ui['config_AwsReleaseGrid'].records.map(function(obj) {
+                        if( id != obj.id && obj.downloadStatus.toUpperCase() == "DOWNLOADING" ){
+                            flag= false;
+                        }
+                    });
+                }else if(releaseInfo.iaasType == "openstack"){
+                    w2ui['config_OpenstackReleaseGrid'].records.map(function(obj) {
+                        if( id != obj.id && obj.downloadStatus.toUpperCase() == "DOWNLOADING" ){
+                            flag= false;
+                        }
+                    });
+                }else{
+                    w2ui['config_releaseGrid'].records.map(function(obj) {
+                        if( id != obj.id && obj.downloadStatus.toUpperCase() == "DOWNLOADING" ){
+                            flag= false;
+                        }
+                    });
+                }
                 if(downloadClient != "" && flag ){
                     downloadClient.disconnect();
                     downloadClient = "";
@@ -453,15 +626,15 @@ function socketDwonload(releaseInfo){
                 doSearch();
             }
         });
-        downloadClient.send("<c:url value='/send/config/systemRelease/regist/download/releaseDownloading'/>", {}, JSON.stringify(releaseInfo));
+        downloadClient.send("<c:url value='/send/config/hbRelease/regist/download/hbReleaseDownloading'/>", {}, JSON.stringify(releaseInfo));
     }, function(frame){
         fail_count ++;
         console.log("request reConnecting.... fail_count: " + fail_count);
         downloadClient.disconnect();
         if( fail_count < 10 ){
-            socketDwonload(releaseInfo);    
+            socketDownload(releaseInfo);    
         }else{
-            w2alert("시스템 릴리즈 다운로드에 실패하였습니다. ", "시스템 릴리즈 다운로드")
+            w2alert("릴리즈 다운로드에 실패하였습니다. ", "릴리즈 다운로드")
             fail_count = 0;
             var requestParameter = {
                     id : releaseInfo.id,
@@ -493,7 +666,7 @@ function releaseFileUpload(releaseInfo){
     
     $.ajax({
         type:'POST',
-        url: '/config/systemRelease/regist/upload',
+        url: '/config/hbRelease/regist/upload',
         enctype : 'multipart/form-data',
         dataType: "text",
         async : true,
@@ -535,10 +708,10 @@ function releaseFileUpload(releaseInfo){
     });
  }
 
-/********************************************************
+/* /********************************************************
  * 설명 : 릴리즈 삭제 데이터 셋팅
  * 기능 : deletePop
- *********************************************************/
+ *********************************************************
 function deletePop(record) {
     var requestParameter = {
         id : record.id,
@@ -546,7 +719,7 @@ function deletePop(record) {
     };
     deleteRelease(requestParameter);
 }
-    
+     */
 /********************************************************
  * 설명 : 릴리즈 삭제 요청
  * 기능 : deleteRelease
@@ -554,7 +727,7 @@ function deletePop(record) {
 function deleteRelease(requestParameter){
     $.ajax({
         type : "DELETE",
-        url : "/config/systemRelease/delete",
+        url : "/config/hbRelease/multidelete",
         data : JSON.stringify(requestParameter),
         contentType : "application/json",
         success : function(data, status) {
@@ -564,6 +737,8 @@ function deleteRelease(requestParameter){
             }
             initView();
             w2ui['config_releaseGrid'].reset();
+            w2ui['config_AwsReleaseGrid'].reset();
+            w2ui['config_OpenstackReleaseGrid'].reset();
         },
         error : function(request, status, error) {
             var errorResult = JSON.parse(request.responseText);
@@ -579,6 +754,8 @@ function deleteRelease(requestParameter){
  *********************************************************/
 function gridReload() {
     w2ui['config_releaseGrid'].reset();
+    w2ui['config_AwsReleaseGrid'].reset();
+    w2ui['config_OpenstackReleaseGrid'].reset();
     doSearch();
 }
 
@@ -600,6 +777,8 @@ function initSetting() {
  *********************************************************/
 function clearMainPage() {
     $().w2destroy('config_releaseGrid');
+    $().w2destroy('config_AwsReleaseGrid');
+    $().w2destroy('config_OpenstackReleaseGrid');
 }
     
 /********************************************************
@@ -623,9 +802,9 @@ $(window).resize(function() {
 <div id="main">
     <div class="page_site">환경설정 및 관리 > <strong>릴리즈 관리</strong></div>
     
-    <!-- OpenPaaS 릴리즈 목록-->
+    <!-- OpenPaaS common 릴리즈 목록-->
     <div class="pdt20">
-        <div class="title fl">릴리즈 목록</div>
+        <div class="title fl">Common 릴리즈 목록</div>
         <div class="fr"> 
             <!-- Btn -->
             <sec:authorize access="hasAuthority('CONFIG_RELEASE_REGIST')">
@@ -637,74 +816,92 @@ $(window).resize(function() {
             <!-- //Btn -->
         </div>
     </div>
-    <!-- 릴리즈 grid -->
-    <div id="config_releaseGrid" style="width:100%; height:718px"></div>    
-        
+    
+    <!-- common 릴리즈 grid -->
+    <div id="config_releaseGrid" style="width:100%; height:250px"></div>
+    
+    <!-- OpenPaaS AWS CPI 릴리즈 목록-->
+    <div class="pdt20">
+        <div class="title fl">AWS CPI 릴리즈 목록</div>
+    </div>
+    
+    <!-- AWS 릴리즈 grid -->
+    <div id="config_AwsReleaseGrid" style="width:100%; height:250px"></div>
+    
+    <!-- OpenPaaS Openstack CPI 릴리즈 목록-->
+    <div class="pdt20">
+        <div class="title fl">Openstack CPI 릴리즈 목록</div>
+    </div>
+    
+    <!-- Openstack 릴리즈 grid -->
+    <div id="config_OpenstackReleaseGrid" style="width:100%; height:250px"></div>
+    
+</div>
     <!-- 릴리즈 등록 팝업 -->
     <div id="regPopupDiv" hidden="true">
         <input name="releaseSize" type="hidden" />
         <input name="id" type="hidden" />
         <form id="settingForm" action="POST">
             <div class="w2ui-page page-0">
-	            <div class="panel panel-info" style="margin-top:5px;" >
-	                <div class="panel-heading"><b>릴리즈 기본 정보</b></div>
-	                <div class="panel-body">
-	                    <div class="w2ui-field">
-	                        <label style="width:30%;text-align: left;padding-left: 20px;">릴리즈 명</label>
-	                        <div style="width: 70%;">
-	                            <input name="releaseName" type="text" maxlength="100" style="width: 60%" required="required" placeholder="릴리즈 명을 입력하세요." />
-	                        </div>
-	                    </div>
-	                    <div class="w2ui-field">
-	                        <label style="width:30%;text-align: left;padding-left: 20px;">릴리즈 유형</label>
-	                        <div style="width: 70%" id="releaseTypeDiv"></div>
-	                    </div>
-	                    <div class="w2ui-field">
-	                        <label style="width:30%;text-align: left;padding-left: 20px;">IaaS 유형</label>
-	                        <div style="width: 70%" id="iaasTypeListDiv"></div>
-	                    </div>
-	                </div>
-	            </div>
-	        </div>
-	        <div class="w2ui-page page-0">
-	            <div class="panel panel-info" style='margin: 10px 0;'>
-	                <div class="panel-heading"><b>릴리즈 다운 유형</b></div>
-	                <div class="panel-body">
-	                    <div class="w2ui-field">
-	                        <input type="radio" name="fileType" id="fileTypLocal" value="file" style="float:left; margin-left:15px;" onchange='setRegistType(this.value);'/>
-	                        <label for="fileTypLocal" style="width:25%;text-align:left;">&nbsp;&nbsp;로컬에서 선택</label>
-	                        <div style="width: 70%">
-	                            <span>
-	                                <input type="file" name="releasePathFile[]" id="releasePathFile" onchange="setReleaseFilePath(this);" hidden="true"/>
-	                                <input style="width: 60%" type="text" id="releaseFileName" name="releaseFileName" style="width:53%;" readonly  onClick="openBrowse();" placeholder="업로드할 릴리즈 파일을 선택하세요."/>
-	                            <span class="btn btn-primary" id = "browser" onClick="openBrowse();" disabled style="height: 25px; padding: 1px 7px 7px 6px;">Browse </span>&nbsp;&nbsp;&nbsp;
-	                           </span>
-	                        </div>
-	                    </div>
-	                    <div class="w2ui-field" style="margin: 8px 0px 0px 0px;">
-	                        <input type="radio" name="fileType" id="fileTypeUrl" style="float:left; margin-left:15px;" value="url" onchange='setRegistType(this.value);'/>
-	                        <label for="fileTypeUrl" for="fileTypeUrl" style="width:25%;text-align: left;">
-	                            &nbsp;&nbsp;릴리즈 Url
-	                            <span class="glyphicon glyphicon glyphicon-question-sign release-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="click" data-html="true" title="<b>공개 릴리즈 참조 사이트</b>"></span>
-	                        </label>
-	                        <div style="width: 70%">
-	                            <input style="width: 60%" type="text" id="releasePathUrl" name="releasePathUrl" style="width:53%;" readonly   placeholder="릴리즈 다운로드 Url을 입력 하세요."/>
-	                        </div>
-	                    </div>
-	                    <div class="w2ui-field" style="margin: 8px 0px 0px 0px;">
-	                        <input type="radio" name="fileType" id="fileTypeVersion" value="version"  style="float:left; margin-left:15px;" onchange='setRegistType(this.value);' />
-	                        <label for="fileTypeVersion" style="width:25%;text-align: left;">&nbsp;&nbsp;릴리즈 Version</label>
-	                        <div style="width: 70%">
-	                            <input style="width: 60%"type="text" id="releasePathVersion" name="releasePathVersion" style="width:53%;" readonly placeholder="릴리즈 다운로드 버전을 입력 하세요."/>
-	                        </div>
-	                    </div>
-	                    <div class="w2ui-field" style="margin: 8px 0px 0px 0px; color:#666">
-	                        <label style="width:30%;text-align: left;padding-left: 15px;color:#3f51b5">&nbsp;&nbsp;파일 덮어 쓰기
-	                            <input name="overlay" type="checkbox" value="overlay" checked/>&nbsp;
-	                        </label>
-	                    </div>
-	                </div>
-	            </div>
+                <div class="panel panel-info" style="margin-top:5px;" >
+                    <div class="panel-heading"><b>릴리즈 기본 정보</b></div>
+                    <div class="panel-body">
+                        <div class="w2ui-field">
+                            <label style="width:30%;text-align: left;padding-left: 20px;">릴리즈 명</label>
+                            <div style="width: 70%;">
+                                <input name="releaseName" type="text" maxlength="100" style="width: 60%" required="required" placeholder="릴리즈 명을 입력하세요." />
+                            </div>
+                        </div>
+                        <div class="w2ui-field">
+                            <label style="width:30%;text-align: left;padding-left: 20px;">릴리즈 유형</label>
+                            <div style="width: 70%" id="releaseTypeDiv"></div>
+                        </div>
+                        <div class="w2ui-field">
+                            <label style="width:30%;text-align: left;padding-left: 20px;">IaaS 유형</label>
+                            <div style="width: 70%" id="iaasTypeListDiv"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w2ui-page page-0">
+                <div class="panel panel-info" style='margin: 10px 0;'>
+                    <div class="panel-heading"><b>릴리즈 다운 유형</b></div>
+                    <div class="panel-body">
+                        <div class="w2ui-field">
+                            <input type="radio" name="fileType" id="fileTypLocal" value="file" style="float:left; margin-left:15px;" onchange='setRegistType(this.value);'/>
+                            <label for="fileTypLocal" style="width:25%;text-align:left;">&nbsp;&nbsp;로컬에서 선택</label>
+                            <div style="width: 70%">
+                                <span>
+                                    <input type="file" name="releasePathFile[]" id="releasePathFile" onchange="setReleaseFilePath(this);" hidden="true"/>
+                                    <input style="width: 60%" type="text" id="releaseFileName" name="releaseFileName" style="width:53%;" readonly  onClick="openBrowse();" placeholder="업로드할 릴리즈 파일을 선택하세요."/>
+                                <span class="btn btn-primary" id = "browser" onClick="openBrowse();" disabled style="height: 25px; padding: 1px 7px 7px 6px;">Browse </span>&nbsp;&nbsp;&nbsp;
+                               </span>
+                            </div>
+                        </div>
+                        <div class="w2ui-field" style="margin: 8px 0px 0px 0px;">
+                            <input type="radio" name="fileType" id="fileTypeUrl" style="float:left; margin-left:15px;" value="url" onchange='setRegistType(this.value);'/>
+                            <label for="fileTypeUrl" for="fileTypeUrl" style="width:25%;text-align: left;">
+                                &nbsp;&nbsp;릴리즈 Url
+                                <span class="glyphicon glyphicon glyphicon-question-sign release-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="click" data-html="true" title="<b>공개 릴리즈 참조 사이트</b>"></span>
+                            </label>
+                            <div style="width: 70%">
+                                <input style="width: 60%" type="text" id="releasePathUrl" name="releasePathUrl" style="width:53%;" readonly   placeholder="릴리즈 다운로드 Url을 입력 하세요."/>
+                            </div>
+                        </div>
+                        <div class="w2ui-field" style="margin: 8px 0px 0px 0px;">
+                            <input type="radio" name="fileType" id="fileTypeVersion" value="version"  style="float:left; margin-left:15px;" onchange='setRegistType(this.value);' />
+                            <label for="fileTypeVersion" style="width:25%;text-align: left;">&nbsp;&nbsp;릴리즈 Version</label>
+                            <div style="width: 70%">
+                                <input style="width: 60%"type="text" id="releasePathVersion" name="releasePathVersion" style="width:53%;" readonly placeholder="릴리즈 다운로드 버전을 입력 하세요."/>
+                            </div>
+                        </div>
+                        <div class="w2ui-field" style="margin: 8px 0px 0px 0px; color:#666">
+                            <label style="width:30%;text-align: left;padding-left: 15px;color:#3f51b5">&nbsp;&nbsp;파일 덮어 쓰기
+                                <input name="overlay" type="checkbox" value="overlay" checked/>&nbsp;
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
         <div id="regPopupBtnDiv" hidden="true">
@@ -732,13 +929,13 @@ $(function() {
                 }
             }, releaseFileName: { 
                 required: function(){
-                	if( $(".w2ui-msg-body input:radio[name='fileType']:checked").val() == "file" ){
-                		return checkEmpty( $(".w2ui-msg-body input[name='releaseFileName']").val());
-                	}else return false;
+                    if( $(".w2ui-msg-body input:radio[name='fileType']:checked").val() == "file" ){
+                        return checkEmpty( $(".w2ui-msg-body input[name='releaseFileName']").val());
+                    }else return false;
                 }
             }, releasePathUrl: { 
                 required: function(){
-                	if( $(".w2ui-msg-body input:radio[name='fileType']:checked").val() == "url" ){
+                    if( $(".w2ui-msg-body input:radio[name='fileType']:checked").val() == "url" ){
                         return checkEmpty( $(".w2ui-msg-body input[name='releasePathUrl']").val());
                     }else return false;
                 }, sqlInjection : function(){
@@ -746,7 +943,7 @@ $(function() {
                 }
             }, releasePathVersion: { 
                 required: function(){
-                	if( $(".w2ui-msg-body input:radio[name='fileType']:checked").val() == "version" ){
+                    if( $(".w2ui-msg-body input:radio[name='fileType']:checked").val() == "version" ){
                         return checkEmpty( $(".w2ui-msg-body input[name='releasePathVersion']").val());
                     }else return false;
                 }, sqlInjection : function(){

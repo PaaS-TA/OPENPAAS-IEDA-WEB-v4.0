@@ -43,7 +43,7 @@
                       <li><a href="javascript:goPage('<c:url value="/config/hbstemcell"/>', 'Public 스템셀 다운로드');">스템셀 관리</a></li>
                   </sec:authorize>
                   <sec:authorize access="hasAuthority('CONFIG_RELEASE_MENU')">
-                      <li><a href="javascript:goPage('<c:url value="/config/systemRelease"/>', 'System 릴리즈 관리');">릴리즈 관리</a></li>
+                      <li><a href="javascript:goPage('<c:url value="/config/hbRelease"/>', 'System 릴리즈 관리');">릴리즈 관리</a></li>
                   </sec:authorize>
                   <sec:authorize access="hasAuthority('INFO_IAASCONFIG_MENU')">
                         <li><a href="javascript:goPage('<c:url value="/info/iaasConfig"/>', '인프라 환경 설정 관리');">인프라 환경 설정 관리</a></li>
