@@ -3,6 +3,7 @@ package org.openpaas.ieda.hbdeploy.web.information.iaasConfig.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import org.openpaas.ieda.hbdeploy.web.information.iaasConfig.dao.HbIaasConfigMgn
 import org.openpaas.ieda.hbdeploy.web.information.iaasConfig.dao.HbIaasConfigMgntVO;
 import org.openpaas.ieda.hbdeploy.web.information.iaasConfig.dto.HbIaasConfigMgntDTO;
 
+@Service
 public class HbIaasConfigMgntService {
 
     @Autowired HbIaasConfigMgntDAO dao;

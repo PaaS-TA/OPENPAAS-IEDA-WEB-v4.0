@@ -30,7 +30,7 @@
     From dual
 </select>
 
-<select id="selectIaasConfigInfoList" resultType="org.openpaas.ieda.deploy.web.information.iassConfig.dao.IaasConfigMgntVO">
+<select id="selectIaasConfigInfoList" resultType="org.openpaas.ieda.hbdeploy.web.information.iaasConfig.dao.HbIaasConfigMgntVO">
 /** ieda.iaas.information.iaasConfig.selectIaasConfigInfoList **/
     Select
          a.id as id
@@ -62,7 +62,7 @@
        And a.create_user_id= #{userId}
 </select>
 
-<select id= "selectIaasConfigInfo" resultType="org.openpaas.ieda.deploy.web.information.iassConfig.dao.IaasConfigMgntVO">
+<select id= "selectIaasConfigInfo" resultType="org.openpaas.ieda.hbdeploy.web.information.iaasConfig.dao.HbIaasConfigMgntVO">
     /** ieda.iaas.information.iaasConfig.selectIaasConfigInfo **/
     Select
          a.id as id

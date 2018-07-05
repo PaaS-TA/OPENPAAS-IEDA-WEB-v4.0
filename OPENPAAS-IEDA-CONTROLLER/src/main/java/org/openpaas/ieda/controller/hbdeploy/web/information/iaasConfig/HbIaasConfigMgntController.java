@@ -7,9 +7,9 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.openpaas.ieda.controller.deploy.web.information.iaasConfig.IaasConfigMgntController;
-import org.openpaas.ieda.deploy.web.information.iassConfig.dao.IaasConfigMgntVO;
-import org.openpaas.ieda.deploy.web.information.iassConfig.dto.IaasConfigMgntDTO;
-import org.openpaas.ieda.deploy.web.information.iassConfig.service.IaasConfigMgntService;
+import org.openpaas.ieda.hbdeploy.web.information.iaasConfig.dao.HbIaasConfigMgntVO;
+import org.openpaas.ieda.hbdeploy.web.information.iaasConfig.dto.HbIaasConfigMgntDTO;
+import org.openpaas.ieda.hbdeploy.web.information.iaasConfig.service.HbIaasConfigMgntService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class HbIaasConfigMgntController {
 
-    @Autowired IaasConfigMgntService service;
+    @Autowired HbIaasConfigMgntService service;
     private final static Logger LOGGER = LoggerFactory.getLogger(IaasConfigMgntController.class);
     
     /***************************************************
@@ -74,7 +74,7 @@ public class HbIaasConfigMgntController {
             LOGGER.info("================================================> /info/hbIaasConfig/all/list");
         }
         //전체 환경 설정 목록 조회
-        List<IaasConfigMgntVO> allIaasConfigInfoList = service.getAllIaasConfigInfoList(principal);
+        List<HbIaasConfigMgntVO> allIaasConfigInfoList = service.getAllIaasConfigInfoList(principal);
         HashMap<String, Object> list = new HashMap<String, Object>();
         int size = 0;
         if ( allIaasConfigInfoList != null ) {
@@ -113,7 +113,7 @@ public class HbIaasConfigMgntController {
             LOGGER.info("================================================> /info/hbIaasConfig/"+iaasType+"/list");
         }
         
-        List<IaasConfigMgntVO> list = service.getIaasConfigInfoList(iaasType, principal);
+        List<HbIaasConfigMgntVO> list = service.getIaasConfigInfoList(iaasType, principal);
         HashMap<String, Object> result = new HashMap<String, Object>();
         int size = 0;
         if (list != null) {
@@ -131,7 +131,7 @@ public class HbIaasConfigMgntController {
      * @return : ResponseEntity<?>
     ***************************************************/
     @RequestMapping(value="/info/hbIaasConfig/{iaasType}/save", method=RequestMethod.PUT)
-    public  ResponseEntity<?> saveIaasConfigInfo(Principal principal, @PathVariable("iaasType") String iaasType, @RequestBody @Valid IaasConfigMgntDTO dto){
+    public  ResponseEntity<?> saveIaasConfigInfo(Principal principal, @PathVariable("iaasType") String iaasType, @RequestBody @Valid HbIaasConfigMgntDTO dto){
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("================================================> /info/hbIaasConfig/"+iaasType+"/save");
         }
@@ -143,14 +143,14 @@ public class HbIaasConfigMgntController {
      * @project : Paas 플랫폼 설치 자동화
      * @description :  환경 설정 정보 상세 조회
      * @title : getIaasConifgInfo
-     * @return : ResponseEntity<IaasConfigMgntVO>
+     * @return : ResponseEntity<HbIaasConfigMgntVO>
     ***************************************************/
     @RequestMapping(value="/info/hbIaasConfig/{iaasType}/save/detail/{id}", method=RequestMethod.GET)
-    public ResponseEntity<IaasConfigMgntVO> getIaasConfigInfo(@PathVariable("iaasType") String iaasType, @PathVariable("id") int id, Principal principal){
+    public ResponseEntity<HbIaasConfigMgntVO> getIaasConfigInfo(@PathVariable("iaasType") String iaasType, @PathVariable("id") int id, Principal principal){
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("================================================> /info/hbIaasConfig/"+iaasType+"/save/detail/"+id);
         }
-        IaasConfigMgntVO iaasInfo = service.getIaasConfigInfo(iaasType, id, principal);
+        HbIaasConfigMgntVO iaasInfo = service.getIaasConfigInfo(iaasType, id, principal);
         return new ResponseEntity<>(iaasInfo,HttpStatus.OK);
     }
     
@@ -161,7 +161,7 @@ public class HbIaasConfigMgntController {
      * @return : ResponseEntity<?>
     ***************************************************/
     @RequestMapping(value="/info/hbIaasConfig/{iaasType}/delete", method=RequestMethod.DELETE)
-    public ResponseEntity<?> deleteIaasConfigInfo(@PathVariable("iaasType") String iaasType, @RequestBody @Valid IaasConfigMgntDTO dto, Principal principal){
+    public ResponseEntity<?> deleteIaasConfigInfo(@PathVariable("iaasType") String iaasType, @RequestBody @Valid HbIaasConfigMgntDTO dto, Principal principal){
         if (LOGGER.isInfoEnabled()){LOGGER.info("================================================> /info/hbIaasConfig/"+iaasType+"/delete");}
         service.deleteIaasConfigInfo(dto, principal);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
