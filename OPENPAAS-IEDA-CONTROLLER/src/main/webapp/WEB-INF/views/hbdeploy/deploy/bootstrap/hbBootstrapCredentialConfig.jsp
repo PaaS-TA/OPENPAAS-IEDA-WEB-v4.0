@@ -50,7 +50,6 @@ var credentialLayout = {
                            return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
                        }
                    }},
-                   { field: 'credentialConfigName', caption: '디렉터 인증서 명', size:'50%', style:'text-align:center;'},
                    { field: 'credentialKeyName', caption: '디렉터 인증서 파일 명', size:'60%', style:'text-align:center;'},
                    { field: 'directorPublicIp', caption: '디렉터 Public IP', size:'50%', style:'text-align:center;'},
                    { field: 'directorPrivateIp', caption: '디렉터 Private IP', size:'50%', style:'text-align:center;'}
