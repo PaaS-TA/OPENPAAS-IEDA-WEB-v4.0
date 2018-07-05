@@ -152,8 +152,8 @@ function settingResourceInfo(){
     $("input[name=resourceInfoId]").val(record.recid);
     $("input[name=resourceConfigName]").val(record.resourceConfigName);
     $("select[name=iaasType]").val(record.iaasType);
-    $("select[name=iaasConfigId]").val(record.iaasConfigAlias);
-    $("select[name=stemcellName]").val(record.stemcellName);
+    //$("select[name=iaasConfigId]").val(record.iaasConfigAlias);
+    $("select[name=stemcellName]").html("<option value='"+record.stemcellName+"' selected >"+record.stemcellName+"</option>");
     $("input[name=instanceType]").val(record.instanceType);
     $("input[name=vmPassword]").val(record.vmPassword);
 }
@@ -246,6 +246,7 @@ function deleteBootstrapResourceConfigInfo(id, resourceConfigName){
  * 설명 : 스템셀 목록 조회
  ***************************************************************** */
 function getStemcellList(iaas){
+	
     var url = "/common/deploy/stemcell/list/bootstrap/" + iaas;
     $.ajax({
         type : "GET",
@@ -253,6 +254,7 @@ function getStemcellList(iaas){
         contentType : "application/json",
         async : true,
         success : function(data, status) {
+            console.log(iaas);
             stemcells = new Array();
             if(data.records.length != 0){
                 var option = "";
@@ -260,12 +262,17 @@ function getStemcellList(iaas){
                     option += "<option "+ obj.stemcellFileName +">"+obj.stemcellFileName+"</option>";
                 });
             }else if (data.records.length == 0){
-                option = "<option value=''>스템셀이 없습니다.</option>";
+            	if (iaas == 'nothing'){
+                    option = "<option value=''>인프라 환경을 먼저 선택하세요.</option>";
+                }else{
+                    option = "<option value=''>스템셀이 없습니다.</option>";
+                }
             }
             $("#stemcellName").html(option);
         },
         error : function( e, status ) {
             w2alert(search_data_fail_msg, "BOOTSTRAP 설치");
+            resetForm();
         }
     });
 }
@@ -302,11 +309,13 @@ function resetForm(status){
     $("input[name=resourceConfigName]").val("");
     $("select[name=iaasType]").val("");
     $("select[name=stemcellName]").val("");
+    $("select[name=stemcellName]").html("<option value=''>인프라 환경을 먼저 선택하세요.</option>");
     $("input[name=instanceType]").val("");
     $("input[name=vmPassword]").val("");
     $("input[name=resourceInfoId]").val("");
     if(status=="reset"){
         w2ui['resource_GroupGrid'].clear();
+        $("select[name=stemcellName]").html("<option value=''>인프라 환경을 먼저 선택하세요.</option>");
         doSearch();
     }
     document.getElementById("settingForm").reset();
@@ -342,7 +351,7 @@ function resetForm(status){
                        <label style="width:40%;text-align: left;padding-left: 20px;">클라우드 인프라 환경</label>
                        <div>
                            <select class="form-control" onchange="getStemcellList(this.value);" name="iaasType" style="width: 320px; margin-left: 20px;">
-                               <option value="">인프라 환경을 선택하세요.</option>
+                               <option value="nothing">인프라 환경을 선택하세요.</option>
                                <option value="aws">AWS</option>
                                <option value="openstack">Openstack</option>
                            </select>
