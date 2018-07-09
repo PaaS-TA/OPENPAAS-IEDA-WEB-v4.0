@@ -218,7 +218,6 @@ function lock(msg) {
 function setstemcellFilePath(fileInput){
     console.log(fileInput);
     var file = fileInput.files;
-    alert("1");
     var files = $('.w2ui-msg-body #stemcellPathFile')[0].files;
     console.log(files);
     
