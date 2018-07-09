@@ -15,6 +15,7 @@ import org.openpaas.ieda.hbdeploy.web.config.stemcell.dao.HbStemcellManagementVO
 import org.openpaas.ieda.hbdeploy.web.config.stemcell.dto.HbStemcellManagementDTO;
 import org.openpaas.ieda.hbdeploy.web.config.stemcell.service.HbStemcellManagementDownloadAsyncService;
 import org.openpaas.ieda.hbdeploy.web.config.stemcell.service.HbStemcellManagementService;
+import org.openpaas.ieda.hbdeploy.web.config.stemcell.service.HbStemcellManagementUploadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +28,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 @Controller
 public class HbStemcellManagementController {
 
     @Autowired private HbStemcellManagementService service;
-    @Autowired private StemcellManagementUploadService uploadService;
+    @Autowired private HbStemcellManagementUploadService uploadService;
     @Autowired private HbStemcellManagementDownloadAsyncService downloadService;
 
     private final static Logger LOGGER = LoggerFactory.getLogger(StemcellManagementController.class);
@@ -114,4 +116,16 @@ public class HbStemcellManagementController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : 로컬 스템셀 파일 업로드
+     * @title : doFileUploadHybridStemcell
+     * @return : ResponseEntity<Object>
+    *****************************************************************/
+    @RequestMapping(value="/config/hbstemcell/regist/upload", method=RequestMethod.POST)
+    public ResponseEntity<Object> doFileUploadHybridStemcell(MultipartHttpServletRequest request, Principal principal){
+        if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> /config/hbstemcell/regist/upload"); }
+        uploadService.uploadStemcellFile(request, principal);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

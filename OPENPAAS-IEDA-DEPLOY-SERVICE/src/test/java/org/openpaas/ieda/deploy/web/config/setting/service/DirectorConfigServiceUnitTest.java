@@ -153,7 +153,6 @@ public class DirectorConfigServiceUnitTest extends BaseDeployControllerUnitTest{
         mockDirectorConfigService.boshEnvAliasSequence(dvo);
     }
     
-    
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description : 설치 관리자 추가 테스트
@@ -213,7 +212,7 @@ public class DirectorConfigServiceUnitTest extends BaseDeployControllerUnitTest{
     * @title : deleteDirectorConfigFileNotFound
     * @return : void
     ***************************************************/
-    @Test
+    @Test(expected=CommonException.class)
     public void deleteDirectorConfigFileNotFound(){
         DirectorConfigVO expectVo = setDirectorInfo();
         when(mockDirectorConfigDAO.selectDirectorConfigBySeq(anyInt())).thenReturn(expectVo);
@@ -226,7 +225,7 @@ public class DirectorConfigServiceUnitTest extends BaseDeployControllerUnitTest{
     * @title : deleteDirectorConfigNullPoint
     * @return : void
     ***************************************************/
-    @Test
+    @Test(expected=CommonException.class)
     public void deleteDirectorConfigNullPoint() throws Exception{
         OutputStreamWriter fileWriter = new OutputStreamWriter(new FileOutputStream(BOSHCONFIGTESTFILEPATH),"UTF-8");
         fileWriter.write("1");
