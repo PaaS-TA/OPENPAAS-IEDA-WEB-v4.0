@@ -1,6 +1,6 @@
 <%
 /* =================================================================
- * 상세설명 : CF 설치
+ * 상세설명 : CF Deployment
  * =================================================================
  * 수정일    작성자             내용     
  * -----------------------------------------------------------------
@@ -87,7 +87,7 @@ $(function () {
 });
  
 function setW2layout(){
-    var pstyle = 'width:615px;height:595;';
+    var pstyle = 'width:740px;height:595;';
     config = {
           layout2: {
               name: 'layout2',
@@ -201,8 +201,8 @@ function setCfData(contents) {
             subnetDns                : contents.networks[i].subnetDns,
             subnetReservedFrom       : contents.networks[i].subnetReservedFrom,
             subnetReservedTo         : contents.networks[i].subnetReservedTo,
-            subnetStaticFrom         : contents.networks[i].subnetStaticFrom,
-            subnetStaticTo           : contents.networks[i].subnetStaticTo,
+            //subnetStaticFrom         : contents.networks[i].subnetStaticFrom,
+            //subnetStaticTo           : contents.networks[i].subnetStaticTo,
             subnetId                 : contents.networks[i].subnetId,
             networkName              : contents.networks[i].networkName,
             cloudSecurityGroups      : contents.networks[i].cloudSecurityGroups,
@@ -268,7 +268,7 @@ function setCfData(contents) {
 function defaultInfoPopup() {
     settingDiegoUse(diegoUse, $("#defaultInfoDiv ul"));
     w2popup.open({
-        title : "<b>CF 설치</b>",
+        title : "<b>CF DEPLOYMENT</b>",
         width : 750,
         height :850,
         modal : true,
@@ -358,7 +358,7 @@ function getCfRelease() {
         },
         error : function(e, status) {
             w2popup.unlock();
-            w2alert("Cf Release List 를 가져오는데 실패하였습니다.", "CF 설치");
+            w2alert("Cf Release List 를 가져오는데 실패하였습니다.", "CF Deployment");
         }
     });
 }
@@ -386,7 +386,7 @@ function getLoggregatorRelease(){
         },
         error : function(e, status) {
             w2popup.unlock();
-            w2alert("Cf Release List 를 가져오는데 실패하였습니다.", "CF 설치");
+            w2alert("Cf Release List 를 가져오는데 실패하였습니다.", "CF Deployment");
         }
     });
 }
@@ -417,7 +417,7 @@ function getOsConfRelease(){
         },
         error : function(e, status){
             w2popup.unlock();
-            w2alert("OS-CONF Release List 를 가져오는데 실패하였습니다.", "CF 설치");
+            w2alert("OS-CONF Release List 를 가져오는데 실패하였습니다.", "CF Deployment");
         }
     });
 }
@@ -544,7 +544,7 @@ function saveDefaultInfo() {
         },
         error: function(request, status, error) {
             var errorResult = JSON.parse(request.responseText);
-            w2alert(errorResult.message, "CF 설치");
+            w2alert(errorResult.message, "CF Deployment");
         }
     });
  }
@@ -556,7 +556,7 @@ function saveDefaultInfo() {
 function defaultNetworkPopup(div, height){
     settingDiegoUse(diegoUse, $(div+" ul"));
     w2popup.open({
-        title   : "<b>CF 설치</b>",
+        title   : "<b>CF Deployment</b>",
         width   : 750,
         height  : height,
         body    : $(div+"Div").html(),
@@ -595,11 +595,11 @@ function defaultNetworkPopup(div, height){
                  $(".w2ui-msg-body input[name='publicSubnetRange']").val(networkInfo[i].subnetRange); 
                  $(".w2ui-msg-body input[name='publicSubnetGateway']").val(networkInfo[i].subnetGateway);
                  $(".w2ui-msg-body input[name='publicSubnetDns']").val(networkInfo[i].subnetDns);
-                 $(".w2ui-msg-body input[name='publicStaticIp']").val(networkInfo[i].subnetStaticFrom);
-                 $(".w2ui-msg-body input[name='publicStaticFrom']").val(networkInfo[i].subnetStaticFrom);
-                 $(".w2ui-msg-body input[name='publicStaticTo']").val(networkInfo[i].subnetStaticTo);
+                 $(".w2ui-msg-body input[name='publicStaticIp']").val(networkInfo[i].subnetStaticFrom);///
+                 $(".w2ui-msg-body input[name='publicStaticFrom']").val(networkInfo[i].subnetStaticFrom);///
+                 $(".w2ui-msg-body input[name='publicStaticTo']").val(networkInfo[i].subnetStaticTo);///
              }else{
-                 $(".w2ui-msg-body input[name='publicStaticIp']").val(networkInfo[i].subnetStaticFrom); 
+                 $(".w2ui-msg-body input[name='publicStaticIp']").val(networkInfo[i].subnetStaticFrom); ///
              }
          }else{
              if(networkInfo[i].seq  > 1)  settingNetwork(networkInfo[i].seq );
@@ -610,8 +610,8 @@ function defaultNetworkPopup(div, height){
              $(".w2ui-msg-body input[name='subnetDns_"+seq+"']").val(networkInfo[i].subnetDns);
              $(".w2ui-msg-body input[name='subnetReservedFrom_"+seq+"']").val(networkInfo[i].subnetReservedFrom);
              $(".w2ui-msg-body input[name='subnetReservedTo_"+seq+"']").val(networkInfo[i].subnetReservedTo);
-             $(".w2ui-msg-body input[name='subnetStaticFrom_"+seq+"']").val(networkInfo[i].subnetStaticFrom);
-             $(".w2ui-msg-body input[name='subnetStaticTo_"+seq+"']").val(networkInfo[i].subnetStaticTo);
+             //$(".w2ui-msg-body input[name='subnetStaticFrom_"+seq+"']").val(networkInfo[i].subnetStaticFrom);
+             //$(".w2ui-msg-body input[name='subnetStaticTo_"+seq+"']").val(networkInfo[i].subnetStaticTo);
              $(".w2ui-msg-body input[name='networkName_"+seq+"']").val(networkInfo[i].networkName);
              $(".w2ui-msg-body input[name='subnetId_"+seq+"']").val(networkInfo[i].subnetId);
              $(".w2ui-msg-body input[name='cloudSecurityGroups_"+seq+"']").val(networkInfo[i].cloudSecurityGroups);
@@ -641,7 +641,7 @@ function defaultNetworkPopup(div, height){
  * 설명 : 네트워크 입력 추가
  * 기능 : addInternalNetworkInputs
  *********************************************************/
- function addInternalNetworkInputs(preDiv, form){
+  function addInternalNetworkInputs(preDiv, form){
     w2popup.lock("Internal 네트워크 추가 중", true);
     var index = Number(preDiv.split("_")[1])+1;
     var div= preDiv.split("_")[0] + "_"+ index;
@@ -712,11 +712,12 @@ function defaultNetworkPopup(div, height){
         html+=         "<input name='subnetReservedTo_"+index+"' type='text' style='display:inline-block; width:32%;' placeholder='예) 10.0.0.20' />";
         html+=     "</div></div>";
         
-        html+= field_div_label + "IP할당 대역(최소 20개)" + "</label>"; 
+/*         html+= field_div_label + "IP할당 대역(최소 20개)" + "</label>"; 
         html+=     "<div style=' width: 60%;'>"+"<input name='subnetStaticFrom_"+index+"' type='text' style='display:inline-block; width:32%;' placeholder='예) 10.0.0.10' />";
         html+=         "<span style='width: 4%; text-align: center;'>&nbsp;&ndash; &nbsp;</span>";
         html+=         "<input name='subnetStaticTo_"+index+"' type='text' style='display:inline-block; width:32%;' placeholder='예) 10.0.0.20'/>";
-        html+=     "</div>";
+        html+=     "</div>"; */
+        
         html+= "</div></div></div>";
         
         $(".w2ui-msg-body "+ div).show();
@@ -724,7 +725,7 @@ function defaultNetworkPopup(div, height){
         $(form + " "+ div).html(html);
         createInternalNetworkValidate(index);
         
-}
+} 
 
  /********************************************************
   * 설명 : 네트워크 유효성 추가
@@ -800,21 +801,21 @@ function createInternalNetworkValidate(index){
         }, messages: {required: "IP 할당 제외 대역"+text_required_msg}
     });
     
-    $("[name*='subnetStaticFrom_"+index+"']").rules("add", {
+/*     $("[name*='subnetStaticFrom_"+index+"']").rules("add", {
         required: function(){
             return checkEmpty($(".w2ui-msg-body input[name='subnetStaticFrom_"+index+"']").val());
         },ipv4: function(){
             return $(".w2ui-msg-body input[name='subnetStaticFrom_"+index+"']").val();  
         }, messages: {required: "IP 할당 대역"+text_required_msg}
-    });
+    }); */
     
-    $("[name*='subnetStaticTo_"+index+"']").rules("add", {
+/*     $("[name*='subnetStaticTo_"+index+"']").rules("add", {
         required: function(){
             return checkEmpty($(".w2ui-msg-body input[name='subnetStaticTo_"+index+"']").val());
         },ipv4: function(){
             return $(".w2ui-msg-body input[name='subnetStaticTo_"+index+"']").val();  
         }, messages: {required: "IP 할당 대역"+text_required_msg}
-    });
+    }); */
     
     if( iaas.toLowerCase() != "vsphere" ){
         $("[name*='cloudSecurityGroups_"+index+"']").rules("add", {
@@ -909,8 +910,8 @@ function saveNetworkInfo(type, form) {
              subnetDns           : $(".w2ui-msg-body input[name='subnetDns_"+i+"']").val(),
              subnetReservedFrom  : $(".w2ui-msg-body input[name='subnetReservedFrom_"+i+"']").val(),
              subnetReservedTo    : $(".w2ui-msg-body input[name='subnetReservedTo_"+i+"']").val(),
-             subnetStaticFrom    : $(".w2ui-msg-body input[name='subnetStaticFrom_"+i+"']").val(),
-             subnetStaticTo      : $(".w2ui-msg-body input[name='subnetStaticTo_"+i+"']").val(),
+           //subnetStaticFrom    : $(".w2ui-msg-body input[name='subnetStaticFrom_"+i+"']").val(),
+           //subnetStaticTo      : $(".w2ui-msg-body input[name='subnetStaticTo_"+i+"']").val(),
              networkName         : $(".w2ui-msg-body input[name='networkName_"+i+"']").val(),
              subnetId            : $(".w2ui-msg-body input[name='subnetId_"+i+"']").val(),
              cloudSecurityGroups : $(".w2ui-msg-body input[name='cloudSecurityGroups_"+i+"']").val(),
@@ -965,7 +966,7 @@ function getCountryCodes() {
         },
         error : function(e, status) {
             w2popup.unlock();
-            w2alert("국가 코드를 가져오는데 실패하였습니다.", "CF 설치");
+            w2alert("국가 코드를 가져오는데 실패하였습니다.", "CF Deployment");
         }
     });
 }
@@ -977,7 +978,7 @@ function getCountryCodes() {
 function keyInfoPopup(){
     settingDiegoUse(diegoUse, $("#KeyInfoDiv ul"));
     w2popup.open({
-        title   : "<b>CF 설치</b>",
+        title   : "<b>CF Deployment</b>",
         width   : 650,
         height  : 500,
         body    : $("#KeyInfoDiv").html(),
@@ -1081,7 +1082,7 @@ function createKeyInfo(){
 function saveKeyInfo(type){
      if( type == "after"){
          if( checkEmpty(keyFile) ){
-             w2alert("Key를 생성하지 않았습니다. 확인해주세요.", "CF 설치");
+             w2alert("Key를 생성하지 않았습니다. 확인해주세요.", "CF Deployment");
              return;
          }
          keyInfo = {
@@ -1107,7 +1108,7 @@ function saveKeyInfo(type){
                 settingIaasPopup("resource");
             },
             error : function(e, status) {
-                w2alert("Key 생성 정보 등록에 실패 하였습니다.", "CF 설치");
+                w2alert("Key 생성 정보 등록에 실패 하였습니다.", "CF Deployment");
             }
         });
     } else{
@@ -1124,7 +1125,7 @@ function saveKeyInfo(type){
 function resourceInfoPopup(div, height) {
     settingDiegoUse(diegoUse, $(div+" ul"));
     w2popup.open({
-        title   : "<b>CF 설치</b>",
+        title   : "<b>CF Deployment</b>",
         width   : 750,
         height  : 690,
         body    : $(div+"Div").html(),
@@ -1160,7 +1161,7 @@ function resourceInfoPopup(div, height) {
                         $(".w2ui-msg-body input[name='runnerFlavorCpu']").val(resourceInfo.runnerCpu);
                     }
                 }
-                w2popup.lock("스템셀을 조회 중입니다.", true);
+                w2popup.lock("조회 중입니다.", true);
                 getStamcellList();
             }
         },
@@ -1193,19 +1194,56 @@ function getStamcellList() {
                         options += "<option value='"+obj.stemcellFileName+"/"+obj.stemcellVersion+"'>"+obj.stemcellFileName+"/"+obj.stemcellVersion+"</option>";
                     }
                 });
-                $(".w2ui-msg-body select[name='stemcells']").html(options);
+                $("#stemcellsInfo select[name='stemcells']").html(options);
             }
             w2popup.unlock();
         },
         error : function(e, status) {
             w2popup.unlock();
-            w2alert("Stemcell List 를 가져오는데 실패하였습니다.", "CF 설치");
+            w2alert("Stemcell List 를 가져오는데 실패하였습니다.", "CF Deployment");
         }
     });
 }
+/********************************************************
+ * 설명 : 인스턴스 정보  팝업
+ * 기능 : instanceInfoPopup //aaaaaaaaaaa
+ *********************************************************/
+/* function instanceInfoPopup(){
+    settingDiegoUse(diegoUse, $("#KeyInfoDiv ul"));
+    w2popup.open({
+        title   : "<b>CF Deployment</b>",
+        width   : 750,
+        height  : 500,
+        body    : $("#cfDetailPopDiv").html(),
+        buttons : $("#cfDetailButtons").html(),
+        modal : true,
+        showMax : false,
+        onOpen : function(event) {
+            event.onComplete = function() {
+                //$(".w2ui-msg-body input[name='']").val(defaultInfo.domain);
+                if (instanceInfo != "") {
+                    $(".w2ui-msg-body input[name='adapter']").val(jobsInfo.adapter_z1);//
+                    $(".w2ui-msg-body input[name='api']").val(jobsInfo.api_z1);//
+                    $(".w2ui-msg-body input[name='cc_worker']").val(jobsInfo.cc_worker_z1);//
+                    $(".w2ui-msg-body input[name='consul']").val(jobsInfo.consul_z1);//
+                    $(".w2ui-msg-body input[name='database']").val(jobsInfo.database_z1);//
+                    $(".w2ui-msg-body input[name='diego_api']").val(jobsInfo.diego_api_z1);//
+                    $(".w2ui-msg-body input[name='diego_cell']").val(jobsInfo.diego_cell);//
+                    $(".w2ui-msg-body input[name='doppler']").val(jobsInfo.doppler_z1);//
+                    $(".w2ui-msg-body input[name='haproxy']").val(jobsInfo.haproxy_z1);//
+                }
+            }
+        },
+        onClose : function(event) {
+            event.onComplete = function() {
+                initSetting();
+            }
+        }
+    });
+} */
 
 /********************************************************
- * 설명 : CF 고급 기능
+ * 설명 : CF 고급 기능 aaaaaa
  * 기능 : resourceJobSettingsPop
  *********************************************************/
 function resourceJobSettingsPop(){
@@ -1218,8 +1256,8 @@ function resourceJobSettingsPop(){
         return;
     }
     w2popup.open({
-        title   : '<b>CF 고급 설정</b>',
-        width   : 625,
+        title   : '<b>CF Deployment</b>',
+        width   : 750,
         height  : 685,
         showMax : true,
         body    : '<div id="cfDetailDiv" style="position: absolute; left: 5px; top: 5px; right: 5px; bottom: 5px;"></div>',
@@ -1232,6 +1270,7 @@ function resourceJobSettingsPop(){
                 $('#w2ui-popup #cfDetailDiv').w2render('layout2');
                 w2ui['layout2'].content('main', $('#cfDetailPopDiv').html());
                 settingCfJobs();
+                
             };
         }, onClose : function(event){
             jobPopupComplete();
@@ -1243,14 +1282,14 @@ function resourceJobSettingsPop(){
  * 설명 : CF 고급 설정 정보 저장
  * 기능 : saveCfJobsInfo
  *********************************************************/
-function saveCfJobsInfo(){
+function saveCfJobsInfo(type){
      w2popup.lock(save_info_msg, true);
      var i=0;
      var flag=true;
      
       $(".w2ui-msg-body #cfJobListDiv li > ul").each(function(){
          var input = $($(this).children()[0]).find("input");
-         if ($(input).val != "" && $(input).val() >=0 && $(input).val() <=3) {
+         if ($(input).val != "" && $(input).val() >=0 && $(input).val() <=100) {
          }else{
              flag = false;
          }
@@ -1283,7 +1322,12 @@ function saveCfJobsInfo(){
                 data : JSON.stringify(jobsInfo),
                 success : function(status) {
                     w2popup.unlock();
-                    jobPopupComplete();
+                    if(type == 'before'){
+                        jobPopupComplete();
+                    }else if(type == 'after'){
+                    	jobPopupComplete(); 
+                        saveResourceInfo('after');
+                    }
                 },
                 error :function(request, status, error) {
                     w2popup.unlock();
@@ -1291,8 +1335,10 @@ function saveCfJobsInfo(){
             });
      }else{
          w2popup.unlock();
-         w2alert("인스턴스 수는 0부터 3까지만 가능합니다.");
+         w2alert("인스턴스 수는 0부터 100까지만 가능합니다.");
      }
+     
+     
 }
 
 /********************************************************
@@ -1305,7 +1351,7 @@ function jobPopupComplete(){
     if( iaas.toUpperCase() == "VSPHERE" ){
         resourceInfoPopup("#vSphereResourceInfo", 695);
     }else{
-        resourceInfoPopup("#resourceInfo",690 );
+        resourceInfoPopup("#resourceInfo",750);
    }
 }
 
@@ -1326,12 +1372,11 @@ function settingCfJobs(){
             if( !checkEmpty(data) ){
                 var div = "";
                 var html = "";
-                html += '<div class="panel panel-info" style="height: 100%;overflow: auto;" >';
-                html += '<div class="panel-heading"><b>CF 고급 설정</b></div>';
+                html += '<div class="panel panel-info" style="height: 100%; overflow: auto;" >';
                 html += '<div class="panel-body">';
                 html += '<div id="cfJobListDiv">';
                 html += '<p style="color:red;">- 고급 설정 값을 변경하지 않을 경우 아래에 입력 된 기본 값으로 자동 설정됩니다.</p>';
-                html += '<p style="color:red;">- 해당 Job의 인스턴스 수는 0-3까지 입력하실 수 있습니다.</p>';
+              //html += '<p style="color:red;">- 해당 Job의 인스턴스 수는 0-3까지 입력하실 수 있습니다.</p>';
                 for( var j=1; j<networkInfo.length; j++ ){
                     html += "<p style='color: #565656;font-size: 13px;font-weight:bolder;margin-top: 20px;'>[Internal 네트워크_"+ j+ "]</p>"
                     for( var i=0; i<data.length; i++ ){
@@ -1354,7 +1399,7 @@ function settingCfJobs(){
             }
         },
         error : function(e, status) {
-            w2alert(JSON.parse(e.responseText).message, "CF 설치");
+            w2alert(JSON.parse(e.responseText).message, "CF Deployment");
         }
     });
 }
@@ -1415,7 +1460,7 @@ function setJobSettingHtml(data, j){
  * 기능 : instanceControl
  *********************************************************/
 function instanceControl(e){
-     if ( e.value != "" && e.value >=0 && e.value<=3) {
+     if ( e.value != "" && e.value >=0 && e.value<=100) {
          if( $(e).parent().find("p").length > 0 ){
              $(e).parent().find("p").remove();
          }
@@ -1431,7 +1476,7 @@ function instanceControl(e){
 //              $(e).val("1");
          }
          if( $(e).parent().find("p").length == 0 ){
-             $(e).parent().append("<p>0부터 3까지 숫자만 입력 가능 합니다.</p>");
+             $(e).parent().append("<p>100까지 숫자만 입력 가능 합니다.</p>"); //aaabbbccc
          }
      }
 }
@@ -1442,7 +1487,7 @@ function instanceControl(e){
  * 기능 : saveResourceInfo
  *********************************************************/
 function saveResourceInfo(type) {
-    var stemcellInfos = $(".w2ui-msg-body select[name='stemcells']").val().split("/");
+    var stemcellInfos = $("#stemcellsInfo select[name='stemcells'] :selected").val().split("/");
     resourceInfo = {
             id               : cfId,
             iaas             : iaas.toUpperCase(),
@@ -1469,25 +1514,56 @@ function saveResourceInfo(type) {
     }
     if (type == 'after') {
         //Server send Cf Info
+        
         $.ajax({
             type : "PUT",
             url : "/deploy/"+menu+"/install/saveResourceInfo",
             contentType : "application/json",
             data : JSON.stringify(resourceInfo),
             success : function(data, status) {
-                w2popup.clear();
+                //w2popup.clear();
+                //instanceInfoPopup(); 
                 deploymentFile = data.deploymentFile;
                 createSettingFile(data.id);
             },
             error : function(e, status) {
                 w2alert("Cf Resource 등록에 실패 하였습니다.", "Cf 설치");
             }
-        });
+        }); 
+    	w2popup.clear();
+        
     } else if (type == 'before') {
         w2popup.clear();
         keyInfoPopup();
     }
 }
+
+/********************************************************
+ * 설명 :  인스턴스 정보 팝업
+ * 기능 : instancePopup
+ *********************************************************/
+/* function instancePopup() {
+    settingDiegoUse(diegoUse, $("#deployDiv ul"));
+    w2popup.open({
+        title   : "<b>CF Deploymet</b>",
+        width   : 750,
+        height  : 550,
+        body    : $("#deployDiv").html(),
+        buttons : $("#deployDivButtons").html(),
+        modal : true,
+        showMax : true,
+        onClose : initSetting,
+        onOpen : function(event) {
+            event.onComplete = function() {
+                getDeployInfo();
+            }
+        }
+    });
+} */
+
+
+
+
 
 /********************************************************
  * 설명 :  Manifest 파일 생성
@@ -1505,7 +1581,7 @@ function createSettingFile(id){
         contentType : "application/json",
         data : JSON.stringify(settingFile),
         success : function(status) {
-            deployPopup();
+            deployPopup(); //aaaaaa
         },
         error :function(request, status, error) {
             var errorResult = JSON.parse(request.responseText);
@@ -1526,7 +1602,7 @@ function createSettingFile(id){
 function deployPopup() {
     settingDiegoUse(diegoUse, $("#deployDiv ul"));
     w2popup.open({
-        title   : "<b>CF 설치</b>",
+        title   : "<b>CF Deployment</b>",
         width   : 750,
         height  : 550,
         body    : $("#deployDiv").html(),
@@ -1555,11 +1631,11 @@ function getDeployInfo() {
             if (status == "success") {
                 $(".w2ui-msg-body #deployInfo").text(data);
             } else if (status == "204") {
-                w2alert("배포파일이 존재하지 않습니다.", "CF 설치");
+                w2alert("배포파일이 존재하지 않습니다.", "CF Deployment");
             }
         },
         error : function(e, status) {
-            w2alert(JSON.parse(e.responseText).message, "CF 설치");
+            w2alert(JSON.parse(e.responseText).message, "CF Deployment");
         }
     });
 }
@@ -1570,16 +1646,13 @@ function getDeployInfo() {
  *********************************************************/
 function cfDeploy(type) {
      if( type == "before"  ){
-         if(iaas.toLowerCase() == "vsphere"){
-                resourceInfoPopup("#vSphereResourceInfo", 695);
-            }else{
-                resourceInfoPopup("#resourceInfo",690 );
-            }
+        //instanceInfoPopup();
+    	 resourceJobSettingsPop();
      }else{
         if ( menu =="cf" ){
             w2confirm({
                 msg : "설치하시겠습니까?",
-                title : "<b>"+w2utils.lang('CF 설치') + "</b>",
+                title : "<b>"+w2utils.lang('CF Deployment') + "</b>",
                 yes_text : "예",
                 no_text : "아니오",
                 yes_callBack : installPopup
@@ -1607,7 +1680,7 @@ function installPopup(){
             platform : "cf"
     };
     w2popup.open({
-        title   : "<b>CF 설치</b>",
+        title   : "<b>CF Deployment</b>",
         width   : 750,
         height  : 600,
         body    : $("#installDiv").html(),
@@ -1641,7 +1714,7 @@ function installPopup(){
                                     installClient.disconnect();
                                     installClient = "";
                                 }
-                                w2alert(message, "CF 설치");
+                                w2alert(message, "CF Deployment");
                                }
                         }
                     });
@@ -1885,6 +1958,7 @@ function gridReload() {
                 <li class="before">네트워크 정보</li>
                 <li class="before">Key 생성</li>
                 <li class="before">리소스 정보</li>
+                <li class="before">인스턴스 정보</li>
                 <li class="before">배포파일 정보</li>
                 <li class="before install">설치</li>
             </ul>
@@ -2025,6 +2099,7 @@ function gridReload() {
                 <li class="active">네트워크 정보</li>
                 <li class="before">Key 생성</li>
                 <li class="before">리소스 정보</li>
+                <li class="before">인스턴스 정보</li>
                 <li class="before">배포파일 정보</li>
                 <li class="before install">설치</li>
             </ul>
@@ -2093,14 +2168,14 @@ function gridReload() {
                             <input name="subnetReservedTo_1"  type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.106" />
                         </div>
                     </div>
-                    <div class="w2ui-field">
+                    <!-- <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">IP할당 대역(최소 20개)</label>
                         <div style=" width: 60%;">
                             <input name="subnetStaticFrom_1"  type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.100" />
                             <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
                             <input name="subnetStaticTo_1" type="text" style="display:iinline-block; width:32%;" placeholder="예) 10.0.0.106" />
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <!-- 추가 네트워크 div_1 -->
@@ -2122,6 +2197,7 @@ function gridReload() {
                 <li class="active">네트워크 정보</li>
                 <li class="before">Key 생성</li>
                 <li class="before">리소스 정보</li>
+                <li class="before">인스턴스 정보</li>
                 <li class="before">배포파일 정보</li>
                 <li class="before install">설치</li>
             </ul>
@@ -2196,14 +2272,14 @@ function gridReload() {
                             <input name="subnetReservedTo_1" id="subnetReservedTo_1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.106" />
                         </div>
                     </div>
-                    <div class="w2ui-field">
+                   <!--  <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">IP할당 대역(최소 20개)</label>
                         <div style=" width: 60%;">
                             <input name="subnetStaticFrom_1" id="subnetStaticFrom_1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.100" />
                             <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
                             <input name="subnetStaticTo_1" id="subnetStaticTo_1" type="text" style="display:iinline-block; width:32%;" placeholder="예) 10.0.0.106" />
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <!-- 추가 네트워크 div_1 -->
@@ -2226,6 +2302,7 @@ function gridReload() {
                 <li class="active">네트워크 정보</li>
                 <li class="before">Key 생성</li>
                 <li class="before">리소스 정보</li>
+                <li class="before">인스턴스 정보</li>
                 <li class="before">배포파일 정보</li>
                 <li class="before install">설치</li>
             </ul>
@@ -2294,14 +2371,14 @@ function gridReload() {
                             <input name="subnetReservedTo_1" id="subnetReservedTo_1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.106" />
                         </div>
                     </div>
-                    <div class="w2ui-field">
+                  <!--   <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">IP할당 대역(최소 20개)</label>
                         <div style=" width: 60%;">
                             <input name="subnetStaticFrom_1" id="subnetStaticFrom_1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.100" />
                             <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
                             <input name="subnetStaticTo_1" id="subnetStaticTo_1" type="text" style="display:iinline-block; width:32%;" placeholder="예) 10.0.0.106" />
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <!-- 추가 네트워크 div_1 -->
@@ -2323,6 +2400,7 @@ function gridReload() {
                 <li class="active">네트워크 정보</li>
                 <li class="before">Key 생성</li>
                 <li class="before">리소스 정보</li>
+                <li class="before">인스턴스 정보</li>
                 <li class="before">배포파일 정보</li>
                 <li class="before install">설치</li>
             </ul>
@@ -2407,14 +2485,14 @@ function gridReload() {
                             <input name="subnetReservedTo_1" type="text" style="display:inline-block;width:32%;" placeholder="예) 10.0.0.106" />
                         </div>
                     </div>
-                    <div class="w2ui-field">
+                  <!--   <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">IP할당 대역(최소 20개)</label>
                         <div style=" width: 60%;">
                             <input name="subnetStaticFrom_1" type="text" style="display:inline-block;width:32%;" placeholder="예) 10.0.0.100" />
                             <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
                             <input name="subnetStaticTo_1" type="text" style="display:inline-block;width:32%;" placeholder="예) 10.0.0.106" />
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <!-- 추가 네트워크 div_1 -->
@@ -2436,6 +2514,7 @@ function gridReload() {
                 <li class="pass">네트워크 정보</li>
                 <li class="active">Key 생성</li>
                 <li class="before">리소스 정보</li>
+                <li class="before">인스턴스 정보</li>
                 <li class="before">배포파일 정보</li>
                 <li class="before install">설치</li>
             </ul>
@@ -2506,6 +2585,7 @@ function gridReload() {
                 <li class="pass">네트워크 정보</li>
                 <li class="pass">Key 생성</li>
                 <li class="active">리소스 정보</li>
+                <li class="before">인스턴스 정보</li>
                 <li class="before">배포파일 정보</li>
                 <li class="before install">설치</li>
             </ul>
@@ -2513,13 +2593,13 @@ function gridReload() {
         <div class="w2ui-page page-0" style="margin-top:15px;padding:0 3%;">
             <div class="panel panel-info">    
                 <div class="panel-heading" style="position:relative"><b>리소스 정보</b>
-                    <div style="position: absolute;right: 10px ;top: 2px; ">
+                    <!-- <div style="position: absolute;right: 10px ;top: 2px; ">
                         <a class="btn btn-info btn-sm" onclick="resourceJobSettingsPop();">고급 기능</a>
-                    </div>
+                    </div> -->
                 </div>
                 
                 <div class="panel-body" style="padding:5px 5% 10px 5%;">
-                    <div class="w2ui-field">
+                    <div class="w2ui-field" id="stemcellsInfo">
                         <label style="text-align: left; width: 30%; font-size: 11px;">Stemcell</label>
                         <div style=" width: 60%;">
                             <div>
@@ -2583,7 +2663,7 @@ function gridReload() {
     </form>
     <div class="w2ui-buttons" id="resourceInfoButtons" hidden="true">
         <button class="btn" style="float: left;" onclick="saveResourceInfo('before');">이전</button>
-        <button class="btn" style="float: right; padding-right: 15%" onclick="$('#resourceInfoForm').submit();">다음>></button>
+        <button class="btn" style="float: right; padding-right: 15%" onclick="resourceJobSettingsPop();">다음>></button>
     </div>
 </div>
 
@@ -2596,6 +2676,7 @@ function gridReload() {
                 <li class="pass">네트워크 정보</li>
                 <li class="pass">Key 생성</li>
                 <li class="active">리소스 정보</li>
+                <li class="before">인스턴스 정보</li>
                 <li class="before">배포파일 정보</li>
                 <li class="before install">설치</li>
             </ul>
@@ -2603,9 +2684,9 @@ function gridReload() {
         <div class="w2ui-page page-0" style="margin-top:15px;padding:0 3%;">
             <div class="panel panel-info">    
                 <div class="panel-heading" style="position:relative"><b>리소스 정보</b>
-                    <div style="position: absolute;right: 10px ;top: 2px; ">
+                    <!-- <div style="position: absolute;right: 10px ;top: 2px; ">
                         <a class="btn btn-info btn-sm" onclick="resourceJobSettingsPop();">고급 기능</a>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="panel-body" style="padding:5px 5% 10px 5%;">
                     <div class="w2ui-field">
@@ -2708,8 +2789,8 @@ function gridReload() {
     </div>
 </div>
 
-<!-- CF 고급 설정 화면 -->
-<div class="w2ui-buttons" id="cfDetailButtons" hidden="true">
+<!-- CF 고급 설정 화면  aaaaaaa -->
+<!-- <div class="w2ui-buttons" id="cfDetailButtons" hidden="true">
     <button class="btn" id="" style="" onclick="saveCfJobsInfo();">저장</button>
     <button class="btn" style="" onclick="jobPopupComplete();">닫기</button>
 </div>
@@ -2717,6 +2798,38 @@ function gridReload() {
 <div id="cfDetailPopDiv" hidden="true" style="width:100%;">
     <form id="cfDetailForm" style="height:100%;">
     </form>
+</div> -->
+
+<!-- 인스턴스  설정 DIV -->
+<div id="cfDetailPopDiv" style="height: 100%;" hidden="true"> 
+        <div style="margin-left:2%;display:inline-block;width:97%;padding-top:15px;">
+            <ul class="progressStep_6">
+                <li class="pass">기본 정보</li>
+                <li class="pass">네트워크 정보</li>
+                <li class="pass">Key 생성</li>
+                <li class="pass">리소스 정보</li>
+                <li class="active">인스턴스 정보</li>
+                <li class="before">배포파일 정보</li>
+                <li class="before install">설치</li>
+            </ul>
+        </div>
+      	<div class="panel panel-info" style="margin:20px 25px;">    
+            <div class="panel-heading" style="position:relative"><b>인스턴스 정보 ( CF 고급 설정 )</b>
+            </div>
+		    <form id="cfDetailForm" style="widthheight:100%;">
+		    </form>
+            <div class="panel-body" style="padding:5px 5% 10px 5%;">
+				    <div class="w2ui-buttons" id="cfDetailButtons" hidden="true">
+				    <button class="btn" id="" style="float: left;" onclick="saveCfJobsInfo('before');">이전</button>
+				    <button class="btn" style="float: right; padding-right: 15%" onclick="saveCfJobsInfo('after');">다음>></button>
+				    </div>
+            </div> 
+        </div>
+<!--     <div class="w2ui-buttons" id="instanceInfoButtons" hidden="true">
+        <button class="btn" style="float: left;" onclick="jobPopupComplete('before');">이전</button>
+        <button class="btn" style="float: right; padding-right: 15%" onclick="saveCfJobsInfo();">다음>></button>
+    </div> -->
+
 </div>
 
 <!-- 배포파일 정보 -->
@@ -2727,6 +2840,7 @@ function gridReload() {
             <li class="pass">네트워크 정보</li>
             <li class="pass">Key 생성</li>
             <li class="pass">리소스 정보</li>
+            <li class="pass">인스턴스 정보</li>
             <li class="active">배포파일 정보</li>
             <li class="before install">설치</li>
         </ul>
@@ -2748,6 +2862,7 @@ function gridReload() {
             <li class="pass">네트워크 정보</li>
             <li class="pass">Key 생성</li>
             <li class="pass">리소스 정보</li>
+            <li class="pass">인스턴스 정보</li>
             <li class="pass">배포파일 정보</li>
             <li class="active install">설치</li>
         </ul>

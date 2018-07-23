@@ -352,7 +352,7 @@
               ,zone_z1
               ,zone_z2
               ,zone_z3
-         From ieda_job_template
+         From ieda_cf_job_template
         Where deploy_type = #{map.deployType}
           And 
             min_release_version <= #{map.releaseVersion}
@@ -406,7 +406,7 @@
                ,job.update_user_id as update_user_id
                ,job.update_date as update_date
                ,template.job_name as job_name
-          From ieda_job_setting job, ieda_job_template template
+          From ieda_job_setting job, ieda_cf_job_template template
          Where job.job_id = template.id
            And job.id =#{cfId}
            And job.deploy_type = #{deployType}

@@ -321,9 +321,10 @@ public class CommonDeployService{
                         throw new CommonException(getMessageValue("common.internalServerError.exception.code"),
                                 keyFileName + getMessageValue("common.file.create.internalServerError.message"), HttpStatus.INTERNAL_SERVER_ERROR);
                     }
+                    LOGGER.debug(info);
                 }
                 File keyFile = new File( KEY_DIR + SEPARATOR + keyFileName );
-                if( !keyFile.exists() ){
+                if( keyFile == null ){
                     throw new CommonException(message.getMessage("common.internalServerError.exception.code", null, Locale.KOREA),
                             keyFileName +" 파일을 찾을 수 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
                 }

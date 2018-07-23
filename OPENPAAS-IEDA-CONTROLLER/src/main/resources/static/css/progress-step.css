@@ -152,7 +152,7 @@ ul.progressStep_6 li{
     position: relative;
     border-top: 1px solid #666;
     border-bottom: 1px solid #666;
-    width: 16%;				/***  [Step비율] 갯수에 따라 조정 **/
+    width: 13.3%;				/***  [Step비율] 갯수에 따라 조정 **/
     height:48px;			/***  [Step 높이] ***/
     margin: 0 1.1px;
 }
