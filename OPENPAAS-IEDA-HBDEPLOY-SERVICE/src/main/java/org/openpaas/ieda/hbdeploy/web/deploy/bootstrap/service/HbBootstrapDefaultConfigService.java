@@ -45,7 +45,6 @@ public class HbBootstrapDefaultConfigService {
         int count = bootstrapDefaultDao.selectBootstrapDefaultConfigByName(dto.getDefaultConfigName());
         if( StringUtils.isEmpty(dto.getId())){
             vo = new HbBootstrapDefaultConfigVO();
-            vo.setIaasType(dto.getIaasType());
             vo.setCreateUserId(principal.getName());
             if(count > 0){
                 throw new CommonException(message.getMessage("common.conflict.exception.code", null, Locale.KOREA),
@@ -59,6 +58,7 @@ public class HbBootstrapDefaultConfigService {
             }
         }
         if( vo != null ){
+            vo.setIaasType(dto.getIaasType());
             vo.setDefaultConfigName(dto.getDefaultConfigName());
             vo.setDeploymentName(dto.getDeploymentName().trim());
             vo.setDirectorName(dto.getDirectorName().trim());

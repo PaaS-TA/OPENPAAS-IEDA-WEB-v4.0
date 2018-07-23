@@ -583,7 +583,7 @@ function resetForm(status){
     
     $("select[name=boshCpiRelease]").html("<option value='' >BOSH CPI 릴리즈를 선택하세요.</option>");
     $("select[name=boshCpiRelease]").attr("disabled", "disabled");
-    
+    $("input[name='paastaMonitoring']").attr("checked", false);
     $("select[name=paastaMonitoringRelease]").html("<option value='' >PaaS-TA 모니터링 릴리즈를 선택하세요.</option>");
     $("select[name=paastaMonitoringRelease]").attr("disabled", "disabled");
     

@@ -42,7 +42,7 @@ public class HttpSessionIdHandshakeInterceptor implements HandshakeInterceptor {
                 int maxInactiveInterval= 30*60;
                 
                 if( uri.indexOf("/install") > -1 ){
-                    if( menu.equalsIgnoreCase("bootstrap") || menu.equalsIgnoreCase("bosh") ){
+                    if( menu.equalsIgnoreCase("bootstrap") || menu.equalsIgnoreCase("hbbootstrap") ){
                         maxInactiveInterval = 60*60;
                     }else if( menu.equalsIgnoreCase("cf") || menu.equalsIgnoreCase("diego")
                             || menu.equalsIgnoreCase("cfdiego") || menu.equalsIgnoreCase("servicepack") ){

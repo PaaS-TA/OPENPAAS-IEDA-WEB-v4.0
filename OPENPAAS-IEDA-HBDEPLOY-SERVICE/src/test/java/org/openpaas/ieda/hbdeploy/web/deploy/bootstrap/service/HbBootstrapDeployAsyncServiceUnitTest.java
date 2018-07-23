@@ -38,21 +38,6 @@ public class HbBootstrapDeployAsyncServiceUnitTest extends BaseHbDeployControlle
         getLoggined();
     }
     
-    /***************************************************
-     * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : Bootstrap 설치 중 상태 정보 저장
-     * @title : testSaveDeployStatus
-     * @return : void
-    ***************************************************/
-    @Test
-    public void testSaveDeployStatus(){
-        HbBootstrapVO vo = new HbBootstrapVO();
-        vo.setDeployStatus("DONE");
-        vo.setId(1);
-        vo.setDeployLog("deploy Log...");
-        when(mockHbBootstrapDAO.updateBootStrapInfo(any())).thenReturn(1);
-        mockHbBootstrapDeployAsyncService.saveDeployStatus(vo);
-    }
     
     /***************************************************
      * @project : Paas 이종 플랫폼 설치 자동화

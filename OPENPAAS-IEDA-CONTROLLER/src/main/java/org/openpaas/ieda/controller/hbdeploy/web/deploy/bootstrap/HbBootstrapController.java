@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import org.openpaas.ieda.controller.common.BaseController;
 import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dao.HbBootstrapVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dto.HbBootStrapDeployDTO;
-import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dto.HbBootstrapListDTO;
 import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.service.HbBootstrapDeleteDeployAsyncService;
 import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.service.HbBootstrapDeployAsyncService;
 import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.service.HbBootstrapSaveService;
@@ -38,7 +37,7 @@ public class HbBootstrapController extends BaseController {
     private final static Logger LOGGER = LoggerFactory.getLogger(HbBootstrapController.class);
 
     /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : Bootstrap 설치 화면 이동
      * @title : goBootstrap
      * @return : String
@@ -50,15 +49,15 @@ public class HbBootstrapController extends BaseController {
     }
 
     /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : Bootstrap 정보 목록 조회
      * @title : getBootstrapList
      * @return : ResponseEntity<HashMap<String,Object>>
     ***************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/list", method = RequestMethod.GET)
-    public ResponseEntity<HashMap<String, Object>> getHbBootstrapList() {
-        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbbootstrap/list"); }
-        List<HbBootstrapListDTO> content = bootstrapService.getHbBootstrapList();
+    @RequestMapping(value = "/deploy/hbBootstrap/list/{installStatus}", method = RequestMethod.GET)
+    public ResponseEntity<HashMap<String, Object>> getHbBootstrapList(@PathVariable String installStatus) {
+        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/list/{installStatus}"); }
+        List<HbBootstrapVO> content = bootstrapService.getHbBootstrapList(installStatus);
         HashMap<String, Object> result = new HashMap<String, Object>();
         int total = content != null ? content.size() : 0;
         result.put("records", content);
@@ -67,7 +66,7 @@ public class HbBootstrapController extends BaseController {
     }
 
     /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : Bootstrap 상세 조회
      * @title : getBootstrapInfo
      * @return : ResponseEntity<BootstrapVO>
@@ -79,115 +78,77 @@ public class HbBootstrapController extends BaseController {
         return new ResponseEntity<HbBootstrapVO>(vo, HttpStatus.OK);
     }
     
-    /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : Bootstrap 설치 정보  조회
-     * @title : getBootstrapInfo
-     * @return : ResponseEntity<BootstrapVO>
-    ***************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/install/hbDetail/{privateBootstrapId}/{publicBootStrapId}", method = RequestMethod.GET)
-    public ResponseEntity<HbBootstrapVO> getHbBootstrapInstallInfo(@PathVariable String privateBootstrapId, @PathVariable String publicBootStrapId) {
-        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbbootstrap/install/detail/"); }
-        HbBootstrapVO vo = bootstrapService.getHbBootstrapInstallInfo(privateBootstrapId, publicBootStrapId);
-        return new ResponseEntity<HbBootstrapVO>(vo, HttpStatus.OK);
-    }
 
     
     /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : 기본 정보 저장
-     * @title : saveDefaultInfo
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : BOOTSTRAP 설치 정보 저장
+     * @title : saveBootstrapConfigInfo
      * @return : ResponseEntity<BootstrapVO>
     ***************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/install/setDefaultInfo", method = RequestMethod.PUT)
-    public ResponseEntity<HbBootstrapVO> saveDefaultInfo(@RequestBody HbBootStrapDeployDTO.Default dto, Principal principal) {
-        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbbootstrap/install/setDefaultInfo"); }
-        HbBootstrapVO vo = saveService.saveDefaultInfo(dto, principal);
-        return new ResponseEntity<>(vo, HttpStatus.OK);
+    @RequestMapping(value = "/deploy/hbBootstrap/install/save", method = RequestMethod.PUT)
+    public ResponseEntity<?> saveBootstrapConfigInfo(@RequestBody HbBootStrapDeployDTO dto, Principal principal) {
+        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/install/save"); }
+        saveService.saveBootstrapInfo(dto, principal);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : 네트워크 정보 저장
-     * @title : saveNetworkInfo
-     * @return : ResponseEntity<BootstrapVO>
-    ***************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/install/setNetworkInfo", method = RequestMethod.PUT)
-    public ResponseEntity<HbBootstrapVO> saveNetworkInfo(@RequestBody @Valid HbBootStrapDeployDTO.Network dto, Principal principal) {
-        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbbootstrap/install/setNetworkInfo"); }
-        HbBootstrapVO vo = saveService.saveNetworkInfo(dto, principal);
-        return new ResponseEntity<HbBootstrapVO>(vo, HttpStatus.OK);
-    }
-
-    /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : 리소스 정보 저장
-     * @title : saveResourcesInfo
-     * @return : ResponseEntity<BootstrapVO>
-    ***************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/install/setResourceInfo", method = RequestMethod.PUT)
-    public ResponseEntity<HbBootstrapVO> saveResourcesInfo(@RequestBody @Valid HbBootStrapDeployDTO.Resource dto, Principal principal) {
-        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbbootstrap/install/setResourceInfo"); }
-        HbBootstrapVO vo = saveService.saveResourceInfo(dto, principal);
-        return new ResponseEntity<HbBootstrapVO>(vo, HttpStatus.OK);
-    }
-
-    /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : 배포 파일 생성
      * @title : makeDeploymentFile
      * @return : ResponseEntity<?>
     ***************************************************/
-    @RequestMapping(value = "/deploy/hbBootstrap/install/createSettingFile/{id}/{iaas}", method = RequestMethod.POST)
-    public ResponseEntity<?> makeDeploymentFile(@PathVariable int id, @PathVariable String iaas) {
-        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbbootstrap/install/createSettingFile/"+id); }
-        bootstrapService.createSettingFile(id, iaas);
+    @RequestMapping(value = "/deploy/hbBootstrap/install/createSettingFile", method = RequestMethod.POST)
+    public ResponseEntity<?> makeDeploymentFile(@RequestBody HbBootStrapDeployDTO dto,  Principal principal) {
+        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbbootstrap/install/createSettingFile/"); }
+        bootstrapService.createSettingFile(Integer.parseInt(dto.getId()), dto.getIaasType());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : 설치
      * @title : installBootstrap
      * @return : ResponseEntity<BootstrapVO>
     ***************************************************/
     @MessageMapping("/deploy/hbBootstrap/install/bootstrapInstall")
     @SendTo("/deploy/hbBootstrap/install/logs")
-    public ResponseEntity<HbBootstrapVO> installBootstrap(@RequestBody @Valid HbBootStrapDeployDTO.Install dto, Principal principal) {
+    public ResponseEntity<HbBootstrapVO> installBootstrap(@RequestBody @Valid HbBootStrapDeployDTO dto, Principal principal) {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbbootstrap/install/bootstrapInstall"); }
         deployAsyncService.deployAsync(dto, principal);
         return new ResponseEntity<HbBootstrapVO>(HttpStatus.OK);
     }
 
     /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : Bootstrap 삭제 요청
      * @title : deleteBootstrap
      * @return : ResponseEntity<?>
     ***************************************************/
     @MessageMapping("/deploy/hbBootstrap/delete/instance")
     @SendTo("/deploy/hbBootstrap/delete/logs")
-    public ResponseEntity<?> deleteBootstrap(@RequestBody @Valid HbBootStrapDeployDTO.Delete dto, Principal principal) {
+    public ResponseEntity<?> deleteBootstrap(@RequestBody @Valid HbBootStrapDeployDTO dto, Principal principal) {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbbootstrap/delete/instance"); }
         deleteDeployService.deleteDeployAsync(dto, principal);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : 단순 Bootstrap 레코드 삭제
      * @title : deleteJustOnlyBootstrapRecord
      * @return : ResponseEntity<?>
     ***************************************************/
     @RequestMapping(value = "/deploy/hbBootstrap/delete/data", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteBootstrapInfo(@RequestBody @Valid HbBootStrapDeployDTO.Delete dto) {
+    public ResponseEntity<?> deleteBootstrapInfo(@RequestBody @Valid HbBootStrapDeployDTO dto) {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("===================== /deploy/hbbootstrap/delete/data"); }
             bootstrapService.deleteBootstrapInfo(dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : 배포 로그 정보 조회
      * @title : getDeployLogMsg
      * @return : ResponseEntity<String>

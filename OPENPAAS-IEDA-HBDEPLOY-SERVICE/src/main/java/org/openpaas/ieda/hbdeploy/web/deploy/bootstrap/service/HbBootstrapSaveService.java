@@ -3,8 +3,6 @@ package org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.service;
 import java.security.Principal;
 import java.util.Locale;
 
-import javax.transaction.Transactional;
-
 import org.hsqldb.lib.StringUtil;
 import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dao.HbBootstrapDAO;
@@ -22,127 +20,61 @@ public class HbBootstrapSaveService {
     @Autowired private MessageSource message;
     @Autowired private HbBootstrapDAO bootstrapDao;
     
-    /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : 기본 정보 저장
-     * @title : saveDefaultInfo
-     * @return : BootstrapVO
-    ***************************************************/
-    @Transactional
-    public HbBootstrapVO saveDefaultInfo(HbBootStrapDeployDTO.Default dto, Principal principal) {
-        if( StringUtils.isEmpty(dto.getId()) ){
-            throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
-                    message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
-        }
-        HbBootstrapVO vo = bootstrapDao.selectBootstrapInfo(Integer.parseInt(dto.getId()), dto.getIaasType().toLowerCase());
-        if( vo != null ){
-            vo.setSetHybridDbTableName("ieda_"+dto.getBootstrapType()+"_bootstrap");
-            vo.setDeploymentName(dto.getDeploymentName().trim());
-            vo.setDirectorName(dto.getDirectorName().trim());
-            vo.setBoshRelease(dto.getBoshRelease().trim());
-            vo.setCredentialKeyName(dto.getCredentialKeyName());
-            vo.setNtp(dto.getNtp());
-            vo.setBoshCpiRelease(dto.getBoshCpiRelease().trim());
-            vo.setEnableSnapshots(dto.getEnableSnapshots().trim());
-            vo.setSnapshotSchedule(dto.getSnapshotSchedule().trim());
-            vo.setUpdateUserId(principal.getName());
-            vo.setPaastaMonitoringUse(dto.getPaastaMonitoringUse());
-            vo.setPaastaMonitoringIp(dto.getPaastaMonitoringIp());
-            vo.setInfluxdbIp(dto.getInfluxdbIp());
-            vo.setPaastaMonitoringRelease(dto.getPaastaMonitoringRelease());
-            vo.setOsConfRelease(dto.getOsConfRelease());
-        }else{
-            throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
-                    message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
-        }
-        bootstrapDao.updateBootStrapInfo(vo);
-        return vo;
-    }
-
-    /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : 네트워크 정보 저장
-     * @title : saveNetworkInfo
-     * @return : BootstrapVO
-    ***************************************************/
-    @Transactional
-    public HbBootstrapVO saveNetworkInfo(HbBootStrapDeployDTO.Network dto, Principal principal) {
-        if( StringUtils.isEmpty(dto.getId()) ){
-            throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
-                    message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
-        }
-        
-        HbBootstrapVO vo = bootstrapDao.selectBootstrapInfo(Integer.parseInt(dto.getId()), dto.getIaasType().toLowerCase());
-        
-        if( vo != null ){
-            vo.setSetHybridDbTableName("ieda_"+dto.getBootstrapType()+"_bootstrap");
-            vo.setSubnetId(dto.getSubnetId());
-            vo.setPrivateStaticIp(dto.getPrivateStaticIp());
-            vo.setPublicStaticIp(dto.getPublicStaticIp());
-            vo.setSubnetRange(dto.getSubnetRange());
-            vo.setSubnetGateway(dto.getSubnetGateway());
-            vo.setSubnetDns(dto.getSubnetDns());
-            vo.setUpdateUserId(principal.getName());
-            vo.setPublicSubnetId(dto.getPublicSubnetId()); //vSphere
-            vo.setPublicSubnetRange(dto.getPublicSubnetRange()); //vSphere
-            vo.setPublicSubnetGateway(dto.getPublicSubnetGateway()); //vSphere
-            vo.setPublicSubnetDns(dto.getPublicSubnetDns()); //vSphere
-            vo.setNetworkName(dto.getNetworkName());
-        }else{
-            throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
-                    message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
-        }
-        
-        bootstrapDao.updateBootStrapInfo(vo);
-        
-        return vo;
-    }
-
     /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : 리소스 정보 저장
-     * @title : saveResourcesInfo
-     * @return : BootstrapVO
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : 배포 파일명 생성
+     * @title : saveBootstrapInfo
+     * @return : void
     *****************************************************************/
-    @Transactional
-    public HbBootstrapVO saveResourceInfo(HbBootStrapDeployDTO.Resource dto, Principal principal) {
-        if( StringUtils.isEmpty(dto.getId()) ){
-            throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
-                    message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
-        }
-        
-        HbBootstrapVO bootstrapVo = bootstrapDao.selectBootstrapInfo(Integer.parseInt(dto.getId()), dto.getIaasType().toLowerCase());
-        //Result Check
-        if(bootstrapVo != null){
-            if( StringUtil.isEmpty(bootstrapVo.getDeploymentFile()) ){
-                bootstrapVo.setDeploymentFile(makeDeploymentName(bootstrapVo));
+    public void saveBootstrapInfo(HbBootStrapDeployDTO dto, Principal principal) {
+        int count = bootstrapDao.selectBootstrapConfigByName(dto.getBootstrapConfigName());
+        HbBootstrapVO vo = null;
+        if( StringUtils.isEmpty(dto.getId())){
+            vo = new HbBootstrapVO();
+            vo.setIaasType(dto.getIaasType());
+            vo.setCreateUserId(principal.getName());
+            if(count > 0){
+                throw new CommonException(message.getMessage("common.conflict.exception.code", null, Locale.KOREA),
+                        message.getMessage("hybrid.configMgnt.alias.conflict.message.exception", null, Locale.KOREA), HttpStatus.CONFLICT);
             }
-            bootstrapVo.setSetHybridDbTableName("ieda_"+dto.getBootstrapType()+"_bootstrap");
-            bootstrapVo.setStemcell(dto.getStemcell());
-            bootstrapVo.setCloudInstanceType(dto.getCloudInstanceType());
-            bootstrapVo.setBoshPassword(dto.getBoshPassword());
-            bootstrapVo.setResourcePoolCpu(dto.getResourcePoolCpu());
-            bootstrapVo.setResourcePoolRam(dto.getResourcePoolRam());
-            bootstrapVo.setResourcePoolDisk(dto.getResourcePoolDisk());
-            bootstrapVo.setUpdateUserId(principal.getName());
         }else{
-            throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
-                    message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+            vo = bootstrapDao.selectBootstrapConfigInfo(Integer.parseInt(dto.getId()), dto.getIaasType().toLowerCase());
+            if(!dto.getBootstrapConfigName().equals(vo.getBootstrapConfigName()) && count > 0){
+                throw new CommonException(message.getMessage("common.conflict.exception.code", null, Locale.KOREA),
+                        message.getMessage("hybrid.configMgnt.alias.conflict.message.exception", null, Locale.KOREA), HttpStatus.CONFLICT);
+            }
         }
-        bootstrapDao.updateBootStrapInfo(bootstrapVo);
-        return bootstrapVo;
-    }    
+        if( vo != null ){
+            if( StringUtil.isEmpty(vo.getDeploymentFile()) ){
+                vo.setDeploymentFile(makeDeploymentName(dto));
+            } else {
+                vo.setBootstrapConfigName(dto.getDeploymentFile());
+            }
+            vo.setBootstrapConfigName(dto.getBootstrapConfigName());
+            vo.setNetworkConfigInfo(dto.getNetworkConfigInfo());
+            vo.setCpiConfigInfo(dto.getCpiConfigInfo());
+            vo.setDefaultConfigInfo(dto.getDefaultConfigInfo());
+            vo.setResourceConfigInfo(dto.getResourceConfigInfo());
+            vo.setIaasType(dto.getIaasType());
+            vo.setUpdateUserId(principal.getName());
+        }
+        if( StringUtils.isEmpty(dto.getId()) ){
+            bootstrapDao.insertBootStrapConfigInfo(vo);
+        }else{
+            bootstrapDao.updateBootStrapConfigInfo(vo);
+        }
+    }
     
     /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : 배포 파일명 생성
      * @title : makeDeploymentName
      * @return : String
     *****************************************************************/
-    public String makeDeploymentName(HbBootstrapVO bootstrapVo ){
+    public String makeDeploymentName(HbBootStrapDeployDTO dto ){
         String settingFileName = "";
-        if( !StringUtils.isEmpty(bootstrapVo.getIaasType()) || !StringUtils.isEmpty(bootstrapVo.getId()) ){
-            settingFileName = bootstrapVo.getIaasType().toLowerCase() + "-microbosh-"+ bootstrapVo.getId() +".yml";
+        if( !StringUtils.isEmpty(dto.getIaasType()) || !StringUtils.isEmpty(dto.getId()) ){
+            settingFileName = dto.getIaasType().toLowerCase() + "-hybrid-microbosh-"+ dto.getBootstrapConfigName() +".yml";
         }else{
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
                     message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);

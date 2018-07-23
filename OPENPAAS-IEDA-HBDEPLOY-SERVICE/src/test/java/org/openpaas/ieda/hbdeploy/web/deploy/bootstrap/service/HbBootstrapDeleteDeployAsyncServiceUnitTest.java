@@ -54,7 +54,7 @@ public class HbBootstrapDeleteDeployAsyncServiceUnitTest extends BaseHbDeployCon
      * @title : testSaveDeployStatus
      * @return : void
     ***************************************************/
-    @Test
+/*    @Test
     public void testSaveDeployStatus(){
         HbBootstrapVO vo = new HbBootstrapVO();
         vo.setDeployStatus("DONE");
@@ -62,7 +62,7 @@ public class HbBootstrapDeleteDeployAsyncServiceUnitTest extends BaseHbDeployCon
         vo.setDeployLog("deploy Log...");
         when(mockHbBootstrapDAO.updateBootStrapInfo(any())).thenReturn(1);
         mockHbBootstrapDeleteDeployAsyncService.saveDeployStatus(vo, principal);
-    }
+    }*/
     
     /***************************************************
      * @project : Paas 이종 플랫폼 설치 자동화

@@ -35,7 +35,7 @@ public class HbBootstrapDeleteDeployAsyncService{
     
     final private static String SEPARATOR = System.getProperty("file.separator");
     final private static String DEPLOYMENT_DIR = LocalDirectoryConfiguration.getDeploymentDir() + SEPARATOR;
-    final private static String CREDENTIAL_FILE = LocalDirectoryConfiguration.getGenerateCredentialDir() + SEPARATOR;
+    final private static String HYBRID_CREDENTIAL_FILE = LocalDirectoryConfiguration.getGenerateHybridCredentialDir() + SEPARATOR;
     final private static String LOCK_DIR=LocalDirectoryConfiguration.getLockDir();
     final private static String MESSAGE_ENDPOINT = "/deploy/hbBootstrap/delete/logs"; 
     private final static Logger LOGGER = LoggerFactory.getLogger(HbBootstrapDeleteDeployAsyncService.class);
@@ -46,12 +46,11 @@ public class HbBootstrapDeleteDeployAsyncService{
      * @title : deleteBootstrapDeploy
      * @return : void
     *****************************************************************/
-    public void deleteBootstrapDeploy(HbBootStrapDeployDTO.Delete dto, Principal principal) {
+    public void deleteBootstrapDeploy(HbBootStrapDeployDTO dto, Principal principal) {
         
         String accumulatedLog = "";
-        HbBootstrapVO vo = bootstrapDao.selectBootstrapInfo(Integer.parseInt(dto.getId()), dto.getIaasType().toLowerCase());
+        HbBootstrapVO vo = bootstrapDao.selectBootstrapConfigInfo(Integer.parseInt(dto.getId()), dto.getIaasType().toLowerCase());
         if( vo == null ){
-            dto.setSetHybridDbTableName("ieda_"+dto.getBootstrapType()+"_bootstrap");
             bootstrapDao.deleteBootstrapInfo(dto);
             vo = new HbBootstrapVO();
         }
@@ -65,12 +64,11 @@ public class HbBootstrapDeleteDeployAsyncService{
             if ( !stateFile.exists() ) {
                 status = "done";
                 resultMessage = "BOOTSTRAP 삭제가 완료되었습니다.";
-                dto.setSetHybridDbTableName("ieda_"+vo.getBootstrapType()+"_bootstrap");
                 bootstrapDao.deleteBootstrapInfo(dto);
                 DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList("BOOTSTRAP를 삭제했습니다."));
                 
             }else{
-                File credentialFile = new File(CREDENTIAL_FILE+vo.getCredentialKeyName());
+                File credentialFile = new File(HYBRID_CREDENTIAL_FILE+vo.getDefaultConfigVo().getCredentialKeyName());
                 
                 if(!credentialFile.exists()){
                     status = "error";
@@ -81,7 +79,7 @@ public class HbBootstrapDeleteDeployAsyncService{
                 if( file.exists() ){
                     ProcessBuilder builder = new ProcessBuilder("bosh", "delete-env", deployFile, 
                                                                 "--state="+deployStateFile, 
-                                                                "--vars-store="+CREDENTIAL_FILE+vo.getCredentialKeyName(), "--tty");
+                                                                "--vars-store="+HYBRID_CREDENTIAL_FILE+vo.getDefaultConfigVo().getCredentialKeyName(), "--tty");
                     builder.redirectErrorStream(true);
                     Process process = builder.start();
                     
@@ -116,21 +114,20 @@ public class HbBootstrapDeleteDeployAsyncService{
                 } else {
                     status = "done";
                     resultMessage = "BOOTSTRAP 삭제가 완료되었습니다.";
-                    dto.setSetHybridDbTableName("ieda_"+dto.getBootstrapType()+"_bootstrap");
                     bootstrapDao.deleteBootstrapInfo(dto);
                        //설치 관리자 삭제
-                    deleteDirectorConfigInfo(vo.getIaasType(), vo.getDirectorName());
+                    deleteDirectorConfigInfo(vo.getIaasType(), vo.getDefaultConfigVo().getDirectorName());
                 }
                 DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList(resultMessage));
             }
         }catch(RuntimeException e){
             status = "error";
             e.printStackTrace();
-            CommonDeployUtils.deleteFile(LOCK_DIR, "bootstrap.lock");
+            CommonDeployUtils.deleteFile(LOCK_DIR, "hybird_bootstrap.lock");
             DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList("BOOTSTRAP 삭제 중 Exception이 발생하였습니다."));
         } catch ( Exception e) {
             status = "error";
-            CommonDeployUtils.deleteFile(LOCK_DIR, "bootstrap.lock");
+            CommonDeployUtils.deleteFile(LOCK_DIR, "hybird_bootstrap.lock");
             DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList("BOOTSTRAP 삭제 중 Exception이 발생하였습니다."));
         }finally {
             if(status.toLowerCase().equalsIgnoreCase("error")){
@@ -146,7 +143,7 @@ public class HbBootstrapDeleteDeployAsyncService{
                     }
                 }
             }
-            CommonDeployUtils.deleteFile(LOCK_DIR, "bootstrap.lock");
+            CommonDeployUtils.deleteFile(LOCK_DIR, "hybird_bootstrap.lock");
         }
     }
 
@@ -162,8 +159,7 @@ public class HbBootstrapDeleteDeployAsyncService{
             return null;
         }
         bootstrapVo.setUpdateUserId(principal.getName());
-        bootstrapVo.setSetHybridDbTableName("ieda_"+bootstrapVo.getBootstrapType()+"_bootstrap");
-        bootstrapDao.updateBootStrapInfo(bootstrapVo);
+        bootstrapDao.updateBootStrapConfigInfo(bootstrapVo);
         return bootstrapVo;
     }
     
@@ -188,7 +184,7 @@ public class HbBootstrapDeleteDeployAsyncService{
      * @return : void
     *****************************************************************/
     @Async
-    public void deleteDeployAsync(HbBootStrapDeployDTO.Delete dto, Principal principal) {
+    public void deleteDeployAsync(HbBootStrapDeployDTO dto, Principal principal) {
             deleteBootstrapDeploy(dto, principal);
     }    
 

@@ -128,7 +128,7 @@ public class HbBootstrapControllerUnitTest extends BaseControllerUnitTest {
     public void testGetHbBootstrapList() throws Exception{
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> Hybrid_Bootstrap 정보 목록 조회 Unit Test"); }
         List<HbBootstrapListDTO> expectBootstrapList = setBootstrapList();
-        when(mockHbBootstrapService.getHbBootstrapList()).thenReturn(expectBootstrapList);
+        when(mockHbBootstrapService.getHbBootstrapList("")).thenReturn(expectBootstrapList);
         mockMvc.perform(get(HYBRID_BOOTSTRAP_LIST_URL).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.records[0].recid").value(expectBootstrapList.get(0).getRecid()))

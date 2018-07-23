@@ -70,7 +70,6 @@ public class HbBootstrapCredentialConfigService {
         int count = bootstrapCredentialConfigDao.selectBootstrapCredentialConfigByName(dto.getCredentialConfigName());
         if( StringUtils.isEmpty(dto.getId())){
             vo = new HbBootstrapCredentialConfigVO();
-            vo.setIaasType(dto.getIaasType());
             vo.setCreateUserId(principal.getName());
             if(count > 0){
                 throw new CommonException(message.getMessage("common.conflict.exception.code", null, Locale.KOREA),
@@ -86,6 +85,7 @@ public class HbBootstrapCredentialConfigService {
         if( vo != null ){
             String credentialKeyName = dto.getCredentialConfigName() + "-cred.yml";
             makeCredentialFile(dto, credentialKeyName);
+            vo.setIaasType(dto.getIaasType());
             vo.setNetworkConfigName(dto.getNetworkConfigName());
             vo.setUpdateUserId(principal.getName());
             vo.setDirectorPrivateIp(dto.getDirectorPrivateIp());

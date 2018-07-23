@@ -666,7 +666,7 @@ CREATE TABLE ieda_bootstrap_cpi_config
   id                                    INT(11)      NOT NULL auto_increment,
   iaas_type                             VARCHAR(100) NOT NULL,
   cpi_name                              VARCHAR(100)  NOT NULL,
-  iaas_config_id                        INT(255) NOT NULL,
+  iaas_config_id                        INT(11) NOT NULL,
   create_user_id                        VARCHAR(255) NOT NULL,
   create_date                           DATE         NOT NULL,
   update_user_id                        VARCHAR(255) NOT NULL,
@@ -706,6 +706,65 @@ CREATE TABLE ieda_bootstrap_credential_config
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
+CREATE TABLE ieda_bootstrap_config
+(
+  id                                INT(11)      NOT NULL auto_increment,
+  iaas_type                         VARCHAR(100),
+  bootstrap_config_name             VARCHAR(100),
+  network_config_name               VARCHAR(100),
+  cpi_config_name                   VARCHAR(100),
+  default_config_name               VARCHAR(100),
+  resource_config_name              VARCHAR(100),
+  deployment_file                   VARCHAR(255),
+  deploy_status                     VARCHAR(100),
+  deploy_log                        LONGTEXT,
+  create_user_id                    VARCHAR(255) NOT NULL,
+  create_date                       DATE         NOT NULL,
+  update_user_id                    VARCHAR(255) NOT NULL,
+  update_date                       DATE         NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
+CREATE TABLE ieda_bootstrap_network_config (
+  id                                INT(11) NOT NULL AUTO_INCREMENT,
+  iaas_type                         VARCHAR(100) NOT NULL,
+  network_config_name               VARCHAR(100) NOT NULL,
+  subnet_id                         VARCHAR(100) NOT NULL,
+  private_static_ip                 VARCHAR(100) NOT NULL,
+  subnet_range                      VARCHAR(100) NOT NULL,
+  subnet_gateway                    VARCHAR(100) NOT NULL,
+  subnet_dns                        VARCHAR(100) NOT NULL,
+  public_static_ip                  VARCHAR(100) NOT NULL,
+  create_user_id                    VARCHAR(255) NOT NULL,
+  create_date                       DATE NOT NULL,
+  update_user_id                    VARCHAR(255) NOT NULL,
+  update_date                       DATE NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
+CREATE TABLE ieda_bootstrap_default_config (
+  id                                INT(11) NOT NULL AUTO_INCREMENT,
+  iaas_type                         VARCHAR(100) NOT NULL,
+  default_config_name               VARCHAR(100) NOT NULL,
+  deployment_name                   VARCHAR(100) DEFAULT NULL,
+  director_name                     VARCHAR(100) DEFAULT NULL,
+  ntp                               VARCHAR(100) DEFAULT NULL,
+  credential_key_name               VARCHAR(100) NOT NULL,
+  boshRelease                       VARCHAR(100) NOT NULL,
+  bosh_cpi_release                  VARCHAR(100) DEFAULT NULL,
+  enable_snapshots                  VARCHAR(100) DEFAULT NULL,
+  snapshot_schedule                 VARCHAR(100) DEFAULT NULL,
+  paasta_monitoring_use             VARCHAR(100) DEFAULT NULL,
+  paasta_monitoring_ip              VARCHAR(100) DEFAULT NULL,
+  influxdb_ip                       VARCHAR(100) DEFAULT NULL,
+  paasta_monitoring_release         VARCHAR(100) DEFAULT NULL,
+  create_user_id                    VARCHAR(255) NOT NULL,
+  create_date                       date NOT NULL,
+  update_user_id                    VARCHAR(255) NOT NULL,
+  update_date                       date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
 
 #Setting AUTO_INCREMENT
 ALTER TABLE ieda_role AUTO_INCREMENT=1000;
@@ -734,4 +793,4 @@ ALTER TABLE ieda_bootstrap_cpi_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_bootstrap_default_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_bootstrap_network_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_bootstrap_resource_config AUTO_INCREMENT=1000;
-
+ALTER TABLE ieda_bootstrap_config AUTO_INCREMENT=1000;
