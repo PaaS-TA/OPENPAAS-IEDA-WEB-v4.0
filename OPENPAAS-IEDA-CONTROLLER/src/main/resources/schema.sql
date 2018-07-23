@@ -404,6 +404,23 @@ CREATE table ieda_job_template (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
+#cf deployment job template
+CREATE table ieda_cf_job_template (
+  id                             INT NOT NULL AUTO_INCREMENT, 
+  seq                            INT NOT NULL,
+  deploy_type                    VARCHAR(100) NOT NULL,
+  job_name                       VARCHAR(100),
+  min_release_version            VARCHAR(100),
+  max_release_version            VARCHAR(100),
+  zone_z1                        VARCHAR(100),
+  zone_z2                        VARCHAR(100),
+  zone_z3                        VARCHAR(100),
+  create_user_id                 VARCHAR(255) NOT NULL,
+  create_date                    DATE NOT NULL,
+  update_user_id                 VARCHAR(255) NOT NULL,
+  update_date                    DATE NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 #diego
 CREATE TABLE ieda_diego
@@ -783,6 +800,7 @@ ALTER TABLE ieda_service_pack AUTO_INCREMENT=1000;
 ALTER TABLE ieda_iaas_account AUTO_INCREMENT=1000;
 ALTER TABLE ieda_iaas_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_job_template AUTO_INCREMENT=1000;
+ALTER TABLE ieda_cf_job_template AUTO_INCREMENT=1000;
 ALTER TABLE ieda_director_credential AUTO_INCREMENT=1000;
 ALTER TABLE ieda_hybrid_director_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_hybrid_bootstrap AUTO_INCREMENT=1000;
