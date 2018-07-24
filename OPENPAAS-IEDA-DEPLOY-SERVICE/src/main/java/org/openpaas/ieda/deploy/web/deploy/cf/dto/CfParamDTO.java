@@ -11,9 +11,6 @@ public class CfParamDTO {
         private String id; //id
         @NotNull
         private String iaas; //IaaS
-        @NotNull
-        private String diegoYn;//diego 사용 유무
-        
         // 1.1 Deployment 정보
         @NotNull
         private String deploymentName; //배포명
@@ -28,21 +25,12 @@ public class CfParamDTO {
         private String loggregatorReleaseVersion;
         
         private String appSshFingerprint; //SSH 핑거프린트
-        @NotNull
-        private String deaMemoryMB; //deaMemoryMB
-        @NotNull
-        private String deaDiskMB; //deaDiskMB
         
         // 1.2 기본정보
         @NotNull
         private String domain; //도메인
         @NotNull
-        private String description; //도메인 설명
-        @NotNull
         private String domainOrganization; //도메인 그룹
-        @NotNull
-        private String loginSecret; //로그인 비밀번호
-        @NotNull
         private String paastaMonitoringUse;//PaaS-TA 모니터링 사용 유무
         private String ingestorIp;//PaaS-TA 모니터링 DB 서버 IP
         private String userAddSsh;//os-conf ssh public-key
@@ -61,12 +49,6 @@ public class CfParamDTO {
         }
         public void setIaas(String iaas) {
             this.iaas = iaas;
-        }
-        public String getDiegoYn() {
-            return diegoYn;
-        }
-        public void setDiegoYn(String diegoYn) {
-            this.diegoYn = diegoYn;
         }
         public String getDeploymentName() {
             return deploymentName;
@@ -110,41 +92,17 @@ public class CfParamDTO {
         public void setAppSshFingerprint(String appSshFingerprint) {
             this.appSshFingerprint = appSshFingerprint;
         }
-        public String getDeaMemoryMB() {
-            return deaMemoryMB;
-        }
-        public void setDeaMemoryMB(String deaMemoryMB) {
-            this.deaMemoryMB = deaMemoryMB;
-        }
-        public String getDeaDiskMB() {
-            return deaDiskMB;
-        }
-        public void setDeaDiskMB(String deaDiskMB) {
-            this.deaDiskMB = deaDiskMB;
-        }
         public String getDomain() {
             return domain;
         }
         public void setDomain(String domain) {
             this.domain = domain;
         }
-        public String getDescription() {
-            return description;
-        }
-        public void setDescription(String description) {
-            this.description = description;
-        }
         public String getDomainOrganization() {
             return domainOrganization;
         }
         public void setDomainOrganization(String domainOrganization) {
             this.domainOrganization = domainOrganization;
-        }
-        public String getLoginSecret() {
-            return loginSecret;
-        }
-        public void setLoginSecret(String loginSecret) {
-            this.loginSecret = loginSecret;
         }
         public String getPaastaMonitoringUse() {
             return paastaMonitoringUse;

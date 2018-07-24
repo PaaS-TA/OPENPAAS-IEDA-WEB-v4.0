@@ -112,8 +112,8 @@ public class CfService {
         int cnt = 0;
         String subnetRange , subnetGateway , subnetDns , subnetReservedIp;
         subnetRange = subnetGateway = subnetDns = subnetReservedIp = "";
-        String subnetStaticIp ,subnetId , cloudSecurityGroups, availabilityZone;
-        subnetStaticIp  = subnetId = cloudSecurityGroups = availabilityZone =  "";
+        String subnetStaticIp ,subnetId , cloudSecurityGroups, availabilityZone, publicStaticIp;
+        subnetStaticIp  = subnetId = cloudSecurityGroups = availabilityZone = publicStaticIp = "";
         
         if(netowrks  != null){
             for(NetworkVO networkVO: netowrks){
@@ -132,6 +132,8 @@ public class CfService {
                     subnetId += networkVO.getSubnetId() + br;
                     cloudSecurityGroups += networkVO.getCloudSecurityGroups() + br;
                     availabilityZone += networkVO.getAvailabilityZone() + br;
+                } else {
+                	publicStaticIp += networkVO.getPublicStaticIp();
                 }
             }
             cfListInfo.setSubnetRange(subnetRange);
@@ -139,6 +141,7 @@ public class CfService {
             cfListInfo.setSubnetDns(subnetDns);
             cfListInfo.setSubnetReservedIp(subnetReservedIp);
             cfListInfo.setSubnetStaticIp(subnetStaticIp);
+            cfListInfo.setProxyStaticIps(publicStaticIp);
             cfListInfo.setSubnetId(subnetId);
             cfListInfo.setCloudSecurityGroups(cloudSecurityGroups);
             cfListInfo.setAvailabilityZone(availabilityZone);
@@ -473,9 +476,6 @@ public class CfService {
             items.add(new ReplaceItemDTO("[lInsTypeRAM]", String.valueOf(vo.getResource().getLargeRam())));
             items.add(new ReplaceItemDTO("[lInsTypeDISK]", String.valueOf(vo.getResource().getLargeDisk())));
             //runner Flavor
-            items.add(new ReplaceItemDTO("[rInsTypeCPU]",  String.valueOf(vo.getResource().getRunnerCpu())));
-            items.add(new ReplaceItemDTO("[rInsTypeRAM]", String.valueOf(vo.getResource().getRunnerRam())));
-            items.add(new ReplaceItemDTO("[rInsTypeDISK]", String.valueOf(vo.getResource().getRunnerDisk())));
         }else{
             items.add(new ReplaceItemDTO("[smallInstanceType]", vo.getResource().getSmallFlavor()));
             items.add(new ReplaceItemDTO("[mediumInstanceType]", vo.getResource().getMediumFlavor()));

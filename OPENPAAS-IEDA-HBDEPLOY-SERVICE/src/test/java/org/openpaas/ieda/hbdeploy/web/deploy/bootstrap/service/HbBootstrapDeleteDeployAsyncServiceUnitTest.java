@@ -1,6 +1,5 @@
 package org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.service;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;

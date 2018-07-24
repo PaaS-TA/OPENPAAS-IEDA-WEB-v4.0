@@ -397,8 +397,6 @@ public class DiegoSaveServiceUnitTest extends BaseDeployControllerUnitTest {
         dto.setSubnetRange("192.168.0.0/24");
         dto.setSubnetReservedFrom("192.168.0.1");
         dto.setSubnetReservedTo("192.168.0.155");
-        dto.setSubnetStaticFrom("192.168.155");
-        dto.setSubnetStaticTo("192.168.0.255");
         
         dto.getAvailabilityZone();
         dto.getCloudSecurityGroups();
@@ -413,8 +411,6 @@ public class DiegoSaveServiceUnitTest extends BaseDeployControllerUnitTest {
         dto.getSubnetRange();
         dto.getSubnetReservedFrom();
         dto.getSubnetReservedTo();
-        dto.getSubnetStaticFrom();
-        dto.getSubnetStaticTo();
         list.add(dto);
         if(type.equals("size")){
             dto = new NetworkDTO();
@@ -431,8 +427,6 @@ public class DiegoSaveServiceUnitTest extends BaseDeployControllerUnitTest {
             dto.setSubnetRange("192.168.0.0/24");
             dto.setSubnetReservedFrom("192.168.0.1");
             dto.setSubnetReservedTo("192.168.0.155");
-            dto.setSubnetStaticFrom("192.168.155");
-            dto.setSubnetStaticTo("192.168.0.255");
             list.add(dto);
         }
         return list;

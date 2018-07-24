@@ -22,9 +22,6 @@ public class ResourceVO {
     private Integer largeCpu;
     private Integer largeRam;
     private Integer largeDisk;
-    private Integer runnerCpu;
-    private Integer runnerRam;
-    private Integer runnerDisk;
     private String createUserId;
     private String updateUserId;
     private Date createDate; // 생성일자
@@ -138,24 +135,6 @@ public class ResourceVO {
     }
     public void setLargeDisk(Integer largeDisk) {
         this.largeDisk = largeDisk;
-    }
-    public Integer getRunnerCpu() {
-        return runnerCpu;
-    }
-    public void setRunnerCpu(Integer runnerCpu) {
-        this.runnerCpu = runnerCpu;
-    }
-    public Integer getRunnerRam() {
-        return runnerRam;
-    }
-    public void setRunnerRam(Integer runnerRam) {
-        this.runnerRam = runnerRam;
-    }
-    public Integer getRunnerDisk() {
-        return runnerDisk;
-    }
-    public void setRunnerDisk(Integer runnerDisk) {
-        this.runnerDisk = runnerDisk;
     }
     public String getCreateUserId() {
         return createUserId;

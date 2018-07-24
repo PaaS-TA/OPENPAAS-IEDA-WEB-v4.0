@@ -29,9 +29,6 @@ public class ResourceDTO {
     private String largeCpu;//large 인스턴스 유형 Cpu
     private String largeRam;//large 인스턴스 유형 Ram
     private String largeDisk;//large 인스턴스 유형 Disk
-    private String runnerCpu;//runner 인스턴스 유형 Cpu
-    private String runnerRam;//runner 인스턴스 유형 Ram
-    private String runnerDisk;//runner 인스턴스 유형 Disk
     
     private String keyFile;//key파일명
     
@@ -154,24 +151,6 @@ public class ResourceDTO {
     }
     public void setLargeDisk(String largeDisk) {
         this.largeDisk = largeDisk;
-    }
-    public String getRunnerCpu() {
-        return runnerCpu;
-    }
-    public void setRunnerCpu(String runnerCpu) {
-        this.runnerCpu = runnerCpu;
-    }
-    public String getRunnerRam() {
-        return runnerRam;
-    }
-    public void setRunnerRam(String runnerRam) {
-        this.runnerRam = runnerRam;
-    }
-    public String getRunnerDisk() {
-        return runnerDisk;
-    }
-    public void setRunnerDisk(String runnerDisk) {
-        this.runnerDisk = runnerDisk;
     }
     public String getKeyFile() {
         return keyFile;

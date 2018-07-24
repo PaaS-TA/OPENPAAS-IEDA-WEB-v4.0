@@ -6,7 +6,7 @@ public class NetworkVO {
         private Integer id;//id
         private String createUserId;//생성자
         private String updateUserId;//수정자
-        private String publicStaticIP;
+        private String publicStaticIp;
         private String deployType;//배포 유형
         private String net; //net 구분
         private Integer seq; //시퀀스
@@ -62,11 +62,11 @@ public class NetworkVO {
             this.seq = seq;
         }
         
-        public String getPublicStaticIP() {
-            return publicStaticIP;
+        public String getPublicStaticIp() {
+            return publicStaticIp;
         }
-        public void setPublicStaticIP(String publicStaticIP) {
-            this.publicStaticIP = publicStaticIP;
+        public void setPublicStaticIp(String publicStaticIP) {
+            this.publicStaticIp = publicStaticIP;
         }
         public String getSubnetStaticFrom() {
             return subnetStaticFrom;
