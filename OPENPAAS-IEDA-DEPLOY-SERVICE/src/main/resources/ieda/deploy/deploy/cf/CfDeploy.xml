@@ -6,7 +6,6 @@
     <resultMap id="cf" type="org.openpaas.ieda.deploy.web.deploy.cf.dao.CfVO">
         <id property="id" column="ID" />
         <result property="iaasType" column="IAAS_TYPE"/>
-        <result property="diegoYn" column="DIEGO_YN"/>
         <result property="createUserId" column="CREATE_USER_ID"/>
         <result property="createDate" column="CREATE_DATE" />
         <result property="updateUserId" column="UPDATE_USER_ID"/>
@@ -15,17 +14,8 @@
         <result property="directorUuid" column="DIRECTOR_UUID" />
         <result property="releaseName" column="RELEASE_NAME" />
         <result property="releaseVersion" column="RELEASE_VERSION" />
-        <result property="loggregatorReleaseName" column="LOGGREGATOR_RELEASE_NAME" />
-        <result property="loggregatorReleaseVersion" column="LOGGREGATOR_RELEASE_VERSION" />
-        <result property="appSshFingerprint" column="APP_SSH_FINGERPRINT" />
         <result property="domain" column="DOMAIN" />
-        <result property="description" column="DESCRIPTION" />
         <result property="domainOrganization" column="DOMAIN_ORGANIZATION" />
-        <result property="deaMemoryMB" column="DEA_MEMORY_MB" />
-        <result property="deaDiskMB" column="DEA_DISK_MB" />
-        <result property="loginSecret" column="LOGIN_SECRET" />
-        <result property="paastaMonitoringUse" column="PAASTA_MONITORING_USE" />
-        <result property="ingestorIp" column="INGESTOR_IP" />
         <result property="countryCode" column="COUNTRY_CODE" />
         <result property="stateName" column="STATE_NAME" />
         <result property="localityName" column="LOCALITY_NAME" />
@@ -73,18 +63,12 @@
         Select 
              c.id as id 
             ,c.iaas_type as iaas_type
-            ,app_ssh_fingerprint
-            ,diego_yn
             ,deploy_status
             ,deployment_file
             ,deployment_name
-            ,description
             ,director_uuid
             ,domain
             ,domain_organization
-            ,login_secret
-            ,paasta_monitoring_use
-            ,ingestor_ip
             ,key_file
             ,release_name
             ,release_version
@@ -95,12 +79,7 @@
             ,c.osconf_release_name
             ,c.osconf_release_version
         From ieda_cf c 
-        LEFT JOIN ieda_cf_diego a
-        ON c.id = a.cf_id
          Where LOWER(c.iaas_type) = #{iaas}
-        <if test="platform == 'cf'">
-             And (a.cf_id is null || c.deploy_status = 'error')
-        </if>
     </select>
     
     <select id="selectCfInfoById" resultMap="cf">
@@ -108,24 +87,16 @@
         Select 
              id
             ,iaas_type
-            ,dea_memory_mb
-            ,dea_disk_mb
-            ,diego_yn
-            ,app_ssh_fingerprint
             ,deploy_status
             ,deployment_file
             ,deployment_name
-            ,description
             ,director_uuid
             ,domain
             ,domain_organization
-            ,login_secret
             ,release_name
             ,release_version
             ,loggregator_release_name
             ,loggregator_release_version
-            ,paasta_monitoring_use
-            ,ingestor_ip
             ,country_code
             ,state_name
             ,locality_name
@@ -159,24 +130,14 @@
              cf.id as id 
             ,resource.id as resource_id
             ,iaas_type
-            ,dea_memory_mb
-            ,dea_disk_mb
-            ,diego_yn
-            ,app_ssh_fingerprint
             ,deploy_status
             ,deployment_file
             ,deployment_name
-            ,description
             ,director_uuid
             ,domain
             ,domain_organization
-            ,login_secret
-            ,paasta_monitoring_use
-            ,ingestor_ip
             ,release_name
             ,release_version
-            ,loggregator_release_name
-            ,loggregator_release_version
             ,country_code
             ,state_name
             ,locality_name
@@ -220,22 +181,14 @@
         Insert Into ieda_cf (
              id
             ,iaas_type 
-            ,diego_yn
             ,deployment_name
             ,director_uuid
             ,release_name
             ,release_version
             ,loggregator_release_name
             ,loggregator_release_version
-            ,app_ssh_fingerprint
             ,domain
-            ,description
             ,domain_organization
-            ,login_secret
-            ,dea_memory_mb
-            ,dea_disk_mb
-            ,paasta_monitoring_use
-            ,ingestor_ip
             ,country_code
             ,state_name
             ,locality_name
@@ -255,22 +208,14 @@
         Values(
              #{cf.id}
             ,#{cf.iaasType}
-            ,#{cf.diegoYn}
             ,#{cf.deploymentName}
             ,#{cf.directorUuid}
             ,#{cf.releaseName}
             ,#{cf.releaseVersion}
             ,#{cf.loggregatorReleaseName}
             ,#{cf.loggregatorReleaseVersion}
-            ,#{cf.appSshFingerprint}
             ,#{cf.domain}
-            ,#{cf.description}
             ,#{cf.domainOrganization}
-            ,#{cf.loginSecret}
-            ,#{cf.deaMemoryMB}
-            ,#{cf.deaDiskMB}
-            ,#{cf.paastaMonitoringUse}
-            ,#{cf.ingestorIp}
             ,#{cf.countryCode}
             ,#{cf.stateName}
             ,#{cf.localityName}
@@ -302,15 +247,8 @@
             ,release_version=#{cf.releaseVersion}
             ,loggregator_release_name=#{cf.loggregatorReleaseName}
             ,loggregator_release_version=#{cf.loggregatorReleaseVersion}
-            ,app_ssh_fingerprint=#{cf.appSshFingerprint}
-            ,dea_memory_mb=#{cf.deaMemoryMB}
-            ,dea_disk_mb=#{cf.deaDiskMB}
             ,domain=#{cf.domain}
-            ,description=#{cf.description}
             ,domain_organization=#{cf.domainOrganization}
-            ,login_secret=#{cf.loginSecret}
-            ,paasta_monitoring_use=#{cf.paastaMonitoringUse}
-            ,ingestor_ip=#{cf.ingestorIp}
             ,country_code = #{cf.countryCode}
             ,state_name=#{cf.stateName}
             ,locality_name=#{cf.localityName}
@@ -433,10 +371,6 @@
         Select 
              id
             ,iaas_type
-            ,dea_memory_mb
-            ,dea_disk_mb
-            ,diego_yn
-            ,app_ssh_fingerprint
             ,deploy_status
             ,deployment_file
             ,deployment_name
@@ -444,13 +378,10 @@
             ,director_uuid
             ,domain
             ,domain_organization
-            ,login_secret
             ,release_name
             ,release_version
             ,loggregator_release_name
             ,loggregator_release_version
-            ,paasta_monitoring_use
-            ,ingestor_ip
             ,country_code
             ,state_name
             ,locality_name

@@ -280,13 +280,12 @@ CREATE TABLE ieda_network
   deploy_type                       VARCHAR(100)  NOT NULL,
   seq                               INT(11)       NOT NULL DEFAULT 0,
   net                               VARCHAR(255)  NOT NULL,
+  public_static_ip                  VARCHAR(255),
   subnet_range                      VARCHAR(255),
   subnet_gateway                    VARCHAR(255),
   subnet_reserved_from              VARCHAR(255),
   subnet_reserved_to                VARCHAR(255),
   subnet_dns                        VARCHAR(255),
-  subnet_static_from                VARCHAR(255),
-  subnet_static_to                  VARCHAR(255),
   subnet_id                         VARCHAR(255),
   network_name                      VARCHAR(255),
   cloud_security_groups             VARCHAR(255),
@@ -335,22 +334,14 @@ CREATE TABLE ieda_cf
 (
   id                                INT(11)       NOT NULL AUTO_INCREMENT,
   iaas_type                         VARCHAR(255)  NOT NULL,
-  diego_yn                          VARCHAR(255)  NOT NULL,
   deployment_name                   VARCHAR(100),
   director_uuid                     VARCHAR(100),
   release_name                      VARCHAR(100),
   release_version                   VARCHAR(100),
   loggregator_release_name          VARCHAR(100),
   loggregator_release_version       VARCHAR(100),
-  app_ssh_fingerprint               VARCHAR(200),
-  dea_memory_mb                     INT(11),
-  dea_disk_mb                       INT(11),
   domain                            VARCHAR(100),
-  description                       VARCHAR(100),
   domain_organization               VARCHAR(100),
-  login_secret                      VARCHAR(100),
-  paasta_monitoring_use             VARCHAR(100),
-  ingestor_ip                       VARCHAR(100),
   country_code                      VARCHAR(255),
   state_name                        VARCHAR(255),
   locality_name                     VARCHAR(255),
@@ -384,24 +375,6 @@ CREATE table ieda_job_setting (
   update_user_id                VARCHAR(255) NOT NULL,
   update_date                   DATE         NOT NULL,
   PRIMARY KEY (id,seq, deploy_type)
-) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
-
-#job template
-CREATE table ieda_job_template (
-  id                             INT NOT NULL AUTO_INCREMENT, 
-  seq                            INT NOT NULL,
-  deploy_type                    VARCHAR(100) NOT NULL,
-  job_name                       VARCHAR(100),
-  min_release_version            VARCHAR(100),
-  max_release_version            VARCHAR(100),
-  zone_z1                        VARCHAR(100),
-  zone_z2                        VARCHAR(100),
-  zone_z3                        VARCHAR(100),
-  create_user_id                 VARCHAR(255) NOT NULL,
-  create_date                    DATE NOT NULL,
-  update_user_id                 VARCHAR(255) NOT NULL,
-  update_date                    DATE NOT NULL,
-  PRIMARY KEY (id)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 #cf deployment job template
@@ -551,111 +524,6 @@ CREATE TABLE ieda_director_credential
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-CREATE TABLE ieda_hybrid_bootstrap
-(
-  hybrid_bootstrap_id                   INT(11)      NOT NULL auto_increment,
-  public_bootstrap_id                   VARCHAR(100),  
-  private_bootstrap_id                  VARCHAR(100),  
-  create_user_id                        VARCHAR(255) NOT NULL,
-  create_date                           DATE         NOT NULL,
-  update_user_id                        VARCHAR(255) NOT NULL,
-  update_date                           DATE         NOT NULL,
-  PRIMARY KEY (`hybrid_bootstrap_id`)
-) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
-
-# HYBRID BOOTSTRAP
-CREATE TABLE ieda_private_bootstrap
-(
-  id                                INT(11)       NOT NULL AUTO_INCREMENT,
-  iaas_config_id                    INT(11)       NOT NULL,
-  iaas_type                         VARCHAR(255)  NOT NULL,
-  deployment_name                   VARCHAR(100),
-  director_name                     VARCHAR(100),
-  credential_key_name               VARCHAR(100),
-  bootstrap_type                    VARCHAR(100),
-  ntp                               VARCHAR(100),
-  bosh_release                      VARCHAR(100),
-  bosh_cpi_release                  VARCHAR(100),
-  os_conf_release                   VARCHAR(100),
-  enable_snapshots                  VARCHAR(100),
-  snapshot_schedule                 VARCHAR(100),
-  subnet_id                         VARCHAR(100),
-  network_name                      VARCHAR(100),
-  private_static_ip                 VARCHAR(100),
-  public_static_ip                  VARCHAR(100),
-  subnet_range                      VARCHAR(100),
-  subnet_gateway                    VARCHAR(100),
-  subnet_dns                        VARCHAR(100),
-  public_subnet_id                  VARCHAR(100),
-  public_subnet_range               VARCHAR(100),
-  public_subnet_gateway             VARCHAR(100),
-  public_subnet_dns                 VARCHAR(100),
-  stemcell                          VARCHAR(100),
-  cloud_instance_type               VARCHAR(100),
-  bosh_password                     VARCHAR(255),
-  resource_pool_cpu                 VARCHAR(100),
-  resource_pool_ram                 VARCHAR(100),
-  resource_pool_disk                VARCHAR(100),
-  deployment_file                   VARCHAR(255),
-  deploy_status                     VARCHAR(100),
-  deploy_log                        LONGTEXT,
-  create_user_id                    VARCHAR(255)  NOT NULL,
-  create_date                       DATE          NOT NULL,
-  update_user_id                    VARCHAR(255)  NOT NULL,
-  update_date                       DATE          NOT NULL,
-  paasta_monitoring_use             VARCHAR(100) NULL,
-  paasta_monitoring_ip              VARCHAR(100) NULL,
-  influxdb_ip                       VARCHAR(100) NULL,
-  paasta_monitoring_release         VARCHAR(100) NULL,
-  PRIMARY KEY (id)
-) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
-
-# HYBRID BOOTSTRAP
-CREATE TABLE ieda_public_bootstrap
-(
-  id                                INT(11)       NOT NULL AUTO_INCREMENT,
-  iaas_config_id                    INT(11)       NOT NULL,
-  iaas_type                         VARCHAR(255)  NOT NULL,
-  deployment_name                   VARCHAR(100),
-  director_name                     VARCHAR(100),
-  credential_key_name               VARCHAR(100),
-  bootstrap_type                    VARCHAR(100),
-  ntp                               VARCHAR(100),
-  bosh_release                      VARCHAR(100),
-  bosh_cpi_release                  VARCHAR(100),
-  os_conf_release                   VARCHAR(100),
-  enable_snapshots                  VARCHAR(100),
-  snapshot_schedule                 VARCHAR(100),
-  subnet_id                         VARCHAR(100),
-  network_name                      VARCHAR(100),
-  private_static_ip                 VARCHAR(100),
-  public_static_ip                  VARCHAR(100),
-  subnet_range                      VARCHAR(100),
-  subnet_gateway                    VARCHAR(100),
-  subnet_dns                        VARCHAR(100),
-  public_subnet_id                  VARCHAR(100),
-  public_subnet_range               VARCHAR(100),
-  public_subnet_gateway             VARCHAR(100),
-  public_subnet_dns                 VARCHAR(100),
-  stemcell                          VARCHAR(100),
-  cloud_instance_type               VARCHAR(100),
-  bosh_password                     VARCHAR(255),
-  resource_pool_cpu                 VARCHAR(100),
-  resource_pool_ram                 VARCHAR(100),
-  resource_pool_disk                VARCHAR(100),
-  deployment_file                   VARCHAR(255),
-  deploy_status                     VARCHAR(100),
-  deploy_log                        LONGTEXT,
-  create_user_id                    VARCHAR(255)  NOT NULL,
-  create_date                       DATE          NOT NULL,
-  update_user_id                    VARCHAR(255)  NOT NULL,
-  update_date                       DATE          NOT NULL,
-  paasta_monitoring_use             VARCHAR(100) NULL,
-  paasta_monitoring_ip              VARCHAR(100) NULL,
-  influxdb_ip                       VARCHAR(100) NULL,
-  paasta_monitoring_release         VARCHAR(100) NULL,
-  PRIMARY KEY (id)
-) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 CREATE TABLE ieda_hybrid_director_config
 (

@@ -75,7 +75,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
         when(mockCfDAO.selectCfDeploymentNameDuplication(anyString(), anyString(), anyInt())).thenReturn(0);
         CfVO resultVo = mockCfSaveService.saveDefaultInfo(dto, principal);
         assertEquals(resultVo.getAppSshFingerprint(), dto.getAppSshFingerprint());
-        assertEquals(resultVo.getDiegoYn(), dto.getDiegoYn());
         assertEquals(resultVo.getDirectorUuid(), dto.getDirectorUuid());
         assertEquals(resultVo.getPaastaMonitoringUse(), dto.getPaastaMonitoringUse());
         assertEquals(resultVo.getReleaseName(), dto.getReleaseName());
@@ -95,7 +94,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
         when(mockCfDAO.selectCfDeploymentNameDuplication(anyString(), anyString(), anyInt())).thenReturn(0);
         CfVO resultVo = mockCfSaveService.saveDefaultInfo(dto, principal);
         assertEquals(resultVo.getAppSshFingerprint(), dto.getAppSshFingerprint());
-        assertEquals(resultVo.getDiegoYn(), dto.getDiegoYn());
         assertEquals(resultVo.getDirectorUuid(), dto.getDirectorUuid());
         assertEquals(resultVo.getPaastaMonitoringUse(), dto.getPaastaMonitoringUse());
         assertEquals(resultVo.getReleaseName(), dto.getReleaseName());
@@ -472,8 +470,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
         dto.setSubnetDns("8.8.8.8");
         dto.setSubnetReservedFrom("1");
         dto.setSubnetReservedTo("255");
-        dto.setSubnetStaticFrom("1");
-        dto.setSubnetStaticTo("255");
         dto.setSubnetId("1");
         dto.setCloudSecurityGroups("seg");
         dto.setNetworkName("cf-net");
@@ -492,8 +488,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
             dto.setSubnetDns("8.8.8.8");
             dto.setSubnetReservedFrom("1");
             dto.setSubnetReservedTo("255");
-            dto.setSubnetStaticFrom("1");
-            dto.setSubnetStaticTo("255");
             dto.setSubnetId("1");
             dto.setCloudSecurityGroups("seg");
             dto.setNetworkName("cf-net");
@@ -596,16 +590,11 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
     public CfParamDTO.Default setCfDefaultParamInfo(String type) {
         CfParamDTO.Default dto = new CfParamDTO.Default();
         dto.setAppSshFingerprint("fingerPrint");
-        dto.setDeaDiskMB("32718");
-        dto.setDeaMemoryMB("8192");
         dto.setDeploymentName("cf");
-        dto.setDescription("cf");
-        dto.setDiegoYn("N");
         dto.setDirectorUuid("uuid");
         dto.setDomain("domain");
         dto.setIaas("openstack");
         dto.setIngestorIp("172.16.100.1");
-        dto.setLoginSecret("login");
         dto.setDomainOrganization("paas-ta");
         dto.setPaastaMonitoringUse("yes");
         dto.setReleaseName("cf");

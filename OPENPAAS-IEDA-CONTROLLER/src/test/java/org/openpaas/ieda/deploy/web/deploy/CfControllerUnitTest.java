@@ -501,8 +501,6 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
         dto.setSubnetDns("8.8.8.8");
         dto.setSubnetReservedFrom("1");
         dto.setSubnetReservedTo("255");
-        dto.setSubnetStaticFrom("1");
-        dto.setSubnetStaticTo("255");
         dto.setSubnetId("1");
         dto.setCloudSecurityGroups("seg");
         dto.setNetworkName("cf-net");
@@ -551,17 +549,12 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
     public CfParamDTO.Default setCfDefaultParamInfo() {
         CfParamDTO.Default dto = new CfParamDTO.Default();
         dto.setAppSshFingerprint("fingerPrint");
-        dto.setDeaDiskMB("32718");
-        dto.setDeaMemoryMB("8192");
         dto.setDeploymentName("cf");
-        dto.setDescription("cf");
-        dto.setDiegoYn("N");
         dto.setDirectorUuid("uuid");
         dto.setDomain("domain");
         dto.setIaas("openstack");
         dto.setId("1");
         dto.setIngestorIp("172.16.100.1");
-        dto.setLoginSecret("login");
         dto.setDomainOrganization("paas-ta");
         dto.setPaastaMonitoringUse("yes");
         dto.setReleaseName("cf");

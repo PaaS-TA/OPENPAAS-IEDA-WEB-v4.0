@@ -491,8 +491,6 @@ public class DiegoControllerUnitTest extends BaseControllerUnitTest{
         dto.setSubnetRange("192.168.0.0/24");
         dto.setSubnetReservedFrom("192.168.0.1");
         dto.setSubnetReservedTo("192.168.0.155");
-        dto.setSubnetStaticFrom("192.168.155");
-        dto.setSubnetStaticTo("192.168.0.255");
         list.add(dto);
         return list;
     }

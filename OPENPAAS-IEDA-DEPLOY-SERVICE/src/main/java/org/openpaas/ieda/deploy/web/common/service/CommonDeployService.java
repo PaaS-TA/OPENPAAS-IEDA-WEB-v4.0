@@ -31,7 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.deploy.web.common.dao.CommonDeployDAO;
@@ -63,7 +62,6 @@ public class CommonDeployService{
     @Autowired MessageSource message;
     
     final private static String SEPARATOR = System.getProperty("file.separator");
-    final private static String GENERATE_CERTS_DIR = LocalDirectoryConfiguration.getGenerateCertsDir();
     final private static String SSH_DIR = LocalDirectoryConfiguration.getSshDir();
     final private static String KEY_DIR = LocalDirectoryConfiguration.getKeyDir();
     final private static String DEPLOYMENT_DIR = LocalDirectoryConfiguration.getDeploymentDir();
@@ -71,6 +69,9 @@ public class CommonDeployService{
     final private static String LOCK_DIR = LocalDirectoryConfiguration.getLockDir() + SEPARATOR;
     final private static String CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateCredentialDir();
     final private static Logger LOGGER = LoggerFactory.getLogger(CommonDeployService.class);
+    final private static String CF_CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateCfDeploymentCredentialDir();
+    final private static String MANIFEST_TEMPLATE_DIR = LocalDirectoryConfiguration.getManifastTemplateDir();
+    
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
@@ -258,125 +259,34 @@ public class CommonDeployService{
      * @return : String
     *****************************************************************/
     public String createKeyInfo( KeyInfoDTO dto, Principal principal){
-        File generateCertsFile = null;
-        InputStream inputStream = null;
-        BufferedReader bufferedReader = null;
         String keyFileName = "";
-        
-        DefaultArtifactVersion maxVersion = new DefaultArtifactVersion("1.25.1");
-        DefaultArtifactVersion version = new DefaultArtifactVersion(dto.getVersion());
-        String generateCerts = "";
-        String platform = dto.getPlatform().toLowerCase();
-        Integer releaseVersion = 0;
-        if(!platform.equals("diego") && (!dto.getVersion().equals("2.0") && !dto.getVersion().equals("3.0") && !dto.getVersion().equals("3.1"))){
-            releaseVersion = Integer.parseInt(dto.getVersion());
-        }
-        if( (platform.equals("cf") && releaseVersion < 272 && !dto.getVersion().equals("3.0") && !dto.getVersion().equals("3.1"))  
-                || ( platform.equals("diego") && maxVersion.compareTo(version) > 0 ) ) {
-            generateCerts = GENERATE_CERTS_DIR + SEPARATOR + "generate-certs_v1" + SEPARATOR + "generate-certs";
-        } else {
-            generateCerts = GENERATE_CERTS_DIR + SEPARATOR + "generate-certs_v2" + SEPARATOR + "generate-certs";
+        String commonCredentialManifestPath = MANIFEST_TEMPLATE_DIR + "/cf-deployment/"+dto.getVersion()+"/common/cfcredential.yml";
+        File cfCredentialFile = new File(CF_CREDENTIAL_DIR + SEPARATOR + dto.getDomain()+ "-cred.yml");
+        if(cfCredentialFile.exists()){
+            cfCredentialFile.delete();
         }
         try {
-            generateCertsFile = new File( generateCerts );
-            if( generateCertsFile.exists() ){
-                //key를 생성할 코드를 설정(cf: 1, diego: 2, cf-diego: 3)
-                  //272 버전 이상일 경우 platform이 cf 일지라도 cf-diego 키 생성
-                String code = setCreateKeyCodeNumber( dto.getPlatform(),dto.getVersion() );
-                if(code.equals("3")) {
-                    dto.setPlatform("cf-diego");
-                }
-                
-                //key 파일명
-                keyFileName = dto.getIaas().toLowerCase() + "-" + dto.getPlatform()+"-key-" + dto.getId()+".yml";
-                
-                ProcessBuilder builder = new ProcessBuilder();
-                List<String> cmd = new ArrayList<String>();
-                cmd.add(generateCerts);
-                if( (platform.equals("cf") && releaseVersion < 272 && !dto.getVersion().equals("3.0") && !dto.getVersion().equals("3.1")) || ( platform.equals("diego") && maxVersion.compareTo(version) > 0 ) ) {
-                    cmd.add(GENERATE_CERTS_DIR + SEPARATOR + "generate-certs_v1");
-                }else {
-                    cmd.add(GENERATE_CERTS_DIR + SEPARATOR + "generate-certs_v2");
-                }
-                cmd.add(code); //1:cf, 2: diego, 3: cf-diego
-                cmd.add( keyFileName.split(".yml")[0] ); // make key name(<iaas>-cf-key-<id>);
-                if( !platform.equals("diego")){
-                    cmd.add(dto.getDomain());//domain
-                    cmd.add(dto.getCountryCode());//국가 코드
-                    cmd.add(dto.getStateName());//시//도
-                    cmd.add(dto.getLocalityName());//시/구/군
-                    cmd.add(dto.getOrganizationName());//회사명
-                    cmd.add(dto.getUnitName());//부서명
-                    cmd.add(dto.getEmail());//email
-                }
-                builder.command(cmd);
-                builder.redirectErrorStream(true);
-                Process process = builder.start();//start script
-                
-                inputStream = process.getInputStream();//get script log
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
-                String info = null;
-                while ((info = bufferedReader.readLine()) != null) {
-                    if( info.indexOf("ERROR") > -1 ){
-                        throw new CommonException(getMessageValue("common.internalServerError.exception.code"),
-                                keyFileName + getMessageValue("common.file.create.internalServerError.message"), HttpStatus.INTERNAL_SERVER_ERROR);
-                    }
-                    LOGGER.debug(info);
-                }
-                File keyFile = new File( KEY_DIR + SEPARATOR + keyFileName );
-                if( keyFile == null ){
-                    throw new CommonException(message.getMessage("common.internalServerError.exception.code", null, Locale.KOREA),
-                            keyFileName +" 파일을 찾을 수 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-                saveKeyFileName(dto, keyFileName, principal);
-            }else{
-                throw new CommonException(getMessageValue("common.notFound.exception.code"),
-                        getMessageValue("common.notFound.template.message"), HttpStatus.NOT_FOUND);
-            }
+            List<String> cmd = new ArrayList<String>();
+            cmd.add("bosh");
+            cmd.add("interpolate");
+            cmd.add(commonCredentialManifestPath);
+            cmd.add("-v");
+            cmd.add("system_domain="+dto.getDomain()+"");
+            cmd.add("--vars-store="+CF_CREDENTIAL_DIR + SEPARATOR + dto.getDomain()+ "-cred.yml");
+            ProcessBuilder builder = new ProcessBuilder(cmd);
+            builder.redirectErrorStream(true);
+            builder.start();
+            keyFileName = dto.getDomain()+"-cred.yml";
+            Thread.sleep(10000);
+            
+            saveKeyFileName(dto, keyFileName, principal);
+            
         } catch (IOException e) {
-            throw new CommonException(getMessageValue("common.internalServerError.exception.code"),
-                    getMessageValue("common.internalServerError.message"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }finally{
-            try {
-                if( bufferedReader != null ){
-                    bufferedReader.close();
-                }
-            } catch (IOException e) {
-                throw new CommonException(getMessageValue("common.internalServerError.exception.code"),
-                        getMessageValue("common.internalServerError.message"), HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            throw new CommonException("conflict.credentialName.exception", "디렉터 인증서 파일 생성 중 에러가 발생 하였습니다.", HttpStatus.BAD_REQUEST);
+        } catch (InterruptedException e) {
+            throw new CommonException("Thread.interruptedException", "서버 실행 중 에러가 발생 했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return keyFileName;
-    }
-    
-    /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : key 생성 코드 설정(cf: 1; diego: 2; cf-diego: 3)
-     * @title : setCreateKeyCodeNumber
-     * @return : String
-    ***************************************************/
-    public String setCreateKeyCodeNumber( String platform, String releaseVersion ) {
-        String code ="";
-        int cfReleaseVersion = 0;
-        if(!platform.equalsIgnoreCase("diego") && (!releaseVersion.equals("2.0") && !releaseVersion.equals("3.0") && !releaseVersion.equals("3.1") )){
-            cfReleaseVersion = Integer.parseInt(releaseVersion);
-            if( (platform.equalsIgnoreCase("cf") && cfReleaseVersion >= 272) || platform.equalsIgnoreCase("cfdiego")) {
-                code = "3";
-            }else {
-                code="1";
-            }
-        } else if(platform.equalsIgnoreCase("diego")){
-            code = "2";
-        } else if( platform.equalsIgnoreCase("cfdiego") ){
-            code = "3";
-        } else {
-            if( ( platform.equalsIgnoreCase("cf") || platform.equalsIgnoreCase("diego") ) && releaseVersion.equals("3.0") || releaseVersion.equals("3.1") ) {
-                code = "3";
-            }else {
-                code = "1";
-            }
-        }
-        return code;
     }
     
     /***************************************************
@@ -386,17 +296,10 @@ public class CommonDeployService{
      * @return : void
     ***************************************************/
     public void saveKeyFileName( KeyInfoDTO dto, String keyFileName, Principal principal ){
-        if( !("diego".equalsIgnoreCase(dto.getPlatform())) ){
-            CfVO cfVo = cfDao.selectCfInfoById( Integer.parseInt(dto.getId()) );
-            cfVo.setKeyFile(keyFileName);
-            cfVo.setUpdateUserId(principal.getName());
-            cfDao.updateCfInfo(cfVo);
-        }else{
-            DiegoVO diegoVo = diegoDao.selectDiegoInfo( Integer.parseInt(dto.getId()) );
-            diegoVo.setKeyFile(keyFileName);
-            diegoVo.setUpdateUserId(principal.getName());
-            diegoDao.updateDiegoDefaultInfo(diegoVo);
-        }
+        CfVO cfVo = cfDao.selectCfInfoById( Integer.parseInt(dto.getId()) );
+        cfVo.setKeyFile(keyFileName);
+        cfVo.setUpdateUserId(principal.getName());
+        cfDao.updateCfInfo(cfVo);
     }
     
     /****************************************************************

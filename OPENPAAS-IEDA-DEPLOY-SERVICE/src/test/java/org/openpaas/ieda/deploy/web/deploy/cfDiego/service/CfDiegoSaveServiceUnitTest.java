@@ -287,8 +287,6 @@ public class CfDiegoSaveServiceUnitTest extends BaseDeployControllerUnitTest {
         
         dto.setSubnetReservedFrom("1");
         dto.setSubnetReservedTo("255");
-        dto.setSubnetStaticFrom("1");
-        dto.setSubnetStaticTo("255");
         dto.setSubnetId("1");
         dto.setCloudSecurityGroups("seg");
         dto.setNetworkName("cf-net");

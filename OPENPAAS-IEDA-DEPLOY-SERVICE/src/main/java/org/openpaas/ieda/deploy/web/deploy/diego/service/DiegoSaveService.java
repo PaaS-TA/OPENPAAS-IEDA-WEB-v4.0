@@ -113,8 +113,6 @@ public class DiegoSaveService {
                 vo.setSubnetReservedFrom(network.getSubnetReservedFrom());
                 vo.setSubnetReservedTo(network.getSubnetReservedTo());
                 vo.setNetworkName(network.getNetworkName());
-                vo.setSubnetStaticFrom(network.getSubnetStaticFrom());
-                vo.setSubnetStaticTo(network.getSubnetStaticTo());
                 vo.setSubnetId(network.getSubnetId());
                 vo.setCloudSecurityGroups(network.getCloudSecurityGroups());
                 vo.setAvailabilityZone(network.getAvailabilityZone());

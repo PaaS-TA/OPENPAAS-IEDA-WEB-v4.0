@@ -45,7 +45,6 @@ public class CfSaveService {
         if( StringUtils.isEmpty(dto.getId())){
             vo = new CfVO();
             vo.setIaasType(dto.getIaas());
-            vo.setDiegoYn(dto.getDiegoYn());
             vo.setCreateUserId(principal.getName());
         }else{
             vo = cfDao.selectCfInfoById(Integer.parseInt(dto.getId()));
@@ -59,17 +58,13 @@ public class CfSaveService {
         vo.setLoggregatorReleaseName(dto.getLoggregatorReleaseName());
         vo.setLoggregatorReleaseVersion(dto.getLoggregatorReleaseVersion());
         vo.setAppSshFingerprint(dto.getAppSshFingerprint());
-        vo.setDeaMemoryMB(dto.getDeaMemoryMB().isEmpty() ? null : Integer.parseInt(dto.getDeaMemoryMB()));
-        vo.setDeaDiskMB(dto.getDeaDiskMB().isEmpty() ? null : Integer.parseInt(dto.getDeaDiskMB()));
         vo.setUserAddSsh(dto.getUserAddSsh());
         vo.setOsConfReleaseName(dto.getOsConfReleaseName());
         vo.setOsConfReleaseVersion(dto.getOsConfReleaseVersion());
         
         // 1.2 기본정보
         vo.setDomain(dto.getDomain());
-        vo.setDescription(dto.getDescription());
         vo.setDomainOrganization(dto.getDomainOrganization());
-        vo.setLoginSecret(dto.getLoginSecret());
         
         //1.3 PaaS-TA 모니터링 
         vo.setPaastaMonitoringUse(dto.getPaastaMonitoringUse());
@@ -107,14 +102,13 @@ public class CfSaveService {
                 cfId = Integer.parseInt(network.getCfId());
                 vo.setId(Integer.parseInt(network.getCfId()));
                 vo.setDeployType(network.getDeployType());
+                vo.setPublicStaticIp(network.getPublicStaticIp());
                 vo.setNet(network.getNet());
                 vo.setSubnetRange(network.getSubnetRange());
                 vo.setSubnetGateway(network.getSubnetGateway());
                 vo.setSubnetDns(network.getSubnetDns());
                 vo.setSubnetReservedFrom(network.getSubnetReservedFrom());
                 vo.setSubnetReservedTo(network.getSubnetReservedTo());
-                vo.setSubnetStaticFrom(network.getSubnetStaticFrom());
-                vo.setSubnetStaticTo(network.getSubnetStaticTo());
                 vo.setNetworkName(network.getNetworkName());
                 vo.setSubnetId(network.getSubnetId());
                 vo.setCloudSecurityGroups(network.getCloudSecurityGroups());
@@ -202,20 +196,11 @@ public class CfSaveService {
     @Transactional
     public HashMap<String, Object> saveResourceInfo(ResourceDTO dto, Principal principal){
         String codeName= setMessageSourceValue("common.deploy.type.cf.name");
-        String deploymentFile = null;
         HashMap<String, Object> map  = new HashMap<String, Object>();
         ResourceVO resourceVo = new ResourceVO();
         
-        //1. select resource Info
         CfVO vo = cfDao.selectCfResourceInfoById(Integer.parseInt(dto.getId()), codeName);
-        //2. set deploymentFIleName
-        if(StringUtils.isEmpty(vo.getDeploymentFile())) {
-            deploymentFile = makeDeploymentName(vo);
-        }else {
-            deploymentFile = vo.getDeploymentFile();
-        }
         
-        //3. set resourceVo(insert/update)
         if( vo.getResource().getId() != null ){
             resourceVo = vo.getResource();
         }else{
@@ -239,22 +224,13 @@ public class CfSaveService {
             resourceVo.setLargeCpu(Integer.parseInt(dto.getLargeCpu()));
             resourceVo.setLargeDisk(Integer.parseInt(dto.getLargeDisk()));
             resourceVo.setLargeRam(Integer.parseInt(dto.getLargeRam()));
-            resourceVo.setRunnerCpu(dto.getRunnerCpu().isEmpty() ? null : Integer.parseInt(dto.getRunnerCpu()));
-            resourceVo.setRunnerDisk(dto.getRunnerDisk().isEmpty() ? null : Integer.parseInt(dto.getRunnerDisk()));
-            resourceVo.setRunnerRam(dto.getRunnerRam().isEmpty() ? null : Integer.parseInt(dto.getRunnerRam()));
         }else{
             //openstack/aws Flavor setting
             resourceVo.setSmallFlavor(dto.getSmallFlavor());
             resourceVo.setMediumFlavor(dto.getMediumFlavor());
             resourceVo.setLargeFlavor(dto.getLargeFlavor());
-            resourceVo.setRunnerFlavor(dto.getRunnerFlavor());
         }
-        
-        vo.setDeploymentFile(deploymentFile);
         vo.setUpdateUserId(principal.getName());
-        map.put("deploymentFile", deploymentFile);
-        map.put("id", vo.getId());
-        
         //4. update Cf Info
         cfDao.updateCfInfo(vo);
         //5. Insert OR Update Cf Resource Info

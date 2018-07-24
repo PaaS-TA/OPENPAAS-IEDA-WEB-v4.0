@@ -63,7 +63,7 @@
                        <li><a href="javascript:goPage('<c:url value="/deploy/bootstrap"/>', 'Micro BOSH 설치');"> BOOTSTRAP 설치</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('DEPLOY_CF_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/cf"/>', 'CF DEPLOYMENT');"> CF DEPLOYMENT</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/cf"/>', 'CF DEPLOYMENT');"> CF-DEPLOYMENT 설치</a></li>
                    </sec:authorize>
                    <%-- <sec:authorize access="hasAuthority('DEPLOY_DIEGO_MENU')">
                        <li><a href="javascript:goPage('<c:url value="/deploy/diego"/>', 'DIEGO 설치');"> DIEGO 설치</a></li>

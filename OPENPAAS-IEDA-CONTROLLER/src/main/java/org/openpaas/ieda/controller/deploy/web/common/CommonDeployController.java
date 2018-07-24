@@ -295,10 +295,6 @@ public class CommonDeployController {
         if(LOGGER.isInfoEnabled()){ LOGGER.info("==================================> Key 생성 요청"); }
         String keyFile = commonService.createKeyInfo(dto, principal);
         HashMap<String, Object> map = new HashMap<String, Object>();
-        if( dto.getPlatform().toLowerCase().equalsIgnoreCase("diego") ){
-            String fingerprint = commonService.getFingerprint(keyFile);
-            map.put("fingerprint", fingerprint);
-        }
         map.put("keyFile", keyFile);
         return new ResponseEntity<HashMap<String, Object>>(map,HttpStatus.OK);
     }
