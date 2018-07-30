@@ -51,7 +51,7 @@ deployment_version=$2
 
 base_dir="${user_home}/.bosh_plugin"
 deployment_file_dir="${base_dir}/deployment"
-stub_template_dir="${user_home}/OPENPAAS-IEDA-WEB-v3.0/OPENPAAS-IEDA-CONTROLLER/src/main/resources/static/deploy_template/diego/${deployment_version}"
+stub_template_dir="${user_home}/IEDA-OPENPAAS-BACKUP/OPENPAAS-IEDA-CONTROLLER/src/main/resources/static/deploy_template/diego/${deployment_version}"
 diego_cert_dir="${base_dir}/key"
 template_common_dir="${stub_template_dir}/common"
 

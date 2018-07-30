@@ -135,7 +135,7 @@ $(function() {
          style: 'text-align: center',
          columns:[
                {field: 'recid',     caption: 'recid', hidden: true}
-             , {field: 'bootstrapConfigName', caption: 'BOOTSTRAP 정보 별칭', size: '20%'}
+             , {field: 'bootstrapConfigName', caption: 'BOOTSTRAP 정보 별칭', size: '140px'}
              , {field: 'iaasType', caption: '인프라 환경 타입', size:'120px', style:'text-align:center;' ,render: function(record){ 
                  if(record.iaasType.toLowerCase() == "aws"){
                      return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
@@ -143,10 +143,56 @@ $(function() {
                      return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
                  }
              }}
-             , {field: 'cpiConfigInfo', caption: 'CPI 정보 별칭', size: '20%'}
-             , {field: 'defaultConfigInfo', caption: '기본 정보 별칭', size: '20%'}
-             , {field: 'networkConfigInfo', caption: '네트워크 정보 별칭', size: '20%'}
-             , {field: 'resourceConfigInfo', caption: '리소스 정보 별칭 ', size: '20%'}
+             , {field: 'deployStatus', caption: '배포상태', size: '100px', 
+                 render: function(record) {
+                     if ( record.deployStatus == 'DEPLOY_STATUS_PROCESSING' )
+                         return '<span class="btn btn-primary" style="width:60px">배포중</span>';
+                     else if ( record.deployStatus == 'DEPLOY_STATUS_DONE' )
+                         return '<span class="btn btn-primary" style="width:60px">성공</span>';
+                     else    if ( record.deployStatus == 'DEPLOY_STATUS_CANCELLED' )
+                         return '<span class="btn btn-danger" style="width:60px">취소</span>';
+                     else    if ( record.deployStatus == 'DEPLOY_STATUS_FAILED' )
+                         return '<span class="btn btn-danger" style="width:60px">실패</span>';
+                     else    if ( record.deployStatus == 'DEPLOY_STATUS_DELETING' )
+                         return '<span class="btn btn-primary" style="width:60px">삭제중</span>';
+                     else
+                         return '&ndash;';
+                        }
+               }
+             , {field: 'deployLog', caption: '배포로그', size: '100px',
+                 render: function(record) {
+                     if ( (record.deployStatus == 'DEPLOY_STATUS_DONE' || record.deployStatus == 'DEPLOY_STATUS_FAILED') && record.deployLog != null ) {
+                            return '<span id="" class="btn btn-primary" style="width:60px" onClick="getHbDeployLogMsg( \''+record.id+'\',\''+record.iaasType+'\');">로그보기</span>';
+                     } else {
+                         return '&ndash;';
+                     }
+                 }
+               }
+             , {field: 'networkConfigVo.subnetId', caption: '네트워크 ID', size: '200px'}
+             , {field: 'networkConfigVo.subnetRange', caption: '서브넷 범위', size: '100px'}
+             , {field: 'networkConfigVo.publicStaticIp', caption: '디렉터 공인 IP', size: '100px'}
+             , {field: 'networkConfigVo.privateStaticIp', caption: '디렉터 내부 IP', size: '100px'}
+             , {field: 'networkConfigVo.subnetGateway', caption: '게이트웨이', size: '100px'}
+             , {field: 'networkConfigVo.subnetDns', caption: 'DNS', size: '100px'}
+             , {field: 'defaultConfigVo.ntp', caption: 'NTP', size: '100px'}
+             , {field: 'resourceConfigVo.stemcellName', caption: '스템셀', size: '340px'}
+             , {field: 'resourceConfigVo.instanceType', caption: '인스턴스 유형', size: '100px'}
+             , {field: 'resourceConfigVo.vmPassword', caption: 'VM 비밀번호', size: '100px'}
+             , {field: 'deploymentFile', caption: '배포파일명', size: '250px',
+                 render: function(record) {
+                     if ( record.deploymentFile != null ){
+                         var deplymentParam = {
+                                 service : "bootstrap"
+                                ,iaas    : record.iaas
+                                ,id      : record.id
+                             } 
+                         var fileName = record.deploymentFile;
+                         return '<a style="color:#333;" href="/common/deploy/download/manifest/' + fileName +'" onclick="window.open(this.href); return false;">' + record.deploymentFile + '</a>';
+                   }else {
+                        return '&ndash;';
+                      }
+                  }
+              }
              ],
          onSelect : function(event) {
              event.onComplete = function() {
@@ -270,14 +316,16 @@ $(function() {
             return;
         }
         
+        var record = new Array();
+        
         for(var i=0; i<selected.length; i++){
-            var record = w2ui['config_bootstrapGrid2'].get(selected[i]);
-            createSettingFile(record);
-            if(i==0){
-                firstInstallPopup(record);
-            }else if(i==1) {
-                secondInstallPopup(record);
-            }
+            record.push(w2ui['config_bootstrapGrid2'].get(selected[i]));
+            createSettingFile(record[i]);
+        }
+        if(record == ""){
+            w2alert("배포할 BOOTSTRAP 이 존재하지 않음");
+        }else{
+            firstInstallPopup(record);
         }
     });
     
@@ -321,14 +369,17 @@ $(function() {
 var bootstrapInstallSocket = null;
 function firstInstallPopup(bootstrapInfo){
     console.log(bootstrapInfo);
-    if(!lockFileSet(bootstrapInfo.bootstrapConfigName)) return;
-    var message = bootstrapInfo.iaasType + " BOOTSTRAP ";
+    
+    var firstDeploy = bootstrapInfo[0];
+    
+    if(!lockFileSet(firstDeploy.bootstrapConfigName)) return;
+    var message = firstDeploy.iaasType + " BOOTSTRAP ";
     var requestParameter = {
-           id : bootstrapInfo.id,
-           iaasType: bootstrapInfo.iaasType
+           id : firstDeploy.id,
+           iaasType: firstDeploy.iaasType
     };
     w2popup.open({
-        title   : "<b>"+bootstrapInfo.iaasType.toUpperCase()+" 클라우드 환경 BOOTSTRAP 설치</b>",
+        title   : "<b>"+firstDeploy.iaasType.toUpperCase()+" 클라우드 환경 BOOTSTRAP 설치</b>",
         width   : 800,
         height  : 620,
         modal   : true,
@@ -356,8 +407,12 @@ function firstInstallPopup(bootstrapInfo){
                                 
                                 installStatus = response.state.toLowerCase();
                                 $('.w2ui-msg-buttons #deployPopupBtn').prop("disabled", false);
-                                    
-                                installClient.disconnect();
+                                
+                                if(bootstrapInfo.length == 2){
+                                    installClient.disconnect(secondInstallPopup(bootstrapInfo[1]));
+                                }else{
+                                    installClient.disconnect();
+                                }
                                 w2alert(message, "BOOTSTRAP 설치");
                             }
                         }
@@ -412,7 +467,7 @@ function secondInstallPopup(bootstrapInfo){
                                 installLogs.append(response.messages[i] + "\n").scrollTop( installLogs[0].scrollHeight );
                             }
                             if ( response.state.toLowerCase() != "started" ) {
-                                if ( response.state.toLowerCase() == "done" )    message = message + " 설치가 완료되었습니다."; 
+                                if ( response.state.toLowerCase() == "done" ) message = message + " 설치가 완료되었습니다."; 
                                 if ( response.state.toLowerCase() == "error" ) message = message + " 설치 중 오류가 발생하였습니다.";
                                 if ( response.state.toLowerCase() == "cancelled" ) message = message + " 설치 중 취소되었습니다.";
                                 
@@ -741,7 +796,7 @@ function popupClose() {
  * 설명 : 배포 파일 생성
  ***************************************************************** */
 function createSettingFile(data){
-    console.log(data);
+    console.log('create'+data);
     deploymentInfo = {
             iaasType       : data.iaasType,
             id : data.id
@@ -810,10 +865,10 @@ function doButtonStyle(){
  * 기능 : getDeployLogMsg
  * 설명 : 설치 로그 조회
  ***************************************************************** */
-function getDeployLogMsg(id){
+function getHbDeployLogMsg(id,iaas){
     $.ajax({
         type        : "GET",
-        url         : "/deploy/bootstrap/list/"+id,
+        url         : "/deploy/hbBootstrap/list/"+id+"/"+iaas,
         contentType : "application/json",
         success     : function(data, status){
             if(!checkEmpty(data)) {
@@ -938,7 +993,7 @@ function popupComplete(){
 
 <div id="bootstrapRegistInfoDiv" style="width:100%;height:100%;" hidden="true">
     <form id="settingForm" action="POST">
-    <input class="form-control" name = "bootstrapInfoId" type="hidden""/>
+    <input class="form-control" name = "bootstrapInfoId" type="hidden"/>
         <div class="w2ui-page page-0" style="margin-top:30px;padding:0 3%;">
             <div class="panel panel-info"> 
                 <div class="panel-heading" style = "text-align: left; font-size:15px;"><b>이종 BOOTSTRAP 설치 정보</b></div>
@@ -996,7 +1051,7 @@ function popupComplete(){
         </div>
         <div class="w2ui-buttons" id="bootstrapRegistInfoBtnDiv" hidden="true">
             <button class="btn" id="registBootstrapInfoBtn" onclick="$('#settingForm').submit();">확인</button>
-            <button class="btn" id="popClose" onclick="saveIaasConfigInfo();">취소</button>
+            <button class="btn" id="popClose" onclick="w2popup.close();">취소</button>
         </div>
     </form>
 </div>
