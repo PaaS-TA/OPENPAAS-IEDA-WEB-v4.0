@@ -78,7 +78,7 @@
             </li>
             
             <li>
-               <a href="javascript:;" data-toggle="collapse" data-target="#cfMenu" ><i class="fa fa-fw fa-spinner"></i>이종 CF DEPLOYMENT<i class="fa fa-fw fa-caret-down"></i></a>
+               <a href="javascript:;" data-toggle="collapse" data-target="#cfMenu" ><i class="fa fa-fw fa-spinner"></i>이종 CF-DEPLOYMENT<i class="fa fa-fw fa-caret-down"></i></a>
                <ul id="cfMenu" class="collapse">
                    <sec:authorize access="hasAuthority('DEPLOY_CF_DIEGO_MENU')">
                        <li><a href="javascript:goPage('<c:url value="/deploy/hbCfDeployment/defaultConfig"/>', '기본 정보 관리');">기본 정보 관리</a></li>
@@ -95,7 +95,7 @@
                        <li><a href="javascript:goPage('<c:url value="/deploy/hbCfDeployment/instanceConfig"/>', '인스턴스 정보 관리');">인스턴스 정보 관리</a></li>
                   
                    <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/hbCfDeployment/hbCfDeployment"/>', '이종 CF 설치');">이종 CF 설치</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/hbCfDeployment/hbCfDeployment"/>', '이종 CF 설치');">이종 CF-DEPLOYMENT 설치</a></li>
                    </sec:authorize>
                 </ul>
             </li>

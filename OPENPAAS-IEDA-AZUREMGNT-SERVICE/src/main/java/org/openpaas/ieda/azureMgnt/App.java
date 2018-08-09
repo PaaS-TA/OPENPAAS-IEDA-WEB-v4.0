@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -31,21 +32,23 @@ public class App {
             }
             Yaml yaml = new Yaml();
             Map<String, Object> object = (Map<String, Object>)yaml.load(contents);
-            JSONObject jObj = new JSONObject(object);
-            Iterator<?> i = jObj.keySet().iterator();
-            List<String> jsonKeyList = new ArrayList<String>();
-            while(i.hasNext()){
-                String key = i.next().toString();
-                //System.out.println(key);
-                jsonKeyList.add(key);
+            ArrayList<String> key = new ArrayList<String>();
+            ArrayList<String> value = new ArrayList<String>();
+            for (Object name : object.keySet()) {   
+                key.add(name.toString());
+                value.add(object.get(name).toString());
             }
             
-            blockLevel1(jsonKeyList, jObj);
+            for(int i = 0; i<value.size(); i++){
+            	System.out.println(value.get(i));
+            }
             
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
+            JSONObject jObj = new JSONObject(object);
+            Iterator<?> i = jObj.keySet().iterator();
+        }catch (Exception e) {
+			// TODO: handle exception
+		}
+                
     }
     //얘는 당연히 있나?
     private static void blockLevel1(List<String> jsonKeyList, JSONObject jObj) {
