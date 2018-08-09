@@ -61,27 +61,79 @@
         <result property="commonAccessSecret" column="COMMON_ACCESS_SECRET"/>
         <result property="commonTenant" column="COMMON_TENANT"/>
         <result property="commonProject" column="COMMON_PROJECT"/>
+        <result property="commonRegion" column="COMMON_REGION"/>
         <result property="openstackVersion" column="OPENSTACK_KEYSTONE_VERSION"/>
+        <result property="openstackDomain" column="OPENSTACK_DOMAIN"/>
     </collection>
 </resultMap>
 
 <select id="selectBootstrapList" resultMap="bootstrap">
-    select 
-         id 
-        ,iaas_type
-        ,bootstrap_config_name
-        ,network_config_name
-        ,cpi_config_name
-        ,default_config_name
-        ,resource_config_name
-        ,deployment_file
-        ,deploy_status
-        ,deploy_log
-        ,create_user_id
-        ,create_date
-        ,update_user_id
-        ,update_date
-    from ieda_bootstrap_config
+    select
+        bootstrap.id 
+        ,bootstrap.iaas_type
+        ,bootstrap.bootstrap_config_name
+        ,bootstrap.network_config_name
+        ,bootstrap.cpi_config_name
+        ,bootstrap.default_config_name
+        ,bootstrap.resource_config_name
+        ,bootstrap.deployment_file
+        ,bootstrap.deploy_status
+        ,bootstrap.deploy_log
+        ,cpi.iaas_config_id
+        ,resource.stemcell_name
+        ,resource.instance_type
+        ,resource.vm_password
+        ,bootstrap.create_user_id
+        ,bootstrap.create_date
+        ,bootstrap.update_user_id
+        ,bootstrap.update_date
+        ,network.subnet_id
+        ,network.private_static_ip
+        ,network.subnet_range
+        ,network.subnet_gateway
+        ,network.subnet_dns
+        ,network.public_static_ip
+        ,defaultInfo.deployment_name
+        ,defaultInfo.director_name
+        ,defaultInfo.ntp
+        ,defaultInfo.credential_key_name
+        ,defaultInfo.boshRelease
+        ,defaultInfo.bosh_cpi_release
+        ,defaultInfo.enable_snapshots
+        ,defaultInfo.snapshot_schedule
+        ,defaultInfo.paasta_monitoring_use
+        ,defaultInfo.paasta_monitoring_ip
+        ,defaultInfo.influxdb_ip
+        ,defaultInfo.paasta_monitoring_release
+        ,config.iaas_config_alias as iaas_config_alias
+        ,config.id as iaas_config_id
+        ,config.account_id as account_id
+        ,config.common_security_group as common_security_group
+        ,config.common_region as common_region
+        ,config.common_keypair_name as common_keypair_name
+        ,config.common_keypair_path as common_keypair_path
+        ,config.common_availability_zone as common_availability_zone
+        ,account.id as iaas_account_id
+        ,ifnull(account.common_access_endpoint, "") as common_access_endpoint
+        ,ifnull(account.common_access_user, "") as common_access_user
+        ,ifnull(account.common_access_secret, "") as common_access_secret
+        ,ifnull(account.common_tenant, "") as common_tenant
+        ,ifnull(account.common_project, "") as common_project
+        ,ifnull(account.openstack_keystone_version, "") as openstack_keystone_version
+        ,ifnull(account.openstack_domain, "") as openstack_domain
+    from ieda_bootstrap_config as bootstrap
+    Left join ieda_bootstrap_cpi_config as cpi
+    on bootstrap.cpi_config_name = cpi.cpi_name
+    Left join ieda_bootstrap_network_config as network
+    on bootstrap.network_config_name = network.network_config_name
+    Left join ieda_bootstrap_resource_config as resource
+    on bootstrap.resource_config_name = resource.resource_config_name
+    Left join ieda_bootstrap_default_config as defaultInfo
+    on bootstrap.default_config_name = defaultInfo.default_config_name
+    Left join ieda_iaas_config as config
+    on cpi.iaas_config_id = config.id
+    Left join ieda_iaas_account as account
+    on config.account_id = account.id
     <if test="installStatus == 'installAble'">
     where deploy_status is null
     or deploy_status = '';
@@ -145,6 +197,7 @@
         ,ifnull(account.common_tenant, "") as common_tenant
         ,ifnull(account.common_project, "") as common_project
         ,ifnull(account.openstack_keystone_version, "") as openstack_keystone_version
+        ,ifnull(account.openstack_domain, "") as openstack_domain
     from ieda_bootstrap_config as bootstrap
     Left join ieda_bootstrap_cpi_config as cpi
     on bootstrap.cpi_config_name = cpi.cpi_name

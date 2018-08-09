@@ -19,6 +19,8 @@
               And c.iaas_type=config.iaas_type ) as deployStatus
      From ieda_iaas_config config
     Where create_user_id= #{userId}
+    And iaas_type = 'AWS'
+    Or iaas_type = 'OPENSTACK'
     Order by iaas_type asc, update_date asc
 </select>
 
