@@ -29,7 +29,7 @@ public class CfVO {
     private String appSshFingerprint;//SSH 핑거프린트
     private Integer deaMemoryMB; //deaDiskMB
     private Integer deaDiskMB; //deaDiskMB
-    
+    private String cfDbType;
     
     // 1.2 기본정보
     private String domain;//도메인
@@ -233,6 +233,12 @@ public class CfVO {
     }
     public void setUnitName(String unitName) {
         this.unitName = unitName;
+    }
+    public String getCfDbType() {
+        return cfDbType;
+    }
+    public void setCfDbtype(String cfDbType) {
+        this.cfDbType = cfDbType;
     }
     public String getEmail() {
         return email;

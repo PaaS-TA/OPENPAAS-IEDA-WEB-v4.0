@@ -14,6 +14,8 @@ public class NetworkVO {
         private String subnetStaticTo;//VM 할당 IP대역 To
         private String subnetReservedFrom;//할당된 IP대역 From
         private String subnetReservedTo;//할당된 IP대역 To
+        private String subnetReservedFrom2;//할당된 IP대역 From
+        private String subnetReservedTo2;//할당된 IP대역 To
         private String subnetRange;//서브넷 범위
         private String subnetGateway;//게이트웨이
         private String subnetDns;//DNS
@@ -91,6 +93,18 @@ public class NetworkVO {
         }
         public void setSubnetReservedTo(String subnetReservedTo) {
             this.subnetReservedTo = subnetReservedTo;
+        }
+        public String getSubnetReservedFrom2() {
+            return subnetReservedFrom2;
+        }
+        public void setSubnetReservedFrom2(String subnetReservedFrom2) {
+            this.subnetReservedFrom2 = subnetReservedFrom2;
+        }
+        public String getSubnetReservedTo2() {
+            return subnetReservedTo2;
+        }
+        public void setSubnetReservedTo2(String subnetReservedTo2) {
+            this.subnetReservedTo2 = subnetReservedTo2;
         }
         public String getSubnetRange() {
             return subnetRange;

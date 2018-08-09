@@ -285,6 +285,8 @@ CREATE TABLE ieda_network
   subnet_gateway                    VARCHAR(255),
   subnet_reserved_from              VARCHAR(255),
   subnet_reserved_to                VARCHAR(255),
+  subnet_static_from                VARCHAR(255),
+  subnet_static_to                  VARCHAR(255),
   subnet_dns                        VARCHAR(255),
   subnet_id                         VARCHAR(255),
   network_name                      VARCHAR(255),

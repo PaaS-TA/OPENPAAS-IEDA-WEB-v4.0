@@ -11,6 +11,7 @@
         <result property="updateUserId" column="UPDATE_USER_ID"/>
         <result property="updateDate" column="UPDATE_DATE" />
         <result property="deploymentName" column="DEPLOYMENT_NAME" />
+        <result property="cfDbType" column="CF_DB_TYPE" />
         <result property="directorUuid" column="DIRECTOR_UUID" />
         <result property="releaseName" column="RELEASE_NAME" />
         <result property="releaseVersion" column="RELEASE_VERSION" />
@@ -67,6 +68,7 @@
             ,deployment_file
             ,deployment_name
             ,director_uuid
+            ,cf_db_type
             ,domain
             ,domain_organization
             ,key_file
@@ -93,6 +95,7 @@
             ,director_uuid
             ,domain
             ,domain_organization
+            ,cf_db_type
             ,release_name
             ,release_version
             ,loggregator_release_name
@@ -135,6 +138,7 @@
             ,deployment_name
             ,director_uuid
             ,domain
+            ,cf_db_type
             ,domain_organization
             ,release_name
             ,release_version
@@ -188,6 +192,7 @@
             ,loggregator_release_name
             ,loggregator_release_version
             ,domain
+            ,cf_db_type
             ,domain_organization
             ,country_code
             ,state_name
@@ -215,6 +220,7 @@
             ,#{cf.loggregatorReleaseName}
             ,#{cf.loggregatorReleaseVersion}
             ,#{cf.domain}
+            ,#{cf.cfDbType}
             ,#{cf.domainOrganization}
             ,#{cf.countryCode}
             ,#{cf.stateName}
@@ -249,6 +255,7 @@
             ,loggregator_release_version=#{cf.loggregatorReleaseVersion}
             ,domain=#{cf.domain}
             ,domain_organization=#{cf.domainOrganization}
+            ,cf_db_type=#{cf.cfDbType}
             ,country_code = #{cf.countryCode}
             ,state_name=#{cf.stateName}
             ,locality_name=#{cf.localityName}
@@ -376,6 +383,7 @@
             ,deployment_name
             ,description
             ,director_uuid
+            ,cf_db_type
             ,domain
             ,domain_organization
             ,release_name

@@ -16,6 +16,8 @@ $("#defaultInfoForm").validate({
                 required: function(){ return checkEmpty( $(".w2ui-msg-body input[name='domainOrganization']").val() ); }
             }, domain: { 
                 required: function(){ return checkEmpty( $(".w2ui-msg-body input[name='domain']").val() ); }
+            }, cfDbType: { 
+                required: function(){ return checkEmpty( $(".w2ui-msg-body select[name='cfDbType']").val() ); }
             }, ingestorIp: { 
                 required: function(){
                     if( $(".w2ui-msg-body input:checkbox[name='paastaMonitoring']").is(":checked") ){
@@ -68,6 +70,7 @@ $("#defaultInfoForm").validate({
             ,deploymentName      : { required: "배포 명"+text_required_msg }
             ,domainOrganization  : { required: "기본 조직 명"+text_required_msg }
             ,releases            : { required: "CF Deployment" + select_required_msg }
+            ,cfDbType            : { required: "CF 데이터베이스 유형" + select_required_msg }
             ,domain              : { required: "도메인"+text_required_msg }
             ,ingestorIp          : { required: "Ingestor 서버 IP"+text_required_msg } 
             ,ingestorPort        : { required: "Ingestor 서버 PORT"+text_required_msg }

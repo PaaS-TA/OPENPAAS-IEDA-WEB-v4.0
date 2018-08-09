@@ -1,0 +1,14 @@
+networks:
+- name: default
+  type: manual
+  subnets:
+  - range: 10.0.0.16
+    dns: [8.8.8.8]
+    gateway: 192.168.0.1
+    reserved: [192.168.0.22]
+    cloud_properties:
+      virtual_network_name: lee-network
+      subnet_name: [lee-subnet]
+      security_group: lee-sg
+- name: vip
+  type: vip

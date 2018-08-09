@@ -14,7 +14,6 @@ public class ResourceDTO {
     private String stemcellName; //스템셀명
     @NotNull
     private String stemcellVersion; //스템셀버전
-    @NotNull
     private String boshPassword; //VM 비밀번호
     private String smallFlavor;//small 인스턴스 유형
     private String mediumFlavor;//medium 인스턴스 유형

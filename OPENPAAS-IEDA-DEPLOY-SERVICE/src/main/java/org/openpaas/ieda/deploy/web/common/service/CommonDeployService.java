@@ -39,7 +39,6 @@ import org.openpaas.ieda.deploy.web.common.dto.KeyInfoDTO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dao.CfDAO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dao.CfVO;
 import org.openpaas.ieda.deploy.web.deploy.diego.dao.DiegoDAO;
-import org.openpaas.ieda.deploy.web.deploy.diego.dao.DiegoVO;
 import org.openpaas.ieda.deploy.web.information.iassConfig.dao.IaasConfigMgntDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -260,7 +259,7 @@ public class CommonDeployService{
     *****************************************************************/
     public String createKeyInfo( KeyInfoDTO dto, Principal principal){
         String keyFileName = "";
-        String commonCredentialManifestPath = MANIFEST_TEMPLATE_DIR + "/cf-deployment/"+dto.getVersion()+"/common/cfcredential.yml";
+        String commonCredentialManifestPath = MANIFEST_TEMPLATE_DIR + "/cf-deployment/"+dto.getVersion()+"/common/cf-credential.yml";
         File cfCredentialFile = new File(CF_CREDENTIAL_DIR + SEPARATOR + dto.getDomain()+ "-cred.yml");
         if(cfCredentialFile.exists()){
             cfCredentialFile.delete();

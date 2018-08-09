@@ -1,21 +1,19 @@
 package org.openpaas.ieda.deploy.web.deploy.cf.service;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethodBase;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.deploy.api.director.utility.DirectorRestHelper;
+import org.openpaas.ieda.deploy.web.common.dao.CommonDeployDAO;
+import org.openpaas.ieda.deploy.web.common.dao.ManifestTemplateVO;
 import org.openpaas.ieda.deploy.web.config.setting.dao.DirectorConfigVO;
 import org.openpaas.ieda.deploy.web.config.setting.service.DirectorConfigService;
 import org.openpaas.ieda.deploy.web.deploy.cf.dao.CfDAO;
@@ -35,9 +33,13 @@ public class CfDeployAsyncService {
     @Autowired private SimpMessagingTemplate messagingTemplate;
     @Autowired private DirectorConfigService directorConfigService;
     @Autowired private CfDAO cfDao;
-    @Autowired MessageSource message;
+    @Autowired private CfService cfService;
+    @Autowired private MessageSource message;
+    @Autowired private CommonDeployDAO commonDao;
     
     private final static String SEPARATOR = System.getProperty("file.separator");
+    private final static String MANIFEST_TEMPLATE_DIR = LocalDirectoryConfiguration.getManifastTemplateDir();
+    final private static String CF_CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateCfDeploymentCredentialDir();
     private final static String DEPLOYMENT_DIR = LocalDirectoryConfiguration.getDeploymentDir();
     
     /****************************************************************
@@ -48,97 +50,168 @@ public class CfDeployAsyncService {
     *****************************************************************/
     public void deploy(CfParamDTO.Install dto, Principal principal, String platform) {
         String deploymentFileName = "";
-        String messageEndpoint =  "";
-        if( platform.toLowerCase().equalsIgnoreCase("cf") ) {
-            messageEndpoint = "/deploy/cf/install/logs"; 
-        }else {
-            messageEndpoint = "/deploy/cfDiego/install/cfLogs"; 
-        }
-        
-        CfVO vo = cfDao.selectCfInfoById(Integer.parseInt(dto.getId()));
+        String messageEndpoint =  "/deploy/cf/install/logs"; 
+        CfVO vo = cfService.getCfInfo(Integer.parseInt(dto.getId()));
+        ManifestTemplateVO result = commonDao.selectManifetTemplate(vo.getIaasType(), vo.getReleaseVersion(), "CFDEPLOYMENT", vo.getReleaseName());
         deploymentFileName = vo != null ? vo.getDeploymentFile() : "";
         
         if ( StringUtils.isEmpty(deploymentFileName) ) {
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), 
                     message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
         }
-        String deployFile = DEPLOYMENT_DIR + SEPARATOR + deploymentFileName; 
+        String cloudConfigFile = DEPLOYMENT_DIR + SEPARATOR + deploymentFileName; 
         String errorMessage = message.getMessage("common.internalServerError.message", null, Locale.KOREA);
-        
-        if ( vo != null ) {
-            String deployStatus = message.getMessage("common.deploy.status.processing", null, Locale.KOREA);
-            vo.setDeployStatus(deployStatus);
-            vo.setUpdateUserId(principal.getName());
-            saveDeployStatus(vo);
-        }
-        
         String status = "";
-        String temp = "";
-        String taskId = "";
         
-        BufferedReader br = null;
-        InputStreamReader isr = null;
-        FileInputStream fis = null;
-        StringBuffer content = new StringBuffer();
         try {
-            DirectorConfigVO defaultDirector = directorConfigService.getDefaultDirector();
-            HttpClient httpClient = DirectorRestHelper.getHttpClient(defaultDirector.getDirectorPort());
-            PostMethod postMethod = new PostMethod(DirectorRestHelper.getDeployURI(defaultDirector.getDirectorUrl(), defaultDirector.getDirectorPort()));
-            postMethod = (PostMethod)DirectorRestHelper.setAuthorization(defaultDirector.getUserId(), defaultDirector.getUserPassword(), (HttpMethodBase)postMethod);
-            postMethod.setRequestHeader("Content-Type", "text/yaml");
-            
-            fis = new FileInputStream(deployFile);
-            isr = new InputStreamReader(fis, "UTF-8");
-            br = new BufferedReader(isr);
-            
-            while ( (temp=br.readLine()) != null) {
-                content.append(temp).append("\n");
+            BufferedReader bufferedReader = null;
+            String accumulatedLog= null;
+            DirectorConfigVO directorInfo = directorConfigService.getDefaultDirector();
+            List<String> cmd = new ArrayList<String>(); //bosh cloud config 명령어 실행 줄 Cloud Config 관련 Rest API를 아직 지원 안하는 것 같음 2018.08.01
+            cmd.add("bosh");
+            cmd.add("-e");
+            cmd.add(directorInfo.getDirectorName());
+            cmd.add("update-cloud-config");
+            cmd.add(cloudConfigFile);
+            cmd.add("-n");
+            ProcessBuilder builder = new ProcessBuilder(cmd);
+            builder.redirectErrorStream(true);
+            builder.start();
+            if ( vo != null ) {
+                String deployStatus = message.getMessage("common.deploy.status.processing", null, Locale.KOREA);
+                vo.setDeployStatus(deployStatus);
+                vo.setUpdateUserId(principal.getName());
+                saveDeployStatus(vo);
             }
-            postMethod.setRequestEntity(new StringRequestEntity(content.toString(), "text/yaml", "UTF-8"));
-            int statusCode = httpClient.executeMethod(postMethod);
-            if ( statusCode == HttpStatus.MOVED_PERMANENTLY.value() || statusCode == HttpStatus.MOVED_TEMPORARILY.value() ) {
-                
-                Header location = postMethod.getResponseHeader("Location");
-                taskId = DirectorRestHelper.getTaskId(location.getValue());
-                
-                status = DirectorRestHelper.trackToTask(defaultDirector, messagingTemplate, messageEndpoint, httpClient, taskId, "event", principal.getName());
-                
+            //if 문을 통해 public IP 사용 유무/mysql/postgres 사용 유무에 따라 해당 커맨드 라인 변경
+            cmd = new ArrayList<String>(); // bosh deploy 명령어 실행 줄 Rest API를 통해 deploy 시 -v/-o 옵션을 사용하지 못하고 통 Manifest 파일을 올려야 하는 것 같음 2018.08.01
+            cmd.add("bosh");
+            cmd.add("-e");
+            cmd.add(directorInfo.getDirectorName());
+            cmd.add("-d");
+            cmd.add(vo.getDeploymentName());
+            cmd.add("deploy");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonBaseTemplate()+"");
+            setDefualtInfo(cmd, vo, result);
+            setPublicNetworkIpUse(cmd, vo, result);
+            if("postgres".equals(vo.getCfDbType().toLowerCase())){
+                postgresDbUse(cmd, result);
+            }
+            setJobSetting(cmd, vo, result);
+            cmd.add("--tty");
+            cmd.add("-n");
+            //cmd.add("--no-redact");
+            builder = new ProcessBuilder(cmd);
+            builder.redirectErrorStream(true);
+            Process process = builder.start();
+            InputStream inputStream = process.getInputStream();
+            bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
+            String info = null;
+            StringBuffer accumulatedBuffer = new StringBuffer();
+            while ((info = bufferedReader.readLine()) != null){
+                accumulatedBuffer.append(info).append("\n");
+                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList(info));
+            }
+            if( accumulatedBuffer != null ) {
+                accumulatedLog = accumulatedBuffer.toString();
+            }
+            
+            if( accumulatedLog.contains("Failed deploying") || accumulatedLog.contains("Failed") || accumulatedLog.contains("error") 
+                || accumulatedLog.contains("invalid") || accumulatedLog.contains("not support") || accumulatedLog.contains("Expected") || accumulatedLog.contains("expected") ){
+                status = "error";
+                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
             } else {
-                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
+                status = "done";
+                vo.setDeployStatus( message.getMessage("common.deploy.status.done", null,  Locale.KOREA ) );
+                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "done", Arrays.asList("", "CF-Deployment 설치가 완료되었습니다."));
             }
-        }catch(IOException e){
-            status = "error";
-            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(errorMessage));
+            
         }catch (RuntimeException e) {
             status = "error";
-            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
+            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
         }catch ( Exception e) {
             status = "error";
             DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(errorMessage));
-        } finally {
-            try {
-                if ( br != null ) {
-                    br.close();
-                }
-                if ( fis != null ) {
-                    fis.close();
-                }
-                if ( isr != null ) {
-                    isr.close();
-                }
-            } catch ( Exception e ) {
-                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(errorMessage));
-            }
-        }
+        } 
         String deployStatus = message.getMessage("common.deploy.status."+status.toLowerCase(), null, Locale.KOREA);
         if ( vo != null ) {
             vo.setDeployStatus(deployStatus);
-            if( !StringUtils.isEmpty(taskId) ) {
-                vo.setTaskId(Integer.parseInt(taskId));
-            }
             vo.setUpdateUserId(principal.getName());
             saveDeployStatus(vo);
         }
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : CF Job 인스턴스 수 설정
+     * @title : setDefualtInfo
+     * @return : void
+    *****************************************************************/
+    private void setDefualtInfo(List<String> cmd, CfVO vo, ManifestTemplateVO result) {
+        cmd.add("--vars-store="+CF_CREDENTIAL_DIR+ SEPARATOR +vo.getKeyFile()+"");
+        cmd.add("-v");
+        cmd.add("deployment_name="+vo.getDeploymentName()+"");
+        cmd.add("-v");
+        cmd.add("system_domain="+vo.getDomain()+"");
+        cmd.add("-v");
+        cmd.add("system_domain_org="+vo.getDomainOrganization()+"");
+        cmd.add("-v");
+        cmd.add("stemcell_version="+vo.getResource().getStemcellVersion()+"");
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonJobTemplate());
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getMetaTemplate());
+
+    }
+
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : CF Job 인스턴스 수 설정
+     * @title : setPublicNetworkIpUse
+     * @return : void
+    *****************************************************************/
+    private void setJobSetting(List<String> cmd, CfVO vo, ManifestTemplateVO result) {
+        if (vo.getJobs()!=null && vo.getJobs().size()!=0 ){
+            for(int i=0; i<vo.getJobs().size(); i++){
+                cmd.add("-v");
+                cmd.add(vo.getJobs().get(i).get("job_name")+"_instance="+String.valueOf(vo.getJobs().get(i).get("instances"))+"");
+            }
+            cmd.add("-o");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getOptionResourceTemplate());
+        }
+    }
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : Public Network IP 사용 시 값
+     * @title : setPublicNetworkIpUse
+     * @return : void
+    *****************************************************************/
+    private void setPublicNetworkIpUse(List<String> cmd, CfVO vo, ManifestTemplateVO result) {
+        if(vo.getNetworks() != null && vo.getNetworks().size() != 0){
+            for( int i=0; i<vo.getNetworks().size(); i++ ){
+                if("external".equals(vo.getNetworks().get(i).getNet().toLowerCase()) 
+                    && ( vo.getNetworks().get(i).getPublicStaticIp() != null && !vo.getNetworks().get(i).getPublicStaticIp().isEmpty())){
+                    cmd.add("-v");
+                    cmd.add("haproxy_public_ip="+vo.getNetworks().get(i).getPublicStaticIp()+"");
+                    cmd.add("-o");
+                    cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonOptionTemplate());
+                }
+            }
+            if(vo.getNetworks().size() == 3){
+                cmd.add("-o");
+                cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getOptionNetworkTemplate());
+            }
+        }
+    }
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : postgres DB 사용 시 옵션 값 추가
+     * @title : postgresDbUse
+     * @return : CfVO
+    *****************************************************************/
+    private void postgresDbUse(List<String> cmd, ManifestTemplateVO result) {
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getOptionEtc());
     }
 
     /****************************************************************
@@ -162,4 +235,5 @@ public class CfDeployAsyncService {
     public void deployAsync(CfParamDTO.Install dto, Principal principal, String platform) {
         deploy(dto, principal, platform);
     }
+
 }

@@ -11,6 +11,8 @@
             <result property="publicStaticIp" column="PUBLIC_STATIC_IP" />
             <result property="subnetReservedTo" column="SUBNET_RESERVED_TO" />
             <result property="subnetRange" column="SUBNET_RANGE" />
+            <result property="subnetStaticFrom" column="SUBNET_STATIC_FROM" />
+            <result property="subnetStaticTo" column="SUBNET_STATIC_TO" />
             <result property="subnetGateway" column="SUBNET_GATEWAY" />
             <result property="subnetDns" column="SUBNET_DNS" />
             <result property="networkName" column="NETWORK_NAME" />
@@ -34,6 +36,8 @@
                 ,ifnull(subnet_gateway, "") as subnet_gateway
                 ,ifnull(subnet_reserved_from, "") as subnet_reserved_from
                 ,ifnull(subnet_reserved_to, "") as subnet_reserved_to
+                ,ifnull(subnet_static_from, "") as subnet_static_from
+                ,ifnull(subnet_static_to, "") as subnet_static_to
                 ,ifnull(subnet_dns, "") as subnet_dns
                 ,ifnull(network_name, "") as network_name
                 ,ifnull(public_static_ip, "") as public_static_ip
@@ -61,6 +65,8 @@
                 subnet_gateway, 
                 subnet_reserved_from, 
                 subnet_reserved_to, 
+                subnet_static_from, 
+                subnet_static_to, 
                 subnet_dns, 
                 subnet_id, 
                 network_name,
@@ -82,6 +88,8 @@
                 #{item.subnetGateway}, 
                 #{item.subnetReservedFrom}, 
                 #{item.subnetReservedTo},
+                #{item.subnetStaticFrom}, 
+                #{item.subnetStaticTo},
                 #{item.subnetDns},
                 #{item.subnetId}, 
                 #{item.networkName}, 

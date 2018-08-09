@@ -81,6 +81,7 @@ $(function() {
             , {field: 'subnetGateway', caption: '게이트웨이', size: '100px'}
             , {field: 'subnetDns', caption: 'DNS', size: '100px'}
             , {field: 'subnetReservedIp', caption: '할당 제외 IP 대역', size: '240px' }
+            , {field: 'subnetStaticIp', caption: '할당 IP 대역', size: '240px' }
             , {field: 'subnetId', caption: '네트워크 ID(포트 그룹명)', size: '140px'}
             , {field: 'cloudSecurityGroups', caption: '시큐리티 그룹명', size: '100px'}
             

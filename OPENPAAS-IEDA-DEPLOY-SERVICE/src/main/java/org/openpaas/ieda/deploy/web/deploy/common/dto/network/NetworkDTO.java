@@ -26,6 +26,9 @@ public class NetworkDTO {
     private String subnetReservedFrom; //할당된 IP대역 From
     @NotNull
     private String subnetReservedTo; //할당된 IP대역 To
+    private String subnetStaticFrom; //할당된 IP대역 From
+    private String subnetStaticTo; //할당된 IP대역 To
+    
     @NotNull
     private String subnetId; //네트워크 ID
     private String cloudSecurityGroups; //시큐리티 그룹
@@ -116,6 +119,18 @@ public class NetworkDTO {
     }
     public void setSubnetReservedTo(String subnetReservedTo) {
         this.subnetReservedTo = subnetReservedTo;
+    }
+    public String getSubnetStaticFrom() {
+        return subnetStaticFrom;
+    }
+    public void setSubnetStaticFrom(String subnetStaticFrom) {
+        this.subnetStaticFrom = subnetStaticFrom;
+    }
+    public String getSubnetStaticTo() {
+        return subnetStaticTo;
+    }
+    public void setSubnetStaticTo(String subnetStaticTo) {
+        this.subnetStaticTo = subnetStaticTo;
     }
     public String getSubnetId() {
         return subnetId;
