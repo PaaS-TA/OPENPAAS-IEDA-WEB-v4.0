@@ -307,7 +307,7 @@ function resetForm(status){
 
 </script>
 <div id="main">
-    <div class="page_site"> 이종 CF Deployment <strong>Default 정보 관리</strong></div>
+    <div class="page_site"> 이종 CF Deployment <strong>인증서 정보 관리</strong></div>
     <!-- 사용자 목록-->
     <div class="pdt20">
         <div class="title fl"> 인증서 목록</div>
