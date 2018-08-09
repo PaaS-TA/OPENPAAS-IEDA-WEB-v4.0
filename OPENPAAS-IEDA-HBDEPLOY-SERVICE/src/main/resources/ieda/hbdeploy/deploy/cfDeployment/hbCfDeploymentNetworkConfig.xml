@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentNetworkConfigDAO">
+
+    <resultMap id="hbCfDeploymentNetworkConfig" type="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentNetworkConfigVO">
+        <id property="id" column="ID" />
+        <result property="iaasType" column="IAAS_TYPE"/>
+        <result property="networkName" column="NETWORK_NAME" />
+        <result property="direction" column="DIRECTION" />
+        <result property="publicStaticIp" column="PUBLIC_STATIC_IP" />
+        <result property="subnetId" column="SUBNET_ID" />
+        <result property="securityGroup" column="SECURITY_GROUP" />
+        <result property="subnetRange" column="SUBNET_RANGE" />
+        <result property="subnetGateway" column="SUBNET_GATEWAY" />
+        <result property="subnetDns" column="SUBNET_DNS" />
+        <result property="subnetReservedFrom" column="SUBNET_RESERVED_FROM" />
+        <result property="subnetReservedTo" column="SUBNET_RESERVED_TO" />
+        <result property="createUserId" column="CREATE_USER_ID"/>
+        <result property="createDate" column="CREATE_DATE" />
+        <result property="updateUserId" column="UPDATE_USER_ID"/>
+        <result property="updateDate" column="UPDATE_DATE" />
+    </resultMap>
+
+    <select id = "selectHbCfDeploymentNetworkConfigInfoList" resultMap="hbCfDeploymentNetworkConfig">
+        select 
+            id as id
+            ,iaas_type as iaas_Type
+            ,network_name as network_name
+            ,direction as direction 
+            ,public_static_ip as public_static_ip
+            ,subnet_id as subnet_id
+            ,security_group as security_group
+            ,subnet_range as subnet_range 
+            ,subnet_gateway as subnet_gateway
+            ,subnet_dns as subnet_dns
+            ,subnet_reserved_from as subnet_reserved_from
+            ,subnet_reserved_to as subnet_reserved_to
+            ,create_user_id as create_user_id
+            ,create_date as create_date
+            ,update_user_id as update_user_id
+            ,update_date as update_date
+        from ieda_hb_cfDeployment_network_config
+        ORDER BY id;
+    </select>
+
+    <insert id="insertHbCfDeploymentNetworkConfigInfo">
+        INSERT INTO ieda_hb_cfDeployment_network_config(
+             iaas_type
+            ,network_name
+            ,direction 
+            ,public_static_ip
+            ,subnet_id
+            ,security_group
+            ,subnet_range
+            ,subnet_gateway
+            ,subnet_dns
+            ,subnet_reserved_from
+            ,subnet_reserved_to
+            ,create_user_id
+            ,create_date
+            ,update_user_id
+            ,update_date
+            ) VALUES (
+            #{network.iaasType}
+            ,#{network.networkName}
+            ,#{network.direction} 
+            ,#{network.publicStaticIp}
+            ,#{network.subnetId}
+            ,#{network.securityGroup}
+            ,#{network.subnetRange}
+            ,#{network.subnetGateway}
+            ,#{network.subnetDns}
+            ,#{network.subnetReservedFrom}
+            ,#{network.subnetReservedTo}
+            ,now()
+            ,#{network.updateUserId}
+            ,now()
+            )
+    </insert>
+
+    <update id="updateHbCfDeploymentNetworkConfigInfo">
+        UPDATE ieda_hb_cfDeployment_network_config set
+            iaas_type = #{network.iaasType}
+            ,network_name = #{network.networkName}
+            ,direction = #{network.direction}
+            ,public_static_ip = #{network.publicStaticIp}
+            ,subnet_id = #{network.subnetId}
+            ,security_group = #{network.securityGroup}
+            ,subnet_range = #{network.subnetRange}
+            ,subnet_gateway = #{network.subnetGateway}
+            ,subnet_dns = #{network.subnetDns}
+            ,subnet_reserved_from = #{network.subnetReservedFrom}
+            ,subnet_reserved_to = #{network.subnetReservedTo}
+            ,update_user_id = #{network.updateUserId}
+            ,update_date = now()
+        WHERE id = #{network.id}
+    </update>
+
+    <select id="selectHbCfDeploymentNetworkConfigInfo" resultMap="hbCfDeploymentNetworkConfig">
+        select 
+            id as id
+            ,iaas_type as iaas_type
+            ,network_name as network_name
+            ,public_static_ip as public_static_ip
+            ,subnet_id as subnet_id
+            ,security_group as security_group
+            ,subnet_range as subnet_range
+            ,subnet_gateway as subnet_gateway
+            ,subnet_dns as subnet_dns
+            ,subnet_reserved_from as subnet_reserved_from
+            ,subnet_reserved_to as subnet_reserved_to            
+            ,create_user_id as create_user_id
+            ,create_date as create_date
+            ,update_user_id as update_user_id
+            ,update_date as update_date
+        from ieda_hb_cfDeployment_network_config
+        where id = #{id}
+    </select> 
+
+    <delete id = "deleteHbCfDeploymentNetworkConfigInfo">
+        delete from 
+            ieda_hb_cfDeployment_network_config
+        where
+            id = #{network.id}
+        and
+            network_name = #{network.networkName}
+    </delete>
+    
+    <select id = "selectHbCfDeploymentNetworkConfigByName" resultType="int">
+        select
+            count(*)
+        from
+            ieda_hb_cfDeployment_network_config
+        where
+            network_name = #{networkName}
+    </select>
+</mapper>

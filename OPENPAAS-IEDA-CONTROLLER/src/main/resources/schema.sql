@@ -567,7 +567,6 @@ CREATE TABLE ieda_bootstrap_resource_config
   resource_config_name                   VARCHAR(100) NOT NULL,
   stemcell_name                             VARCHAR(100) NOT NULL,
   instance_type                     VARCHAR(100) NOT NULL,
-  vm_password                          VARCHAR(100) NOT NULL,
   create_user_id                        VARCHAR(255) NOT NULL,
   create_date                           DATE         NOT NULL,
   update_user_id                        VARCHAR(255) NOT NULL,
@@ -650,6 +649,114 @@ CREATE TABLE ieda_bootstrap_default_config (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
+#hb cf deploymnet
+
+CREATE TABLE ieda_hb_cfDeployment_default_config
+(
+  id                                    INT(11)      NOT NULL auto_increment,
+  iaas_type                             VARCHAR(100) NOT NULL,
+  deployment_name                       VARCHAR(100) NOT NULL,
+  cf_deployment_version                 VARCHAR(100) NOT NULL,
+  domain                                VARCHAR(100) NOT NULL,
+  domain_organization                   VARCHAR(100) NOT NULL,
+  create_user_id                        VARCHAR(255) NOT NULL,
+  create_date                           DATE         NOT NULL,
+  update_user_id                        VARCHAR(255) NOT NULL,
+  update_date                           DATE         NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
+CREATE TABLE ieda_hb_cfDeployment_network_config
+(
+  id                                    INT(11)      NOT NULL auto_increment,
+  iaas_type                             VARCHAR(100) NOT NULL,
+  public_static_ip                      VARCHAR(100) NOT NULL,
+  network_name                          VARCHAR(100) NOT NULL,
+  direction                             VARCHAR(100) NOT NULL,
+  subnet_id                             VARCHAR(100) NOT NULL,
+  security_group                        VARCHAR(100) NOT NULL,
+  subnet_range                          VARCHAR(100) NOT NULL,
+  subnet_gateway                        VARCHAR(100) NOT NULL,
+  subnet_dns                            VARCHAR(100) NOT NULL,
+  subnet_reserved_from                  VARCHAR(100) NOT NULL,
+  subnet_reserved_to                    VARCHAR(100) NOT NULL,
+  create_user_id                        VARCHAR(255) NOT NULL,
+  create_date                           DATE         NOT NULL,
+  update_user_id                        VARCHAR(255) NOT NULL,
+  update_date                           DATE         NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
+
+CREATE TABLE ieda_hb_cfDeployment_resource_config
+(
+  id                                    INT(11)      NOT NULL auto_increment,
+  iaas_type                             VARCHAR(100) NOT NULL,
+  resource_config_name                   VARCHAR(100) NOT NULL,
+  stemcell_name                             VARCHAR(100) NOT NULL,
+  instance_type_s                     VARCHAR(100) NOT NULL,
+  instance_type_m                     VARCHAR(100) NOT NULL,
+  instance_type_l                     VARCHAR(100) NOT NULL,
+  vm_password                          VARCHAR(100) NOT NULL,
+  create_user_id                        VARCHAR(255) NOT NULL,
+  create_date                           DATE         NOT NULL,
+  update_user_id                        VARCHAR(255) NOT NULL,
+  update_date                           DATE         NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
+CREATE TABLE ieda_hb_cfDeployment_credential_config
+(
+  id                                    INT(11)      NOT NULL auto_increment,
+  iaas_type                             VARCHAR(100) NOT NULL,
+  credential_config_name                VARCHAR(100) NOT NULL,
+  domain                                VARCHAR(100) NOT NULL,
+  country_code                          VARCHAR(100) NOT NULL,
+  city                                  VARCHAR(100) NOT NULL,
+  company                               VARCHAR(100) NOT NULL,
+  job_title                             VARCHAR(100) NOT NULL,
+  email_address                                 VARCHAR(100) NOT NULL,
+  create_user_id                        VARCHAR(255) NOT NULL,
+  create_date                           DATE         NOT NULL,
+  update_user_id                        VARCHAR(255) NOT NULL,
+  update_date                           DATE         NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
+
+
+CREATE TABLE ieda_hb_cfDeployment
+(
+  id                                INT(11)       NOT NULL AUTO_INCREMENT,
+  iaas_type                         VARCHAR(255)  NOT NULL,
+  deployment_name                   VARCHAR(100),
+  cf_deployment_version             VARCHAR(100),
+  director_uuid                     VARCHAR(100),
+  release_name                      VARCHAR(100),
+  release_version                   VARCHAR(100),
+  loggregator_release_name          VARCHAR(100),
+  loggregator_release_version       VARCHAR(100),
+  domain                            VARCHAR(100),
+  domain_organization               VARCHAR(100),
+  country_code                      VARCHAR(255),
+  state_name                        VARCHAR(255),
+  locality_name                     VARCHAR(255),
+  organization_name                 VARCHAR(255),
+  unit_name                         VARCHAR(255),
+  email                             VARCHAR(255),
+  key_file                          VARCHAR(255),
+  deployment_file                   VARCHAR(255),
+  deploy_status                     VARCHAR(100),
+  task_id                           INT(11),
+  create_user_id                    VARCHAR(255)  NOT NULL,
+  create_date                       DATE          NOT NULL,
+  update_user_id                    VARCHAR(255)  NOT NULL,
+  update_date                       DATE          NOT NULL,
+  user_add_ssh                      LONGTEXT NULL,
+  osconf_release_name               VARCHAR(255) NULL,
+  osconf_release_version            VARCHAR(255) NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 #Setting AUTO_INCREMENT
 ALTER TABLE ieda_role AUTO_INCREMENT=1000;
@@ -680,3 +787,8 @@ ALTER TABLE ieda_bootstrap_default_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_bootstrap_network_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_bootstrap_resource_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_bootstrap_config AUTO_INCREMENT=1000;
+ALTER TABLE ieda_hb_cfDeployment_default_config AUTO_INCREMENT=1000;
+ALTER TABLE ieda_hb_cfDeployment_network_config AUTO_INCREMENT=1000;
+ALTER TABLE ieda_hb_cfDeployment_resource_config AUTO_INCREMENT=1000;
+ALTER TABLE ieda_hb_cfDeployment_credential_config AUTO_INCREMENT=1000;
+ALTER TABLE ieda_hb_cfDeployment AUTO_INCREMENT=1000;

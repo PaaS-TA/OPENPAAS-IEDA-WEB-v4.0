@@ -300,7 +300,6 @@ function saveAzureInboundRules(rgName, sgName){
     	resourceGroupName: rgName,
     	securityGroupName: sgName,
                     }
-    console.log(info.accountId+"AAA BBB CCC "+infosecurityGroupName);
     $.ajax({
         type : "POST",
         url : "/azureMgnt/inbound/save",
@@ -309,9 +308,7 @@ function saveAzureInboundRules(rgName, sgName){
         data : JSON.stringify(info),
         success : function(status) {
             w2popup.unlock();
-            w2popup.close();
-            accountId = accountId;
-            doSearch();
+
         }, error : function(request, status, error) {
             w2popup.unlock();
             var errorResult = JSON.parse(request.responseText);

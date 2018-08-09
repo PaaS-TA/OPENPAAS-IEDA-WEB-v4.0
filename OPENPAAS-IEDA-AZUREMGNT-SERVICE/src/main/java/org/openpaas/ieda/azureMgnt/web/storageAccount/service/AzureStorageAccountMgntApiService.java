@@ -1,5 +1,6 @@
 package org.openpaas.ieda.azureMgnt.web.storageAccount.service;
 
+import java.util.ArrayList;
 //import com.microsoft.azure.storage.table.*;
 import java.util.HashMap;
 import java.util.List;
@@ -109,8 +110,8 @@ public class AzureStorageAccountMgntApiService {
      * @title : getAzureStorageAccountKeyFromAzure
      * @return : String
     *****************************************************************/	   
-   public String getAzureStorageAccountKeyFromAzure(IaasAccountMgntVO vo, String storageAccountName ){
-	   String key ="";
+   public List<StorageAccountKey> getAzureStorageAccountKeyFromAzure(IaasAccountMgntVO vo, String storageAccountName ){
+	   List<StorageAccountKey> storageAccountKeys = new ArrayList<StorageAccountKey>();
 	   AzureTokenCredentials azureClient = getAzureClient(vo);
        Azure azure  = Azure.configure()
                .withLogLevel(LogLevel.NONE)
@@ -121,10 +122,10 @@ public class AzureStorageAccountMgntApiService {
         if (thename.equals(storageAccountName)){
     	    String storageAccountId = azure.storageAccounts().list().get(i).id();
     	    StorageAccount storageAccount = azure.storageAccounts().getById(storageAccountId);
-    	    List<StorageAccountKey> storageAccountKeys = storageAccount.getKeys();
-    	    key = storageAccountKeys.get(i).value();
+    	    storageAccountKeys = storageAccount.getKeys();
+    	   // key = storageAccountKeys.get(i).value();
          }
        }
-      return key;
+      return storageAccountKeys;
    }
 }

@@ -2,7 +2,7 @@
 /* =================================================================
  * 작성일 : 2018.07
  * 작성자 : 이정윤
- * 상세설명 : 리소스 정보 관리 화면
+ * 상세설명 : Default 정보 관리 화면
  * =================================================================
  */ 
 %>
@@ -15,7 +15,7 @@
 var text_required_msg = '<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
 var select_required_msg='<spring:message code="common.select.vaildate.required.message"/>';//을(를) 선택하세요.
 var search_data_fail_msg ='클라우드 인프라 환경을 선택하세요.';
-var resourceConfigInfo = "";//리소스 정보
+var defaultConfigInfo = "";//기본 정보
 var iaas = "";
 var resourceLayout = {
         layout2: {
@@ -27,11 +27,11 @@ var resourceLayout = {
             ]
         },
         /********************************************************
-         *  설명 : 리소스 정보 목록 Grid
+         *  설명 : 기본 정보 목록 Grid
         *********************************************************/
         grid: {
-            name: 'resource_GroupGrid',
-            header: '<b>Resource 정보</b>',
+            name: 'default_Grid',
+            header: '<b>Default 정보</b>',
             method: 'GET',
                 multiSelect: false,
             show: {
@@ -41,23 +41,23 @@ var resourceLayout = {
             columns:[
                    { field: 'recid', hidden: true },
                    { field: 'id', hidden: true },
-                   { field: 'resourceConfigName', caption: '리소스 정보 별칭', size:'50%', style:'text-align:center;' },
-                   { field: 'iaasType', caption: '인프라 환경 타입', size:'50%', style:'text-align:center;' ,render: function(record){ 
+                   { field: 'deploymentName', caption: '배포 명', size:'20%', style:'text-align:center;' },
+                   { field: 'iaasType', caption: '인프라 환경 타입', size:'20%', style:'text-align:center;' ,render: function(record){ 
                        if(record.iaasType.toLowerCase() == "aws"){
                            return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
                        }else if (record.iaasType.toLowerCase() == "openstack"){
                            return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
                        }
                    }},
-                   { field: 'stemcellName', caption: '스템셀 명', size:'50%', style:'text-align:center;'},
-                   { field: 'instanceTypeS', caption: '인스턴스 유형 S', size:'60%', style:'text-align:center;'},
-                   { field: 'instanceTypeM', caption: '인스턴스 유형 M', size:'60%', style:'text-align:center;'},
-                   { field: 'instanceTypeL', caption: '인스턴스 유형 L', size:'60%', style:'text-align:center;'},
+                   { field: 'cfDeploymentVersion', caption: 'CF Deployment 버전', size:'20%', style:'text-align:center;'},
+                   { field: 'domain', caption: '도메인', size:'20%', style:'text-align:center;'},
+                   { field: 'domainOrganization', caption: '기본 조직명', size:'20%', style:'text-align:center;'},
+                   { field: 'cfDbType', caption: 'CF Database 유형', size:'20%', style:'text-align:center;'}
                   ],
             onSelect : function(event) {
                 event.onComplete = function() {
                     $('#deleteBtn').attr('disabled', false);
-                    settingResourceInfo();
+                    settingDefaultInfo();
                     return;
                 }
             },
@@ -107,30 +107,30 @@ var resourceLayout = {
 }
 
 $(function(){
-    $('#resource_GroupGrid').w2layout(resourceLayout.layout2);
+    $('#default_Grid').w2layout(resourceLayout.layout2);
     w2ui.layout2.content('left', $().w2grid(resourceLayout.grid));
     w2ui['layout2'].content('main', $('#regPopupDiv').html());
     doSearch();
     
     $("#deleteBtn").click(function(){
         if($("#deleteBtn").attr('disabled') == "disabled") return;
-        var selected = w2ui['resource_GroupGrid'].getSelection();
+        var selected = w2ui['default_Grid'].getSelection();
         if( selected.length == 0 ){
-            w2alert("선택된 정보가 없습니다.", "리소스 삭제");
+            w2alert("선택된 정보가 없습니다.", "기본  삭제");
             return;
         }
         else {
-            var record = w2ui['resource_GroupGrid'].get(selected);
+            var record = w2ui['default_Grid'].get(selected);
             w2confirm({
-                title        : "리소스 정보",
-                msg            : "리소스 정보 ("+record.resourceConfigName + ")을 삭제하시겠습니까?",
+                title       : "기본 정보",
+                msg         : "기본 정보 ("+record.deploymentName + ")을 삭제하시겠습니까?",
                 yes_text    : "확인",
-                no_text        : "취소",
+                no_text     : "취소",
                 yes_callBack: function(event){
-                    deleteCfDeploymentResourceConfigInfo(record.recid, record.resourceConfigName);
+                    deleteHbCfDeploymentDefaultConfigInfo(record.recid, record.deploymentName);
                 },
                 no_callBack    : function(){
-                    w2ui['resource_GroupGrid'].clear();
+                    w2ui['default_Grid'].clear();
                     doSearch();
                 }
             });
@@ -139,38 +139,38 @@ $(function(){
 });
 
 /********************************************************
- * 설명 : 리소스 수정 정보 설정
- * 기능 : settingResourceInfo
+ * 설명 : 기본  수정 정보 설정
+ * 기능 : settingDefaultInfo
  *********************************************************/
-function settingResourceInfo(){
-    var selected = w2ui['resource_GroupGrid'].getSelection();
-    var record = w2ui['resource_GroupGrid'].get(selected);
+function settingDefaultInfo(){
+    var selected = w2ui['default_Grid'].getSelection();
+    var record = w2ui['default_Grid'].get(selected);
     if(record == null) {
-        w2alert("리소스 정보 설정 중 에러가 발생 했습니다.");
+        w2alert("기본 정보 설정 중 에러가 발생 했습니다.");
         return;
     }
     iaas = record.iaasType;
-    $("input[name=resourceInfoId]").val(record.recid);
-    $("input[name=resourceConfigName]").val(record.resourceConfigName);
+    $("input[name=defaultInfoId]").val(record.recid);
+    $("input[name=deploymentName]").val(record.deploymentName);
     $("select[name=iaasType]").val(record.iaasType);
-    $("select[name=stemcellName]").html("<option value='"+record.stemcellName+"' selected >"+record.stemcellName+"</option>");
-    $("input[name=instanceTypeS]").val(record.instanceTypeS);
-    $("input[name=instanceTypeM]").val(record.instanceTypeM);
-    $("input[name=instanceTypeL]").val(record.instanceTypeL);
+    $("select[name=cfDeploymentVersion]").html("<option value='"+record.cfDeploymentVersion+"' selected >"+record.cfDeploymentVersion+"</option>");
+    $("input[name=domain]").val(record.domain);
+    $("input[name=domainOrganization]").val(record.domainOrganization);
+    $("input[name=cfDbType]").val(record.cfDbType);
 }
 
 /********************************************************
- * 설명 : 리소스 정보 목록 조회
+ * 설명 : 기본 정보 목록 조회
  * 기능 : doSearch
  *********************************************************/
 function doSearch() {
-    resourceConfigInfo="";//리소스 정보
+    defaultConfigInfo="";//기본 정보
     iaas = "";
     resetForm();
     
-    w2ui['resource_GroupGrid'].clear();
-    w2ui['resource_GroupGrid'].load('/deploy/hbCfDeployment/resourceConfig/list');
-    doButtonStyle(); 
+    w2ui['default_Grid'].clear();
+    w2ui['default_Grid'].load('/deploy/hbCfDeployment/defaultConfig/list');
+    //doButtonStyle(); 
 }
 
 /********************************************************
@@ -182,54 +182,53 @@ function doButtonStyle() {
 }
 
 /********************************************************
- * 설명 : 리소스 정보 등록
- * 기능 : registCfDeploymentResourceConfigInfo
+ * 설명 : 기본 정보 등록
+ * 기능 : registHbCfDeploymentDefaultConfigInfo
  *********************************************************/
-function registCfDeploymentResourceConfigInfo(){
+function registHbCfDeploymentDefaultConfigInfo(){
     w2popup.lock("등록 중입니다.", true);
-    resourceConfigInfo = {
-            id                     : $("input[name=resourceInfoId]").val(),
-            iaasType               : $("select[name=iaasType]").val(),
-            resourceConfigName     : $("input[name=resourceConfigName]").val(),
-            stemcellName           : $("select[name=stemcellName]").val(),
-            instanceTypeS           : $("input[name=instanceTypeS]").val(),
-            instanceTypeM           : $("input[name=instanceTypeM]").val(),
-            instanceTypeL           : $("input[name=instanceTypeL]").val(),
-            
+    defaultConfigInfo = {
+    		id                     : $("input[name='defaultInfoId']").val(),
+            iaasType               : $("select[name='iaasType']").val(),
+            deploymentName         : $("input[name='deploymentName']").val(),
+            cfDeploymentVersion    : $("select[name='cfDeploymentVersion'] :selected").val(),
+            domain                 : $("input[name='domain']").val(),
+            domainOrganization     : $("input[name='domainOrganization']").val(),
+            cfDbType               : $("select[name='cfDbType']").val()
     }
     $.ajax({
         type : "PUT",
-        url : "/deploy/hbCfDeployment/resourceConfig/save",
+        url : "/deploy/hbCfDeployment/defaultConfig/save",
         contentType : "application/json",
         async : true,
-        data : JSON.stringify(resourceConfigInfo),
+        data : JSON.stringify(defaultConfigInfo),
         success : function(data, status) {
             doSearch();
         },
         error : function( e, status ) {
             w2popup.unlock();
             var errorResult = JSON.parse(e.responseText);
-            w2alert(errorResult.message, "리소스 정보 저장");
+            w2alert(errorResult.message, "기본 정보 저장");
         }
     });
 }
 
 /********************************************************
- * 설명 : 리소스 정보 삭제
- * 기능 : deleteCfDeploymentResourceConfigInfo
+ * 설명 : 기본 정보 삭제
+ * 기능 : deleteHbCfDeploymentDefaultConfigInfo
  *********************************************************/
-function deleteCfDeploymentResourceConfigInfo(id, resourceConfigName){
+function deleteHbCfDeploymentDefaultConfigInfo(id, deploymentName){
     w2popup.lock("삭제 중입니다.", true);
-    resourceInfo = {
+    defaultInfo = {
         id : id,
-        resourceConfigName : resourceConfigName
+        deploymentName : deploymentName
     }
     $.ajax({
         type : "DELETE",
-        url : "/deploy/hbCfDeployment/resourceConfig/delete",
+        url : "/deploy/hbCfDeployment/defaultConfig/delete",
         contentType : "application/json",
         async : true,
-        data : JSON.stringify(resourceInfo),
+        data : JSON.stringify(defaultInfo),
         success : function(status) {
             w2popup.unlock();
             w2popup.close();
@@ -244,40 +243,28 @@ function deleteCfDeploymentResourceConfigInfo(id, resourceConfigName){
 }
 
 /******************************************************************
- * 기능 : getStemcellList
- * 설명 : 스템셀 목록 조회
+ * 기능 : getCfDeplymentVersionList
+ * 설명 : CF Deploymnet 버전 목록 조회
  ***************************************************************** */
-function getStemcellList(iaas){
-    
-    var url = "/common/deploy/stemcell/list/bootstrap/" + iaas;
-    $.ajax({
-        type : "GET",
-        url : url,
-        contentType : "application/json",
-        async : true,
-        success : function(data, status) {
-            console.log(iaas);
-            stemcells = new Array();
-            if(data.records.length != 0){
-                var option = "";
-                data.records.map(function (obj){
-                    option += "<option "+ obj.stemcellFileName +">"+obj.stemcellFileName+"</option>";
-                });
-            }else if (data.records.length == 0){
-                if (iaas == 'nothing'){
-                    option = "<option value=''>인프라 환경을 먼저 선택하세요.</option>";
-                }else{
-                    option = "<option value=''>스템셀이 없습니다.</option>";
-                }
-            }
-            $("#stemcellName").html(option);
-        },
-        error : function( e, status ) {
-            w2alert(search_data_fail_msg, "BOOTSTRAP 설치");
-            resetForm();
+function getCfDeploymentVersionList(iaasType){
+    var option = "";
+    if(iaasType != null){
+        if("aws"== iaasType ){
+            option += "<option value=''> CF Deployment 버전을 선택하세요.</option>";
+            option += "<option value='v1a'> Cf Ver 1 </option>";
+            option += "<option value='v2a'> Cf Ver 2 </option>";
+        }else if("openstack" == iaasType ){
+            option += "<option value=''> CF Deployment 버전을 선택하세요.</option>";
+            option += "<option value='v1'> Cf Ver 10 </option>";
+            option += "<option value='v2'> Cf Ver 20 </option>";
         }
-    });
-}
+        
+    }else if (iaasType == null){
+            option = "<option value=''> 인프라 환경을 먼저 선택하세요.</option>";
+    }
+
+    $("#cfDeploymentVersion").html(option);
+} 
 
 /********************************************************
  * 설명 : 화면 리사이즈시 호출
@@ -299,26 +286,27 @@ function lock (msg) {
  *********************************************************/
 function clearMainPage() {
     $().w2destroy('layout2');
-    $().w2destroy('resource_GroupGrid');
+    $().w2destroy('default_Grid');
 }
+
 /********************************************************
- * 설명 : 리소스 정보 리셋
+ * 설명 : 기본 정보 리셋
  * 기능 : resetForm
  *********************************************************/
 function resetForm(status){
     $(".panel-body").find("p").remove();
     $(".panel-body").children().children().children().css("borderColor", "#bbb");
-    $("input[name=resourceConfigName]").val("");
+    $("input[name=deploymentName]").val("");
     $("select[name=iaasType]").val("");
-    $("select[name=stemcellName]").val("");
-    $("select[name=stemcellName]").html("<option value=''>인프라 환경을 먼저 선택하세요.</option>");
-    $("input[name=instanceTypeS]").val("");
-    $("input[name=instanceTypeM]").val("");
-    $("input[name=instanceTypeL]").val("");
-    $("input[name=resourceInfoId]").val("");
+    $("select[name=cfDeploymentVersion]").val("");
+    $("input[name=domain]").val("");
+    $("input[name=domainOrganization]").val("");
+    $("select[name=cfDbType]").val("");
+    $("input[name=defaultInfoId]").val("");
     if(status=="reset"){
-        w2ui['resource_GroupGrid'].clear();
-        $("select[name=stemcellName]").html("<option value=''>인프라 환경을 먼저 선택하세요.</option>");
+        w2ui['default_Grid'].clear();
+        $("select[name=cfDeploymentVersion]").html("<option value=''>CF Deployment 버전을 선택하세요.</option>");
+        $("select[name=cfDbType]").html("<option value=''>CF Database 유형을 선택하세요.</option>");
         doSearch();
     }
     document.getElementById("settingForm").reset();
@@ -326,34 +314,34 @@ function resetForm(status){
 
 </script>
 <div id="main">
-    <div class="page_site">이종 BOOTSTRAP 설치 > <strong>Resource 정보 관리</strong></div>
+    <div class="page_site">이종 CF Deployment > <strong>Default 정보 관리</strong></div>
     <!-- 사용자 목록-->
     <div class="pdt20">
-        <div class="title fl"> 리소스 정보 목록</div>
+        <div class="title fl"> 기본 정보 목록</div>
     </div>
-    <div id="resource_GroupGrid" style="width:100%;  height:700px;"></div>
+    <div id="default_Grid" style="width:100%;  height:700px;"></div>
 
 </div>
 
 
 <div id="regPopupDiv" hidden="true" >
     <form id="settingForm" action="POST" >
-    <input type="hidden" name="resourceInfoId" />
+    <input type="hidden" name="defaultInfoId" />
         <div class="w2ui-page page-0" style="">
            <div class="panel panel-default">
-               <div class="panel-heading"><b>리소스 정보</b></div>
+               <div class="panel-heading"><b>기본 정보</b></div>
                <div class="panel-body" style="height:615px; overflow-y:auto;">
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">리소스 정보 별칭</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;">배포 명</label>
                        <div>
-                           <input class="form-control" name = "resourceConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="리소스 별칭을 입력 하세요."/>
+                           <input class="form-control" name = "deploymentName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="배포 명을 입력 하세요."/>
                        </div>
                    </div>
                    
                    <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;">클라우드 인프라 환경</label>
                        <div>
-                           <select class="form-control" onchange="getStemcellList(this.value);" name="iaasType" style="width: 320px; margin-left: 20px;">
+                           <select class="form-control" onchange="getCfDeploymentVersionList(this.value);" name="iaasType" style="width: 320px; margin-left: 20px;">
                                <option value="nothing">인프라 환경을 선택하세요.</option>
                                <option value="aws">AWS</option>
                                <option value="openstack">Openstack</option>
@@ -361,29 +349,32 @@ function resetForm(status){
                        </div>
                    </div>
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">스템셀 명</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;">CF Deployment 버전 명</label>
                        <div>
-                           <select class="form-control" name="stemcellName" id="stemcellName" style="width: 320px; margin-left: 20px;">
-                               <option value="">스템셀을 선택하세요.</option>
-                           </select>                           
+                           <select class="form-control" id="cfDeploymentVersion" name="cfDeploymentVersion"  style="width: 320px; margin-left: 20px;">
+                           </select>
+                       </div>
+                   </div>
+                    <div class="w2ui-field">
+                       <label style="width:40%;text-align: left;padding-left: 20px;"> 도메인 </label>
+                       <div>
+                           <input class="form-control"  name="domain" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="도메인을 입력하세요."/>
+                       </div>
+                   </div>
+                    <div class="w2ui-field">
+                       <label style="width:40%;text-align: left;padding-left: 20px;"> 기본 조직명 </label>
+                       <div>
+                           <input class="form-control" name="domainOrganization" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="기본 조직명을 입력하세요."/>
                        </div>
                    </div>
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">인스턴스 유형 Small </label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;"> CF Database 유형 </label>
                        <div>
-                           <input class="form-control"  name="instanceTypeS" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="Small 인스턴스 유형 입력하세요."/>
-                       </div>
-                   </div>
-                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">인스턴스 유형 Medium </label>
-                       <div>
-                           <input class="form-control"  name="instanceTypeM" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="Medium 인스턴스 유형 입력하세요."/>
-                       </div>
-                   </div>
-                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">인스턴스 유형 Large</label>
-                       <div>
-                           <input class="form-control"  name="instanceTypeL" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="Large 인스턴스 유형 입력하세요."/>
+                           <select class="form-control" name="cfDbType" style="width: 320px; margin-left: 20px;">
+                                <option value="">CF Database 유형을 선택하세요.</option>
+                                <option value="mySql"> MySQL </option>
+                                <option value="postgres"> Postgres </option>
+                           </select>
                        </div>
                    </div>
                    
@@ -405,44 +396,44 @@ $(function() {
         ignore : [],
         //onfocusout: function(element) {$(element).valid()},
         rules: {
-            resourceConfigName: { 
+            deploymentName: { 
                 required: function(){
-                    return checkEmpty( $("input[name='resourceConfigName']").val() );
+                    return checkEmpty( $("input[name='deploymentName']").val() );
                 }
             }, iaasType: { 
                 required: function(){
                     return checkEmpty( $("select[name='iaasType']").val() );
                 }
-            }, stemcellName: { 
+            }, cfDeploymentVersion: { 
                 required: function(){
-                    return checkEmpty( $("select[name='stemcellName']").val() );
+                    return checkEmpty( $("select[name='cfDeploymentVersion']").val() );
                 }
-            }, instanceTypeS: { 
+            }, domain: { 
                 required: function(){
-                    return checkEmpty( $("input[name='instanceTypeS']").val() );
+                    return checkEmpty( $("input[name='domain']").val() );
                 }
-            }, instanceTypeM: { 
+            }, domainOrganization: { 
                 required: function(){
-                    return checkEmpty( $("input[name='instanceTypeM']").val() );
+                    return checkEmpty( $("input[name='domainOrganization']").val() );
                 }
-            }, instanceTypeL: { 
+            }, cfDbType: { 
                 required: function(){
-                    return checkEmpty( $("input[name='instanceTypeL']").val() );
+                    return checkEmpty( $("select[name='cfDbType']").val() );
                 }
             }
         }, messages: {
-            resourceConfigName: { 
-                required:  "리소스 별칭"+text_required_msg
+            deploymentName: { 
+                required:  "기본  별칭"+text_required_msg
             }, iaasType: { 
                 required:  "클라우드 인프라 환경 타입"+select_required_msg,
-            }, stemcellName: { 
-                required:  "Stemcell Name"+select_required_msg,
-            }, instanceTypeS: { 
-                required:  "Instance Type Small"+text_required_msg,
-            }, instanceTypeM: { 
-                required:  "Instance Type Medium"+text_required_msg,
-            }, instanceTypeL: { 
-                required:  "Instance Type Large"+text_required_msg,
+            }, cfDeploymentVersion: { 
+                required:  "CF Deployment 버전"+select_required_msg,
+            }, domain: { 
+                required:  "도메인 "+text_required_msg,
+            }, domainOrganization: { 
+                required:  "기본 조직명 "+text_required_msg,
+            }, cfDbType: { 
+                required:  "Cf DB 유형"+select_required_msg,
             }
         }, unhighlight: function(element) {
             setHybridSuccessStyle(element);
@@ -454,7 +445,7 @@ $(function() {
                 setHybridInvalidHandlerStyle(errors, validator);
             }
         }, submitHandler: function (form) {
-            registCfDeploymentResourceConfigInfo();
+        	registHbCfDeploymentDefaultConfigInfo();
         }
     });
 });

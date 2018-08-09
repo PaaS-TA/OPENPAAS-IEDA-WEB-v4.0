@@ -52,5 +52,5 @@ public interface HbCfDeploymentResourceConfigDAO {
      * @title : selectCfDeploymentResourceConfigByName
      * @return : void
     *****************************************************************/
-	int selectCfDeploymentResourceConfigByName(@Param("resourceConfigName")String networkConfigName);
+	int selectCfDeploymentResourceConfigByName(@Param("resourceConfigName")String resourceConfigName);
 }

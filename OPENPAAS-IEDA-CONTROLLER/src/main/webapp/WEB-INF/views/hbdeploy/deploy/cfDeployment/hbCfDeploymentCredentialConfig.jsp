@@ -2,7 +2,7 @@
 /* =================================================================
  * 작성일 : 2018.07
  * 작성자 : 이정윤
- * 상세설명 : 리소스 정보 관리 화면
+ * 상세설명 : 인증서 정보 관리 화면
  * =================================================================
  */ 
 %>
@@ -15,7 +15,7 @@
 var text_required_msg = '<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
 var select_required_msg='<spring:message code="common.select.vaildate.required.message"/>';//을(를) 선택하세요.
 var search_data_fail_msg ='클라우드 인프라 환경을 선택하세요.';
-var resourceConfigInfo = "";//리소스 정보
+var credentialConfigInfo = "";//인증서
 var iaas = "";
 var resourceLayout = {
         layout2: {
@@ -27,37 +27,39 @@ var resourceLayout = {
             ]
         },
         /********************************************************
-         *  설명 : 리소스 정보 목록 Grid
+         *  설명 : 인증서 목록 Grid
         *********************************************************/
         grid: {
-            name: 'resource_GroupGrid',
-            header: '<b>Resource 정보</b>',
+            name: 'credential_Grid',
+            header: '<b>인증서 정보</b>',
             method: 'GET',
                 multiSelect: false,
             show: {
                     selectColumn: true,
-                    footer: true},
+                    footer: false
+                   },
             style: 'text-align: center',
             columns:[
                    { field: 'recid', hidden: true },
                    { field: 'id', hidden: true },
-                   { field: 'resourceConfigName', caption: '리소스 정보 별칭', size:'50%', style:'text-align:center;' },
-                   { field: 'iaasType', caption: '인프라 환경 타입', size:'50%', style:'text-align:center;' ,render: function(record){ 
+                   { field: 'credentialConfigName', caption: '인증서 명', size:'15%', style:'text-align:center;' },
+                   { field: 'iaasType', caption: '인프라 환경 타입', size:'15%', style:'text-align:center;' ,render: function(record){ 
                        if(record.iaasType.toLowerCase() == "aws"){
                            return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
                        }else if (record.iaasType.toLowerCase() == "openstack"){
                            return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
                        }
                    }},
-                   { field: 'stemcellName', caption: '스템셀 명', size:'50%', style:'text-align:center;'},
-                   { field: 'instanceTypeS', caption: '인스턴스 유형 S', size:'60%', style:'text-align:center;'},
-                   { field: 'instanceTypeM', caption: '인스턴스 유형 M', size:'60%', style:'text-align:center;'},
-                   { field: 'instanceTypeL', caption: '인스턴스 유형 L', size:'60%', style:'text-align:center;'},
+                   { field: 'countryCode', caption: '국가 코드', size:'15%', style:'text-align:center;'},
+                   { field: 'domain', caption: '도메인', size:'15%', style:'text-align:center;'},
+                   { field: 'company', caption: '회사명', size:'10%', style:'text-align:center;'},
+                   { field: 'jobTitle', caption: '부서명', size:'10%', style:'text-align:center;'},
+                   { field: 'emailAddress', caption: '이메일', size:'10%', style:'text-align:center;'}
                   ],
             onSelect : function(event) {
                 event.onComplete = function() {
+                    settingDefaultInfo();
                     $('#deleteBtn').attr('disabled', false);
-                    settingResourceInfo();
                     return;
                 }
             },
@@ -107,30 +109,30 @@ var resourceLayout = {
 }
 
 $(function(){
-    $('#resource_GroupGrid').w2layout(resourceLayout.layout2);
+    $('#credential_Grid').w2layout(resourceLayout.layout2);
     w2ui.layout2.content('left', $().w2grid(resourceLayout.grid));
     w2ui['layout2'].content('main', $('#regPopupDiv').html());
     doSearch();
     
     $("#deleteBtn").click(function(){
         if($("#deleteBtn").attr('disabled') == "disabled") return;
-        var selected = w2ui['resource_GroupGrid'].getSelection();
+        var selected = w2ui['credential_Grid'].getSelection();
         if( selected.length == 0 ){
-            w2alert("선택된 정보가 없습니다.", "리소스 삭제");
+            w2alert("선택된 정보가 없습니다.", "기본  삭제");
             return;
         }
         else {
-            var record = w2ui['resource_GroupGrid'].get(selected);
+            var record = w2ui['credential_Grid'].get(selected);
             w2confirm({
-                title        : "리소스 정보",
-                msg            : "리소스 정보 ("+record.resourceConfigName + ")을 삭제하시겠습니까?",
+                title       : "인증서",
+                msg         : "인증서 ("+record.credentialConfigName + ")을 삭제하시겠습니까?",
                 yes_text    : "확인",
-                no_text        : "취소",
+                no_text     : "취소",
                 yes_callBack: function(event){
-                    deleteCfDeploymentResourceConfigInfo(record.recid, record.resourceConfigName);
+                    deleteHbCfDeploymentCredentialConfigInfo(record.recid, record.credentialConfigName);
                 },
                 no_callBack    : function(){
-                    w2ui['resource_GroupGrid'].clear();
+                    w2ui['credential_Grid'].clear();
                     doSearch();
                 }
             });
@@ -139,38 +141,44 @@ $(function(){
 });
 
 /********************************************************
- * 설명 : 리소스 수정 정보 설정
- * 기능 : settingResourceInfo
+ * 설명 : 기본  수정 정보 설정
+ * 기능 : settingDefaultInfo
  *********************************************************/
-function settingResourceInfo(){
-    var selected = w2ui['resource_GroupGrid'].getSelection();
-    var record = w2ui['resource_GroupGrid'].get(selected);
+function settingDefaultInfo(){
+    var selected = w2ui['credential_Grid'].getSelection();
+    var record = w2ui['credential_Grid'].get(selected);
+    
+    console.log(record +"testeeeeee" );
+    
     if(record == null) {
-        w2alert("리소스 정보 설정 중 에러가 발생 했습니다.");
+        w2alert("인증서 설정 중 에러가 발생 했습니다.");
         return;
     }
     iaas = record.iaasType;
-    $("input[name=resourceInfoId]").val(record.recid);
-    $("input[name=resourceConfigName]").val(record.resourceConfigName);
-    $("select[name=iaasType]").val(record.iaasType);
-    $("select[name=stemcellName]").html("<option value='"+record.stemcellName+"' selected >"+record.stemcellName+"</option>");
-    $("input[name=instanceTypeS]").val(record.instanceTypeS);
-    $("input[name=instanceTypeM]").val(record.instanceTypeM);
-    $("input[name=instanceTypeL]").val(record.instanceTypeL);
+    $("input[name=credentialInfoId]").val(record.recid);
+    $("input[name=credentialConfigName]").val(record.credentialConfigName);
+    $("select[name=iaasType] :selected").val(record.iaasType);
+    $("select[name=countryCode] :selected").html("<option value='"+record.countryCode+"' selected >"+record.countryCode+"</option>");
+    $("input[name=city]").val(record.city);
+    $("input[name=domain]").val(record.domain);
+    $("input[name=company]").val(record.company);
+    $("input[name=jobTitle]").val(record.jobTitle);
+    $("input[name=emailAddress]").val(record.emailAddress);
+    
 }
 
 /********************************************************
- * 설명 : 리소스 정보 목록 조회
+ * 설명 : 인증서 목록 조회
  * 기능 : doSearch
  *********************************************************/
 function doSearch() {
-    resourceConfigInfo="";//리소스 정보
+    credentialConfigInfo="";//인증서
     iaas = "";
     resetForm();
     
-    w2ui['resource_GroupGrid'].clear();
-    w2ui['resource_GroupGrid'].load('/deploy/hbCfDeployment/resourceConfig/list');
-    doButtonStyle(); 
+    w2ui['credential_Grid'].clear();
+    w2ui['credential_Grid'].load('/deploy/hbCfDeployment/credentialConfig/list');
+    //doButtonStyle(); 
 }
 
 /********************************************************
@@ -182,54 +190,57 @@ function doButtonStyle() {
 }
 
 /********************************************************
- * 설명 : 리소스 정보 등록
- * 기능 : registCfDeploymentResourceConfigInfo
+ * 설명 : 인증서 등록
+ * 기능 : registHbCfDeploymentCredentialConfigInfo
  *********************************************************/
-function registCfDeploymentResourceConfigInfo(){
+function registHbCfDeploymentCredentialConfigInfo(){
     w2popup.lock("등록 중입니다.", true);
-    resourceConfigInfo = {
-            id                     : $("input[name=resourceInfoId]").val(),
-            iaasType               : $("select[name=iaasType]").val(),
-            resourceConfigName     : $("input[name=resourceConfigName]").val(),
-            stemcellName           : $("select[name=stemcellName]").val(),
-            instanceTypeS           : $("input[name=instanceTypeS]").val(),
-            instanceTypeM           : $("input[name=instanceTypeM]").val(),
-            instanceTypeL           : $("input[name=instanceTypeL]").val(),
-            
+    
+    credentialConfigInfo = {
+            id                     : $("input[name='credentialInfoId']").val(),
+            iaasType               : $("select[name='iaasType'] :selected").val(),
+            credentialConfigName   : $("input[name='credentialConfigName']").val(),
+            countryCode            : $("select[name='countryCode'] :selected").val(),
+            domain                 : $("input[name='domain']").val(),
+            city                   : $("input[name='city']").val(),
+            company                : $("input[name='company']").val(),
+            jobTitle               : $("input[name='jobTitle']").val(),
+            emailAddress           : $("input[name='emailAddress']").val()
     }
+    
     $.ajax({
         type : "PUT",
-        url : "/deploy/hbCfDeployment/resourceConfig/save",
+        url : "/deploy/hbCfDeployment/credentialConfig/save",
         contentType : "application/json",
         async : true,
-        data : JSON.stringify(resourceConfigInfo),
+        data : JSON.stringify(credentialConfigInfo),
         success : function(data, status) {
             doSearch();
         },
         error : function( e, status ) {
             w2popup.unlock();
             var errorResult = JSON.parse(e.responseText);
-            w2alert(errorResult.message, "리소스 정보 저장");
+            w2alert(errorResult.message, "인증서 저장");
         }
     });
 }
 
 /********************************************************
- * 설명 : 리소스 정보 삭제
- * 기능 : deleteCfDeploymentResourceConfigInfo
+ * 설명 : 인증서 삭제
+ * 기능 : deleteHbCfDeploymentCredentialConfigInfo
  *********************************************************/
-function deleteCfDeploymentResourceConfigInfo(id, resourceConfigName){
+function deleteHbCfDeploymentCredentialConfigInfo(id, credentialConfigName){
     w2popup.lock("삭제 중입니다.", true);
-    resourceInfo = {
+    credentialInfo = {
         id : id,
-        resourceConfigName : resourceConfigName
+        credentialConfigName : credentialConfigName
     }
     $.ajax({
         type : "DELETE",
-        url : "/deploy/hbCfDeployment/resourceConfig/delete",
+        url : "/deploy/hbCfDeployment/credentialConfig/delete",
         contentType : "application/json",
         async : true,
-        data : JSON.stringify(resourceInfo),
+        data : JSON.stringify(credentialInfo),
         success : function(status) {
             w2popup.unlock();
             w2popup.close();
@@ -243,41 +254,7 @@ function deleteCfDeploymentResourceConfigInfo(id, resourceConfigName){
     });
 }
 
-/******************************************************************
- * 기능 : getStemcellList
- * 설명 : 스템셀 목록 조회
- ***************************************************************** */
-function getStemcellList(iaas){
-    
-    var url = "/common/deploy/stemcell/list/bootstrap/" + iaas;
-    $.ajax({
-        type : "GET",
-        url : url,
-        contentType : "application/json",
-        async : true,
-        success : function(data, status) {
-            console.log(iaas);
-            stemcells = new Array();
-            if(data.records.length != 0){
-                var option = "";
-                data.records.map(function (obj){
-                    option += "<option "+ obj.stemcellFileName +">"+obj.stemcellFileName+"</option>";
-                });
-            }else if (data.records.length == 0){
-                if (iaas == 'nothing'){
-                    option = "<option value=''>인프라 환경을 먼저 선택하세요.</option>";
-                }else{
-                    option = "<option value=''>스템셀이 없습니다.</option>";
-                }
-            }
-            $("#stemcellName").html(option);
-        },
-        error : function( e, status ) {
-            w2alert(search_data_fail_msg, "BOOTSTRAP 설치");
-            resetForm();
-        }
-    });
-}
+ 
 
 /********************************************************
  * 설명 : 화면 리사이즈시 호출
@@ -299,26 +276,30 @@ function lock (msg) {
  *********************************************************/
 function clearMainPage() {
     $().w2destroy('layout2');
-    $().w2destroy('resource_GroupGrid');
+    $().w2destroy('credential_Grid');
 }
+
 /********************************************************
- * 설명 : 리소스 정보 리셋
+ * 설명 : 인증서 리셋
  * 기능 : resetForm
  *********************************************************/
 function resetForm(status){
     $(".panel-body").find("p").remove();
     $(".panel-body").children().children().children().css("borderColor", "#bbb");
-    $("input[name=resourceConfigName]").val("");
     $("select[name=iaasType]").val("");
-    $("select[name=stemcellName]").val("");
-    $("select[name=stemcellName]").html("<option value=''>인프라 환경을 먼저 선택하세요.</option>");
-    $("input[name=instanceTypeS]").val("");
-    $("input[name=instanceTypeM]").val("");
-    $("input[name=instanceTypeL]").val("");
-    $("input[name=resourceInfoId]").val("");
+    $("input[name=credentialConfigName]").val("");
+    $("select[name=countryCode]").val("");
+    $("input[name=domain]").val("");
+    $("input[name=city]").val("");
+    $("input[name=company]").val("");
+    $("input[name=jobTitle]").val("");
+    $("input[name=emailAddress]").val("");
+
+    $("input[name=credentialInfoId]").val("");
     if(status=="reset"){
-        w2ui['resource_GroupGrid'].clear();
-        $("select[name=stemcellName]").html("<option value=''>인프라 환경을 먼저 선택하세요.</option>");
+        w2ui['credential_Grid'].clear();
+        $("select[name=iaasType]").html("<option value=''>인프라 유형을 선택하세요.</option>");
+        $("select[name=countryCode]").html("<option value=''>국가 코드를 선택하세요.</option>");
         doSearch();
     }
     document.getElementById("settingForm").reset();
@@ -326,64 +307,84 @@ function resetForm(status){
 
 </script>
 <div id="main">
-    <div class="page_site">이종 BOOTSTRAP 설치 > <strong>Resource 정보 관리</strong></div>
+    <div class="page_site"> 이종 CF Deployment <strong>Default 정보 관리</strong></div>
     <!-- 사용자 목록-->
     <div class="pdt20">
-        <div class="title fl"> 리소스 정보 목록</div>
+        <div class="title fl"> 인증서 목록</div>
     </div>
-    <div id="resource_GroupGrid" style="width:100%;  height:700px;"></div>
+    <div id="credential_Grid" style="width:100%;  height:700px;"></div>
 
 </div>
 
 
 <div id="regPopupDiv" hidden="true" >
     <form id="settingForm" action="POST" >
-    <input type="hidden" name="resourceInfoId" />
+    <input type="hidden" name="credentialInfoId" />
         <div class="w2ui-page page-0" style="">
            <div class="panel panel-default">
-               <div class="panel-heading"><b>리소스 정보</b></div>
+               <div class="panel-heading"><b>인증서</b></div>
                <div class="panel-body" style="height:615px; overflow-y:auto;">
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">리소스 정보 별칭</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;"> 배포 명</label>
                        <div>
-                           <input class="form-control" name = "resourceConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="리소스 별칭을 입력 하세요."/>
+                           <input class="form-control" name = "credentialConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="인증서 명을 입력 하세요."/>
                        </div>
                    </div>
                    
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">클라우드 인프라 환경</label>
+                       <label style="width:40%; text-align: left;padding-left: 20px;"> 클라우드 인프라 환경</label>
                        <div>
-                           <select class="form-control" onchange="getStemcellList(this.value);" name="iaasType" style="width: 320px; margin-left: 20px;">
-                               <option value="nothing">인프라 환경을 선택하세요.</option>
-                               <option value="aws">AWS</option>
-                               <option value="openstack">Openstack</option>
+                           <select class="form-control"  name="iaasType" style="width: 320px; margin-left: 20px;">
+                               <option value=""> 인프라 환경을 선택하세요. </option>
+                               <option value="aws"> AWS </option>
+                               <option value="openstack"> Openstack </option>
                            </select>
                        </div>
                    </div>
+                   
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">스템셀 명</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;"> 국가 코드</label>
                        <div>
-                           <select class="form-control" name="stemcellName" id="stemcellName" style="width: 320px; margin-left: 20px;">
-                               <option value="">스템셀을 선택하세요.</option>
-                           </select>                           
+                           <select class="form-control" id="countryCode" name="countryCode"  style="width: 320px; margin-left: 20px;">
+                               <option value=""> 국가 코드를 선택하세요. </option>
+                               <option value="KR"> KR </option>
+                               
+                           </select>
                        </div>
                    </div>
+
+                    <div class="w2ui-field">
+                       <label style="width:40%;text-align: left;padding-left: 20px;"> 도시  </label>
+                       <div>
+                           <input class="form-control"  name="city" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="도시를 입력하세요."/>
+                       </div>
+                   </div>
+
+                    <div class="w2ui-field">
+                       <label style="width:40%;text-align: left;padding-left: 20px;"> 도메인 </label>
+                       <div>
+                           <input class="form-control"  name="domain" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="도메인을 입력하세요."/>
+                       </div>
+                   </div>
+                   
+                    <div class="w2ui-field">
+                       <label style="width:40%;text-align: left;padding-left: 20px;"> 회사 명 </label>
+                       <div>
+                           <input class="form-control" name="company" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="회사 명을 입력하세요."/>
+                       </div>
+                   </div>
+                   
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">인스턴스 유형 Small </label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;"> 부서 명 </label>
                        <div>
-                           <input class="form-control"  name="instanceTypeS" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="Small 인스턴스 유형 입력하세요."/>
+                           <input class="form-control" name="jobTitle" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="부서 명을 입력하세요."/>
                        </div>
                    </div>
-                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">인스턴스 유형 Medium </label>
+                   
+                   <div class="w2ui-field">
+                       <label style="width:40%;text-align: left;padding-left: 20px;"> 이메일 </label>
                        <div>
-                           <input class="form-control"  name="instanceTypeM" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="Medium 인스턴스 유형 입력하세요."/>
-                       </div>
-                   </div>
-                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">인스턴스 유형 Large</label>
-                       <div>
-                           <input class="form-control"  name="instanceTypeL" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="Large 인스턴스 유형 입력하세요."/>
+                           <input class="form-control" name="emailAddress" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="이메일을 입력하세요."/>
                        </div>
                    </div>
                    
@@ -399,50 +400,70 @@ function resetForm(status){
 </div>
 <script>
 $(function() {
-    
+    $.validator.addMethod("validemail", 
+           function(value, element) {
+                return /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(value);
+                              }, 
+               "Sorry, I've enabled very strict email validation"
+           );
     
     $("#settingForm").validate({
         ignore : [],
         //onfocusout: function(element) {$(element).valid()},
         rules: {
-            resourceConfigName: { 
+            credentialConfigName: { 
                 required: function(){
-                    return checkEmpty( $("input[name='resourceConfigName']").val() );
+                    return checkEmpty( $("input[name='credentialConfigName']").val() );
                 }
             }, iaasType: { 
                 required: function(){
                     return checkEmpty( $("select[name='iaasType']").val() );
                 }
-            }, stemcellName: { 
+            }, countryCode: { 
                 required: function(){
-                    return checkEmpty( $("select[name='stemcellName']").val() );
+                    return checkEmpty( $("select[name='countryCode']").val() );
                 }
-            }, instanceTypeS: { 
+            }, domain: { 
                 required: function(){
-                    return checkEmpty( $("input[name='instanceTypeS']").val() );
+                    return checkEmpty( $("input[name='domain']").val() );
                 }
-            }, instanceTypeM: { 
+            }, city: { 
                 required: function(){
-                    return checkEmpty( $("input[name='instanceTypeM']").val() );
+                    return checkEmpty( $("input[name='city']").val() );
                 }
-            }, instanceTypeL: { 
+            }, company: { 
                 required: function(){
-                    return checkEmpty( $("input[name='instanceTypeL']").val() );
+                    return checkEmpty( $("input[name='company']").val() );
+                }
+            }, jobTitle: { 
+                required: function(){
+                    return checkEmpty( $("input[name='jobTitle']").val() );
+                }
+            }, emailAddress: { 
+                required: function(){
+                    return checkEmpty( $("input[name='emailAddress']").val() );
+                }, validemail : function(){
+                    return $(".w2ui-msg-body input[name='emailAddress']").val();
                 }
             }
         }, messages: {
-            resourceConfigName: { 
-                required:  "리소스 별칭"+text_required_msg
+            credentialConfigName: { 
+                required:  "기본  별칭"+text_required_msg
             }, iaasType: { 
                 required:  "클라우드 인프라 환경 타입"+select_required_msg,
-            }, stemcellName: { 
-                required:  "Stemcell Name"+select_required_msg,
-            }, instanceTypeS: { 
-                required:  "Instance Type Small"+text_required_msg,
-            }, instanceTypeM: { 
-                required:  "Instance Type Medium"+text_required_msg,
-            }, instanceTypeL: { 
-                required:  "Instance Type Large"+text_required_msg,
+            }, countryCode: { 
+                required:  "국가 코드 "+select_required_msg,
+            }, domain: { 
+                required:  "도메인 "+text_required_msg,
+            }, city: { 
+                required:  "도시 "+text_required_msg,
+            }, company: { 
+                required:  "회사 명 "+text_required_msg,                
+            }, jobTitle: { 
+                required:  "부서 명 "+text_required_msg,
+            }, emailAddress: { 
+                required:  "이메일 주소"+text_required_msg,
+                validemail : "이메일 형식을 확인하세요.",
             }
         }, unhighlight: function(element) {
             setHybridSuccessStyle(element);
@@ -454,7 +475,7 @@ $(function() {
                 setHybridInvalidHandlerStyle(errors, validator);
             }
         }, submitHandler: function (form) {
-            registCfDeploymentResourceConfigInfo();
+            registHbCfDeploymentCredentialConfigInfo();
         }
     });
 });

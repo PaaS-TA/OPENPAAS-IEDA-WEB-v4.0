@@ -303,36 +303,48 @@ public class AzureSecurityGroupMgntService {
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, dto.getAccountId());
         List<String[]> list = new ArrayList<String[]>();
         List <SecurityRuleInner> srList = new ArrayList<SecurityRuleInner>();
-             String[] stringArray0 = {"100", "inboundrules1", "22"};
-             String[] stringArray1 = {"101", "inboundrules2", "6868"};
-             String[] stringArray2 = {"102", "inboundrules3", "25555"};
-             String[] stringArray3 = {"103", "inboundrules4", "80"};
-             String[] stringArray4 = {"104", "inboundrules5", "443"};
-             String[] stringArray5 = {"105", "inboundrules6", "4443"};
-             String[] stringArray6 = {"106", "inboundrules7", "*"};
+             String[] allPort = {"100", "allowAllInbound", "*", "any"};
+             String[] bootstrapAgentPort = {"101", "allow_bootstrapAgent_inbound", "6868", "tcp"}; //bootrap agent
+             String[] directorApiPort = {"102", "allow_directorApi_inbound", "25555", "tcp"};//directorApi
+             String[] uaaApiPort = {"103", "allow_uaaApi_inbound", "8443", "tcp"}; //uaaApi
+             String[] credHubPort = {"104", "allow_credHub_inbound", "8844", "tcp"}; //credHub Api
+             String[] natsPort = {"105", "allow_nats_inbound", "4222", "tcp"}; //NATS
+             String[] blobstorePort = {"106", "allow_blobstore_inbound", "25250", "tcp"}; //blobstore
+             String[] registryPort = {"107", "allow_registry_inbound", "25777", "tcp"}; //registry if enabled
+             String[] port8080 = {"108", "allow_port8080", "8080", "any"};  
+             String[] httpPort = {"109", "allow_http_inbound", "80", "any"};
+             String[] httpsPort = {"110", "allow_https_inbound", "443", "tcp"};
+             String[] sshPort = {"111", "allow_ssh_inbound", "22", "tcp"}; //ssh 
              
-             list.add(0, stringArray0);
-             list.add(1, stringArray1);
-             list.add(2, stringArray2);
-             list.add(3, stringArray3);
-             list.add(4, stringArray4);
-             list.add(5, stringArray5);
-             list.add(6, stringArray6);
+             list.add(0, allPort);
+             list.add(1, bootstrapAgentPort);
+             list.add(2, directorApiPort);
+             list.add(3, uaaApiPort);
+             list.add(4, credHubPort);
+             list.add(5, natsPort);
+             list.add(6, blobstorePort);
+             list.add(7, registryPort);
+             list.add(8, port8080);
+             list.add(9, httpPort);
+             list.add(10, httpsPort);
+             list.add(11, sshPort);
              
              int priority =0;
              String inboundName ="";
              String port ="";
+             String protocolName ="";
              for (int i=0; i<list.size(); i++){
                  SecurityRuleInner securityRuleInner = new SecurityRuleInner();
                  priority = Integer.parseInt(list.get(i)[0]);
                  inboundName = list.get(i)[1];
                  port = list.get(i)[2];
+                 protocolName = list.get(i)[3];
                  SecurityRuleAccess access = SecurityRuleAccess.ALLOW;
                  SecurityRuleDirection direction = SecurityRuleDirection.INBOUND;
                  SecurityRuleProtocol protocol = null;
-                 if(! "*".equals(port)){
+                 if("tcp".equals(protocolName)){
                     protocol = SecurityRuleProtocol.TCP;
-                 }else if("*".equals(port)){
+                 }else if("any".equals(protocolName)){
                     protocol = SecurityRuleProtocol.ASTERISK;
                  }
                  securityRuleInner = securityRuleInner.withName(inboundName).withPriority(priority).withSourcePortRange(port).withDestinationPortRange("*").withProtocol(protocol).withSourceAddressPrefix("*").withDestinationAddressPrefix("*").withAccess(access).withDirection(direction);

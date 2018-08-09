@@ -81,7 +81,7 @@
                <a href="javascript:;" data-toggle="collapse" data-target="#cfMenu" ><i class="fa fa-fw fa-spinner"></i>이종 CF DEPLOYMENT<i class="fa fa-fw fa-caret-down"></i></a>
                <ul id="cfMenu" class="collapse">
                    <sec:authorize access="hasAuthority('DEPLOY_CF_DIEGO_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/hbCfDeployment/infoConfig"/>', '기본 정보 관리');">기본 정보 관리</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/hbCfDeployment/defaultConfig"/>', '기본 정보 관리');">기본 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('DEPLOY_CF_DIEGO_MENU')">
                        <li><a href="javascript:goPage('<c:url value="/deploy/hbCfDeployment/networkConfig"/>', 'NETWROK 정보 관리');">NETWROK 정보 관리</a></li>

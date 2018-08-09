@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.microsoft.azure.management.storage.StorageAccount;
+import com.microsoft.azure.management.storage.StorageAccountKey;
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.StorageCredentials;
 import com.microsoft.azure.storage.StorageException;
@@ -88,7 +89,8 @@ public class AzureStorageAccountMgntService {
      * @throws IOException 
      ***************************************************/
     public List<AzureStorageAccountMgntVO> getAzureBlobInfoList(Principal principal, int accountId, String storageAccountName) throws URISyntaxException, NoSuchFieldException, SecurityException, IOException {
-         String accountKey = getStorageAccountKey(principal,accountId,storageAccountName);
+        List<StorageAccountKey> accountkeys = getStorageAccountKey(principal,accountId,storageAccountName);
+        String accountKey = accountkeys.get(0).value();
          String storageConnectionString = "DefaultEndpointsProtocol=https;" + 
                  "AccountName="+storageAccountName+";" + 
                  "AccountKey="+accountKey+";EndpointSuffix=core.windows.net";
@@ -174,7 +176,8 @@ public class AzureStorageAccountMgntService {
      * @throws IOException 
      ***************************************************/   
     public List<AzureStorageAccountMgntVO> getAzureTableInfoList(Principal principal, int accountId, String storageAccountName) throws URISyntaxException, NoSuchFieldException, SecurityException, IOException {
-        String accountKey = getStorageAccountKey(principal,accountId,storageAccountName);
+        List<StorageAccountKey> accountkeys = getStorageAccountKey(principal,accountId,storageAccountName);
+        String accountKey = accountkeys.get(0).value();
         String storageConnectionString = "DefaultEndpointsProtocol=https;" + 
                 "AccountName="+storageAccountName+";" + 
                 "AccountKey="+accountKey+";EndpointSuffix=core.windows.net";
@@ -221,11 +224,11 @@ public class AzureStorageAccountMgntService {
      * @title : getStorageAccountKey
      * @return : String
      ***************************************************/    
-    public String getStorageAccountKey(Principal principal, int accountId, String storageAccountName){
+    public List<StorageAccountKey> getStorageAccountKey(Principal principal, int accountId, String storageAccountName){
         IaasAccountMgntVO vo = getAzureAccountInfo(principal, accountId);
         try{
-            String key =  azureStorageAccountMgntApiService.getAzureStorageAccountKeyFromAzure(vo, storageAccountName);
-            return key;
+        	List<StorageAccountKey> keys =  azureStorageAccountMgntApiService.getAzureStorageAccountKeyFromAzure(vo, storageAccountName);
+            return keys;
         }catch (Exception e) {
             String detailMessage = e.getMessage();
             if(!detailMessage.equals("") && detailMessage != null){
@@ -294,7 +297,8 @@ public class AzureStorageAccountMgntService {
         try{
             //azureStorageAccountMgntApiService.createAzureBlobFromAzure(vo, dto);
             String storageAccountName = dto.getStorageAccountName();
-            String accountKey = getStorageAccountKey(principal,dto.getAccountId(),storageAccountName);
+            List<StorageAccountKey> accountkeys = getStorageAccountKey(principal,dto.getAccountId(),storageAccountName);
+            String accountKey = accountkeys.get(0).value();
             String storageConnectionString = "DefaultEndpointsProtocol=https;" + 
                     "AccountName="+storageAccountName+";" + 
                     "AccountKey="+accountKey+";EndpointSuffix=core.windows.net";
@@ -352,7 +356,8 @@ public class AzureStorageAccountMgntService {
     public void deleteAzureBlob(AzureStorageAccountMgntDTO dto, Principal principal){
         try{
             String storageAccountName = dto.getStorageAccountName();
-            String accountKey = getStorageAccountKey(principal,dto.getAccountId(),storageAccountName);
+            List<StorageAccountKey> accountkeys = getStorageAccountKey(principal,dto.getAccountId(),storageAccountName);
+            String accountKey = accountkeys.get(0).value();
             String storageConnectionString = "DefaultEndpointsProtocol=https;" + 
                     "AccountName="+storageAccountName+";" + 
                     "AccountKey="+accountKey+";EndpointSuffix=core.windows.net";
@@ -382,7 +387,8 @@ public class AzureStorageAccountMgntService {
      ***************************************************/
     public void createAzureTable(AzureStorageAccountMgntDTO dto, Principal principal) throws StorageException{
         String storageAccountName = dto.getStorageAccountName();
-        String accountKey = getStorageAccountKey(principal,dto.getAccountId(),storageAccountName);
+        List<StorageAccountKey> accountkeys = getStorageAccountKey(principal,dto.getAccountId(),storageAccountName);
+        String accountKey = accountkeys.get(0).value();
         String storageConnectionString = "DefaultEndpointsProtocol=https;" + 
                 "AccountName="+storageAccountName+";" + 
                 "AccountKey="+accountKey+";EndpointSuffix=core.windows.net";
@@ -425,7 +431,8 @@ public class AzureStorageAccountMgntService {
      ***************************************************/
     public void deleteAzureTable(AzureStorageAccountMgntDTO dto, Principal principal) throws StorageException{
         String storageAccountName = dto.getStorageAccountName();
-        String accountKey = getStorageAccountKey(principal,dto.getAccountId(),storageAccountName);
+        List<StorageAccountKey> accountkeys = getStorageAccountKey(principal,dto.getAccountId(),storageAccountName);
+        String accountKey = accountkeys.get(0).value();
         String storageConnectionString = "DefaultEndpointsProtocol=https;" + 
                 "AccountName="+storageAccountName+";" + 
                 "AccountKey="+accountKey+";EndpointSuffix=core.windows.net";

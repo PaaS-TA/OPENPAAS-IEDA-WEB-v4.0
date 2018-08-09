@@ -29,11 +29,11 @@
 <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/default.css?ver=1'/>"/>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/guide.css?ver=1'/>"/>
-<link rel="stylesheet" type="text/css" href="<c:url value='/css/deploy-common.css?ver=4'/>"/>
-<link rel="stylesheet" type="text/css" href="<c:url value='/css/deploy-content.css?ver=4'/>"/>
-<link rel="stylesheet" type="text/css" href="<c:url value='/css/progress-step.css?ver=3'/>"/> <!-- progress-step css -->
-<link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-guide.css?ver=2'/>"/>
-<link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-init.css?ver=2'/>"/>
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/deploy-common.css?ver=11'/>"/>
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/deploy-content.css?ver=11'/>"/>
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/progress-step.css?ver=11'/>"/> <!-- progress-step css -->
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-guide.css?ver=11'/>"/>
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-init.css?ver=11'/>"/>
 <!-- JAVA SCRIPT -->
 <!-- JQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>

@@ -45,13 +45,13 @@ public class HbBootstrapResourceConfigVO {
     public void setStemcellName(String stemcellName) {
         this.stemcellName = stemcellName;
     }
-    public String getInstanceType() {
-        return instanceType;
-    }
-    public void setInstanceType(String instanceType) {
-        this.instanceType = instanceType;
-    }
-    public String getVmPassword() {
+	public String getInstanceType() {
+		return instanceType;
+	}
+	public void setInstanceType(String instanceType) {
+		this.instanceType = instanceType;
+	}
+	public String getVmPassword() {
         return vmPassword;
     }
     public void setVmPassword(String vmPassword) {
