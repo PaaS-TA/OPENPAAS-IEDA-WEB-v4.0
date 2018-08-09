@@ -15,7 +15,9 @@
 var text_required_msg = '<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
 var select_required_msg='<spring:message code="common.select.vaildate.required.message"/>';//을(를) 선택하세요.
 var search_data_fail_msg ='클라우드 인프라 환경을 선택하세요.';
+var country_parent_code = '<spring:message code="common.code.country.code.parent"/>';//ieda_common_code country 조회
 var credentialConfigInfo = "";//인증서
+var countryCodes = null;
 var iaas = "";
 var resourceLayout = {
         layout2: {
@@ -54,7 +56,7 @@ var resourceLayout = {
                    { field: 'domain', caption: '도메인', size:'15%', style:'text-align:center;'},
                    { field: 'company', caption: '회사명', size:'10%', style:'text-align:center;'},
                    { field: 'jobTitle', caption: '부서명', size:'10%', style:'text-align:center;'},
-                   { field: 'emailAddress', caption: '이메일', size:'10%', style:'text-align:center;'}
+                   { field: 'emailAddress', caption: '이메일', size:'10%', style:'text-align:center;'},
                   ],
             onSelect : function(event) {
                 event.onComplete = function() {
@@ -66,45 +68,18 @@ var resourceLayout = {
             onUnselect : function(event) {
                 event.onComplete = function() {
                     resetForm();
+                    getCountryCodes();
                     $('#deleteBtn').attr('disabled', true);
                     return;
                 }
             },onLoad:function(event){
+            	
                 if(event.xhr.status == 403){
                     location.href = "/abuse";
                     event.preventDefault();
                 }
             },onError : function(event) {
-            },
-        form: { 
-            header: 'Edit Record',
-            name: 'regPopupDiv',
-            fields: [
-                { name: 'recid', type: 'text', html: { caption: 'ID', attr: 'size="10" readonly' } },
-                { name: 'fname', type: 'text', required: true, html: { caption: 'First Name', attr: 'size="40" maxlength="40"' } },
-                { name: 'lname', type: 'text', required: true, html: { caption: 'Last Name', attr: 'size="40" maxlength="40"' } },
-                { name: 'email', type: 'email', html: { caption: 'Email', attr: 'size="30"' } },
-                { name: 'sdate', type: 'date', html: { caption: 'Date', attr: 'size="10"' } }
-            ],
-            actions: {
-                Reset: function () {
-                    this.clear();
-                },
-                Save: function () {
-                    var errors = this.validate();
-                    if (errors.length > 0) return;
-                    if (this.recid == 0) {
-                        w2ui.grid.add($.extend(true, { recid: w2ui.grid.records.length + 1 }, this.record));
-                        w2ui.grid.selectNone();
-                        this.clear();
-                    } else {
-                        w2ui.grid.set(this.recid, this.record);
-                        w2ui.grid.selectNone();
-                        this.clear();
-                    }
-                }
             }
-        }
     }
 }
 
@@ -112,6 +87,7 @@ $(function(){
     $('#credential_Grid').w2layout(resourceLayout.layout2);
     w2ui.layout2.content('left', $().w2grid(resourceLayout.grid));
     w2ui['layout2'].content('main', $('#regPopupDiv').html());
+    
     doSearch();
     
     $("#deleteBtn").click(function(){
@@ -148,7 +124,7 @@ function settingDefaultInfo(){
     var selected = w2ui['credential_Grid'].getSelection();
     var record = w2ui['credential_Grid'].get(selected);
     
-    console.log(record +"testeeeeee" );
+    console.log(record + "" );
     
     if(record == null) {
         w2alert("인증서 설정 중 에러가 발생 했습니다.");
@@ -157,14 +133,46 @@ function settingDefaultInfo(){
     iaas = record.iaasType;
     $("input[name=credentialInfoId]").val(record.recid);
     $("input[name=credentialConfigName]").val(record.credentialConfigName);
-    $("select[name=iaasType] :selected").val(record.iaasType);
-    $("select[name=countryCode] :selected").html("<option value='"+record.countryCode+"' selected >"+record.countryCode+"</option>");
+    $("select[name=iaasType]").val(record.iaasType);
+    $("select[name=countryCode]").html("<option value='"+record.countryCode+"' selected >"+record.countryCode+"</option>");
     $("input[name=city]").val(record.city);
     $("input[name=domain]").val(record.domain);
     $("input[name=company]").val(record.company);
     $("input[name=jobTitle]").val(record.jobTitle);
     $("input[name=emailAddress]").val(record.emailAddress);
     
+}
+
+/********************************************************
+ * 설명 : 국가 코드 목록 조회
+ * 기능 : getCountryCodes
+ *********************************************************/
+function getCountryCodes() {
+    $.ajax({
+        type : "GET",
+        url : "/common/deploy/codes/countryCode/"+country_parent_code,
+        contentType : "application/json",
+        success : function(data, status) {
+            countryCodes = new Array();
+            if( data != null){
+                var options = "";
+                data.map(function(obj) {
+                	
+                    if( credentialConfigInfo.countryCode == obj.codeName ){
+                        options += "<option value='"+obj.codeName+"' :selected>"+obj.codeName+"</option>";
+                    }else{
+                        options += "<option value='"+obj.codeName+"'>"+obj.codeName+"</option>";
+                    }
+                });
+                console.log(options);
+                $("div select#countryCode select[name='countryCode']").html(options);
+            }
+        },
+        error : function(e, status) {
+            w2popup.unlock();
+            w2alert("국가 코드를 가져오는데 실패하였습니다.", "CF Deployment");
+        }
+    });
 }
 
 /********************************************************
@@ -175,10 +183,9 @@ function doSearch() {
     credentialConfigInfo="";//인증서
     iaas = "";
     resetForm();
-    
+    getCountryCodes();
     w2ui['credential_Grid'].clear();
     w2ui['credential_Grid'].load('/deploy/hbCfDeployment/credentialConfig/list');
-    //doButtonStyle(); 
 }
 
 /********************************************************
@@ -216,6 +223,7 @@ function registHbCfDeploymentCredentialConfigInfo(){
         data : JSON.stringify(credentialConfigInfo),
         success : function(data, status) {
             doSearch();
+            
         },
         error : function( e, status ) {
             w2popup.unlock();
@@ -245,6 +253,7 @@ function deleteHbCfDeploymentCredentialConfigInfo(id, credentialConfigName){
             w2popup.unlock();
             w2popup.close();
             doSearch();
+            
         }, error : function(request, status, error) {
             w2popup.unlock();
             w2popup.close();
@@ -294,8 +303,9 @@ function resetForm(status){
     $("input[name=company]").val("");
     $("input[name=jobTitle]").val("");
     $("input[name=emailAddress]").val("");
-
+  
     $("input[name=credentialInfoId]").val("");
+
     if(status=="reset"){
         w2ui['credential_Grid'].clear();
         $("select[name=iaasType]").html("<option value=''>인프라 유형을 선택하세요.</option>");
@@ -322,10 +332,10 @@ function resetForm(status){
     <input type="hidden" name="credentialInfoId" />
         <div class="w2ui-page page-0" style="">
            <div class="panel panel-default">
-               <div class="panel-heading"><b>인증서</b></div>
+               <div class="panel-heading"><b>인증서 정보 </b></div>
                <div class="panel-body" style="height:615px; overflow-y:auto;">
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;"> 배포 명</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;"> 인증서 명</label>
                        <div>
                            <input class="form-control" name = "credentialConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="인증서 명을 입력 하세요."/>
                        </div>
@@ -346,8 +356,8 @@ function resetForm(status){
                        <label style="width:40%;text-align: left;padding-left: 20px;"> 국가 코드</label>
                        <div>
                            <select class="form-control" id="countryCode" name="countryCode"  style="width: 320px; margin-left: 20px;">
-                               <option value=""> 국가 코드를 선택하세요. </option>
-                               <option value="KR"> KR </option>
+                              <!--  <option value=""> 국가 코드를 선택하세요. </option>
+                               <option value="KR"> KR </option> -->
                                
                            </select>
                        </div>

@@ -263,6 +263,234 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
 }
 
 
+/********************************************************
+ * 설명 : 네트워크 화면 설정
+ * 기능 : settingNetwork
+ *********************************************************/
+ function settingNetwork( index ){
+     if( iaas.toLowerCase() == 'aws' || iaas.toLowerCase() == "openstack" ){
+         addInternalNetworkInputs('#defaultNetworkInfoDiv_1', "#defaultNetworkInfoForm" );
+     }
+ }
+ 
+ /********************************************************
+  * 설명 : 네트워크 입력 추가
+  * 기능 : addInternalNetworkInputs
+  *********************************************************/
+  function addInternalNetworkInputs(preDiv, form){
+     w2popup.lock("Internal 네트워크 추가 중", true);
+     var index = Number(preDiv.split("_")[1])+1;
+     var div= preDiv.split("_")[0] + "_"+ index;
+     var body_div= "<div class='panel-body'>";
+     var field_div_label="<div class='w2ui-field'>"+"<label style='text-align: left; width: 36%; font-size: 11px;'>";
+     var text_style="type='text' style='display:inline-blcok; width:70%;'";
+     var html= "<div class='panel panel-info' style='margin-top:2%;'>";
+         html+= "<div  class='panel-heading' style='position:relative;'>";
+         html+=    "<b>Internal 네트워크</b>";
+         html+=    "<div style='position: absolute;right: 10px; top: 2px;'>";
+         html+=        '<span class="btn btn-info btn-sm" onclick="delInternalNetwork(\''+preDiv+'\', '+index+');">삭제</span>';
+         html+=    "</div>";
+         html+= "</div>";
+         html+= body_div;
+         if( iaas.toLowerCase() == "google" ){
+             html+= field_div_label + "네트워크 명" + "</label>";
+             html+= "<div style=' width: 60%;'>"+"<input name='networkName_"+index+"'" + text_style +" placeholder='네트워크 명을 입력하세요.'/>"+"</div></div>";
+             
+             html+= field_div_label + "서브넷 명" + "</label>"; 
+             html+= "<div style=' width: 60%;'>"+"<input name='subnetId_"+index+"'" + text_style +" placeholder='서브넷 명을 입력하세요.'/>"+"</div></div>";
+             
+             html+= field_div_label + "방화벽 규칙" + "</label>"; 
+             html+= "<div style=' width: 60%;'>"+"<input name='cloudSecurityGroups_"+index+"'" + text_style +" placeholder='예) internet, cf-security'/>"+"</div></div>";
+             
+             html+= field_div_label + "영역" + "</label>"; 
+             html+= "<div style=' width: 60%;'>"+"<input name='availabilityZone_"+index+"'" + text_style +" placeholder='예) asia-northeast1-a'/>"+"</div></div>";
+             
+         } else if( iaas.toLowerCase() == "azure" ){
+             html+= field_div_label + "네트워크 명" + "</label>";
+             html+= "<div style=' width: 60%;'>"+"<input name='networkName_"+index+"'" + text_style +" placeholder='네트워크 명을 입력하세요.'/>"+"</div></div>";
+             
+             html+= field_div_label + "서브넷 명" + "</label>"; 
+             html+= "<div style=' width: 60%;'>"+"<input name='subnetId_"+index+"'" + text_style +" placeholder='서브넷 명을 입력하세요.'/>"+"</div></div>";
+             
+             html+= field_div_label + "보안 그룹" + "</label>"; 
+             html+= "<div style=' width: 60%;'>"+"<input name='cloudSecurityGroups_"+index+"'" + text_style +" placeholder='예) bosh-security, cf-security'/>"+"</div></div>";
+         }
+         else if(iaas.toLowerCase() == "vsphere"){
+             html+= field_div_label + "포트 그룹명" + "</label>"; 
+             html+= "<div style=' width: 60%;'>"+"<input name='subnetId_"+index+"'" + text_style +" placeholder='포트 그룹명을 입력하세요.'/>"+"</div></div>";
+         }else{
+             html+= field_div_label + "서브넷 아이디" + "</label>"; 
+             html+="<div style=' width: 60%;'>"+"<input name='subnetId_"+index+"'" + text_style +" placeholder='서브넷 아이디를 입력하세요.'/>"+"</div></div>";
+             
+             html+= field_div_label + "보안 그룹" + "</label>"; 
+             html+= "<div style=' width: 60%;'>"+"<input name='cloudSecurityGroups_"+index+"'" + text_style +" placeholder='예) bosh-security, cf-security'/>"+"</div></div>";
+             
+             
+             if( iaas.toLowerCase() == "aws" ){
+                 html+= field_div_label + "가용 영역" + "</label>"; 
+                 html+= "<div style=' width: 60%;'>"+"<input name='availabilityZone_"+index+"'" + text_style +" placeholder='예) us-west-2'/>"+"</div></div>";
+             }
+         }
+         html+= field_div_label + "서브넷 범위" + "</label>"; 
+         html+= "<div style=' width: 60%;'>"+"<input name='subnetRange_"+index+"'" + text_style +" placeholder='예) 10.0.0.0/24'/>" + "</div></div>";
+         
+         html+= field_div_label + "게이트웨이" + "</label>"; 
+         html+= "<div style=' width: 60%;'>"+ "<input name='subnetGateway_"+index+"'" + text_style +" placeholder='예) 10.0.0.1'/>" + "</div></div>";
+         
+         html+= field_div_label + "DNS" + "</label>"; 
+         html+= "<div style=' width: 60%;'>"+ "<input name='subnetDns_"+index+"'" + text_style +" placeholder='예) 8.8.8.8'/>" + "</div></div>";
+        
+         html+= field_div_label + "IP할당 제외 대역" + "</label>"; 
+         html+=     "<div style=' width: 60%;'>";
+         html+=         "<input name='subnetReservedFrom_"+index+"' type='text' style='display:inline-block; width:32%;' placeholder='예) 10.0.0.10' />";
+         html+=         "<span style='width: 4%; text-align: center;'>&nbsp;&ndash; &nbsp;</span>";
+         html+=         "<input name='subnetReservedTo_"+index+"' type='text' style='display:inline-block; width:32%;' placeholder='예) 10.0.0.20' />";
+         html+=     "</div></div>";
+         
+         html+= field_div_label + "IP할당 대역(최소 20개)" + "</label>"; 
+         html+=     "<div style=' width: 60%;'>"+"<input name='subnetStaticFrom_"+index+"' type='text' style='display:inline-block; width:32%;' placeholder='예) 10.0.0.10' />";
+         html+=         "<span style='width: 4%; text-align: center;'>&nbsp;&ndash; &nbsp;</span>";
+         html+=         "<input name='subnetStaticTo_"+index+"' type='text' style='display:inline-block; width:32%;' placeholder='예) 10.0.0.20'/>";
+         html+=     "</div>";
+         html+= "</div></div></div>";
+         $(".w2ui-msg-body "+ div).show();
+         $(".w2ui-msg-body "+preDiv + " .addInternal").hide();
+         
+         $(form + " "+ div).html(html);
+         
+         createInternalNetworkValidate(index);
+         
+ }
+ 
+  /********************************************************
+   * 설명 : 네트워크 유효성 추가
+   * 기능 : createInternalNetworkValidate
+   *********************************************************/
+  function createInternalNetworkValidate(index){
+     var subnet_message="서브넷 아이디";
+     var zone_message = "가용 영역";
+     if( iaas.toLowerCase() == "google"){
+         $("[name*='networkName_"+index+"']").rules("add", {
+             required: function(){
+                 return checkEmpty($(".w2ui-msg-body input[name='networkName_"+index+"']").val());
+             }, messages: {required: "네트워크 명 "+text_required_msg}
+         });
+         subnet_message = "서브넷 명";
+         zone_message = "zone";
+     }else if(  iaas.toLowerCase() == "vsphere"){ 
+         subnet_message="포트 그룹명";
+     }
+     $("[name*='subnetId_"+index+"']").rules("add", {
+         required: function(){
+             return checkEmpty($(".w2ui-msg-body input[name='subnetId_"+index+"']").val());
+         }, messages: {required: subnet_message+text_required_msg}
+     });
+     $("[name*='subnetRange_"+index+"']").rules("add", {
+         required: function(){
+             return checkEmpty($(".w2ui-msg-body input[name='subnetRange_"+index+"']").val());
+         },ipv4Range : function(){
+             return $(".w2ui-msg-body input[name='subnetRange_"+index+"']").val();  
+         }, messages: {required: "서브넷 범위"+text_required_msg}
+     });
+     
+     $("[name*='subnetGateway_"+index+"']").rules("add", {
+         required: function(){
+             return checkEmpty($(".w2ui-msg-body input[name='subnetGateway_"+index+"']").val());
+         },ipv4: function(){
+             return $(".w2ui-msg-body input[name='subnetGateway_"+index+"']").val();  
+         }, messages: {required: "게이트웨이"+text_required_msg}
+     });
+     
+     $("[name*='subnetDns_"+index+"']").rules("add", {
+         required: function(){
+             return checkEmpty($(".w2ui-msg-body input[name='subnetDns_"+index+"']").val());
+         },ipv4: function(){
+             if( $(".w2ui-msg-body input[name='subnetDns_"+index+"']").val().indexOf(",") > -1 ){
+                 var list = ($(".w2ui-msg-body input[name='subnetDns_"+index+"']").val()).split(",");
+                 var flag = true;
+                 for( var i=0; i<list.length; i++ ){
+                     var val = validateIpv4(list[i].trim());
+                     if( !val ) flag = false;
+                 }
+                 if( !flag ) return "";
+                 else return list[0].trim();
+             }else{
+                 return $(".w2ui-msg-body input[name='subnetDns_"+index+"']").val();
+             }
+         }, messages: {required: "DNS"+text_required_msg}
+     });
+     
+     $("[name*='subnetReservedFrom_"+index+"']").rules("add", {
+         required: function(){
+             return checkEmpty($(".w2ui-msg-body input[name='subnetReservedFrom_"+index+"']").val());
+         },ipv4: function(){
+             return $(".w2ui-msg-body input[name='subnetReservedFrom_"+index+"']").val();  
+         }, messages: {required: "IP 할당 제외 대역"+text_required_msg}
+     });
+     
+     $("[name*='subnetReservedTo_"+index+"']").rules("add", {
+         required: function(){
+             return checkEmpty($(".w2ui-msg-body input[name='subnetReservedTo_"+index+"']").val());
+         },ipv4: function(){
+             return $(".w2ui-msg-body input[name='subnetReservedTo_"+index+"']").val();  
+         }, messages: {required: "IP 할당 제외 대역"+text_required_msg}
+     });
+     
+      $("[name*='subnetStaticFrom_"+index+"']").rules("add", {
+         required: function(){
+             return checkEmpty($(".w2ui-msg-body input[name='subnetStaticFrom_"+index+"']").val());
+         },ipv4: function(){
+             return $(".w2ui-msg-body input[name='subnetStaticFrom_"+index+"']").val();  
+         }, messages: {required: "IP 할당 대역"+text_required_msg}
+     }); 
+     
+      $("[name*='subnetStaticTo_"+index+"']").rules("add", {
+         required: function(){
+             return checkEmpty($(".w2ui-msg-body input[name='subnetStaticTo_"+index+"']").val());
+         },ipv4: function(){
+             return $(".w2ui-msg-body input[name='subnetStaticTo_"+index+"']").val();  
+         }, messages: {required: "IP 할당 대역"+text_required_msg}
+     }); 
+     
+     if( iaas.toLowerCase() != "vsphere" ){
+         $("[name*='cloudSecurityGroups_"+index+"']").rules("add", {
+             required: function(){
+                 return checkEmpty($(".w2ui-msg-body input[name='cloudSecurityGroups_"+index+"']").val());
+             }, messages: {required: "보안 그룹"+text_required_msg}
+         });
+     }
+     
+     if( iaas.toLowerCase() == "google" ){
+         $("[name*='networkName_"+index+"']").rules("add", {
+             required: function(){
+                 return checkEmpty($(".w2ui-msg-body input[name='networkName_"+index+"']").val());
+             }, messages: {required: "네트워크 명"+text_required_msg}
+         });
+     }
+     if( iaas.toLowerCase() == 'aws' || iaas.toLowerCase() == 'google' ){
+         $("[name*='availabilityZone_"+index+"']").rules("add", {
+             required: function(){
+                 return checkEmpty($(".w2ui-msg-body input[name='availabilityZone_"+index+"']").val());
+             }, messages: {required: zone_message + text_required_msg}
+         });
+     }
+     if( iaas.toLowerCase() == "azure" ){
+         $("[name*='networkName_"+index+"']").rules("add", {
+             required: function(){
+                 return checkEmpty($(".w2ui-msg-body input[name='networkName_"+index+"']").val());
+             }, messages: {required: "네트워크 명"+text_required_msg}
+         });
+     }
+     w2popup.unlock();
+ }
+
+ /********************************************************
+  * 설명 : ipv4 유효성 체크
+  * 기능 : validateIpv4
+  *********************************************************/
+ function validateIpv4(params){
+     return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(params);
+ }
 
 /********************************************************
  * 설명 : 화면 리사이즈시 호출
@@ -312,102 +540,18 @@ function resetForm(status){
 }
 
 /********************************************************
- * 설명 : 네트워크 입력 추가
- * 기능 : addInternalNetworkInputs
-*********************************************************/
-function addInternalNetworkInputs( preDiv, form ){
-    var index = Number(preDiv.split("_")[1])+1;
-    var divDisplay = preDiv.split("_")[0];
-    var div= preDiv.split("_")[0] + "_"+ index;
-    var body_div= "<div class='panel-body'>";
-    var field_div_label="<div class='w2ui-field'>"+"<label style='text-align: left; width: 40%; font-size: 11px;'>";
-    var text_style="type='text' style='display:inline-blcok; width:70%;'";
-    var inputIndex = index -1;
-    
-    var html= "<div class='panel panel-info' style='margin-top:2%;'>";
-        html+= "<div  class='panel-heading' style='position:relative;'>";
-        html+=    "<b>Internal 네트워크</b>";
-        html+=    "<div style='position: absolute;right: 10px; top: 2px;'>";
-        if( index == 2 ){
-            if( $(".w2ui-msg-body "+divDisplay+"_3").css("display") == "none" ){
-                html+= '<span class="btn btn-info btn-sm addInternal" onclick="addInternalNetworkInputs(\''+div+'\', \''+form+'\');">추가</span>';
-            }else{
-                html+= '<span class="btn btn-info btn-sm addInternal" style="display:none;" onclick="addInternalNetworkInputs(\''+div+'\', \''+form+'\');">추가</span>';
-            }
-        }
-        html+=        '&nbsp;&nbsp;<span class="btn btn-info btn-sm" onclick="delInternalNetwork(\''+preDiv+'\', '+index+');">삭제</span>';
-        html+=    "</div>";
-        html+= "</div>";
-        html+= body_div;
-        if( iaas.toLowerCase() == "google" ){
-            html+= field_div_label + "네트워크 명" + "</label>";
-            html+= "<div style='width: 60%'>"+"<input name='networkName_"+inputIndex+"'" + text_style +" placeholder='네트워크 명을 입력하세요.'/>"+"</div></div>";
-            
-            html+= field_div_label + "서브넷 명" + "</label>"; 
-            html+= "<div style='width: 60%'>"+"<input name='subnetId_"+inputIndex+"'" + text_style +" placeholder='서브넷 명을 입력하세요.'/>"+"</div></div>";
-            
-            html+= field_div_label + "방화벽 규칙" + "</label>"; 
-            html+= "<div style='width: 60%'>"+"<input name='cloudSecurityGroups_"+inputIndex+"'" + text_style +" placeholder='예) internet, cf-security'/>"+"</div></div>";
-            
-            html+= field_div_label + "영역" + "</label>"; 
-            html+= "<div style='width: 60%'>"+"<input name='availabilityZone_"+inputIndex+"'" + text_style +" placeholder='예) asia-northeast1-a'/>"+"</div></div>";
-            
-        }else if(iaas.toLowerCase() == "vsphere"){
-            html+= field_div_label + "포트 그룹명" + "</label>"; 
-            html+= "<div style='width: 60%'>"+"<input name='subnetId_"+inputIndex+"'" + text_style +" placeholder='포트 그룹명을 입력하세요.'/>"+"</div></div>";
-        }else if(iaas.toLowerCase() == "azure"){
-            html+= field_div_label + "네트워크 명" + "</label>";
-            html+= "<div style='width: 60%'>"+"<input name='networkName_"+inputIndex+"'" + text_style +" placeholder='네트워크 명을 입력하세요.'/>"+"</div></div>";
-            
-            html+= field_div_label + "서브넷 명" + "</label>"; 
-            html+= "<div style='width: 60%'>"+"<input name='subnetId_"+inputIndex+"'" + text_style +" placeholder='서브넷 명을 입력하세요.'/>"+"</div></div>";
-            
-            html+= field_div_label + "보안 그룹" + "</label>"; 
-            html+= "<div style='width: 60%'>"+"<input name='cloudSecurityGroups_"+inputIndex+"'" + text_style +" placeholder='예) internet, cf-security'/>"+"</div></div>";
-        }else{
-            html+= field_div_label + "시큐리티 그룹" + "</label>"; 
-            html+= "<div style='width: 60%'>"+"<input name='cloudSecurityGroups_"+inputIndex+"'" + text_style +" placeholder='예) bosh-security, cf-security'/>"+"</div></div>";
-            
-            html+= field_div_label + "서브넷 아이디" + "</label>"; 
-            html+="<div style='width: 60%'>"+"<input name='subnetId_"+inputIndex+"'" + text_style +" placeholder='서브넷 아이디를 입력하세요.'/>"+"</div></div>";
-            
-            if( iaas.toLowerCase() == "aws" ){
-                html+= field_div_label + "가용 영역" + "</label>"; 
-                html+= "<div style='width: 60%'>"+"<input name='availabilityZone_"+inputIndex+"'" + text_style +" placeholder='예) us-west-2'/>"+"</div></div>";
-            }
-        }
-        html+= field_div_label + "서브넷 범위" + "</label>"; 
-        html+= "<div style='width: 60%'>"+"<input name='subnetRange_"+inputIndex+"'" + text_style +" placeholder='예) 10.0.0.0/24'/>" + "</div></div>";
-        
-        html+= field_div_label + "게이트웨이" + "</label>"; 
-        html+= "<div style='width: 60%'>"+ "<input name='subnetGateway_"+inputIndex+"'" + text_style +" placeholder='예) 10.0.0.1'/>" + "</div></div>";
-        
-        html+= field_div_label + "DNS" + "</label>"; 
-        html+= "<div style='width: 60%'>"+ "<input name='subnetDns_"+inputIndex+"'" + text_style +" placeholder='예) 8.8.8.8'/>" + "</div></div>";
-       
-        html+= field_div_label + "IP할당 제외 대역" + "</label>"; 
-        html+=     "<div style='width: 60%'>";
-        html+=         "<input name='subnetReservedFrom_"+inputIndex+"' type='text' style='display:inline-block; width:32%;' placeholder='예) 10.0.0.10' />";
-        html+=         "<span style='width: 4%; text-align: center;'>&nbsp;&ndash; &nbsp;</span>";
-        html+=         "<input name='subnetReservedTo_"+inputIndex+"' type='text' style='display:inline-block; width:32%;' placeholder='예) 10.0.0.20' />";
-        html+=     "</div></div>";
-        
-        html+= field_div_label + "IP할당 대역(최소 20개)" + "</label>"; 
-        html+=     "<div style='width: 60%'>"+"<input name='subnetStaticFrom_"+inputIndex+"' type='text' style='display:inline-block; width:32%;' placeholder='예) 10.0.0.10' />";
-        html+=         "<span style='width: 4%; text-align: center;'>&nbsp;&ndash; &nbsp;</span>";
-        html+=         "<input name='subnetStaticTo_"+inputIndex+"' type='text' style='display:inline-block; width:32%;' placeholder='예) 10.0.0.20'/>";
-        html+=     "</div>";
-        html+= "</div></div></div>";
-        
-        //추가 버튼 hidden
-        $(".w2ui-msg-body "+ div).show();
-        $(".w2ui-msg-body "+preDiv + " .addInternal").hide();
-        $(form + " "+ div).html(html);
-        $(form + " " +div).css("display", "block");
-        createInternalNetworkValidate(inputIndex);
+ * 설명 : 네트워크 입력 삭제
+ * 기능 : delNetwork
+ *********************************************************/
+function delInternalNetwork(preDiv, index){
+     var div= preDiv.split("_")[0] + "_"+ index;
+     var form = preDiv.split("Div")[0]+"Form";
+     $(form + " "+ div).html("");
+     $(".w2ui-msg-body "+preDiv+" .addInternal").css("display","block");
 }
 
 </script>
+
 <div id="main">
     <div class="page_site">이종 CF Deployment > <strong>Network 정보 관리</strong></div>
     <!-- 사용자 목록-->
@@ -415,16 +559,13 @@ function addInternalNetworkInputs( preDiv, form ){
         <div class="title fl"> 네트워크 정보 목록</div>
     </div>
     <div id="network_Grid" style="width:100%;  height:700px;"></div>
-
 </div>
-
 
 <div id="regPopupDiv" hidden="true" >
     <form id="settingForm" action="POST" > <!-- id="defaultNetworkInfoForm"  -->
     <input type="hidden" name="networkInfoId" />
     
         <div class="w2ui-page page-0" style="">
-        
            <div class="panel panel-network">
                <div class="panel-heading"><b>네트워크 정보</b></div>
                 <div class="panel-body" >
