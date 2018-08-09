@@ -693,7 +693,7 @@ function resetForm(status){
                     </div>
                     
                     <div class="w2ui-field">
-                        <label style="width:40%;text-align: left;padding-left: 20px;">스냅샷기능 사용여부</label>
+                        <label style="width:43%;text-align: left;padding-left: 20px;">스냅샷기능 사용여부</label>
                         <div>
                             <span onclick="enableSnapshotsFn('true');" style="width:30%;"><label><input type="radio" name="enableSnapshots" value="true" />&nbsp;사용</label></span>
                             &nbsp;&nbsp;
@@ -713,18 +713,18 @@ function resetForm(status){
                         <span class="glyphicon glyphicon glyphicon-question-sign paastaMonitoring-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="click" data-html="true"></span>
                         </label>
                         <div style="width: 60%">
-                            <input name="paastaMonitoring" type="checkbox" id="paastaMonitoring" onclick="checkPaasTAMonitoringUseYn(this.value);"/>사용
+                            <input style="margin-left: 20px;" name="paastaMonitoring" type="checkbox" id="paastaMonitoring" onclick="checkPaasTAMonitoringUseYn(this.value);"/>사용
                         </div>
                     </div>
                     <div class="w2ui-field">
-                        <label style="width:60%;text-align: left;padding-left: 20px;">PaaS-TA 모니터링 Ingestor 서버 IP</label>
+                        <label style="width:40%;text-align: left;padding-left: 20px;">PaaS-TA 모니터링 Ingestor 서버 IP</label>
                         <div>
                             <input class="form-control" name = "ingestorIp" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)10.0.0.0"/>
                         </div>
                     </div>
                     
                     <div class="w2ui-field">
-                        <label style="width:60%;text-align: left;padding-left: 20px;">PaaS-TA 모니터링 Influxdb 서버 IP</label>
+                        <label style="width:40%;text-align: left;padding-left: 20px;">PaaS-TA 모니터링 Influxdb 서버 IP</label>
                         <div>
                             <input class="form-control" name = "influxdbIp" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)10.0.0.0"/>
                         </div>
