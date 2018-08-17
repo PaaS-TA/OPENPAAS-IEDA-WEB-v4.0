@@ -22,8 +22,8 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.common.web.security.SessionInfoDTO;
-import org.openpaas.ieda.deploy.api.director.dto.DirectorInfoDTO;
-import org.openpaas.ieda.deploy.api.director.utility.DirectorRestHelper;
+import org.openpaas.ieda.hbdeploy.api.director.dto.DirectorInfoDTO;
+import org.openpaas.ieda.hbdeploy.api.director.utility.DirectorRestHelper;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigDAO;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigVO;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dto.HbDirectorConfigDTO;
@@ -48,6 +48,52 @@ public class HbDirectorConfigService  {
     final private static String SEPARATOR = System.getProperty("file.separator");
     final private static String CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateCredentialDir() + SEPARATOR;
     private final static Logger LOGGER = LoggerFactory.getLogger(HbDirectorConfigService.class);
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : Url을 통한 디렉터 정보 조회
+     * @title : getSelectedDirectorByUrl
+     * @return : HbDirectorConfigVO
+    *****************************************************************/
+    public HbDirectorConfigVO getSelectedDirectorByUrl(String directorUrl){
+        List<HbDirectorConfigVO> listvo = dao.selectHbDirectorConfigByDirectorUrl(directorUrl);
+        HbDirectorConfigVO selectedDirector = new HbDirectorConfigVO();
+        if(listvo != null){
+            selectedDirector = listvo.get(0);
+        }else{
+            throw new CommonException("notfound.director.exception",
+                    "해당하는 디렉터가 존재하지 않습니다.", HttpStatus.NOT_FOUND);
+        }
+        if( selectedDirector != null ) {
+            boolean flag = checkDirectorConnect(selectedDirector.getDirectorUrl(),
+                                                 selectedDirector.getDirectorPort(),
+                                                 selectedDirector.getUserId(),
+                                                 selectedDirector.getUserPassword());
+            selectedDirector.setConnect(flag);
+        }
+        return selectedDirector;
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : HttpClient에 요청하여 설치관리자 존재 유무 확인
+     * @title : checkDirectorConnect
+     * @return : boolean
+    *****************************************************************/
+    public boolean checkDirectorConnect(String directorUrl, int port, String userId, String password) {
+        boolean flag = true;
+        try {
+            HttpClient client = DirectorRestHelper.getHttpClient(port);
+            GetMethod get = new GetMethod(DirectorRestHelper.getInfoURI(directorUrl, port)); 
+            get = (GetMethod)DirectorRestHelper.setAuthorization(userId, password, (HttpMethodBase)get); 
+            client.executeMethod(get);
+        } catch (RuntimeException e) {
+            if( LOGGER.isErrorEnabled() ){ LOGGER.error( e.getMessage() );}
+        } catch (Exception e) {
+            return false;
+        }
+        return flag;
+    }
     
     /***************************************************
      * @param directorType 

@@ -14,7 +14,6 @@ public interface HbDirectorConfigDAO {
     ***************************************************/
     int insertHbDirector(@Param("director")HbDirectorConfigVO directorConfig);
     
-    
     /***************************************************
     * @project : Paas 플랫폼 설치 자동화
     * @description :: 디렉터 삭제

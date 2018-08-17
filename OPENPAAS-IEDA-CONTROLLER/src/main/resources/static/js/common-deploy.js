@@ -17,6 +17,7 @@ function getDefaultDirector(url, type) {
         success : function(data) {
             if (!checkEmpty(data)) {
                 if(type!="hybrid"){
+                	console.log("directorInfodiv : "+directorInfoDiv);
                     $("#isDefaultDirector").html(directorInfoDiv);
                     setDefaultDirectorInfo(data);
                 } else{
