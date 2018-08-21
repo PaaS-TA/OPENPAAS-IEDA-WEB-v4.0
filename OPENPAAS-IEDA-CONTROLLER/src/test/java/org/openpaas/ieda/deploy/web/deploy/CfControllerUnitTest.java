@@ -449,9 +449,6 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
         dto.setMediumDisk("8192");
         dto.setMediumFlavor("m1.medium");
         dto.setMediumRam("111");
-        dto.setRunnerCpu("4");
-        dto.setRunnerDisk("1");
-        dto.setRunnerRam("2313");
         dto.setSmallCpu("1");
         dto.setSmallDisk("123");
         dto.setSmallRam("8192");
@@ -495,7 +492,6 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
         dto.setDeployType("cf");
         dto.setNet("cf-net");
         dto.setSeq("1");
-        dto.setPublicStaticIP("172.16.100.1");
         dto.setSubnetRange("/24");
         dto.setSubnetGateway("1");
         dto.setSubnetDns("8.8.8.8");
@@ -521,7 +517,6 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
         vo.setId(1);
         vo.setCreateUserId("admin");
         vo.setUpdateUserId("admin");
-        vo.setPublicStaticIP("1.1.1.1");
         vo.setDeployType("cf");
         vo.setNet("network");
         vo.setSeq(1);

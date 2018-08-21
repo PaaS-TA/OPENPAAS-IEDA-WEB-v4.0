@@ -204,7 +204,7 @@ public class DirectorConfigService  {
         try{
             // bosh-env에 로그인
             boshEnvAliasLoginSequence(directorConfig);
-            // 로그인 판별
+             // 로그인 판별
             int statusResult = isExistBoshEnvLogin(directorConfig.getDirectorUrl(), 
                     directorConfig.getDirectorPort(), 
                     directorConfig.getUserId(), 

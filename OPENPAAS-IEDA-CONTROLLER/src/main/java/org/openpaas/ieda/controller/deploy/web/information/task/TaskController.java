@@ -9,10 +9,10 @@ import javax.validation.Valid;
 import javax.websocket.server.ServerEndpoint;
 
 import org.openpaas.ieda.controller.common.BaseController;
+import org.openpaas.ieda.deploy.api.task.TaskListDTO;
 import org.openpaas.ieda.deploy.web.information.task.dto.TaskDTO;
 import org.openpaas.ieda.deploy.web.information.task.service.TaskAsyncService;
 import org.openpaas.ieda.deploy.web.information.task.service.TaskService;
-import org.openpaas.ieda.hbdeploy.api.task.TaskListDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

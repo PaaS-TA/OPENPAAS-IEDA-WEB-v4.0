@@ -38,7 +38,6 @@ import org.openpaas.ieda.deploy.web.common.dao.ManifestTemplateVO;
 import org.openpaas.ieda.deploy.web.common.dto.KeyInfoDTO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dao.CfDAO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dao.CfVO;
-import org.openpaas.ieda.deploy.web.deploy.diego.dao.DiegoDAO;
 import org.openpaas.ieda.deploy.web.information.iassConfig.dao.IaasConfigMgntDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +54,6 @@ import org.yaml.snakeyaml.Yaml;
 public class CommonDeployService{
     
     @Autowired CfDAO cfDao;
-    @Autowired DiegoDAO diegoDao;
     @Autowired CommonDeployDAO commonDao;
     @Autowired IaasConfigMgntDAO iaasConfigDao;
     @Autowired MessageSource message;

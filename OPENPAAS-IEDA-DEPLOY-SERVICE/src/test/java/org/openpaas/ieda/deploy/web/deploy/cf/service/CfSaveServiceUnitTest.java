@@ -333,9 +333,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
         dto.setMediumDisk("8192");
         dto.setMediumFlavor("m1.medium");
         dto.setMediumRam("111");
-        dto.setRunnerCpu("4");
-        dto.setRunnerDisk("1");
-        dto.setRunnerRam("2313");
         dto.setSmallCpu("1");
         dto.setSmallDisk("123");
         dto.setSmallRam("8192");
@@ -387,7 +384,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
         vo.setId(1);
         vo.setNet("internal");
         vo.setNetworkName("netName");
-        vo.setPublicStaticIP("172.168.100.100");
         vo.setSeq(1);
         vo.setSubnetDns("8.8.8.8");
         vo.setSubnetGateway("192.168.1.1");
@@ -405,7 +401,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
         vo.getId();
         vo.getNet();
         vo.getNetworkName();
-        vo.getPublicStaticIP();
         vo.getSeq();
         vo.getSubnetDns();
         vo.getSubnetGateway();
@@ -421,7 +416,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
             vo = new NetworkVO();
             vo.setNet("internal");
             vo.setNetworkName("netName");
-            vo.setPublicStaticIP("172.168.100.101");
             vo.setSeq(1);
             vo.setSubnetDns("8.8.8.8");
             vo.setSubnetGateway("192.168.2.1");
@@ -435,7 +429,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
             vo = new NetworkVO();
             vo.setNet("internal");
             vo.setNetworkName("netName2");
-            vo.setPublicStaticIP("172.168.100.102");
             vo.setSeq(1);
             vo.setSubnetDns("8.8.8.8");
             vo.setSubnetGateway("192.168.3.1");
@@ -464,7 +457,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
         dto.setDeployType("cf");
         dto.setNet("cf-net");
         dto.setSeq("1");
-        dto.setPublicStaticIP("172.16.100.1");
         dto.setSubnetRange("/24");
         dto.setSubnetGateway("1");
         dto.setSubnetDns("8.8.8.8");
@@ -482,7 +474,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
             dto.setDeployType("cf");
             dto.setNet("cf-net");
             dto.setSeq("1");
-            dto.setPublicStaticIP("172.16.100.1");
             dto.setSubnetRange("/24");
             dto.setSubnetGateway("1");
             dto.setSubnetDns("8.8.8.8");
@@ -494,7 +485,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
             dto.setAvailabilityZone("us-west-1");
             list.add(dto);
         }
-        dto.getPublicStaticIP();
         dto.getSeq();
         dto.getBoshId();
         dto.getIaas();
@@ -567,10 +557,7 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
         vo.setMediumDisk(500);
         vo.setMediumFlavor("m1.medium");
         vo.setMediumRam(500);
-        vo.setRunnerCpu(1500);
-        vo.setRunnerDisk(1500);
         vo.setRunnerFlavor("m1.xlarge");
-        vo.setRunnerRam(1500);
         vo.setSmallFlavor("m1.small");
         vo.setSmallCpu(1);
         vo.setSmallRam(1000);

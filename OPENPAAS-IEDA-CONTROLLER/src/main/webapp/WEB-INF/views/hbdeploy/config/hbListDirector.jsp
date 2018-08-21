@@ -438,7 +438,7 @@ function credsChangeKeyPathStyle( showDiv, hideDiv ){
     
     <!-- 디렉터 목록-->
     <div class="pdt20">
-        <div class="title fl">Public Cloud 디렉터 목록</div>
+        <div class="title fl">AWS Cloud 디렉터 목록</div>
         <div class="fr"> 
         <!-- Btn -->
             <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_ADD')">
@@ -454,7 +454,7 @@ function credsChangeKeyPathStyle( showDiv, hideDiv ){
     <div id="config_directorGrid" style="width:100%; height:270px"></div>
     
     <div class="pdt20">
-        <div class="title fl">Private Cloud 디렉터 정보</div>
+        <div class="title fl">OPENSTACK Cloud 디렉터 정보</div>
         <div class="fr"> 
             <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_ADD')">
             <span id="addSetting2" class="btn btn-primary" style="width:130px" >설정 추가</span>

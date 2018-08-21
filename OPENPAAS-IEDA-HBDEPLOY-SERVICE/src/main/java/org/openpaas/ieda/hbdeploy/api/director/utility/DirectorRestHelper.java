@@ -19,8 +19,8 @@ import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.hbdeploy.api.director.dto.ResponseTaskOuput;
 import org.openpaas.ieda.hbdeploy.api.director.utility.DirectorRestHelper;
 import org.openpaas.ieda.hbdeploy.api.director.utility.ExSSLSocketFactory;
-import org.openpaas.ieda.hbdeploy.api.task.TaskInfoDTO;
-import org.openpaas.ieda.hbdeploy.api.task.TaskOutputDTO;
+import org.openpaas.ieda.hbdeploy.api.task.HbTaskInfoDTO;
+import org.openpaas.ieda.hbdeploy.api.task.HbTaskOutputDTO;
 import org.openpaas.ieda.deploy.web.common.service.CommonDeployUtils;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigVO;
 import org.slf4j.Logger;
@@ -422,7 +422,7 @@ public class DirectorRestHelper {
                     break;
                 }
                 //응답 결과 task 상태 정보를 가져온다.
-                TaskInfoDTO taskInfo = mapper.readValue(getTaskStaus.getResponseBodyAsString(), TaskInfoDTO.class);
+                HbTaskInfoDTO taskInfo = mapper.readValue(getTaskStaus.getResponseBodyAsString(), HbTaskInfoDTO.class);
                 
                 GetMethod getTaskOutput = new GetMethod(DirectorRestHelper.getTaskOutputURI(selectedDirector.getDirectorUrl(), selectedDirector.getDirectorPort(), taskId, logType));
                 getTaskOutput = (GetMethod) DirectorRestHelper.setAuthorization(selectedDirector.getUserId(), selectedDirector.getUserPassword(), (HttpMethodBase) getTaskOutput);
@@ -480,11 +480,11 @@ public class DirectorRestHelper {
                         String outputs2 = outputs1.substring(0, outputs1.length() - 1).replace("\n", ",");
                         String outputs = "[" + outputs2 + "]";
                         
-                        List<TaskOutputDTO> taskOutputList = mapper.readValue(outputs, new TypeReference<List<TaskOutputDTO>>() {
+                        List<HbTaskOutputDTO> taskOutputList = mapper.readValue(outputs, new TypeReference<List<HbTaskOutputDTO>>() {
                         });
     
                         List<String> responseMessage = new ArrayList<String>();
-                        for (TaskOutputDTO output : taskOutputList) {
+                        for (HbTaskOutputDTO output : taskOutputList) {
     
                             if (output.getStage() != null && (lastStage == null || !lastStage.equalsIgnoreCase(output.getStage()))) {
                                     responseMessage.add("");
@@ -589,7 +589,7 @@ public class DirectorRestHelper {
                     break;
                 }
                 
-                TaskInfoDTO taskInfo = mapper.readValue(getTaskStaus.getResponseBodyAsString(), TaskInfoDTO.class);
+                HbTaskInfoDTO taskInfo = mapper.readValue(getTaskStaus.getResponseBodyAsString(), HbTaskInfoDTO.class);
                 GetMethod getTaskOutput = new GetMethod(DirectorRestHelper.getTaskOutputURI( selectedDirector.getDirectorUrl(), selectedDirector.getDirectorPort(), taskId, logType));
                 getTaskOutput = (GetMethod) DirectorRestHelper.setAuthorization(selectedDirector.getUserId(), selectedDirector.getUserPassword(), (HttpMethodBase) getTaskOutput);
                 String range = "bytes=" + offset + "-";
@@ -665,7 +665,7 @@ public class DirectorRestHelper {
                     break;
                 }
 
-                TaskInfoDTO taskInfo = mapper.readValue(getTaskStaus.getResponseBodyAsString(), TaskInfoDTO.class);
+                HbTaskInfoDTO taskInfo = mapper.readValue(getTaskStaus.getResponseBodyAsString(), HbTaskInfoDTO.class);
 
                 GetMethod getTaskOutput = new GetMethod(DirectorRestHelper.getTaskOutputURI(
                         selectedDirector.getDirectorUrl(), selectedDirector.getDirectorPort(), taskId, logType));
@@ -709,10 +709,10 @@ public class DirectorRestHelper {
                         String outputs2 = outputs1.substring(0, outputs1.length() - 1).replace("\n", ",");
                         String outputs = "[" + outputs2 + "]";
     
-                        List<TaskOutputDTO> taskOutputList = mapper.readValue(outputs, new TypeReference<List<TaskOutputDTO>>() {});
+                        List<HbTaskOutputDTO> taskOutputList = mapper.readValue(outputs, new TypeReference<List<HbTaskOutputDTO>>() {});
     
                         List<String> responseMessage = new ArrayList<String>();
-                        for (TaskOutputDTO output : taskOutputList) {
+                        for (HbTaskOutputDTO output : taskOutputList) {
                             if (output.getStage() != null && ( lastStage == null || !lastStage.equalsIgnoreCase(output.getStage()) )) {
                                 responseMessage.add("");
                                 responseMessage.add("  Started    " + output.getStage());

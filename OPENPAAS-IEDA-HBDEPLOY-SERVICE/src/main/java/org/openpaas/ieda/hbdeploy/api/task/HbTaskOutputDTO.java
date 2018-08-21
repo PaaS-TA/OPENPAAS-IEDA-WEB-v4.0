@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TaskOutputDTO {
+public class HbTaskOutputDTO {
     
     private double time; //시간
     private String stage; //단계

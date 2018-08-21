@@ -196,89 +196,6 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
     }
 
     /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : CF 배포 파일 생성 중 Manifest 결과 값이 NULL일 경우 테스트
-     * @title :testCreateSettingFileNullPoint
-     * @return :void
-     ***************************************************/
-    @Test(expected=CommonException.class)
-    public void testCreateSettingFileNullPoint() {
-        when(mockCommonDeployDAO.selectManifetTemplate(anyString(), anyString(), anyString(), anyString())).thenReturn(null);
-        CfVO expectCfInfo = setCfInfo("default");
-        mockCfService.createSettingFile(expectCfInfo);
-    }
-    
-    /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : CF 배포 파일 생성 중 해당 Version의 Input 파일이 존재 하지 않을 경우 테스트
-     * @title :testCreateSettingFileInputFileNullPoint
-     * @return :void
-     ***************************************************/
-    @Test(expected=CommonException.class)
-    public void testCreateSettingFileInputFileNullPoint() {
-        ManifestTemplateVO manifestTemplateInfo = setManifestTemplateInfo("default");
-        when(mockCommonDeployDAO.selectManifetTemplate(anyString(), anyString(), anyString(), anyString())).thenReturn(manifestTemplateInfo);
-        CfVO expectCfInfo = setCfInfo("default");
-        mockCfService.createSettingFile(expectCfInfo);
-    }
-    
-    /***************************************************
-    * @project : Paas 플랫폼 설치 자동화
-    * @description : Option Manifest 템플릿 정보 설정 테스트
-    * @title : testSetOptionManifestTemplateInfo
-    * @return : void
-    ***************************************************/
-    @Test
-    public void testSetOptionManifestTemplateInfo(){
-        ManifestTemplateVO manifestTemplateInfo = setManifestTemplateInfo("default");
-        CfVO expectCfInfo = setCfInfo("default");
-        ManifestTemplateVO vo = new ManifestTemplateVO();
-        mockCfService.setOptionManifestTemplateInfo(manifestTemplateInfo, vo, expectCfInfo);
-    }
-    
-    /***************************************************
-    * @project : Paas 플랫폼 설치 자동화
-    * @description : Option Manifest 템플릿 정보가 존재 하지 않을 경우 테스트
-    * @title : testSetOptionManifestTemplateInfoEmpty
-    * @return : void
-    ***************************************************/
-    @Test
-    public void testSetOptionManifestTemplateInfoEmpty(){
-        ManifestTemplateVO manifestTemplateInfo = setManifestTemplateInfo("empty");
-        CfVO expectCfInfo = setCfInfo("default");
-        ManifestTemplateVO vo = new ManifestTemplateVO();
-        mockCfService.setOptionManifestTemplateInfo(manifestTemplateInfo, vo, expectCfInfo);
-    }
-    
-    /***************************************************
-    * @project : Paas 플랫폼 설치 자동화
-    * @description : Option Manifest 템플릿 정보가 Diego 사용여부 사용 인 경우 테스트
-    * @title : testSetOptionManifestTemplateInfoDiegoY
-    * @return : void
-    ***************************************************/
-    @Test
-    public void testSetOptionManifestTemplateInfoDiegoY(){
-        ManifestTemplateVO manifestTemplateInfo = setManifestTemplateInfo("default");
-        CfVO expectCfInfo = setCfInfo("diego");
-        ManifestTemplateVO vo = new ManifestTemplateVO();
-        mockCfService.setOptionManifestTemplateInfo(manifestTemplateInfo, vo, expectCfInfo);
-    }
-    
-    /***************************************************
-    * @project : Paas 플랫폼 설치 자동화
-    * @description : Option Manifest 템플릿 정보가 PaaS-ta 모니터링 사용여부 사용 인 경우 테스트
-    * @title : testSetOptionManifestTemplateInfoPaasTaY
-    * @return : void
-    ***************************************************/
-    @Test
-    public void testSetOptionManifestTemplateInfoPaasTaY(){
-        ManifestTemplateVO manifestTemplateInfo = setManifestTemplateInfo("default");
-        CfVO expectCfInfo = setCfInfo("paas-ta");
-        ManifestTemplateVO vo = new ManifestTemplateVO();
-        mockCfService.setOptionManifestTemplateInfo(manifestTemplateInfo, vo, expectCfInfo);
-    }
-    
-    /***************************************************
     * @project : Paas 플랫폼 설치 자동화
     * @description : CF 단순 레코드 삭제  테스트
     * @title : testDeleteCfInfoRecord
@@ -291,84 +208,8 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
         mockCfService.deleteCfInfoRecord(dto);
     }
     
-    /***************************************************
-    * @project : Paas 플랫폼 설치 자동화
-    * @description : OPENSTACK CF 정보 Replace Test
-    * @title : testSetReplaceItems
-    * @return : void
-    ***************************************************/
-    @Test
-    public void testSetReplaceItemsOpenstack(){
-        CfVO expectCfInfo = setCfInfo("paas-ta");
-        mockCfService.setReplaceItems(expectCfInfo, "openstack");
-    }
-    
-    /***************************************************
-    * @project : Paas 플랫폼 설치 자동화
-    * @description : VSPHERE CF 정보 Replace Test
-    * @title : testSetReplaceItems
-    * @return : void
-    ***************************************************/
-    @Test
-    public void testSetReplaceItemsVsphere(){
-        CfVO expectCfInfo = setCfInfo("vsphere");
-        mockCfService.setReplaceItems(expectCfInfo, "vsphere");
-    }
-    
-    /***************************************************
-    * @project : Paas 플랫폼 설치 자동화
-    * @description : AWS CF 정보 Replace Test
-    * @title : testSetReplaceItemsAws
-    * @return : void
-    ***************************************************/
-    @Test
-    public void testSetReplaceItemsAws(){
-        CfVO expectCfInfo = setCfInfo("aws");
-        mockCfService.setReplaceItems(expectCfInfo, "aws");
-    }
-    
-    /***************************************************
-    * @project : Paas 플랫폼 설치 자동화
-    * @description : Google CF 정보 Replace Test
-    * @title : testSetReplaceItemsGoogle
-    * @return : void
-    ***************************************************/
-    @Test
-    public void testSetReplaceItemsGoogle(){
-        
-        when(mockCommonCodeDAO.selectCommonCodeList(anyString())).thenReturn(setCommonCodeListInfo());
-        CfVO expectCfInfo = setCfInfo("google");
-        mockCfService.setReplaceItems(expectCfInfo, "google");
-    }
-    
-    /***************************************************
-    * @project : Paas 플랫폼 설치 자동화
-    * @description : Google CF 정보 Replace Test
-    * @title : testSetReplaceItemsGoogle
-    * @return : void
-    ***************************************************/
-    @Test
-    public void testSetReplaceItemsAzure(){
-        
-        when(mockCommonCodeDAO.selectCommonCodeList(anyString())).thenReturn(setCommonCodeListInfo());
-        CfVO expectCfInfo = setCfInfo("azure");
-        mockCfService.setReplaceItems(expectCfInfo, "azure");
-    }
-    
-    
-    /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description :  CF 고급 설정 정보 ReplaceItemDTO에 설정
-     * @title : testSetReplaceItmesFromJobsInfo
-     * @return : void
-    ***************************************************/
-    @Test
-    public void testSetReplaceItmesFromJobsInfo() {
-        CfVO vo = setJobsReplaceItems();
-        mockCfService.setReplaceItmesFromJobsInfo(vo, new ArrayList<ReplaceItemDTO>());
-        
-    }
-    
+
+
     /***************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description : Jobs 정보 설정
@@ -529,10 +370,7 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
         vo.setMediumDisk(500);
         vo.setMediumFlavor("m1.medium");
         vo.setMediumRam(500);
-        vo.setRunnerCpu(1500);
-        vo.setRunnerDisk(1500);
         vo.setRunnerFlavor("m1.xlarge");
-        vo.setRunnerRam(1500);
         vo.setSmallFlavor("m1.small");
         vo.setSmallCpu(1);
         vo.setSmallRam(1000);
@@ -558,9 +396,6 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
         vo.getLargeCpu();
         vo.getLargeRam();
         vo.getLargeDisk();
-        vo.getRunnerCpu();
-        vo.getRunnerRam();
-        vo.getRunnerDisk();
         vo.getCreateUserId();
         vo.getUpdateUserId();
         return vo;
@@ -583,7 +418,6 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
         vo.setId(1);
         vo.setNet("internal");
         vo.setNetworkName("netName");
-        vo.setPublicStaticIP("172.168.100.100");
         vo.setSeq(1);
         vo.setSubnetDns("8.8.8.8");
         vo.setSubnetGateway("192.168.1.1");
@@ -601,7 +435,6 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
         vo.getId();
         vo.getNet();
         vo.getNetworkName();
-        vo.getPublicStaticIP();
         vo.getSeq();
         vo.getSubnetDns();
         vo.getSubnetGateway();
@@ -617,7 +450,6 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
             vo = new NetworkVO();
             vo.setNet("internal");
             vo.setNetworkName("netName");
-            vo.setPublicStaticIP("172.168.100.101");
             vo.setSeq(1);
             vo.setSubnetDns("8.8.8.8");
             vo.setSubnetGateway("192.168.2.1");
@@ -631,7 +463,6 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
             vo = new NetworkVO();
             vo.setNet("internal");
             vo.setNetworkName("netName2");
-            vo.setPublicStaticIP("172.168.100.102");
             vo.setSeq(1);
             vo.setSubnetDns("8.8.8.8");
             vo.setSubnetGateway("192.168.3.1");
@@ -647,7 +478,6 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
             vo = new NetworkVO();
             vo.setNet("EXTERNAL");
             vo.setNetworkName("netName3");
-            vo.setPublicStaticIP("172.168.100.102");
             list.add(vo);
         }
         return list;
