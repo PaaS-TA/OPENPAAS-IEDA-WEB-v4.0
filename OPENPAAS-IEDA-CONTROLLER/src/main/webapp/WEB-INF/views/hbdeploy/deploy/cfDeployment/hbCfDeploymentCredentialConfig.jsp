@@ -164,8 +164,7 @@ function getCountryCodes() {
                         options += "<option value='"+obj.codeName+"'>"+obj.codeName+"</option>";
                     }
                 });
-                console.log(options);
-                $("div select#countryCode select[name='countryCode']").html(options);
+                $("select#countryCode").html(options);
             }
         },
         error : function(e, status) {
@@ -312,7 +311,7 @@ function resetForm(status){
         $("select[name=countryCode]").html("<option value=''>국가 코드를 선택하세요.</option>");
         doSearch();
     }
-    document.getElementById("settingForm").reset();
+    document.getElementById(" ").reset();
 }
 
 </script>

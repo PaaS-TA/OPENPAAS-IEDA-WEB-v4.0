@@ -242,29 +242,62 @@ function deleteHbCfDeploymentDefaultConfigInfo(id, deploymentName){
     });
 }
 
+/********************************************************
+ * 설명 : CF Deployment version 명 조회
+ * 기능 : getCfDeployment
+ *********************************************************/
+ function getCfDeploymentVersionList1(iaasType) {
+    var option ="";
+    
+    $.ajax({
+        type : "GET",
+        url :"/common/deploy/list/releaseInfo/cfDeployment/"+iaasType, 
+        contentType : "application/json",
+        success : function(data, status) {
+            releases = new Array();
+            if( data != null){
+                option = "<option value=''>CF Deployment를 선택하세요.</option>";
+                data.map(function(obj) {
+                    console.log( obj.releaseType +"TEST data"+ obj.templateVersion +"TEST AAA");
+                    option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"'>"+obj.releaseType+"/"+obj.templateVersion+"</option>";    
+                    /*   if( defaultConfigInfo.releaseName == obj.releaseType && defaultConfigInfo.releaseVersion == obj.templateVersion){
+                       option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"' selected>"+obj.releaseType+"/"+obj.templateVersion+"</option>";
+                    }else{
+                    } */
+                });
+            }
+            $("select#cfDeploymentVersion").html(option);
+            //setInputDisplay(defaultInfo.releaseName+"/"+defaultInfo.releaseVersion);
+            //setDisabledMonitoring(defaultInfo.releaseName+"/"+defaultInfo.releaseVersion);
+        },
+        error : function(e, status) {
+            w2popup.unlock();
+            w2alert("Cf Deployment List 를 가져오는데 실패하였습니다.", "CF Deployment");
+        }
+    });
+} 
 /******************************************************************
  * 기능 : getCfDeplymentVersionList
  * 설명 : CF Deploymnet 버전 목록 조회
  ***************************************************************** */
-function getCfDeploymentVersionList(iaasType){
+ function getCfDeploymentVersionList(iaasType){
     var option = "";
     if(iaasType != null){
         if("aws"== iaasType ){
             option += "<option value=''> CF Deployment 버전을 선택하세요.</option>";
-            option += "<option value='v1a'> Cf Ver 1 </option>";
-            option += "<option value='v2a'> Cf Ver 2 </option>";
+            option += "<option value='v1a'> v3.3.0 </option>";
+            option += "<option value='v2a'> v3.2.0 </option>";
         }else if("openstack" == iaasType ){
             option += "<option value=''> CF Deployment 버전을 선택하세요.</option>";
-            option += "<option value='v1'> Cf Ver 10 </option>";
-            option += "<option value='v2'> Cf Ver 20 </option>";
+            option += "<option value='v1'> v3.2.0 </option>";
+            option += "<option value='v2'> v2.1.0 </option>";
         }
         
     }else if (iaasType == null){
             option = "<option value=''> 인프라 환경을 먼저 선택하세요.</option>";
     }
-
     $("#cfDeploymentVersion").html(option);
-} 
+}  
 
 /********************************************************
  * 설명 : 화면 리사이즈시 호출

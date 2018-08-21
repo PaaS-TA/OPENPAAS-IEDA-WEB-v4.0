@@ -289,7 +289,7 @@ function getCfDeployment() {
                         option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"'>"+obj.releaseType+"/"+obj.templateVersion+"</option>";    
                     }
                 });
-               
+            
             }
             $(".w2ui-msg-body select[name='cfdeployment']").html(option);
             //setInputDisplay(defaultInfo.releaseName+"/"+defaultInfo.releaseVersion);
@@ -1105,7 +1105,7 @@ function getStamcellList() {
     });
 }
 /********************************************************
- * 설명 : 인스턴스 정보  팝업
+ * 설명 : 인스턴스 정보 팝업
  * 기능 : instanceInfoPopup
  *********************************************************/
  function instanceInfoPopup(){
@@ -1338,7 +1338,7 @@ function instanceControl(e){
 //              $(e).val("1");
          }
          if( $(e).parent().find("p").length == 0 ){
-             $(e).parent().append("<p>100까지 숫자만 입력 가능 합니다.</p>"); //aaabbbccc
+             $(e).parent().append("<p>100까지 숫자만 입력 가능 합니다.</p>"); 
          }
      }
 }
@@ -1371,9 +1371,9 @@ function saveResourceInfo(type) {
             largeRam         : $(".w2ui-msg-body input[name='largeFlavorRam']").val(),
             largeDisk        : $(".w2ui-msg-body input[name='largeFlavorDisk']").val(),
     }
+    
     if (type == 'after') {
         //Server send Cf Info
-        
         $.ajax({
             type : "PUT",
             url : "/deploy/"+menu+"/install/saveResourceInfo",

@@ -187,7 +187,7 @@ function doButtonStyle() {
 function registBootstrapResourceConfigInfo(){
     w2popup.lock("등록 중입니다.", true);
     resourceConfigInfo = {
-    		id                     : $("input[name=resourceInfoId]").val(),
+            id                     : $("input[name=resourceInfoId]").val(),
             iaasType               : $("select[name=iaasType]").val(),
             resourceConfigName     : $("input[name=resourceConfigName]").val(),
             stemcellName           : $("select[name=stemcellName]").val(),

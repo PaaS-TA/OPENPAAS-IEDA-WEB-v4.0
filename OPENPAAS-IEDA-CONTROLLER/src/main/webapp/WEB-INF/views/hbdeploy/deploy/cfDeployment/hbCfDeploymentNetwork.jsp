@@ -60,16 +60,16 @@ var resourceLayout = {
                    { field: 'subnetReservedTo1', caption: '~ 끝점 IP', size:'150px', style:'text-align:center;'},
                    { field: 'subnetStaticFrom1', caption: '할당 제외 대역 시작점 IP', size:'150px', style:'text-align:center;'},
                    { field: 'subnetStaticTo1', caption: '~ 끝점 IP', size:'150px', style:'text-align:center;'},
-                   { field: 'subnetId2', caption: '서브넷 ID 2', size:'150px', style:'text-align:center;'},
-                   { field: 'securityGroup2', caption: '보안그룹 2', size:'150px', style:'text-align:center;'},
-                   { field: 'subnetRange2', caption: '서브넷 주소 범위 2', size:'150px', style:'text-align:center;'},
-                   { field: 'subnetGateway2', caption: '게이트웨이 2 ', size:'150px', style:'text-align:center;'},
+                   { field: 'subnetId2', caption: '서브넷 ID', size:'150px', style:'text-align:center;'},
+                   { field: 'securityGroup2', caption: '보안그룹', size:'150px', style:'text-align:center;'},
+                   { field: 'subnetRange2', caption: '서브넷 주소 범위', size:'150px', style:'text-align:center;'},
+                   { field: 'subnetGateway2', caption: '게이트웨이 ', size:'150px', style:'text-align:center;'},
                    { field: 'subnetDns2', caption: 'DNS', size:'150px', style:'text-align:center;'},
                    { field: 'subnetReservedFrom2', caption: '할당 제외 대역 시작점 IP', size:'150px', style:'text-align:center;'},
                    { field: 'subnetReservedTo2', caption: '~ 끝점 IP', size:'150px', style:'text-align:center;'},
                    { field: 'subnetStaticFrom2', caption: '할당 제외 대역 시작점 IP', size:'150px', style:'text-align:center;'},
-                   { field: 'subnetStaticTo2', caption: '~ 끝점 IP', size:'150px', style:'text-align:center;'}
-
+                   { field: 'subnetStaticTo2', caption: '~ 끝점 IP', size:'150px', style:'text-align:center;'},
+   
                    ],
             onSelect : function(event) {
                 event.onComplete = function() {
@@ -173,7 +173,6 @@ function settingNetworkInfo(){
     $("input[name=networkInfoId]").val(record.recid);
     $("input[name=networkName]").val(record.networkName);
     $("select[name=iaasType]").val(record.iaasType);
-    setNetworkInfo(record);
 }
 
 /********************************************************
@@ -183,14 +182,22 @@ function settingNetworkInfo(){
 function setNetworkInfo(networkInfo){
     for(var i=0; i <networkInfo.length; i++){
         if( (networkInfo[i].net).toLowerCase() == "external" ){
-                $(".w2ui-msg-body input[name='publicStaticIp']").val(networkInfo[i].publicStaticIp); 
+            if(  iaas.toLowerCase() == "vsphere" ){
+                $(".w2ui-msg-body input[name='publicSubnetId']").val(networkInfo[i].subnetId);
+                $(".w2ui-msg-body input[name='publicSubnetRange']").val(networkInfo[i].subnetRange); 
+                $(".w2ui-msg-body input[name='publicSubnetGateway']").val(networkInfo[i].subnetGateway);
+                $(".w2ui-msg-body input[name='publicSubnetDns']").val(networkInfo[i].subnetDns);
+                $(".w2ui-msg-body input[name='publicStaticIp']").val(networkInfo[i].publicStaticIp);///
+                $(".w2ui-msg-body input[name='publicStaticFrom']").val(networkInfo[i].subnetStaticFrom);///
+                $(".w2ui-msg-body input[name='publicStaticTo']").val(networkInfo[i].subnetStaticTo);///
+            }else{
+                $(".w2ui-msg-body input[name='publicStaticIp']").val(networkInfo[i].publicStaticIp); ///
+            }
         } else {
             if(networkInfo[i].seq  > 1)  settingNetwork(networkInfo[i].seq );
             var seq = networkInfo[i].seq;
             
             //기본 네트워크 정보
-            $(".w2ui-msg-body input[name='subnetId_"+seq+"']").val(networkInfo[i].subnetId);
-            $(".w2ui-msg-body input[name='securityGroup_"+seq+"']").val(networkInfo[i].securityGroup);
             $(".w2ui-msg-body input[name='subnetRange_"+seq+"']").val(networkInfo[i].subnetRange); 
             $(".w2ui-msg-body input[name='subnetGateway_"+seq+"']").val(networkInfo[i].subnetGateway);
             $(".w2ui-msg-body input[name='subnetDns_"+seq+"']").val(networkInfo[i].subnetDns);
@@ -199,6 +206,8 @@ function setNetworkInfo(networkInfo){
             $(".w2ui-msg-body input[name='subnetStaticFrom_"+seq+"']").val(networkInfo[i].subnetStaticFrom);
             $(".w2ui-msg-body input[name='subnetStaticTo_"+seq+"']").val(networkInfo[i].subnetStaticTo);
             $(".w2ui-msg-body input[name='networkName_"+seq+"']").val(networkInfo[i].networkName);
+            $(".w2ui-msg-body input[name='subnetId_"+seq+"']").val(networkInfo[i].subnetId);
+            $(".w2ui-msg-body input[name='cloudSecurityGroups_"+seq+"']").val(networkInfo[i].cloudSecurityGroups);
             $(".w2ui-msg-body input[name='availabilityZone_"+seq+"']").val(networkInfo[i].availabilityZone);
         }
     }
@@ -238,28 +247,17 @@ function registHbCfDeploymentNetworkConfigInfo(){
             iaasType               : $("select[name=iaasType]").val(),
             networkName            : $("input[name=networkName]").val(),
             publicStaticIp         : $("input[name=publicStaticIp]").val(),
-            subnetId1               : $("input[name=subnetId1]").val(),
-            securityGroup1          : $("input[name=securityGroup1]").val(),
-            subnetRange1            : $("input[name=subnetRange1").val(),
-            subnetGateway1          : $("input[name=subnetGateway1]").val(),
-            subnetDns1              : $("input[name=subnetDns1]").val(),
-            subnetReservedFrom1     : $("input[name=subnetReservedFrom1]").val(),
-            subnetReservedTo1       : $("input[name=subnetReservedTo1]").val(),
-            subnetStaticFrom1     : $("input[name=subnetStaticFrom1]").val(),
-            subnetStaticTo1       : $("input[name=subnetStaticTo1]").val(),
-            subnetId2               : $("input[name=subnetId2]").val(),
-            securityGroup2          : $("input[name=securityGroup2]").val(),
-            subnetRange2            : $("input[name=subnetRange2").val(),
-            subnetGateway2          : $("input[name=subnetGateway2]").val(),
-            subnetDns2              : $("input[name=subnetDns2]").val(),
-            subnetReservedFrom2     : $("input[name=subnetReservedFrom2]").val(),
-            subnetReservedTo2       : $("input[name=subnetReservedTo2]").val(),
-            subnetStaticFrom2     : $("input[name=subnetStaticFrom2]").val(),
-            subnetStaticTo2       : $("input[name=subnetStaticTo2]").val(),
-
-    
+            subnetId               : $("input[name=subnetId]").val(),
+            securityGroup          : $("input[name=securityGroup]").val(),
+            subnetRange            : $("input[name=subnetRange]").val(),
+            subnetGateway          : $("input[name=subnetGateway]").val(),
+            subnetDns              : $("input[name=subnetDns]").val(),
+            subnetReservedFrom     : $("input[name=subnetReservedFrom]").val(),
+            subnetReservedTo       : $("input[name=subnetReservedTo]").val(),
+            subnetReservedFrom     : $("input[name=subnetReservedFrom]").val(),
+            subnetReservedTo       : $("input[name=subnetReservedTo]").val()
+            
     }
-    
     $.ajax({
         type : "PUT",
         url : "/deploy/hbCfDeployment/networkConfig/save",
@@ -331,9 +329,6 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
      var html= "<div class='panel panel-info' style='margin-top:2%;'>";
          html+= "<div  class='panel-heading' style='position:relative;'>";
          html+=    "<b>Internal 네트워크</b>";
-/*       html+= " <div style='position: absolute; left: 330px;top: 2px;'>";
-         html+= '<span class="btn btn-info btn-sm addInternal" onclick="addInternalNetworkInputs(\''+div2+'\', '+form+');">추가</span>';
-         html+= "</div>"; */
          html+=    "<div style='position: absolute;right: 10px; top: 2px;'>";
          html+=        '<span class="btn btn-info btn-sm" onclick="delInternalNetwork(\''+preDiv+'\', '+index+');">삭제</span>';
          html+=    "</div>";
@@ -343,7 +338,7 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
              html+="<div style=' width: 60%;'>"+"<input name='subnetId_"+index+"'" + text_style +" placeholder='서브넷 아이디를 입력하세요.'/>"+"</div></div>";
              
              html+= field_div_label + "보안 그룹" + "</label>"; 
-             html+= "<div style=' width: 60%;'>"+"<input name='securityGroup_"+index+"'" + text_style +" placeholder='예) bosh-security, cf-security'/>"+"</div></div>";
+             html+= "<div style=' width: 60%;'>"+"<input name='cloudSecurityGroups_"+index+"'" + text_style +" placeholder='예) bosh-security, cf-security'/>"+"</div></div>";
              
              
              if( iaas.toLowerCase() == "aws" ){
@@ -373,24 +368,31 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
          html+=     "</div>";
          html+= "</div></div></div>";
          $(".w2ui-msg-body "+ div).show();
-         if(index>4){
-             $(".w2ui-msg-body "+preDiv + " .addInternal").hide();
-         } 
-         $(form + " "+ div).css('display','block');
+         $(".w2ui-msg-body "+preDiv + " .addInternal").hide();
+         
          $(form + " "+ div).html(html);
          
          createInternalNetworkValidate(index);
  }
-
-
  
   /********************************************************
    * 설명 : 네트워크 유효성 추가
    * 기능 : createInternalNetworkValidate
    *********************************************************/
   function createInternalNetworkValidate(index){
-     var subnet_message = "서브넷 아이디";
+     var subnet_message="서브넷 아이디";
      var zone_message = "가용 영역";
+     if( iaas.toLowerCase() == "google"){
+         $("[name*='networkName_"+index+"']").rules("add", {
+             required: function(){
+                 return checkEmpty($(".w2ui-msg-body input[name='networkName_"+index+"']").val());
+             }, messages: {required: "네트워크 명 "+text_required_msg}
+         });
+         subnet_message = "서브넷 명";
+         zone_message = "zone";
+     }else if(  iaas.toLowerCase() == "vsphere"){ 
+         subnet_message="포트 그룹명";
+     }
      $("[name*='subnetId_"+index+"']").rules("add", {
          required: function(){
              return checkEmpty($(".w2ui-msg-body input[name='subnetId_"+index+"']").val());
@@ -416,22 +418,18 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
          required: function(){
              return checkEmpty($(".w2ui-msg-body input[name='subnetDns_"+index+"']").val());
          },ipv4: function(){
-              if( index > 0 ){
-                 var list = [];
-                 for(i=0; i< index; i++){
-                	 
-                 list =+ $(".w2ui-msg-body input[name='subnetDns_"+index+"']").val();
-                 }
+             if( $(".w2ui-msg-body input[name='subnetDns_"+index+"']").val().indexOf(",") > -1 ){
+                 var list = ($(".w2ui-msg-body input[name='subnetDns_"+index+"']").val()).split(",");
                  var flag = true;
                  for( var i=0; i<list.length; i++ ){
-                     var val = validateIpv4(list[i]);
+                     var val = validateIpv4(list[i].trim());
                      if( !val ) flag = false;
                  }
                  if( !flag ) return "";
-                 else return list[0];
+                 else return list[0].trim();
              }else{
                  return $(".w2ui-msg-body input[name='subnetDns_"+index+"']").val();
-             } 
+             }
          }, messages: {required: "DNS"+text_required_msg}
      });
      
@@ -473,7 +471,13 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
              }, messages: {required: zone_message + text_required_msg}
          });
      }
-
+     if( iaas.toLowerCase() == "azure" ){
+         $("[name*='networkName_"+index+"']").rules("add", {
+             required: function(){
+                 return checkEmpty($(".w2ui-msg-body input[name='networkName_"+index+"']").val());
+             }, messages: {required: "네트워크 명"+text_required_msg}
+         });
+     }
      w2popup.unlock();
  }
 
@@ -526,7 +530,6 @@ function resetForm(status){
     $("input[name=subnetReservedTo_1]").val("");
     $("input[name=subnetStaticFrom_1]").val("");
     $("input[name=subnetStaticTo_1]").val("");
-    $("input[name=availabilityZone_1]").val("");
     $("input[name=subnetId_2]").val("");
     $("input[name=securityGroup_2]").val("");
     $("input[name=subnetRange_2]").val("");
@@ -536,8 +539,6 @@ function resetForm(status){
     $("input[name=subnetReservedTo_2]").val("");
     $("input[name=subnetStaticFrom_2]").val("");
     $("input[name=subnetStaticTo_2]").val("");
-    $("input[name=availabilityZone_2]").val("");
-    
     if(status=="reset"){
         w2ui['network_Grid'].clear();
         //$("select[name='']").html("<option value=''>CF Deployment 버전을 선택하세요.</option>");
@@ -569,8 +570,8 @@ function delInternalNetwork(preDiv, index){
 </div>
 
 <div id="regPopupDiv" hidden="true" >
-    <form id="defaultNetworkInfoForm" action="POST">
- <input type="hidden" name="networkInfoId" />
+    <form id="defaultNetworkInfoForm" action="POST" > 
+    <input type="hidden" name="networkInfoId" />
     
         <div class="w2ui-page page-0" style="">
            <div class="panel panel-network">
@@ -582,7 +583,7 @@ function delInternalNetwork(preDiv, index){
                     <div class="w2ui-field">
                        <label style="text-align: left;width:36%;font-size:11px;">클라우드 인프라 환경 </label> 
                        <div>
-                           <select class="form-control" name="iaasType" style="width: 100%; ">
+                           <select class="form-control" onclick="secondNetwork(this.value);" name="iaasType" style="width: 100%; ">
                                <option value="">인프라 환경을 선택하세요.</option>
                                <option value="aws">AWS</option>
                                <option value="openstack">Openstack</option>
@@ -598,84 +599,90 @@ function delInternalNetwork(preDiv, index){
                   </div>
                 </div>
                 </div>
-			</div>
-		</div>
-        <div class="w2ui-page page-0" style="margin-top:15px;padding:0 3%;">
+            <div class="panel-body" style="height:450px; margin-top:-30px; overflow-y:auto;">
             <div class="panel panel-info" style="margin-bottom:10px;">    
                 <div  class="panel-heading" style=""><b>External 네트워크</b></div>
                 <div class="panel-body">
+                
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">CF API TARGET IP</label> 
                         <div style=" width: 60%;">
-                            <input name="publicStaticIp" type="text" style="display:inline-blcok; width:70%;" placeholder="예) 10.0.0.20"/>
+                            <input name="publicStaticIp" type="text" style="display:inline-blcok; width:100%;" placeholder="예) 10.0.0.20"/>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="panel panel-info" id="defaultNetworkInfoDiv_1">
-                <div  class="panel-heading" style="position:relative;">
-                    <b>Internal 네트워크</b>
-                    <div style="position: absolute;right: 0;top: 5px;">
-                        <a class="btn btn-info btn-sm addInternal" onclick="addInternalNetworkInputs('#defaultNetworkInfoDiv_1', '#defaultNetworkInfoForm');">추가</a>
-                    </div>
-                </div>
-                <div class="panel-body">
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">서브넷 아이디</label>
                         <div style=" width: 60%;">
-                            <input name="subnetId1" type="text"  style="display:inline-blcok; width:70%;" placeholder="서브넷 아이디를 입력하세요."/>
+                            <input name="subnetId" type="text"  style="display:inline-blcok; width:100%;" placeholder="서브넷 아이디를 입력하세요."/>
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">보안 그룹</label>
                         <div style=" width: 60%;">
-                            <input name="securityGroup1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) bosh-security, cf-security"/>
+                            <input name="securityGroup" type="text"  style="display:inline-blcok; width:100%;" placeholder="예) bosh-security, cf-security"/>
                         </div>
                     </div>
+                    
                     <div class="w2ui-field" hidden="true" id="availabilityZoneDiv">
                         <label style="text-align: left;width:36%;font-size:11px;">가용 영역</label>
                         <div style=" width: 60%;">
-                            <input name="availabilityZone1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) us-west-2"/>
+                            <input name="availabilityZone_1" type="text"  style="display:inline-blcok; width:100%;" placeholder="예) us-west-2"/>
                         </div>
                     </div>
+                    
+                </div>
+            </div>
+            
+            <div class="panel panel-info" id="defaultNetworkInfoDiv_1">
+                <div  class="panel-heading" style="position:relative;">
+                    <b>Internal 네트워크</b>
+                     <div style="position: absolute;right: 0;top: 5px;">
+                       <a class="btn btn-info btn-sm addInternal" onclick="addInternalNetworkInputs('#network_1', '#defaultNetworkInfoForm');">추가</a>
+                     </div> 
+                </div>
+                <div class="panel-body">
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">서브넷 범위</label>
                         <div style=" width: 60%;">
-                            <input name="subnetRange1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) 10.0.0.0/24"/>
+                            <input name="subnetRange" type="text"  style="display:inline-blcok; width:100%;" placeholder="예) 10.0.0.0/24"/>
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">게이트웨이</label>
                         <div style=" width: 60%;">
-                            <input name="subnetGateway1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) 10.0.0.1"/>
+                            <input name="subnetGateway" type="text"  style="display:inline-blcok; width:100%;" placeholder="예) 10.0.0.1"/>
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">DNS</label>
                         <div style=" width: 60%;">
-                            <input name="subnetDns1" type="text"  style="display:inline-blcok; width:70%;" placeholder="예) 8.8.8.8"/>
+                            <input name="subnetDns" type="text"  style="display:inline-blcok; width:100%;" placeholder="예) 8.8.8.8"/>
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">IP할당 제외 대역</label>
                         <div style=" width: 60%;">
-                            <input name="subnetReservedFrom1" type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.100" />
+                            <input name="subnetReservedFrom" type="text" style="display:inline-block; width:40%;" placeholder="예) 10.0.0.100" />
                             <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
-                            <input name="subnetReservedTo1"  type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.106" />
+                            <input name="subnetReservedTo"  type="text" style="display:inline-block; width:40%;" placeholder="예) 10.0.0.106" />
                         </div>
                     </div>
+                    
                     <div class="w2ui-field">
-                        <label style="text-align: left; width: 36%; font-size: 11px;">IP할당 대역(최소 20개)</label>
+                        <label style="text-align: left; width: 36%; font-size: 11px;">IP할당 대역 (최소 20개)</label>
                         <div style=" width: 60%;">
-                            <input name="subnetStaticFrom1"  type="text" style="display:inline-block; width:32%;" placeholder="예) 10.0.0.100" />
+                            <input name="subnetStaticFrom" type="text" style="display:inline-block; width:40%;" placeholder="예) 10.0.0.100" />
                             <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
-                            <input name="subnetStaticTo1" type="text" style="display:iinline-block; width:32%;" placeholder="예) 10.0.0.106" />
+                            <input name="subnetStaticTo"  type="text" style="display:inline-block; width:40%;" placeholder="예) 10.0.0.106" />
                         </div>
                     </div>
                 </div>
             </div>
-            <div  id="defaultNetworkInfoDiv_2" hidden="true"></div>
-            <div  id="defaultNetworkInfoDiv_3" hidden="true"></div>
+            
+            <div id="defaultNetworkInfoDiv_2" hidden="true"></div>
+            
+            </div>
+           </div>
         </div>
     </form>
     <div id="regPopupBtnDiv" style="text-align: center; margin-top: 5px;">
@@ -714,59 +721,59 @@ $(function() {
                 ipv4 : function(){
                     return $("input[name='publicStaticIp']").val();
                 }
-            }, subnetId1: { 
+            }, subnetId: { 
                 required: function(){
-                    return checkEmpty( $("input[name='subnetId1']").val() );
+                    return checkEmpty( $("input[name='subnetId']").val() );
                 }
-            }, securityGroup1: { 
+            }, securityGroup: { 
                 required: function(){
-                    return checkEmpty( $("input[name='securityGroup1']").val() );
+                    return checkEmpty( $("input[name='securityGroup']").val() );
                 }
-            }, subnetRange1: { 
+            }, subnetRange: { 
                 required: function(){
-                    return checkEmpty( $("input[name='subnetRange1']").val() );
+                    return checkEmpty( $("input[name='subnetRange']").val() );
                 }, 
                 ipv4Range : function(){
-                    return $("input[name='subnetRange1']").val();
+                    return $("input[name='subnetRange']").val();
                 }
-            }, subnetGateway1: { 
+            }, subnetGateway: { 
                 required: function(){
-                    return checkEmpty( $("input[name='subnetGateway1']").val() );
+                    return checkEmpty( $("input[name='subnetGateway']").val() );
                 }
             }, subnetDns: { 
                 required: function(){
-                    return checkEmpty( $("input[name='subnetDns1']").val() );
+                    return checkEmpty( $("input[name='subnetDns']").val() );
                 },
                 ipv4 : function(){
-                    return $("input[name='subnetDns1']").val();
+                    return $("input[name='subnetDns']").val();
                 }
-            }, subnetReservedFrom1: { 
+            }, subnetReservedFrom: { 
                 required: function(){
-                    return checkEmpty( $("input[name='subnetReservedFrom1']").val() );
+                    return checkEmpty( $("input[name='subnetReservedFrom']").val() );
                 }, 
                 ipv4 : function(){
-                    return $("input[name='subnetReservedFrom1']").val();
+                    return $("input[name='subnetReservedFrom']").val();
                 }
-            }, subnetReservedTo1: { 
+            }, subnetReservedTo: { 
                 required: function(){
-                    return checkEmpty( $("input[name='subnetReservedTo1']").val() );
+                    return checkEmpty( $("input[name='subnetReservedTo']").val() );
                 }, 
                 ipv4 : function(){
-                    return $("input[name='subnetReservedTo1']").val();
+                    return $("input[name='subnetReservedTo']").val();
                 }
-            }, subnetStaticFrom1: { 
+            }, subnetStaticFrom: { 
                 required: function(){
-                    return checkEmpty( $("input[name='subnetStaticFrom_1']").val() );
+                    return checkEmpty( $("input[name='subnetStaticFrom']").val() );
                 }, 
                 ipv4 : function(){
-                    return $("input[name='subnetStaticFrom_1']").val();
+                    return $("input[name='subnetStaticFrom']").val();
                 }
-            }, subnetStaticTo1: { 
+            }, subnetStaticTo: { 
                 required: function(){
-                    return checkEmpty( $("input[name='subnetStaticTo1']").val() );
+                    return checkEmpty( $("input[name='subnetStaticTo']").val() );
                 }, 
                 ipv4 : function(){
-                    return $("input[name='subnetStaticTo1']").val();
+                    return $("input[name='subnetStaticTo']").val();
                 }
             }
         }, messages: {
@@ -776,28 +783,28 @@ $(function() {
                 required:  "클라우드 인프라 환경 타입"+select_required_msg,
             }, publicStaticIp: { 
                 ipv4 : text_ip_msg,
-            }, subnetId1: { 
+            }, subnetId: { 
                 required:  "서브넷 아이디 "+text_required_msg,
-            }, securityGroup1: { 
+            }, securityGroup: { 
                 required:  "보안 그룹 "+text_required_msg,
-            }, subnetRange1: { 
+            }, subnetRange: { 
                 required:  "서브넷 주소 범위 "+text_required_msg,
                 ipv4Range : text_cidr_msg
-            }, subnetGateway1: { 
+            }, subnetGateway: { 
                 required:  "게이트웨이 "+text_required_msg,
-            }, subnetDns1: { 
+            }, subnetDns: { 
                 required:  "DNS "+text_required_msg,
                 ipv4 : text_ip_msg
-            }, subnetReservedFrom1: { 
+            }, subnetReservedFrom: { 
                 required:  "IP 할당 제외 대역"+text_required_msg,
                 ipv4 : text_ip_msg
-            }, subnetReservedTo1: { 
+            }, subnetReservedTo: { 
                 required:  "IP 할당 제외 대역 "+text_required_msg,
                 ipv4 : text_ip_msg
-            }, subnetStaticFrom1: { 
+            }, subnetStaticFrom: { 
                 required:  "IP 할당 대역"+text_required_msg,
                 ipv4 : text_ip_msg
-            }, subnetStaticTo1: { 
+            }, subnetStaticTo: { 
                 required:  "IP 할당 대역 "+text_required_msg,
                 ipv4 : text_ip_msg
             }

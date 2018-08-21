@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class HbCfDeploymentNetworkConfigService {
-	
+    
     @Autowired private MessageSource message;
     @Autowired private  HbCfDeploymentNetworkConfigDAO cfDeploymentNetworkDao;
 
@@ -62,28 +62,43 @@ public class HbCfDeploymentNetworkConfigService {
             vo.setIaasType(dto.getIaasType());
             vo.setNetworkName(dto.getNetworkName());
             vo.setPublicStaticIp(dto.getPublicStaticIp());
-           // vo.setSubnetId(dto.getSubnetId());
-          //  vo.setSecurityGroup(dto.getSecurityGroup());
-           // vo.setSubnetRange(dto.getSubnetRange());
-           // vo.setSubnetGateway(dto.getSubnetGateway());
-           // vo.setSubnetDns(dto.getSubnetDns());
-           // vo.setSubnetReservedFrom(dto.getSubnetReservedFrom());
-           // vo.setSubnetReservedTo(dto.getSubnetReservedTo());
+            vo.setSubnetId1(dto.getSubnetId1());
+            vo.setSecurityGroup1(dto.getSecurityGroup1());
+            vo.setSubnetRange1(dto.getSubnetRange1());
+            vo.setSubnetGateway1(dto.getSubnetGateway1());
+            vo.setSubnetDns1(dto.getSubnetDns1());
+            vo.setSubnetReservedFrom1(dto.getSubnetReservedFrom1());
+            vo.setSubnetReservedTo1(dto.getSubnetReservedTo1());
+            vo.setSubnetStaticFrom1(dto.getSubnetStaticFrom1());
+            vo.setSubnetStaticTo1(dto.getSubnetStaticTo1());
+           
+            if(dto.getSubnetId2() !=null){
+                vo.setSubnetId2(dto.getSubnetId2());
+                vo.setSecurityGroup2(dto.getSecurityGroup2());
+                vo.setSubnetRange2(dto.getSubnetRange2());
+                vo.setSubnetGateway2(dto.getSubnetGateway2());
+                vo.setSubnetDns2(dto.getSubnetDns2());
+                vo.setSubnetReservedFrom2(dto.getSubnetReservedFrom2());
+                vo.setSubnetReservedTo2(dto.getSubnetReservedTo2());
+                vo.setSubnetStaticFrom2(dto.getSubnetStaticFrom2());
+                vo.setSubnetStaticTo2(dto.getSubnetStaticTo2());
+            }
+            
             vo.setCreateUserId(principal.getName());
             vo.setCreateDate(vo.getCreateDate());
             vo.setUpdateDate(vo.getUpdateDate());
             vo.setUpdateUserId(principal.getName());
-            if(dto.getSubnetReservedFrom2() !=null && dto.getSubnetReservedTo2() != null){
-         //       vo.setSubnetReservedFrom2(dto.getSubnetReservedFrom2());
-         //       vo.setSubnetReservedTo2(dto.getSubnetReservedTo2());
-            }
+/*            if(dto.getSubnetReservedFrom2() !=null && dto.getSubnetReservedTo2() != null){
+                vo.setSubnetReservedFrom2(dto.getSubnetReservedFrom2());
+                vo.setSubnetReservedTo2(dto.getSubnetReservedTo2());
+            }*/
         }
         
         if( dto.getId() == null ){
         //if( StringUtils.isEmpty(dto.getId().toString())){
-        	cfDeploymentNetworkDao.insertHbCfDeploymentNetworkConfigInfo(vo);
+            cfDeploymentNetworkDao.insertHbCfDeploymentNetworkConfigInfo(vo);
         }else{
-        	cfDeploymentNetworkDao.updateHbCfDeploymentNetworkConfigInfo(vo);
+            cfDeploymentNetworkDao.updateHbCfDeploymentNetworkConfigInfo(vo);
         }
     }
     

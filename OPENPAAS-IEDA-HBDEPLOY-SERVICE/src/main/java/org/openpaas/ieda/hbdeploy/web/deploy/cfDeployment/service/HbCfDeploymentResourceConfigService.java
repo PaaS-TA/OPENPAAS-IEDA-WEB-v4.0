@@ -19,13 +19,11 @@ import org.springframework.stereotype.Service;
 public class HbCfDeploymentResourceConfigService {
 	@Autowired private MessageSource message;
     @Autowired private  HbCfDeploymentResourceConfigDAO cfDeploymentResourceDao;
-    
 
     public List< HbCfDeploymentResourceConfigVO> getResourceConfigInfoList() {
         List< HbCfDeploymentResourceConfigVO> list = cfDeploymentResourceDao.selectCfDeploymentResourceConfigInfoList();
         return list;
     }
-    
     
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화

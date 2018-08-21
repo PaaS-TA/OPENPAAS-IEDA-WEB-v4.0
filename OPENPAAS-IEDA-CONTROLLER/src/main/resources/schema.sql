@@ -674,14 +674,25 @@ CREATE TABLE ieda_hb_cfDeployment_network_config
   iaas_type                             VARCHAR(100) NOT NULL,
   public_static_ip                      VARCHAR(100) NOT NULL,
   network_name                          VARCHAR(100) NOT NULL,
-  direction                             VARCHAR(100) NOT NULL,
-  subnet_id                             VARCHAR(100) NOT NULL,
-  security_group                        VARCHAR(100) NOT NULL,
-  subnet_range                          VARCHAR(100) NOT NULL,
-  subnet_gateway                        VARCHAR(100) NOT NULL,
-  subnet_dns                            VARCHAR(100) NOT NULL,
-  subnet_reserved_from                  VARCHAR(100) NOT NULL,
-  subnet_reserved_to                    VARCHAR(100) NOT NULL,
+  direction                             VARCHAR(100),
+  subnet_id_1                             VARCHAR(100) NOT NULL,
+  security_group_1                        VARCHAR(100) NOT NULL,
+  subnet_range_1                          VARCHAR(100) NOT NULL,
+  subnet_gateway_1                        VARCHAR(100) NOT NULL,
+  subnet_dns_1                            VARCHAR(100) NOT NULL,
+  subnet_reserved_from_1                  VARCHAR(100) NOT NULL,
+  subnet_reserved_to_1                    VARCHAR(100) NOT NULL,
+  subnet_static_from_1                  VARCHAR(100) NOT NULL,
+  subnet_static_to_1                    VARCHAR(100) NOT NULL,
+  subnet_id_2                             VARCHAR(100),
+  security_group_2                        VARCHAR(100), 
+  subnet_range_2                          VARCHAR(100),
+  subnet_gateway_2                        VARCHAR(100),
+  subnet_dns_2                            VARCHAR(100),
+  subnet_reserved_from_2                  VARCHAR(100),
+  subnet_reserved_to_2                    VARCHAR(100),
+  subnet_static_from_2                  VARCHAR(100),
+  subnet_static_to_2                    VARCHAR(100) ,
   create_user_id                        VARCHAR(255) NOT NULL,
   create_date                           DATE         NOT NULL,
   update_user_id                        VARCHAR(255) NOT NULL,
@@ -726,6 +737,33 @@ CREATE TABLE ieda_hb_cfDeployment_credential_config
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 
+CREATE TABLE ieda_hb_cfDeployment_instance_config
+(
+  id                                    INT(11)      NOT NULL auto_increment,
+  iaas_type                             VARCHAR(100) NOT NULL,
+  instance_config_name                  VARCHAR(100) NOT NULL,
+  release_version                       VARCHAR(100) NOT NULL,
+  adapter                               VARCHAR(100) NOT NULL,
+  api                                   VARCHAR(100) NOT NULL,
+  cc_worker                             VARCHAR(100) NOT NULL,
+  consul                                VARCHAR(100) NOT NULL,
+  the_database                          VARCHAR(100) NOT NULL,
+  diego_api                             VARCHAR(100) NOT NULL,
+  diego_cell                            VARCHAR(100) NOT NULL,
+  doppler                               VARCHAR(100) NOT NULL,
+  haproxy                               VARCHAR(100) NOT NULL,
+  log_api                               VARCHAR(100) NOT NULL,
+  nats                                  VARCHAR(100) NOT NULL,
+  router                                VARCHAR(100) NOT NULL,
+  singleton_blobstore                   VARCHAR(100) NOT NULL,
+  tcp_router                            VARCHAR(100) NOT NULL,
+  uaa                                   VARCHAR(100) NOT NULL,        
+  create_user_id                        VARCHAR(255) NOT NULL,
+  create_date                           DATE         NOT NULL,
+  update_user_id                        VARCHAR(255) NOT NULL,
+  update_date                           DATE         NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 CREATE TABLE ieda_hb_cfDeployment
 (
@@ -793,4 +831,5 @@ ALTER TABLE ieda_hb_cfDeployment_default_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_hb_cfDeployment_network_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_hb_cfDeployment_resource_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_hb_cfDeployment_credential_config AUTO_INCREMENT=1000;
+ALTER TABLE ieda_hb_cfDeployment_instance_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_hb_cfDeployment AUTO_INCREMENT=1000;
