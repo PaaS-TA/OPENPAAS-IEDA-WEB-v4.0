@@ -126,7 +126,7 @@
                <a href="javascript:;" data-toggle="collapse" data-target="#deploymentMenu" ><i class="fa fa-fw fa-search-plus"></i> 배포 정보 조회 및 관리 <i class="fa fa-fw fa-caret-down"></i></a>
                <ul id="deploymentMenu" class="collapse">
                     <sec:authorize access="hasAuthority('INFO_STEMCELL_MENU')">
-                        <li><a href="javascript:goPage('<c:url value="/info/stemcell"/>', '스템셀 업로드');">스템셀 업로드</a></li>
+                        <li><a href="javascript:goPage('<c:url value="/info/hbstemcell"/>', '스템셀 업로드');">스템셀 업로드</a></li>
                     </sec:authorize>
                     <sec:authorize access="hasAuthority('INFO_RELEASE_MENU')">
                         <li><a href="javascript:goPage('<c:url value="/info/release"/>', '릴리즈 업로드');">릴리즈 업로드</a></li>
