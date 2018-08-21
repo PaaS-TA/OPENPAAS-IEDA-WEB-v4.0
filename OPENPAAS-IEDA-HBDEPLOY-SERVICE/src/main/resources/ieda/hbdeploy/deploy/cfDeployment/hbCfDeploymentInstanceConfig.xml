@@ -4,6 +4,7 @@
 
 <resultMap id="hbCfDeploymentInstanceConfig" type="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentInstanceConfigVO">
     <id property="id" column="ID" />
+    <result property="recid" column="id"/>
     <result property="instanceConfigName" column ="INSTANCE_CONFIG_NAME"/>
     <result property="iaasType" column="IAAS_TYPE"/>
     <result property="adapter" column="ADAPTER"/>

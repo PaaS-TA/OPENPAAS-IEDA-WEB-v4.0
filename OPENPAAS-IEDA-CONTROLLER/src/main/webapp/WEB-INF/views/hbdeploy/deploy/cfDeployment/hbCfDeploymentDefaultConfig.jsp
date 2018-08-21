@@ -33,15 +33,15 @@ var resourceLayout = {
             name: 'default_Grid',
             header: '<b>Default 정보</b>',
             method: 'GET',
-                multiSelect: false,
+            multiSelect: false,
             show: {
-                    selectColumn: true,
-                    footer: true},
+                selectColumn: true,
+                footer: true},
             style: 'text-align: center',
             columns:[
                    { field: 'recid', hidden: true },
                    { field: 'id', hidden: true },
-                   { field: 'deploymentName', caption: '배포 명', size:'20%', style:'text-align:center;' },
+                   { field: 'defaultConfigName', caption: '배포 명', size:'20%', style:'text-align:center;' },
                    { field: 'iaasType', caption: '인프라 환경 타입', size:'20%', style:'text-align:center;' ,render: function(record){ 
                        if(record.iaasType.toLowerCase() == "aws"){
                            return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
@@ -52,7 +52,7 @@ var resourceLayout = {
                    { field: 'cfDeploymentVersion', caption: 'CF Deployment 버전', size:'20%', style:'text-align:center;'},
                    { field: 'domain', caption: '도메인', size:'20%', style:'text-align:center;'},
                    { field: 'domainOrganization', caption: '기본 조직명', size:'20%', style:'text-align:center;'},
-                   { field: 'cfDbType', caption: 'CF Database 유형', size:'20%', style:'text-align:center;'}
+                   { field: 'cfDbType', caption: 'CF Database 유형', size:'20%', style:'text-align:center;'},
                   ],
             onSelect : function(event) {
                 event.onComplete = function() {
@@ -123,11 +123,11 @@ $(function(){
             var record = w2ui['default_Grid'].get(selected);
             w2confirm({
                 title       : "기본 정보",
-                msg         : "기본 정보 ("+record.deploymentName + ")을 삭제하시겠습니까?",
+                msg         : "기본 정보 ("+record.defaultConfigName + ")을 삭제하시겠습니까?",
                 yes_text    : "확인",
                 no_text     : "취소",
                 yes_callBack: function(event){
-                    deleteHbCfDeploymentDefaultConfigInfo(record.recid, record.deploymentName);
+                    deleteHbCfDeploymentDefaultConfigInfo(record.recid, record.defaultConfigName);
                 },
                 no_callBack    : function(){
                     w2ui['default_Grid'].clear();
@@ -151,12 +151,12 @@ function settingDefaultInfo(){
     }
     iaas = record.iaasType;
     $("input[name=defaultInfoId]").val(record.recid);
-    $("input[name=deploymentName]").val(record.deploymentName);
+    $("input[name=defaultConfigName]").val(record.defaultConfigName);
     $("select[name=iaasType]").val(record.iaasType);
     $("select[name=cfDeploymentVersion]").html("<option value='"+record.cfDeploymentVersion+"' selected >"+record.cfDeploymentVersion+"</option>");
     $("input[name=domain]").val(record.domain);
     $("input[name=domainOrganization]").val(record.domainOrganization);
-    $("input[name=cfDbType]").val(record.cfDbType);
+    $("select[name=cfDbType]").html("<option value='"+record.cfDbType+"' selected >"+record.cfDbType+"</option>");
 }
 
 /********************************************************
@@ -188,13 +188,13 @@ function doButtonStyle() {
 function registHbCfDeploymentDefaultConfigInfo(){
     w2popup.lock("등록 중입니다.", true);
     defaultConfigInfo = {
-    		id                     : $("input[name='defaultInfoId']").val(),
+            id                     : $("input[name='defaultInfoId']").val(),
             iaasType               : $("select[name='iaasType']").val(),
-            deploymentName         : $("input[name='deploymentName']").val(),
+            defaultConfigName      : $("input[name='defaultConfigName']").val(),
             cfDeploymentVersion    : $("select[name='cfDeploymentVersion'] :selected").val(),
             domain                 : $("input[name='domain']").val(),
             domainOrganization     : $("input[name='domainOrganization']").val(),
-            cfDbType               : $("select[name='cfDbType']").val()
+            cfDbType               : $("select[name='cfDbType'] :selected").val(),
     }
     $.ajax({
         type : "PUT",
@@ -217,11 +217,11 @@ function registHbCfDeploymentDefaultConfigInfo(){
  * 설명 : 기본 정보 삭제
  * 기능 : deleteHbCfDeploymentDefaultConfigInfo
  *********************************************************/
-function deleteHbCfDeploymentDefaultConfigInfo(id, deploymentName){
+function deleteHbCfDeploymentDefaultConfigInfo(id, defaultConfigName){
     w2popup.lock("삭제 중입니다.", true);
     defaultInfo = {
         id : id,
-        deploymentName : deploymentName
+        defaultConfigName : defaultConfigName
     }
     $.ajax({
         type : "DELETE",
@@ -246,9 +246,8 @@ function deleteHbCfDeploymentDefaultConfigInfo(id, deploymentName){
  * 설명 : CF Deployment version 명 조회
  * 기능 : getCfDeployment
  *********************************************************/
- function getCfDeploymentVersionList1(iaasType) {
+ function getCfDeploymentVersionList(iaasType) {
     var option ="";
-    
     $.ajax({
         type : "GET",
         url :"/common/deploy/list/releaseInfo/cfDeployment/"+iaasType, 
@@ -259,11 +258,11 @@ function deleteHbCfDeploymentDefaultConfigInfo(id, deploymentName){
                 option = "<option value=''>CF Deployment를 선택하세요.</option>";
                 data.map(function(obj) {
                     console.log( obj.releaseType +"TEST data"+ obj.templateVersion +"TEST AAA");
-                    option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"'>"+obj.releaseType+"/"+obj.templateVersion+"</option>";    
-                    /*   if( defaultConfigInfo.releaseName == obj.releaseType && defaultConfigInfo.releaseVersion == obj.templateVersion){
+                      if( defaultConfigInfo.releaseName == obj.releaseType && defaultConfigInfo.releaseVersion == obj.templateVersion){
                        option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"' selected>"+obj.releaseType+"/"+obj.templateVersion+"</option>";
                     }else{
-                    } */
+                    option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"'>"+obj.releaseType+"/"+obj.templateVersion+"</option>";    
+                    } 
                 });
             }
             $("select#cfDeploymentVersion").html(option);
@@ -276,28 +275,6 @@ function deleteHbCfDeploymentDefaultConfigInfo(id, deploymentName){
         }
     });
 } 
-/******************************************************************
- * 기능 : getCfDeplymentVersionList
- * 설명 : CF Deploymnet 버전 목록 조회
- ***************************************************************** */
- function getCfDeploymentVersionList(iaasType){
-    var option = "";
-    if(iaasType != null){
-        if("aws"== iaasType ){
-            option += "<option value=''> CF Deployment 버전을 선택하세요.</option>";
-            option += "<option value='v1a'> v3.3.0 </option>";
-            option += "<option value='v2a'> v3.2.0 </option>";
-        }else if("openstack" == iaasType ){
-            option += "<option value=''> CF Deployment 버전을 선택하세요.</option>";
-            option += "<option value='v1'> v3.2.0 </option>";
-            option += "<option value='v2'> v2.1.0 </option>";
-        }
-        
-    }else if (iaasType == null){
-            option = "<option value=''> 인프라 환경을 먼저 선택하세요.</option>";
-    }
-    $("#cfDeploymentVersion").html(option);
-}  
 
 /********************************************************
  * 설명 : 화면 리사이즈시 호출
@@ -329,13 +306,13 @@ function clearMainPage() {
 function resetForm(status){
     $(".panel-body").find("p").remove();
     $(".panel-body").children().children().children().css("borderColor", "#bbb");
-    $("input[name=deploymentName]").val("");
+    $("input[name=defaultConfigName]").val("");
     $("select[name=iaasType]").val("");
     $("select[name=cfDeploymentVersion]").val("");
     $("input[name=domain]").val("");
     $("input[name=domainOrganization]").val("");
     $("select[name=cfDbType]").val("");
-    $("input[name=defaultInfoId]").val("");
+    //$("input[name=defaultInfoId]").val("");
     if(status=="reset"){
         w2ui['default_Grid'].clear();
         $("select[name=cfDeploymentVersion]").html("<option value=''>CF Deployment 버전을 선택하세요.</option>");
@@ -367,7 +344,7 @@ function resetForm(status){
                    <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;">배포 명</label>
                        <div>
-                           <input class="form-control" name = "deploymentName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="배포 명을 입력 하세요."/>
+                           <input class="form-control" name = "defaultConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="배포 명을 입력 하세요."/>
                        </div>
                    </div>
                    
@@ -385,6 +362,7 @@ function resetForm(status){
                        <label style="width:40%;text-align: left;padding-left: 20px;">CF Deployment 버전 명</label>
                        <div>
                            <select class="form-control" id="cfDeploymentVersion" name="cfDeploymentVersion"  style="width: 320px; margin-left: 20px;">
+                               <option value=""> 클라우드 인라프 환경을  먼저 선택하세요.</option>
                            </select>
                        </div>
                    </div>
@@ -404,7 +382,7 @@ function resetForm(status){
                        <label style="width:40%;text-align: left;padding-left: 20px;"> CF Database 유형 </label>
                        <div>
                            <select class="form-control" name="cfDbType" style="width: 320px; margin-left: 20px;">
-                                <option value="">CF Database 유형을 선택하세요.</option>
+                                <option value="none">CF Database 유형을 선택하세요.</option>
                                 <option value="mySql"> MySQL </option>
                                 <option value="postgres"> Postgres </option>
                            </select>
@@ -429,9 +407,9 @@ $(function() {
         ignore : [],
         //onfocusout: function(element) {$(element).valid()},
         rules: {
-            deploymentName: { 
+            defaultConfigName: { 
                 required: function(){
-                    return checkEmpty( $("input[name='deploymentName']").val() );
+                    return checkEmpty( $("input[name='defaultConfigName']").val() );
                 }
             }, iaasType: { 
                 required: function(){
@@ -455,7 +433,7 @@ $(function() {
                 }
             }
         }, messages: {
-            deploymentName: { 
+            defaultConfigName: { 
                 required:  "기본  별칭"+text_required_msg
             }, iaasType: { 
                 required:  "클라우드 인프라 환경 타입"+select_required_msg,

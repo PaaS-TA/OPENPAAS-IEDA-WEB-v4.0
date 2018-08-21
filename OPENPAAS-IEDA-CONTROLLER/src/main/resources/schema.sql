@@ -657,10 +657,11 @@ CREATE TABLE ieda_hb_cfDeployment_default_config
 (
   id                                    INT(11)      NOT NULL auto_increment,
   iaas_type                             VARCHAR(100) NOT NULL,
-  deployment_name                       VARCHAR(100) NOT NULL,
+  default_config_name                   VARCHAR(100) NOT NULL,
   cf_deployment_version                 VARCHAR(100) NOT NULL,
   domain                                VARCHAR(100) NOT NULL,
   domain_organization                   VARCHAR(100) NOT NULL,
+  cf_db_type                            VARCHAR(100) NOT NULL,  
   create_user_id                        VARCHAR(255) NOT NULL,
   create_date                           DATE         NOT NULL,
   update_user_id                        VARCHAR(255) NOT NULL,

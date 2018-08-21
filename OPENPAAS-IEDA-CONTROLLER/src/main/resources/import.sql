@@ -1060,7 +1060,7 @@ INSERT INTO ieda_cf_job_template VALUES ( '1000', '0', 'DEPLOY_TYPE_CF', 'adapte
 INSERT INTO ieda_cf_job_template VALUES ( '1001', '1', 'DEPLOY_TYPE_CF', 'api', '2.7.0', '2.7.0', 'true', 'false',  'false', 'SYSTEM', now(), 'SYSTEM', now());
 INSERT INTO ieda_cf_job_template VALUES ( '1002', '2', 'DEPLOY_TYPE_CF', 'cc-worker', '2.7.0', '2.7.0', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
 INSERT INTO ieda_cf_job_template VALUES ( '1003', '3', 'DEPLOY_TYPE_CF', 'consul', '2.7.0', '2.7.0', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_cf_job_template VALUES ( '1004', '4', 'DEPLOY_TYPE_CF', 'database', '2.7.0', '2.7.0', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '1004', '4', 'DEPLOY_TYPE_CF', 'the-database', '2.7.0', '2.7.0', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
 INSERT INTO ieda_cf_job_template VALUES ( '1005', '5', 'DEPLOY_TYPE_CF', 'diego-api', '2.7.0', '2.7.0', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
 INSERT INTO ieda_cf_job_template VALUES ( '1006', '6', 'DEPLOY_TYPE_CF', 'diego-cell', '2.7.0', '2.7.0', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
 INSERT INTO ieda_cf_job_template VALUES ( '1007', '7', 'DEPLOY_TYPE_CF', 'doppler', '2.7.0', '2.7.0', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());

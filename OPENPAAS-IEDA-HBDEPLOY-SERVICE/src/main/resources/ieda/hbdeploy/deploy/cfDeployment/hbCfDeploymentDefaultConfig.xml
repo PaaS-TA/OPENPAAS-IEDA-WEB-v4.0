@@ -5,8 +5,9 @@
 
     <resultMap id="hbCfDeploymentDefaultConfig" type="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentDefaultConfigVO">
         <id property="id" column="ID" />
+        <result property="recid" column="id"/>
         <result property="iaasType" column="IAAS_TYPE"/>
-        <result property="deploymentName" column="DEPLOYMENT_NAME" />
+        <result property="defaultConfigName" column="DEFAULT_CONFIG_NAME" />
         <result property="cfDeploymentVersion" column="CF_DEPLOYMENT_VERSION" />
         <result property="domain" column="DOMAIN" />
         <result property="domainOrganization" column="DOMAIN_ORGANIZATION" />
@@ -21,7 +22,7 @@
         select 
             id as id
             ,iaas_type as iaas_Type
-            ,deployment_name as deployment_name
+            ,default_config_name as default_config_name
             ,cf_deployment_version as cf_deployment_version
             ,domain as domain
             ,domain_organization as domain_organization
@@ -37,7 +38,7 @@
     <insert id="insertHbCfDeploymentDefaultConfigInfo">
         INSERT INTO ieda_hb_cfDeployment_default_config(
              iaas_type
-            ,deployment_name
+            ,default_config_name
             ,cf_deployment_version
             ,domain
             ,domain_organization
@@ -48,7 +49,7 @@
             ,update_date
             ) VALUES (
             #{default.iaasType}
-            ,#{default.deploymentName}
+            ,#{default.defaultConfigName}
             ,#{default.cfDeploymentVersion}
             ,#{default.domain}
             ,#{default.domainOrganization}
@@ -63,7 +64,7 @@
     <update id="updateHbCfDeploymentDefaultConfigInfo">
         UPDATE ieda_hb_cfDeployment_default_config set
             iaas_type = #{default.iaasType}
-            ,deployment_name = #{default.deploymentName}
+            ,default_config_name = #{default.defaultConfigName}
             ,cf_deployment_version = #{default.cfDeploymentVersion}
             ,domain = #{default.domain}
             ,domain_organization = #{default.domainOrganization}
@@ -77,7 +78,7 @@
         select 
             id as id
             ,iaas_type as iaas_type
-            ,deployment_name as deployment_name
+            ,default_config_name as default_config_name
             ,cf_deployment_version as cf_deployment_version
             ,domain as domain
             ,domain_organization as domain_organization
@@ -96,7 +97,7 @@
         where
             id = #{default.id}
         and
-            deployment_name = #{default.deploymentName}
+            default_config_name = #{default.defaultConfigName}
     </delete>
     
     <select id = "selectHbCfDeploymentDefaultConfigByName" resultType="int">
@@ -105,6 +106,6 @@
         from
             ieda_hb_cfDeployment_default_config
         where
-            deployment_name = #{deploymentName}
+            default_config_name = #{defaultConfigName}
     </select>
 </mapper>

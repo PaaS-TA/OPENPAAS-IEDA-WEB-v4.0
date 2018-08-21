@@ -5,6 +5,7 @@
 
     <resultMap id="hbCfDeploymentNetworkConfig" type="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentNetworkConfigVO">
         <id property="id" column="ID" />
+        <result property="recid" column="id"/>
         <result property="iaasType" column="IAAS_TYPE"/>
         <result property="networkName" column="NETWORK_NAME" />
         <result property="direction" column="DIRECTION" />

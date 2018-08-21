@@ -17,6 +17,6 @@ public interface HbCfDeploymentDefaultConfigDAO {
 
     void deleteHbCfDeploymentDefaultConfigInfo(@Param("default")HbCfDeploymentDefaultConfigDTO dto);
 
-    int selectHbCfDeploymentDefaultConfigByName(@Param("deploymentName")String deploymentName);
+    int selectHbCfDeploymentDefaultConfigByName(@Param("defaultConfigName")String defaultConfigName);
 
 }
