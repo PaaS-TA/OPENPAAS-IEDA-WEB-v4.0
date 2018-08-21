@@ -373,9 +373,7 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
          html+=     "</div>";
          html+= "</div></div></div>";
          $(".w2ui-msg-body "+ div).show();
-         if(index>4){
-             $(".w2ui-msg-body "+preDiv + " .addInternal").hide();
-         } 
+         $(".w2ui-msg-body "+preDiv + " .addInternal").hide();
          $(form + " "+ div).css('display','block');
          $(form + " "+ div).html(html);
          

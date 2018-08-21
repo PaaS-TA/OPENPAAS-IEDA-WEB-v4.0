@@ -145,6 +145,7 @@ $(function(){
 function settingDefaultInfo(){
     var selected = w2ui['default_Grid'].getSelection();
     var record = w2ui['default_Grid'].get(selected);
+    var option = "";
     if(record == null) {
         w2alert("기본 정보 설정 중 에러가 발생 했습니다.");
         return;
@@ -156,7 +157,15 @@ function settingDefaultInfo(){
     $("select[name=cfDeploymentVersion]").html("<option value='"+record.cfDeploymentVersion+"' selected >"+record.cfDeploymentVersion+"</option>");
     $("input[name=domain]").val(record.domain);
     $("input[name=domainOrganization]").val(record.domainOrganization);
-    $("select[name=cfDbType]").html("<option value='"+record.cfDbType+"' selected >"+record.cfDbType+"</option>");
+    
+    option += "<option value='"+record.cfDbType+"' selected >"+record.cfDbType+"</option>";
+    
+     if("mySql" == record.cfDbType){
+        option += "<option value='postgres'> Postgres </option>";
+       }else{
+           option += "<option value='mySql'> MySQL </option>";
+       } 
+    $("select[name=cfDbType]").html(option);
 }
 
 /********************************************************
@@ -170,7 +179,7 @@ function doSearch() {
     
     w2ui['default_Grid'].clear();
     w2ui['default_Grid'].load('/deploy/hbCfDeployment/defaultConfig/list');
-    //doButtonStyle(); 
+    doButtonStyle(); 
 }
 
 /********************************************************
@@ -304,6 +313,7 @@ function clearMainPage() {
  * 기능 : resetForm
  *********************************************************/
 function resetForm(status){
+	
     $(".panel-body").find("p").remove();
     $(".panel-body").children().children().children().css("borderColor", "#bbb");
     $("input[name=defaultConfigName]").val("");
@@ -312,11 +322,15 @@ function resetForm(status){
     $("input[name=domain]").val("");
     $("input[name=domainOrganization]").val("");
     $("select[name=cfDbType]").val("");
-    //$("input[name=defaultInfoId]").val("");
+    $("input[name=defaultInfoId]").val("");
+        var option ="";
+        $("select[name=cfDeploymentVersion]").html("<option value=''> CF Deployment 버전을 선택하세요.</option>");
+        option += "<option value=''> CF Database 유형을 선택하세요.</option>";
+        option += "<option value='mySql'> MySQL </option>";
+        option += "<option value='postgres'> Postgres </option>";
+        $("select[name=cfDbType]").html(option);
     if(status=="reset"){
         w2ui['default_Grid'].clear();
-        $("select[name=cfDeploymentVersion]").html("<option value=''>CF Deployment 버전을 선택하세요.</option>");
-        $("select[name=cfDbType]").html("<option value=''>CF Database 유형을 선택하세요.</option>");
         doSearch();
     }
     document.getElementById("settingForm").reset();
@@ -382,7 +396,7 @@ function resetForm(status){
                        <label style="width:40%;text-align: left;padding-left: 20px;"> CF Database 유형 </label>
                        <div>
                            <select class="form-control" name="cfDbType" style="width: 320px; margin-left: 20px;">
-                                <option value="none">CF Database 유형을 선택하세요.</option>
+                                <option value="">CF Database 유형을 선택하세요.</option>
                                 <option value="mySql"> MySQL </option>
                                 <option value="postgres"> Postgres </option>
                            </select>
