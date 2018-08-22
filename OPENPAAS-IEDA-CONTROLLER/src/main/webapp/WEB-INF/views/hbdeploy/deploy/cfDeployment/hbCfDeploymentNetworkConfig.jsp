@@ -32,7 +32,7 @@ var resourceLayout = {
         *********************************************************/
         grid: {
             name: 'network_Grid',
-            header: '<b>Default 정보</b>',
+            header: '<b>Network 정보</b>',
             method: 'GET',
                 multiSelect: false,
             show: {
@@ -256,8 +256,6 @@ function registHbCfDeploymentNetworkConfigInfo(){
             subnetReservedTo2       : $("input[name=subnetReservedTo2]").val(),
             subnetStaticFrom2     : $("input[name=subnetStaticFrom2]").val(),
             subnetStaticTo2       : $("input[name=subnetStaticTo2]").val(),
-
-    
     }
     
     $.ajax({
@@ -323,17 +321,17 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
   *********************************************************/
   function addInternalNetworkInputs(preDiv, form){
      w2popup.lock("Internal 네트워크 추가 중", true);
+
+     $(""+preDiv+ " div div a.btn.btn-info.btn-sm.addInternal").hide();
+     
      var index = Number(preDiv.split("_")[1])+1;
      var div= preDiv.split("_")[0] + "_"+ index;
      var body_div= "<div class='panel-body'>";
      var field_div_label="<div class='w2ui-field'>"+"<label style='text-align: left; width: 36%; font-size: 11px;'>";
      var text_style="type='text' style='display:inline-blcok; width:70%;'";
-     var html= "<div class='panel panel-info' style='margin-top:2%;'>";
-         html+= "<div  class='panel-heading' style='position:relative;'>";
+     var html= "<div class='panel' style='margin-top:2%;'>";
+         html+= "<div  style='position:relative; margin-left:15px; margin-top:10px;'>";
          html+=    "<b>Internal 네트워크</b>";
-/*       html+= " <div style='position: absolute; left: 330px;top: 2px;'>";
-         html+= '<span class="btn btn-info btn-sm addInternal" onclick="addInternalNetworkInputs(\''+div2+'\', '+form+');">추가</span>';
-         html+= "</div>"; */
          html+=    "<div style='position: absolute;right: 10px; top: 2px;'>";
          html+=        '<span class="btn btn-info btn-sm" onclick="delInternalNetwork(\''+preDiv+'\', '+index+');">삭제</span>';
          html+=    "</div>";
@@ -373,15 +371,11 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
          html+=     "</div>";
          html+= "</div></div></div>";
          $(".w2ui-msg-body "+ div).show();
-         $(".w2ui-msg-body "+preDiv + " .addInternal").hide();
          $(form + " "+ div).css('display','block');
          $(form + " "+ div).html(html);
          
          createInternalNetworkValidate(index);
  }
-
-
- 
   /********************************************************
    * 설명 : 네트워크 유효성 추가
    * 기능 : createInternalNetworkValidate
@@ -552,7 +546,7 @@ function delInternalNetwork(preDiv, index){
      var div= preDiv.split("_")[0] + "_"+ index;
      var form = preDiv.split("Div")[0]+"Form";
      $(form + " "+ div).html("");
-     $(".w2ui-msg-body "+preDiv+" .addInternal").css("display","block");
+     $(""+preDiv+ " div div a.btn.btn-info.btn-sm.addInternal").css("display","block");
 }
 
 </script>
@@ -571,16 +565,16 @@ function delInternalNetwork(preDiv, index){
  <input type="hidden" name="networkInfoId" />
     
         <div class="w2ui-page page-0" style="">
-           <div class="panel panel-network">
+           <div class=" panel-network">
                <div class="panel-heading"><b>네트워크 정보</b></div>
                 <div class="panel-body" >
-                <div class="panel panel-info" style="margin-bottom:10px;">    
-                <div  class="panel-heading" style=""><b>네트워크 기본 설정 </b></div>
+                <div class="panel">    
+                <div style="margin-left:15px; margin-top:10px;"><b>네트워크 기본 설정 </b></div>
                   <div class="panel-body">
                     <div class="w2ui-field">
                        <label style="text-align: left;width:36%;font-size:11px;">클라우드 인프라 환경 </label> 
                        <div>
-                           <select class="form-control" name="iaasType" style="width: 100%; ">
+                           <select class="form-control" name="iaasType" style="width: 100%; font-size: 12px !important; height: 28px !important;">
                                <option value="">인프라 환경을 선택하세요.</option>
                                <option value="aws">AWS</option>
                                <option value="openstack">Openstack</option>
@@ -590,7 +584,7 @@ function delInternalNetwork(preDiv, index){
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">Network 별칭</label> 
                         <div style=" width: 60%;">
-                            <input name="networkName" type="text" style="display:inline-blcok; width:100%;" placeholder="예) net 1"/>
+                            <input name="networkName" type="text" style="display:inline-blcok; width:70%;" placeholder="예) net 1"/>
                         </div>
                     </div> 
                   </div>
@@ -599,8 +593,8 @@ function delInternalNetwork(preDiv, index){
 			</div>
 		</div>
         <div class="w2ui-page page-0" style="margin-top:15px;padding:0 3%;">
-            <div class="panel panel-info" style="margin-bottom:10px;">    
-                <div  class="panel-heading" style=""><b>External 네트워크</b></div>
+            <div class="panel" style="margin-bottom:10px;">    
+                <div  style="margin-left:15px; margin-top:10px;"><b>External 네트워크</b></div>
                 <div class="panel-body">
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">CF API TARGET IP</label> 
@@ -610,10 +604,10 @@ function delInternalNetwork(preDiv, index){
                     </div>
                 </div>
             </div>
-            <div class="panel panel-info" id="defaultNetworkInfoDiv_1">
-                <div  class="panel-heading" style="position:relative;">
+            <div class="panel" id="defaultNetworkInfoDiv_1">
+                <div style="position:relative; margin-left:15px; margin-top:10px;">
                     <b>Internal 네트워크</b>
-                    <div style="position: absolute;right: 0;top: 5px;">
+                    <div style="position: absolute;right: 10px;top: 5px;">
                         <a class="btn btn-info btn-sm addInternal" onclick="addInternalNetworkInputs('#defaultNetworkInfoDiv_1', '#defaultNetworkInfoForm');">추가</a>
                     </div>
                 </div>
