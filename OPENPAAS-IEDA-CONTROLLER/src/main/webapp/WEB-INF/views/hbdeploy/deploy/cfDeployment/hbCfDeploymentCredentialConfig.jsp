@@ -12,14 +12,16 @@
 <%@ taglib prefix="spring" uri = "http://www.springframework.org/tags" %>
 
 <script type="text/javascript">
+var save_lock_msg = '<spring:message code="common.save.data.lock"/>';//등록 중 입니다.
 var text_required_msg = '<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
 var select_required_msg='<spring:message code="common.select.vaildate.required.message"/>';//을(를) 선택하세요.
 var search_data_fail_msg ='클라우드 인프라 환경을 선택하세요.';
 var country_parent_code = '<spring:message code="common.code.country.code.parent"/>';//ieda_common_code country 조회
-var credentialConfigInfo = "";//인증서
+var credentialConfigInfo = [];//인증서
 var countryCodes = null;
 var iaas = "";
-var resourceLayout = {
+var releaseInfo = [];
+var credentialLayout = {
         layout2: {
             name: 'layout2',
             padding: 4,
@@ -32,19 +34,21 @@ var resourceLayout = {
          *  설명 : 인증서 목록 Grid
         *********************************************************/
         grid: {
-            name: 'credential_Grid',
+            name: 'cf_deployment_credential_Grid',
             header: '<b>인증서 정보</b>',
             method: 'GET',
                 multiSelect: false,
             show: {
                     selectColumn: true,
-                    footer: false
-                   },
+                    footer: true },
             style: 'text-align: center',
             columns:[
                    { field: 'recid', hidden: true },
                    { field: 'id', hidden: true },
                    { field: 'credentialConfigName', caption: '인증서 명', size:'15%', style:'text-align:center;' },
+                   { field: 'credentialConfigKeyFileName', caption: '인증서 파일 명', size:'20%', style:'text-align:center;'},
+                   { field: 'releaseName', hidden: true },
+                   { field: 'releaseVersion', hidden: true },
                    { field: 'iaasType', caption: '인프라 환경 타입', size:'15%', style:'text-align:center;' ,render: function(record){ 
                        if(record.iaasType.toLowerCase() == "aws"){
                            return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
@@ -52,17 +56,18 @@ var resourceLayout = {
                            return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
                        }
                    }},
-                   { field: 'countryCode', caption: '국가 코드', size:'15%', style:'text-align:center;'},
+                   { field: 'countryCode', caption: '국가 코드', size:'10%', style:'text-align:center;'},
                    { field: 'domain', caption: '도메인', size:'15%', style:'text-align:center;'},
                    { field: 'company', caption: '회사명', size:'10%', style:'text-align:center;'},
                    { field: 'jobTitle', caption: '부서명', size:'10%', style:'text-align:center;'},
-                   { field: 'emailAddress', caption: '이메일', size:'10%', style:'text-align:center;'},
+                   { field: 'emailAddress', caption: '이메일', size:'20%', style:'text-align:center;'}
                   ],
             onSelect : function(event) {
                 event.onComplete = function() {
-                    settingDefaultInfo();
                     $('#deleteBtn').attr('disabled', false);
+                    settingCredentialInfo();
                     return;
+                    
                 }
             },
             onUnselect : function(event) {
@@ -73,7 +78,6 @@ var resourceLayout = {
                     return;
                 }
             },onLoad:function(event){
-            	
                 if(event.xhr.status == 403){
                     location.href = "/abuse";
                     event.preventDefault();
@@ -84,21 +88,20 @@ var resourceLayout = {
 }
 
 $(function(){
-    $('#credential_Grid').w2layout(resourceLayout.layout2);
-    w2ui.layout2.content('left', $().w2grid(resourceLayout.grid));
+    $('#cf_deployment_credential_Grid').w2layout(credentialLayout.layout2);
+    w2ui.layout2.content('left', $().w2grid(credentialLayout.grid));
     w2ui['layout2'].content('main', $('#regPopupDiv').html());
     
     doSearch();
-    
     $("#deleteBtn").click(function(){
         if($("#deleteBtn").attr('disabled') == "disabled") return;
-        var selected = w2ui['credential_Grid'].getSelection();
+        var selected = w2ui['cf_deployment_credential_Grid'].getSelection();
         if( selected.length == 0 ){
-            w2alert("선택된 정보가 없습니다.", "기본  삭제");
+            w2alert("선택된 정보가 없습니다.", "인증서 정보 삭제");
             return;
         }
         else {
-            var record = w2ui['credential_Grid'].get(selected);
+            var record = w2ui['cf_deployment_credential_Grid'].get(selected);
             w2confirm({
                 title       : "인증서",
                 msg         : "인증서 ("+record.credentialConfigName + ")을 삭제하시겠습니까?",
@@ -108,7 +111,7 @@ $(function(){
                     deleteHbCfDeploymentCredentialConfigInfo(record.recid, record.credentialConfigName);
                 },
                 no_callBack    : function(){
-                    w2ui['credential_Grid'].clear();
+                    w2ui['cf_deployment_credential_Grid'].clear();
                     doSearch();
                 }
             });
@@ -117,14 +120,13 @@ $(function(){
 });
 
 /********************************************************
- * 설명 : 기본  수정 정보 설정
- * 기능 : settingDefaultInfo
+ * 설명 : 인증서 수정 정보 설정
+ * 기능 : settingCredentialInfo
  *********************************************************/
-function settingDefaultInfo(){
-    var selected = w2ui['credential_Grid'].getSelection();
-    var record = w2ui['credential_Grid'].get(selected);
+function settingCredentialInfo(){
     
-    console.log(record + "" );
+    var selected = w2ui['cf_deployment_credential_Grid'].getSelection();
+    var record = w2ui['cf_deployment_credential_Grid'].get(selected);
     
     if(record == null) {
         w2alert("인증서 설정 중 에러가 발생 했습니다.");
@@ -135,6 +137,11 @@ function settingDefaultInfo(){
     $("input[name=credentialConfigName]").val(record.credentialConfigName);
     $("select[name=iaasType]").val(record.iaasType);
     $("select[name=countryCode]").html("<option value='"+record.countryCode+"' selected >"+record.countryCode+"</option>");
+    releaseInfo = {
+        releaseName            : record.releaseName,
+        releaseVersion         : record.releaseVersion,
+    }
+    getCfDeployment(iaas);
     $("input[name=city]").val(record.city);
     $("input[name=domain]").val(record.domain);
     $("input[name=company]").val(record.company);
@@ -157,7 +164,6 @@ function getCountryCodes() {
             if( data != null){
                 var options = "";
                 data.map(function(obj) {
-                	
                     if( credentialConfigInfo.countryCode == obj.codeName ){
                         options += "<option value='"+obj.codeName+"' :selected>"+obj.codeName+"</option>";
                     }else{
@@ -179,12 +185,13 @@ function getCountryCodes() {
  * 기능 : doSearch
  *********************************************************/
 function doSearch() {
-    credentialConfigInfo="";//인증서
+    credentialConfigInfo=[];//인증서
+    releaseInfo = [];
     iaas = "";
     resetForm();
     getCountryCodes();
-    w2ui['credential_Grid'].clear();
-    w2ui['credential_Grid'].load('/deploy/hbCfDeployment/credentialConfig/list');
+    w2ui['cf_deployment_credential_Grid'].clear();
+    w2ui['cf_deployment_credential_Grid'].load('/deploy/hbCfDeployment/credentialConfig/list');
 }
 
 /********************************************************
@@ -201,7 +208,7 @@ function doButtonStyle() {
  *********************************************************/
 function registHbCfDeploymentCredentialConfigInfo(){
     w2popup.lock("등록 중입니다.", true);
-    
+    var release = $("select[name='cfdeployment']").val();
     credentialConfigInfo = {
             id                     : $("input[name='credentialInfoId']").val(),
             iaasType               : $("select[name='iaasType'] :selected").val(),
@@ -211,9 +218,10 @@ function registHbCfDeploymentCredentialConfigInfo(){
             city                   : $("input[name='city']").val(),
             company                : $("input[name='company']").val(),
             jobTitle               : $("input[name='jobTitle']").val(),
+            releaseName          : release.split("/")[0],
+            releaseVersion       : release.split("/")[1],
             emailAddress           : $("input[name='emailAddress']").val()
     }
-    
     $.ajax({
         type : "PUT",
         url : "/deploy/hbCfDeployment/credentialConfig/save",
@@ -221,11 +229,12 @@ function registHbCfDeploymentCredentialConfigInfo(){
         async : true,
         data : JSON.stringify(credentialConfigInfo),
         success : function(data, status) {
+            w2utils.unlock($("#layout_layout_panel_main"));
+            w2alert("Key 생성에 성공하였습니다.<br><font style='color:red'> 파일 명은 "+credentialConfigInfo.credentialConfigName+"-cred.yml<br>경로는 .bosh_plugin/hybrid_cf_credential 입니다.</font>", "CF-Deployment Key 생성");
             doSearch();
-            
         },
         error : function( e, status ) {
-            w2popup.unlock();
+            w2utils.unlock($("#layout_layout_panel_main"));
             var errorResult = JSON.parse(e.responseText);
             w2alert(errorResult.message, "인증서 저장");
         }
@@ -262,7 +271,6 @@ function deleteHbCfDeploymentCredentialConfigInfo(id, credentialConfigName){
     });
 }
 
- 
 
 /********************************************************
  * 설명 : 화면 리사이즈시 호출
@@ -284,7 +292,7 @@ function lock (msg) {
  *********************************************************/
 function clearMainPage() {
     $().w2destroy('layout2');
-    $().w2destroy('credential_Grid');
+    $().w2destroy('cf_deployment_credential_Grid');
 }
 
 /********************************************************
@@ -302,26 +310,62 @@ function resetForm(status){
     $("input[name=company]").val("");
     $("input[name=jobTitle]").val("");
     $("input[name=emailAddress]").val("");
-  
     $("input[name=credentialInfoId]").val("");
-
+    $("select[name=cfdeployment]").html("<option value=''>CF Deployment를 선택하세요.</option>");
+    $("select[name=cfdeployment]").attr("disabled", "disabled");
     if(status=="reset"){
-        w2ui['credential_Grid'].clear();
-        $("select[name=iaasType]").html("<option value=''>인프라 유형을 선택하세요.</option>");
-        $("select[name=countryCode]").html("<option value=''>국가 코드를 선택하세요.</option>");
+        w2ui['cf_deployment_credential_Grid'].clear();
         doSearch();
     }
-    document.getElementById(" ").reset();
+    document.getElementById("settingForm").reset();
+}
+
+/********************************************************
+ * 설명 : CF Deployment version 조회
+ * 기능 : getCfDeployment
+ *********************************************************/
+function getCfDeployment(iaas) {
+    var option = "<option value=''>CF Deployment를 선택하세요.</option>";
+    if(iaas == ""){
+        $("select[name=cfdeployment]").attr("disabled", "disabled");
+        $("select[name='cfdeployment']").html(option);
+    } else {
+        if($("select[name=cfdeployment]").attr("disabled") == "disabled"){
+            $("select[name=cfdeployment]").removeAttr("disabled");
+        }
+        $.ajax({
+            type : "GET",
+            url :"/common/deploy/list/releaseInfo/cfDeployment/"+iaas, 
+            contentType : "application/json",
+            success : function(data, status) {
+                if( data != null){
+                    data.map(function(obj) {
+                        if( releaseInfo.releaseName == obj.releaseType && releaseInfo.releaseVersion == obj.templateVersion){
+                            option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"' selected>"+obj.releaseType+"/"+obj.templateVersion+"</option>";
+                        }else{
+                            option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"'>"+obj.releaseType+"/"+obj.templateVersion+"</option>";    
+                        }
+                    });
+
+                }
+                $("select[name='cfdeployment']").html(option);
+            },
+            error : function(e, status) {
+                w2popup.unlock();
+                w2alert("Cf Deployment List 를 가져오는데 실패하였습니다.", "CF Deployment");
+            }
+        });
+    }
 }
 
 </script>
 <div id="main">
-    <div class="page_site"> 이종 CF Deployment <strong>인증서 정보 관리</strong></div>
+    <div class="page_site"> 이종 CF Deployment > <strong>인증서 정보 관리</strong></div>
     <!-- 사용자 목록-->
     <div class="pdt20">
         <div class="title fl"> 인증서 목록</div>
     </div>
-    <div id="credential_Grid" style="width:100%;  height:700px;"></div>
+    <div id="cf_deployment_credential_Grid" style="width:100%;  height:700px;"></div>
 
 </div>
 
@@ -343,14 +387,21 @@ function resetForm(status){
                    <div class="w2ui-field">
                        <label style="width:40%; text-align: left;padding-left: 20px;"> 클라우드 인프라 환경</label>
                        <div>
-                           <select class="form-control"  name="iaasType" style="width: 320px; margin-left: 20px;">
+                           <select class="form-control" onchange="getCfDeployment(this.value);" name="iaasType" style="width: 320px; margin-left: 20px;">
                                <option value=""> 인프라 환경을 선택하세요. </option>
                                <option value="aws"> AWS </option>
                                <option value="openstack"> Openstack </option>
                            </select>
                        </div>
                    </div>
-                   
+                   <div class="w2ui-field">
+                       <label style="width:40%; text-align: left;padding-left: 20px;"> CF Deployment 버전 명</label>
+                       <div>
+                            <select class="form-control" disabled="disabled" name="cfdeployment" style="display:inline-block; width: 320px; margin-left: 20px;">
+                                <option value="">CF Deployment를 선택하세요.</option>
+                            </select>
+                      </div>
+                  </div>
                    <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;"> 국가 코드</label>
                        <div>
@@ -428,6 +479,10 @@ $(function() {
                 required: function(){
                     return checkEmpty( $("select[name='iaasType']").val() );
                 }
+            }, cfdeployment: { 
+                required: function(){
+                    return checkEmpty( $("select[name='cfdeployment']").val() );
+                }
             }, countryCode: { 
                 required: function(){
                     return checkEmpty( $("select[name='countryCode']").val() );
@@ -460,6 +515,8 @@ $(function() {
                 required:  "기본  별칭"+text_required_msg
             }, iaasType: { 
                 required:  "클라우드 인프라 환경 타입"+select_required_msg,
+            }, cfdeployment: { 
+                required:  "cf Deployment 버전"+select_required_msg,
             }, countryCode: { 
                 required:  "국가 코드 "+select_required_msg,
             }, domain: { 
@@ -484,6 +541,7 @@ $(function() {
                 setHybridInvalidHandlerStyle(errors, validator);
             }
         }, submitHandler: function (form) {
+            w2utils.lock($("#layout_layout_panel_main"), save_lock_msg, true);
             registHbCfDeploymentCredentialConfigInfo();
         }
     });

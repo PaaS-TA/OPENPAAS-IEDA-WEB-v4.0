@@ -32,7 +32,7 @@
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/deploy-common.css?ver=11'/>"/>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/deploy-content.css?ver=11'/>"/>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/progress-step.css?ver=11'/>"/> <!-- progress-step css -->
-<link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-guide.css?ver=11'/>"/>
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-guide.css?ver=12'/>"/>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-init.css?ver=11'/>"/>
 <!-- JAVA SCRIPT -->
 <!-- JQuery -->

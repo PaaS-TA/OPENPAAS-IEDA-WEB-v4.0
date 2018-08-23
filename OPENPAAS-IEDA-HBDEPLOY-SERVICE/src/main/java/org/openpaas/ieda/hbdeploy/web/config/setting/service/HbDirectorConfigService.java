@@ -23,7 +23,7 @@ import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.common.web.security.SessionInfoDTO;
 import org.openpaas.ieda.hbdeploy.api.director.dto.DirectorInfoDTO;
-import org.openpaas.ieda.hbdeploy.api.director.utility.DirectorRestHelper;
+import org.openpaas.ieda.hbdeploy.api.director.utility.HbDirectorRestHelper;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigDAO;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigVO;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dto.HbDirectorConfigDTO;
@@ -83,9 +83,9 @@ public class HbDirectorConfigService  {
     public boolean checkDirectorConnect(String directorUrl, int port, String userId, String password) {
         boolean flag = true;
         try {
-            HttpClient client = DirectorRestHelper.getHttpClient(port);
-            GetMethod get = new GetMethod(DirectorRestHelper.getInfoURI(directorUrl, port)); 
-            get = (GetMethod)DirectorRestHelper.setAuthorization(userId, password, (HttpMethodBase)get); 
+            HttpClient client = HbDirectorRestHelper.getHttpClient(port);
+            GetMethod get = new GetMethod(HbDirectorRestHelper.getInfoURI(directorUrl, port)); 
+            get = (GetMethod)HbDirectorRestHelper.setAuthorization(userId, password, (HttpMethodBase)get); 
             client.executeMethod(get);
         } catch (RuntimeException e) {
             if( LOGGER.isErrorEnabled() ){ LOGGER.error( e.getMessage() );}
@@ -122,9 +122,9 @@ public class HbDirectorConfigService  {
     public DirectorInfoDTO getDirectorInfo(String directorUrl, int port, String userId, String password) {
         DirectorInfoDTO info = null;
         try {
-            HttpClient client = DirectorRestHelper.getHttpClient(port);
-            GetMethod get = new GetMethod(DirectorRestHelper.getInfoURI(directorUrl, port)); 
-            get = (GetMethod)DirectorRestHelper.setAuthorization(userId, password, (HttpMethodBase)get); 
+            HttpClient client = HbDirectorRestHelper.getHttpClient(port);
+            GetMethod get = new GetMethod(HbDirectorRestHelper.getInfoURI(directorUrl, port)); 
+            get = (GetMethod)HbDirectorRestHelper.setAuthorization(userId, password, (HttpMethodBase)get); 
             client.executeMethod(get);
         
             ObjectMapper mapper = new ObjectMapper();
@@ -227,7 +227,7 @@ public class HbDirectorConfigService  {
             Map<String, String> certMap = (Map<String,String>)object.get("director_ssl");
             // bosh alias-env를 실행한다.
             ProcessBuilder builder = new ProcessBuilder("bosh", "alias-env", directorConfig.getDirectorName(),
-                                                         "-e", directorConfig.getDirectorUrl(), "--ca-cert="+certMap.get("ca"));
+                                                         "-e", directorConfig.getDirectorUrl(), "--ca-cert="+certMap.get("ca"), "--tty");
             
             Process process = builder.start();
             BufferedReader bufferedReader = null;
@@ -247,7 +247,7 @@ public class HbDirectorConfigService  {
             }
             if(!accumulatedLog.contains("Succeeded")){
                 throw new CommonException("notfound.directorFile.exception",
-                        "기본 디렉터로 설정 중 에러가 발생 했습니다. 정보를 확인 해주세요.", HttpStatus.NOT_FOUND);
+                        "디렉터로 설정 중 에러가 발생 했습니다. 정보를 확인 해주세요.", HttpStatus.NOT_FOUND);
             }
             
             Thread.sleep(10000);
@@ -314,9 +314,9 @@ public class HbDirectorConfigService  {
     public void isExistBoshEnvLogin(String directorUrl, int port, String userId, String password){
         int statusResult = 0;
         try {
-            HttpClient client = DirectorRestHelper.getHttpClient(port);
-            GetMethod get = new GetMethod(DirectorRestHelper.getStemcellsURI(directorUrl, port)); 
-            get = (GetMethod)DirectorRestHelper.setAuthorization(userId, password, (HttpMethodBase)get); 
+            HttpClient client = HbDirectorRestHelper.getHttpClient(port);
+            GetMethod get = new GetMethod(HbDirectorRestHelper.getStemcellsURI(directorUrl, port)); 
+            get = (GetMethod)HbDirectorRestHelper.setAuthorization(userId, password, (HttpMethodBase)get); 
             statusResult = client.executeMethod(get);
         } catch (Exception e) {
             if( LOGGER.isErrorEnabled() ){ LOGGER.error( e.getMessage() );}
@@ -325,7 +325,7 @@ public class HbDirectorConfigService  {
         // stemcell 조회 > httpStatus > 조건 200 이 아닐경우 Exception >> database update
         if(!httpStatus.equals("200")){
             throw new CommonException("unAuthorized.director.exception",
-                    "실행 권한이 없습니다.", HttpStatus.UNAUTHORIZED);
+                    "실행 권한이 없습니다. 디렉터 정보를 확인하세요.", HttpStatus.UNAUTHORIZED);
         }
     }
     
@@ -367,5 +367,21 @@ public class HbDirectorConfigService  {
                 }
             }
         }
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : bosh-env 로그인 판별
+     * @title : isExistBoshEnvLogin
+     * @return : boolean
+    *****************************************************************/
+    public List<HbDirectorConfigVO> getDirectorListByIaas(String iaasType) {
+        List<HbDirectorConfigVO> resultList = dao.selectHbDirectorConfigByIaas(iaasType);
+        int recid = 0;
+        for (HbDirectorConfigVO directionConfig : resultList) {
+            directionConfig.setRecid(recid++);
+            directionConfig.setIaasType(directionConfig.getDirectorCpi().split("_")[0]);
+        }
+        return resultList;
     }
  }

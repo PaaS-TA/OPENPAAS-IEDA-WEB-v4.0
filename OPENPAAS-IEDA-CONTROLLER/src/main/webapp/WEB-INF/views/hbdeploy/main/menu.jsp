@@ -100,39 +100,17 @@
                 </ul>
             </li>
             
-            
-            <%-- <li>
-               <a href="javascript:;" data-toggle="collapse" data-target="#diegoMenu" ><i class="fa fa-fw fa-spinner"></i>이종 DIEGO<i class="fa fa-fw fa-caret-down"></i></a>
-               <ul id="diegoMenu" class="collapse">
-                   <sec:authorize access="hasAuthority('DEPLOY_CF_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/cf"/>', 'CF 설치');">기본 정보 관리</a></li>
-                   </sec:authorize>
-                   <sec:authorize access="hasAuthority('DEPLOY_DIEGO_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/diego"/>', 'DIEGO 설치');">NETWROK 정보 관리</a></li>
-                   </sec:authorize>
-                   <sec:authorize access="hasAuthority('DEPLOY_CF_DIEGO_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/cfDiego"/>', 'CF & DIEGO 통합 설치');">인증서 정보 관리</a></li>
-                   </sec:authorize>
-                   <sec:authorize access="hasAuthority('DEPLOY_CF_DIEGO_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/cfDiego"/>', 'CF & DIEGO 통합 설치');">리소스 정보 관리</a></li>
-                   </sec:authorize>
-                   <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/hbBootstrap"/>', 'BOOTSTRAP 설치');">이종 DIEGO 설치</a></li>
-                   </sec:authorize>
-                </ul>
-            </li> --%>
-            
             <li>
                <a href="javascript:;" data-toggle="collapse" data-target="#deploymentMenu" ><i class="fa fa-fw fa-search-plus"></i> 배포 정보 조회 및 관리 <i class="fa fa-fw fa-caret-down"></i></a>
                <ul id="deploymentMenu" class="collapse">
                     <sec:authorize access="hasAuthority('INFO_STEMCELL_MENU')">
-                        <li><a href="javascript:goPage('<c:url value="/info/hbstemcell"/>', '스템셀 업로드');">스템셀 업로드</a></li>
+                        <li><a href="javascript:goPage('<c:url value="/info/hbStemcell"/>', '스템셀 업로드');">스템셀 업로드</a></li>
                     </sec:authorize>
                     <sec:authorize access="hasAuthority('INFO_RELEASE_MENU')">
-                        <li><a href="javascript:goPage('<c:url value="/info/release"/>', '릴리즈 업로드');">릴리즈 업로드</a></li>
+                        <li><a href="javascript:goPage('<c:url value="/info/hbRelease"/>', '릴리즈 업로드');">릴리즈 업로드</a></li>
                     </sec:authorize>
                     <sec:authorize access="hasAuthority('INFO_DEPLOYMENT_MENU')">
-                        <li><a href="javascript:goPage('<c:url value="/info/deploy/ment"/>', '배포목록');">배포 정보</a></li>
+                        <li><a href="javascript:goPage('<c:url value="/info/hbDeployment"/>', '배포목록');">배포 정보</a></li>
                     </sec:authorize>
                 </ul>
             </li>

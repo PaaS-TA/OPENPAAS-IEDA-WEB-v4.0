@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class HbCfDeploymentCredentialConfigController extends BaseController {
-	
+    
     @Autowired private HbCfDeploymentCredentialService service;
     private final static Logger LOGGER = LoggerFactory.getLogger(HbCfDeploymentDefaultConfigController.class);
     /***************************************************
@@ -57,7 +57,7 @@ public class HbCfDeploymentCredentialConfigController extends BaseController {
     
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : 리소스 정보 등록/수정
+     * @description : 인증서 정보 등록/수정
      * @title : saveCredentialConfigInfo
      * @return : ResponseEntity<>
     *****************************************************************/
@@ -68,4 +68,16 @@ public class HbCfDeploymentCredentialConfigController extends BaseController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : 인증서 정보 등록/수정
+     * @title : saveCredentialConfigInfo
+     * @return : ResponseEntity<>
+    *****************************************************************/
+    @RequestMapping(value = "/deploy/hbCfDeployment/credentialConfig/delete", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteCredentialConfigInfo(@RequestBody HbCfDeploymentCredentialConfigDTO dto, Principal principal) {
+        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbCfDeployment/credentialConfig/save"); }
+        service.deleteCredentialConfigInfo(dto, principal);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }

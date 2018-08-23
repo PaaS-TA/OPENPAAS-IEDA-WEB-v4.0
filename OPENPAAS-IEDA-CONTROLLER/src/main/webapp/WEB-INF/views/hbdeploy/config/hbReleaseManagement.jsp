@@ -816,7 +816,6 @@ $(window).resize(function() {
             <!-- //Btn -->
         </div>
     </div>
-    
     <!-- common 릴리즈 grid -->
     <div id="config_releaseGrid" style="width:100%; height:250px"></div>
     
@@ -835,7 +834,6 @@ $(window).resize(function() {
     
     <!-- Openstack 릴리즈 grid -->
     <div id="config_OpenstackReleaseGrid" style="width:100%; height:250px"></div>
-    
 </div>
     <!-- 릴리즈 등록 팝업 -->
     <div id="regPopupDiv" hidden="true">
@@ -874,7 +872,7 @@ $(window).resize(function() {
                                 <span>
                                     <input type="file" name="releasePathFile[]" id="releasePathFile" onchange="setReleaseFilePath(this);" hidden="true"/>
                                     <input style="width: 60%" type="text" id="releaseFileName" name="releaseFileName" style="width:53%;" readonly  onClick="openBrowse();" placeholder="업로드할 릴리즈 파일을 선택하세요."/>
-                                <span class="btn btn-primary" id = "browser" onClick="openBrowse();" disabled style="height: 25px; padding: 1px 7px 7px 6px;">Browse </span>&nbsp;&nbsp;&nbsp;
+                                    <span class="btn btn-primary" id = "browser" onClick="openBrowse();" disabled style="height: 25px; padding: 1px 7px 7px 6px;">Browse </span>&nbsp;&nbsp;&nbsp;
                                </span>
                             </div>
                         </div>

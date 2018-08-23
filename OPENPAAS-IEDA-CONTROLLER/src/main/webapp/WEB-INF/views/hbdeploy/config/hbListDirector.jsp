@@ -508,12 +508,13 @@ function credsChangeKeyPathStyle( showDiv, hideDiv ){
                         </div>
                     </div>
                     <div class="w2ui-field">
-                        <!-- <label style="width:36%; text-align: left; padding-left: 20px;" class="control-label"></label> -->
                         <div id="credsKeyPathDiv" style="padding-left: 30%">
                             <div id="credsKeyPathFileDiv" hidden="true">
-                                <input type="text" id="credsKeyFileName" name="credsKeyFileName" style="width: 250px;" readonly onclick="openBrowse();" placeholder="Credential File을 선택하세요"/>
-                                <a href="#" id="browse" onclick="openBrowse();"><span id="BrowseBtn">Browse</span></a>
-                                <input type="file" name="keyPathFile" onchange="setCredentialKeyPath(this);" style="display:none"/>
+                                <span>
+                                    <input type="text" id="credsKeyFileName" name="credsKeyFileName" style="width: 250px;" readonly onclick="openBrowse();" placeholder="Credential File을 선택하세요"/>
+                                    <input type="file" name="keyPathFile" onchange="setCredentialKeyPath(this);" style="display:none"/>
+                                    <span id="BrowseBtn"><a href="#" id="browse" onclick="openBrowse();">Browse</a></span>
+                                </span>
                             </div>
                             <div id="credsKeyPathListDiv">
                                 <select name="credsKeyPathList" id="credsKeyPathList" style="width: 250px;" onchange="setCredentialKeyPathList(this)"></select>

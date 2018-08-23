@@ -32,7 +32,7 @@
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/deploy-common.css?ver=5'/>"/>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/deploy-content.css?ver=6'/>"/>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/progress-step.css?ver=2'/>"/> <!-- progress-step css -->
-<link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-guide.css?ver=3'/>"/>
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-guide.css?ver=4'/>"/>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/infra-init.css?ver=4'/>"/>
 <!-- JAVA SCRIPT -->
 <!-- JQuery -->
@@ -57,7 +57,7 @@
 <script type="text/javascript" src="<c:url value='/js/yaml.js'/>"></script>
 <!-- Common -->
 <script type="text/javascript" src="<c:url value='/js/common.js?ver=11'/>"></script>
-<script type="text/javascript" src="<c:url value='/js/common-deploy.js?ver=4'/>"></script>
+<script type="text/javascript" src="<c:url value='/js/common-deploy.js?ver=8'/>"></script>
 
 <script type="text/javascript">
 (function($) {

@@ -44,11 +44,11 @@ public class HbDirectorConfigurationController extends BaseController {
     /***************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description : 설치 관리자 정보 목록 조회(전체)
-     * @title : listDirector
+     * @title : getHbDirectorListByType
      * @return : ResponseEntity<HashMap<String,Object>>
     ***************************************************/
     @RequestMapping(value="/config/hbDirector/list/{directorType}", method=RequestMethod.GET)
-    public ResponseEntity<HashMap<String, Object>> getHbDirectorList(@PathVariable String directorType) {
+    public ResponseEntity<HashMap<String, Object>> getHbDirectorListByType(@PathVariable String directorType) {
         if(LOGGER.isInfoEnabled()){ LOGGER.info("=============================> HB 설치 관리자  정보 목록 조회 요청"); }
         HashMap<String, Object> listResult = new HashMap<String, Object>();
         List<HbDirectorConfigVO> contents = service.getDirectorList(directorType);
@@ -60,6 +60,7 @@ public class HbDirectorConfigurationController extends BaseController {
         listResult.put("records", contents);
         return new ResponseEntity<HashMap<String, Object> >(listResult, HttpStatus.OK);
     }
+    
     
     /***************************************************
      * @project : Paas 플랫폼 설치 자동화

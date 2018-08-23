@@ -15,7 +15,10 @@
 var text_required_msg = '<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
 var select_required_msg='<spring:message code="common.select.vaildate.required.message"/>';//을(를) 선택하세요.
 var search_data_fail_msg ='클라우드 인프라 환경을 선택하세요.';
-var resourceConfigInfo = "";//리소스 정보
+var list_lock_msg = "목록을 조회 중입니다.";
+var resourceConfigInfo = [];//리소스 정보
+var directorInfo = [];
+var stemcellInfo = [];
 var iaas = "";
 var resourceLayout = {
         layout2: {
@@ -111,7 +114,6 @@ $(function(){
     w2ui.layout2.content('left', $().w2grid(resourceLayout.grid));
     w2ui['layout2'].content('main', $('#regPopupDiv').html());
     doSearch();
-    
     $("#deleteBtn").click(function(){
         if($("#deleteBtn").attr('disabled') == "disabled") return;
         var selected = w2ui['resource_GroupGrid'].getSelection();
@@ -150,13 +152,18 @@ function settingResourceInfo(){
         return;
     }
     iaas = record.iaasType;
+    stemcellInfo = record.stemcellName;
+    directorInfo = record.directorInfo;
     $("input[name=resourceInfoId]").val(record.recid);
     $("input[name=resourceConfigName]").val(record.resourceConfigName);
     $("select[name=iaasType]").val(record.iaasType);
-    $("select[name=stemcellName]").html("<option value='"+record.stemcellName+"' selected >"+record.stemcellName+"</option>");
     $("input[name=instanceTypeS]").val(record.instanceTypeS);
     $("input[name=instanceTypeM]").val(record.instanceTypeM);
     $("input[name=instanceTypeL]").val(record.instanceTypeL);
+    $("select[name=directorInfo]").removeAttr("disabled");
+    $("select[name=stemcellName]").removeAttr("disabled");
+    getHbDirectorList(iaas);
+    getStemcellList(directorInfo);
 }
 
 /********************************************************
@@ -164,10 +171,11 @@ function settingResourceInfo(){
  * 기능 : doSearch
  *********************************************************/
 function doSearch() {
-    resourceConfigInfo="";//리소스 정보
+    resourceConfigInfo = [];//리소스 정보
+    stemcellInfo = "";
+    directorInfo = "";
     iaas = "";
     resetForm();
-    
     w2ui['resource_GroupGrid'].clear();
     w2ui['resource_GroupGrid'].load('/deploy/hbCfDeployment/resourceConfig/list');
     doButtonStyle(); 
@@ -186,16 +194,17 @@ function doButtonStyle() {
  * 기능 : registCfDeploymentResourceConfigInfo
  *********************************************************/
 function registCfDeploymentResourceConfigInfo(){
-    w2popup.lock("등록 중입니다.", true);
+    var stemcellInfos = $("select[name='stemcellName'] :selected").val().split("/");
     resourceConfigInfo = {
             id                     : $("input[name=resourceInfoId]").val(),
             iaasType               : $("select[name=iaasType]").val(),
             resourceConfigName     : $("input[name=resourceConfigName]").val(),
-            stemcellName           : $("select[name=stemcellName]").val(),
-            instanceTypeS           : $("input[name=instanceTypeS]").val(),
-            instanceTypeM           : $("input[name=instanceTypeM]").val(),
-            instanceTypeL           : $("input[name=instanceTypeL]").val(),
-            
+            stemcellName           : stemcellInfos[0],
+            stemcellVersion        : stemcellInfos[1],
+            directorInfo           : $("select[name=directorInfo]").val(),
+            instanceTypeS          : $("input[name=instanceTypeS]").val(),
+            instanceTypeM          : $("input[name=instanceTypeM]").val(),
+            instanceTypeL          : $("input[name=instanceTypeL]").val(),
     }
     $.ajax({
         type : "PUT",
@@ -206,8 +215,7 @@ function registCfDeploymentResourceConfigInfo(){
         success : function(data, status) {
             doSearch();
         },
-        error : function( e, status ) {
-            w2popup.unlock();
+        error : function(request, e, status ) {
             var errorResult = JSON.parse(e.responseText);
             w2alert(errorResult.message, "리소스 정보 저장");
         }
@@ -243,40 +251,94 @@ function deleteCfDeploymentResourceConfigInfo(id, resourceConfigName){
     });
 }
 
+/********************************************************
+ * 설명 : 인프라 환경 별 디렉터 정보 조회
+ * 기능 : getHbDirectorList
+ *********************************************************/
+function getHbDirectorList(iaas){
+    var option = "<option value=''>디렉터 정보를 선택하세요.</option>";
+    if(iaas == ""){
+        $("select[name=directorInfo]").attr("disabled", "disabled");
+        $("select[name='directorInfo']").html(option);
+    } else {
+        w2utils.lock($("#layout_layout_panel_main"), list_lock_msg, true);
+        if($("select[name=directorInfo]").attr("disabled") == "disabled"){
+            $("select[name=directorInfo]").removeAttr("disabled");
+        }
+        $.ajax({
+            type : "GET",
+            url : "/config/hbCfDeployment/resourceConfig/list/director/"+iaas+"",
+            contentType : "application/json",
+            async : true,
+            success : function(data, status) {
+                if(data.records.length != 0){
+                    data.records.map(function (obj){
+                        if(obj.iedaDirectorConfigSeq == directorInfo) {
+                            option += "<option selected value="+obj.iedaDirectorConfigSeq+">"+obj.directorName+"/"+obj.directorUrl+"</option>";
+                        } else {
+                            option += "<option value="+obj.iedaDirectorConfigSeq+">"+obj.directorName+"/"+obj.directorUrl+"</option>";
+                        }
+                    });
+                }else if (data.records.length == 0){
+                    option = "<option value=''>디렉터가 존재 하지 않습니다.</option>";
+                }
+                $("#directorInfo").html(option);
+                w2utils.unlock($("#layout_layout_panel_main"));
+            },
+            error : function( request, status, error ) {
+                var errorResult = JSON.parse(request.responseText);
+                w2alert(errorResult.message, "리소스 정보 저장");
+                w2utils.unlock($("#layout_layout_panel_main"));
+                resetForm();
+            }
+        });
+    }
+}
+
 /******************************************************************
  * 기능 : getStemcellList
- * 설명 : 스템셀 목록 조회
+ * 설명 : 업로드 된 스템셀 목록 조회
  ***************************************************************** */
-function getStemcellList(iaas){
-    
-    var url = "/common/deploy/stemcell/list/bootstrap/" + iaas;
-    $.ajax({
-        type : "GET",
-        url : url,
-        contentType : "application/json",
-        async : true,
-        success : function(data, status) {
-            console.log(iaas);
-            stemcells = new Array();
-            if(data.records.length != 0){
-                var option = "";
-                data.records.map(function (obj){
-                    option += "<option "+ obj.stemcellFileName +">"+obj.stemcellFileName+"</option>";
-                });
-            }else if (data.records.length == 0){
-                if (iaas == 'nothing'){
-                    option = "<option value=''>인프라 환경을 먼저 선택하세요.</option>";
-                }else{
-                    option = "<option value=''>스템셀이 없습니다.</option>";
-                }
-            }
-            $("#stemcellName").html(option);
-        },
-        error : function( e, status ) {
-            w2alert(search_data_fail_msg, "BOOTSTRAP 설치");
-            resetForm();
+function getStemcellList(directorInfo){
+    var option = "<option value=''>스템셀을 선택하세요.</option>";
+    if(directorInfo == ""){
+        $("select[name=stemcellName]").attr("disabled", "disabled");
+        $("select[name='stemcellName']").html(option);
+    } else {
+        w2utils.lock($("#layout_layout_panel_main"), list_lock_msg, true);
+        if($("select[name=stemcellName]").attr("disabled") == "disabled"){
+            $("select[name=stemcellName]").removeAttr("disabled");
         }
-    });
+        var url = "/config/hbCfDeployment/resourceConfig/list/stemcells/"+directorInfo+"";
+        $.ajax({
+            type : "GET",
+            url : url,
+            contentType : "application/json",
+            async : true,
+            success : function(data, status) {
+                if(data.records.length != 0){
+                    data.records.map(function (obj){
+                        if(obj.stemcellFileName == stemcellInfo) {
+                            option += "<option selected "+obj.stemcellFileName+"/"+obj.stemcellVersion+">"+obj.stemcellFileName+"/"+obj.stemcellVersion+"</option>";
+                        }else {
+                            option += "<option "+obj.stemcellFileName+"/"+obj.stemcellVersion+">"+obj.stemcellFileName+"/"+obj.stemcellVersion+"</option>";
+                        }
+                        
+                    });
+                }else if (data.records.length == 0){
+                    option = "<option value=''>스템셀이 존재 하지 않습니다.</option>";
+                }
+                $("#stemcellName").html(option);
+                w2utils.unlock($("#layout_layout_panel_main"));
+            },
+            error : function(request, status, error) {
+                var errorResult = JSON.parse(request.responseText);
+                w2alert(errorResult.message, "리소스 정보 저장");
+                w2utils.unlock($("#layout_layout_panel_main"));
+                resetForm();
+            }
+        });
+    }
 }
 
 /********************************************************
@@ -311,14 +373,16 @@ function resetForm(status){
     $("input[name=resourceConfigName]").val("");
     $("select[name=iaasType]").val("");
     $("select[name=stemcellName]").val("");
-    $("select[name=stemcellName]").html("<option value=''>인프라 환경을 먼저 선택하세요.</option>");
     $("input[name=instanceTypeS]").val("");
     $("input[name=instanceTypeM]").val("");
     $("input[name=instanceTypeL]").val("");
     $("input[name=resourceInfoId]").val("");
+    $("select[name=directorInfo]").attr("disabled", "disabled");
+    $("select[name=stemcellName]").attr("disabled", "disabled");
+    $("select[name=directorInfo]").html("<option value=''>디렉터 정보를 선택하세요.</option>");
+    $("select[name=stemcellName]").html("<option value=''>스템셀을 선택하세요.</option>");
     if(status=="reset"){
         w2ui['resource_GroupGrid'].clear();
-        $("select[name=stemcellName]").html("<option value=''>인프라 환경을 먼저 선택하세요.</option>");
         doSearch();
     }
     document.getElementById("settingForm").reset();
@@ -332,7 +396,6 @@ function resetForm(status){
         <div class="title fl"> 리소스 정보 목록</div>
     </div>
     <div id="resource_GroupGrid" style="width:100%;  height:700px;"></div>
-
 </div>
 
 
@@ -353,19 +416,29 @@ function resetForm(status){
                    <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;">클라우드 인프라 환경</label>
                        <div>
-                           <select class="form-control" onchange="getStemcellList(this.value);" name="iaasType" style="width: 320px; margin-left: 20px;">
-                               <option value="nothing">인프라 환경을 선택하세요.</option>
+                           <select class="form-control" onchange="getHbDirectorList(this.value);" name="iaasType" style="width: 320px; margin-left: 20px;">
+                               <option value="">인프라 환경을 선택하세요.</option>
                                <option value="aws">AWS</option>
                                <option value="openstack">Openstack</option>
                            </select>
                        </div>
                    </div>
+                   
+                   <div class="w2ui-field">
+                       <label style="width:40%;text-align: left;padding-left: 20px;">디렉터 정보</label>
+                       <div>
+                           <select class="form-control" disabled="disabled" onchange="getStemcellList(this.value);" id="directorInfo" name="directorInfo" style="width: 320px; margin-left: 20px;">
+                               <option value="">디렉터 정보를 선택하세요</option>
+                           </select>
+                       </div>
+                   </div>
+                   
                    <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;">스템셀 명</label>
                        <div>
-                           <select class="form-control" name="stemcellName" id="stemcellName" style="width: 320px; margin-left: 20px;">
+                           <select class="form-control" disabled="disabled" name="stemcellName" id="stemcellName" style="width: 320px; margin-left: 20px;">
                                <option value="">스템셀을 선택하세요.</option>
-                           </select>                           
+                           </select>
                        </div>
                    </div>
                    <div class="w2ui-field">
@@ -399,8 +472,6 @@ function resetForm(status){
 </div>
 <script>
 $(function() {
-    
-    
     $("#settingForm").validate({
         ignore : [],
         //onfocusout: function(element) {$(element).valid()},
@@ -412,6 +483,10 @@ $(function() {
             }, iaasType: { 
                 required: function(){
                     return checkEmpty( $("select[name='iaasType']").val() );
+                }
+            }, directorInfo: { 
+                required: function(){
+                    return checkEmpty( $("select[name='directorInfo']").val() );
                 }
             }, stemcellName: { 
                 required: function(){
@@ -435,8 +510,10 @@ $(function() {
                 required:  "리소스 별칭"+text_required_msg
             }, iaasType: { 
                 required:  "클라우드 인프라 환경 타입"+select_required_msg,
+            }, directorInfo: { 
+                required:  "디렉터 정보"+select_required_msg,
             }, stemcellName: { 
-                required:  "Stemcell Name"+select_required_msg,
+                required:  "스템셀"+select_required_msg,
             }, instanceTypeS: { 
                 required:  "Instance Type Small"+text_required_msg,
             }, instanceTypeM: { 

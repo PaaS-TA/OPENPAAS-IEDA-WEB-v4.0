@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------
  * 2016.12       이동현        목록 화면 개선 및 코드 버그 수정
  * =================================================================
- */ 
+ */
 %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -13,10 +13,7 @@
 <script type="text/javascript">
 var uploadClient = null;
 var deleteClient = null;
-var bDefaultDirector = "";
-var iaas = "";
 $(function() {
-   bDefaultDirector = getDefaultDirector("<c:url value='/common/use/director'/>");
      
    /********************************************************
     * 설명 :  업로드된 스템셀 목록
@@ -88,9 +85,15 @@ $(function() {
       }, onError:function(evnet){
       }
   });
-
-   initView(bDefaultDirector);
-
+   initView();
+   
+   /************************************************
+    * 설명: 스템셀 조회
+   ************************************************/
+   $("#doSearch").click(function(){
+       doSearch($("#directors").val());
+   });
+   
   /********************************************************
    * 설명 :  스템셀 삭제
   *********************************************************/
@@ -112,74 +115,55 @@ $(function() {
  * 설명 :  스템셀 화면 로드 초기
  * 기능 : initView
  *********************************************************/
-function initView(bDefaultDirector) {
-    var selectedDirector = new Array();
+function initView() {
+    directorArray = [];
      // 업로드된 스템셀 조회
-    if(bDefaultDirector){
-        w2ui['us_uploadStemcellsGrid'].clear(); 
-        doSearchUploadedStemcells(selectedDirector);
-    }else{
-        getDirectorList();
-    }
+    getDirectorList();
     w2ui['us_localStemcellsGrid'].clear();
-    // 로컬에 다운로드된 스템셀 조회
-
-
-    //  버튼 제어 
     $("#doDeleteStemcell").attr("disabled", true);
     $("#doUploadStemcell").attr("disabled", true);
 }
 
+/************************************************
+ * 설명 : 조회기능
+ * 기능 : doSearch
+************************************************/
+function doSearch(directorInfo) {
+    if( checkEmpty(directorInfo) ){
+        w2alert("디렉터 정보를 선택하세요.");
+        return;
+    } else {
+        var directorId = directorInfo.split("/")[0];
+        var directorCpi = directorInfo.split("/")[1];
+        w2ui['us_uploadStemcellsGrid'].clear();
+        w2ui['us_localStemcellsGrid'].clear();
+        doSearchUploadedStemcells(directorId);
+        doSearchLocalStemcells(directorCpi);
+    }
+}
 
 /********************************************************
  * 설명 :  업로드된 스템셀 조회
  * 기능 : doSearchUploadedStemcells
  *********************************************************/
-function doSearchUploadedStemcells(directorData) {
-     console.log(directorData);
-     doSearchLocalStemcells(directorData[0].iaasType);
-     $.ajax({
-        type : "POST",
-        url : "/info/hbstemcell/list/upload",
-        contentType : "application/json",
-        async : true,
-        data : JSON.stringify({
-            directorUrl : directorData[0].directorUrl,
-            directorPort : directorData[0].directorPort,
-            directorType : directorData[0].directorType,
-            userId : directorData[0].userId,
-            userPassword : directorData[0].userPassword,
-            credentialFile : directorData[0].credentialFile
-        }),
-        success : function(data, status) {
-            console.log(data);
-            //w2ui['us_uploadStemcellsGrid'].load();
-        }, error : function(request, status, error) {
-            w2popup.unlock();
-            var errorResult = JSON.parse(request.responseText);
-            w2alert(errorResult.message);
-        }
-    });
-    //w2ui['us_uploadStemcellsGrid'].load("<c:url value='/info/hbstemcell/list/upload'/>");
-    
+function doSearchUploadedStemcells(directorId) {
+    w2ui['us_uploadStemcellsGrid'].load("<c:url value='/info/hbstemcell/list/upload/"+directorId+"'/>");
 }
 
 /********************************************************
  * 설명 :  로컬에 다운로드된 스템셀 조회
  * 기능 : doSearchLocalStemcells
  *********************************************************/
-function doSearchLocalStemcells(data) {
-        iaas = data;
-/*         var directorName = $("#directors").text().toUpperCase();
-        if( directorName.indexOf("_CPI") > 0  ) {
-            var start = directorName.indexOf("(");
-            var end = directorName.indexOf("_CPI)", start+1);
-            iaas = directorName.substring(start+1, end)
-        } */
+function doSearchLocalStemcells(directorCpi) {
+        var iaas = "";
+        if( directorCpi.indexOf("_cpi") > 0  ) {
+            iaas = directorCpi.split("_")[0]
+        }
         if( !checkEmpty(iaas) ){
             w2ui['us_localStemcellsGrid'].load("<c:url value='/info/hbstemcell/list/local/"+iaas+"'/>");
+        } else {
+            w2alert("디렉터 정보를 확인하세요.","스템셀 업로드");
         }
-    
 }
 
 /********************************************************
@@ -199,6 +183,9 @@ function lockFileSet(fileName){
  * 기능 : doUploadStemcell
  *********************************************************/
 function doUploadStemcell() {
+    
+    var directorId = $("#directors").val().split("/")[0];
+    
     var selected = w2ui['us_localStemcellsGrid'].getSelection();
     if ( selected == "" || selected == null) return;
     
@@ -207,7 +194,8 @@ function doUploadStemcell() {
     
     var requestParameter = {
             fileName : record.stemcellFileName,
-            version: record.stemcellVersion
+            version: record.stemcellVersion,
+            directorId: directorId
         };
     w2confirm({ 
         msg            : '스템셀  <br>' + record.stemcellFileName + '을(를)<br> 설치관리자에 업로드하시겠습니까?'
@@ -222,7 +210,9 @@ function doUploadStemcell() {
             }
             uploadLogPopup(requestParameter);
         }, no_callBack : function (){
-            initView(bDefaultDirector);
+            $("#doDeleteStemcell").attr("disabled", true);
+            $("#doUploadStemcell").attr("disabled", true);
+            doSearch($("#directors").val());
         }
     });
 }
@@ -251,7 +241,11 @@ function uploadLogPopup(requestParameter){
         },
         onClose : function(){
             $("textarea").text("");
-            initView(bDefaultDirector);
+            $("#doDeleteStemcell").attr("disabled", true);
+            $("#doUploadStemcell").attr("disabled", true);
+            doSearch($("#directors").val());
+            
+            $("#doDeleteStemcell").attr("disabled", true);
             if( uploadClient != null){
                 uploadClient.disconnect();
                 uploadClient = null;
@@ -267,10 +261,10 @@ function uploadLogPopup(requestParameter){
 function doUploadConnect(requestParameter){
     
     var message = requestParameter.version + " 버전의 스템셀(" + requestParameter.fileName + ") ";
-    var socket = new SockJS('/info/stemcell/upload/stemcellUploading');
+    var socket = new SockJS('/info/hbstemcell/upload/stemcellUploading');
     uploadClient = Stomp.over(socket); 
     uploadClient.connect({}, function(frame) {
-        uploadClient.subscribe('/user/info/stemcell/upload/logs', function(data){
+        uploadClient.subscribe('/user/info/hbstemcell/upload/logs', function(data){
             var response = JSON.parse(data.body);
             if(requestParameter.fileName == response.tag){
                 if ( response.messages != null ) {
@@ -298,7 +292,7 @@ function doUploadConnect(requestParameter){
                 }
             }
         });
-        uploadClient.send('/app/info/stemcell/upload/stemcellUploading', {}, JSON.stringify(requestParameter));
+        uploadClient.send('/app/info/hbstemcell/upload/stemcellUploading', {}, JSON.stringify(requestParameter));
     });
 }
 
@@ -307,6 +301,8 @@ function doUploadConnect(requestParameter){
  * 기능 : doDeleteStemcell
  *********************************************************/
 function doDeleteStemcell() {
+     
+    var directorId = $("#directors").val().split("/")[0];
     var selected = w2ui['us_uploadStemcellsGrid'].getSelection();
     if ( selected == "" || selected == null) return;
     
@@ -315,9 +311,9 @@ function doDeleteStemcell() {
 
     var requestParameter = {
             stemcellName : record.stemcellFileName,
-            version  : record.stemcellVersion
+            version  : record.stemcellVersion,
+            directorId : directorId
     };
-    
     w2confirm({
         msg            : record.stemcellVersion + '버전의 스템셀 <br>' + record.stemcellFileName + '<br>을 삭제하시겠습니까?'
         , title        : '<b>스템셀 삭제</b>'
@@ -327,9 +323,11 @@ function doDeleteStemcell() {
         , no_text      :'취소'
         , yes_callBack : function (){
                 deleteLogPopup(requestParameter);    
-            }
+        }
         , no_callBack : function(){
-            initView(bDefaultDirector);
+            $("#doDeleteStemcell").attr("disabled", true);
+            $("#doUploadStemcell").attr("disabled", true);
+            doSearch($("#directors").val());
         }
     });    
 }
@@ -359,7 +357,10 @@ function deleteLogPopup(requestParameter){
             deleteClient.disconnect();
             deleteClient = null;
             }
-            initView(bDefaultDirector);
+            $("#doDeleteStemcell").attr("disabled", true);
+            $("#doUploadStemcell").attr("disabled", true);
+
+            doSearch($("#directors").val());
         }
     });
 }
@@ -369,12 +370,11 @@ function deleteLogPopup(requestParameter){
  * 기능 : doDeleteConnect
  *********************************************************/
 function doDeleteConnect(requestParameter){
-    
     var message = requestParameter.version + " 버전의 스템셀(" + requestParameter.stemcellName + ") ";
-    var socket = new SockJS('/info/stemcell/delete/stemcellDelete');
+    var socket = new SockJS('/info/hbstemcell/delete/stemcellDelete');
     deleteClient = Stomp.over(socket); 
     deleteClient.connect({}, function(frame) {
-     deleteClient.subscribe('/user/info/stemcell/delete/logs', function(data){
+     deleteClient.subscribe('/user/info/hbstemcell/delete/logs', function(data){
             var response = JSON.parse(data.body);
             
             if ( response.messages != null ) {
@@ -390,7 +390,7 @@ function doDeleteConnect(requestParameter){
                    }
             }
      });
-     deleteClient.send('/app/info/stemcell/delete/stemcellDelete', {}, JSON.stringify(requestParameter));
+     deleteClient.send('/app/info/hbstemcell/delete/stemcellDelete', {}, JSON.stringify(requestParameter));
  });
 }
 
@@ -408,13 +408,11 @@ function popupClose() {
         deleteClient.disconnect();
         $("textarea[name='logAppendArea']").text("");
     }
-    
     w2popup.close();
-    
     // 업로드된 스템셀 조회
-     doSearchUploadedStemcells();
-     $("#doUploadStemcell").attr('disabled', true);
-    
+    $("#doDeleteStemcell").attr("disabled", true);
+    $("#doUploadStemcell").attr("disabled", true);
+     doSearch($("#directors").val());
 }
 
 /********************************************************
@@ -435,58 +433,19 @@ $( window ).resize(function() {
     setLayoutContainerHeight();
 });
 
-/********************************************************
- * 설명 : 디렉터 리스트
- * 기능 : directorList
- *********************************************************/
-function getDirectorList(){
-     directorArray = new Array();
-     $.ajax({
-         type : "GET",
-         url : "/common/use/hbDirector",
-         async : true,
-         success : function(data){
-             var $object = jQuery("#directorList");
-             var directorList = "";
-             if(data != null){
-                 data.map(function(obj){
-                     directorArray.push(obj);
-             });
-                 directorList = "<select name='select' id='directors' class='select' style='width:300px' onchange='doSearchUploadedStemcells(directorArray);'>";
-                 directorList += "<option selected='selected' disabled='disabled' value='all' style='color:gray'>조회할 디렉터를 선택</option>";
-                 for(var i=0; i<directorArray.length; i++){
-                     directorList += "<option value='"+directorArray[i]+"'>"+directorArray[i].directorName+"("+directorArray[i].directorType+")"+"</option>\n";
-                 }
-             }else{
-                 directorList = "<option selected='selected' disabled='disabled' value='all' style='color:red'>조회할 디렉터가 존재하지 않습니다.</option>";
-             }
-             directorList += "</select>"
-             $object.html(directorList);
-         },error : function(xhr, status) {
-                if(xhr.status==403){
-                    location.href = "/abuse";
-                }else{
-                    var errorResult = JSON.parse(request.responseText);
-                    w2alert(errorResult, "스템셀 업로드 조회");
-                }
-            }
-     });
-
- }
 </script>
 
 <div id="main">
     <div class="page_site">정보조회 > <strong>스템셀 업로드</strong></div>
-    
-    <!-- 설치 관리자 -->
-    <div id="isDefaultDirector"></div>
-    
-    <!-- 디렉터 리스트 -->
-    <div id="directorList">
-    </div>
-    
     <!-- 업로드된 스템셀 목록-->
     <div class="pdt20">
+        <div class="title fl">디렉터 정보 설정</div>
+        <div class="search_box" align="left" style="padding-left:10px; width:100%;">
+            <label  style="font-size:11px; color:white;">디렉터 명</label> &nbsp;&nbsp;&nbsp;
+            <select name="select" onchange="doSearch(this.value);" id="directors" class="select" style="width:300px"></select>&nbsp;&nbsp;&nbsp;
+            <span id="doSearch" class="btn btn-info" style="width:50px" >조회</span>
+        </div>
+    
         <div class="title fl">업로드된 스템셀 목록</div>
         <div class="fr"> 
             <sec:authorize access="hasAuthority('INFO_STEMCELL_DELETE')">
@@ -494,7 +453,7 @@ function getDirectorList(){
             </sec:authorize>
         </div>
     </div>
-    <div id="us_uploadStemcellsGrid" style="width:100%; height:278px"></div>
+    <div id="us_uploadStemcellsGrid" style="width:100%; height:260px"></div>
     
     <!-- 로컬 스템셀 목록-->
     <div class="pdt20">
@@ -506,5 +465,5 @@ function getDirectorList(){
         </div>
     </div>
         
-    <div id="us_localStemcellsGrid" style="width:100%; height:278px"></div>
+    <div id="us_localStemcellsGrid" style="width:100%; height:260px"></div>
 </div>

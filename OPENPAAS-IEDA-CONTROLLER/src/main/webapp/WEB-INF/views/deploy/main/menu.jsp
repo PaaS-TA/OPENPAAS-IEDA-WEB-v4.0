@@ -65,12 +65,6 @@
                    <sec:authorize access="hasAuthority('DEPLOY_CF_MENU')">
                        <li><a href="javascript:goPage('<c:url value="/deploy/cf"/>', 'CF DEPLOYMENT');"> CF-DEPLOYMENT 설치</a></li>
                    </sec:authorize>
-                   <%-- <sec:authorize access="hasAuthority('DEPLOY_DIEGO_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/diego"/>', 'DIEGO 설치');"> DIEGO 설치</a></li>
-                   </sec:authorize>  --%>
-                   <%-- <sec:authorize access="hasAuthority('DEPLOY_CF_DIEGO_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/cfDiego"/>', 'CF & DIEGO 통합 설치');">CF & DIEGO 통합 설치</a></li>
-                   </sec:authorize>  --%>
                    <sec:authorize access="hasAuthority('DEPLOY_SERVICEPACK_MENU')">
                        <li><a href="javascript:goPage('<c:url value="/deploy/servicePack"/>', '서비스팩 설치');"> 서비스팩 설치</a></li>
                    </sec:authorize>

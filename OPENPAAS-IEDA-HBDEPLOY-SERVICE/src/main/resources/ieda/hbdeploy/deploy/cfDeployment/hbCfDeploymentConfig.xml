@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentDAO">
+
+	<resultMap id="cfdeployment" type="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentVO">
+		<id property="id" column="id"/>
+    	<result property="recid" column="id"/>
+    	<result property="cfDeploymentConfigName" column="cf_deployment_config_name"/>
+    	<result property="iaasType" column="iaas_type"/>
+    	<result property="networkConfigInfo" column="network_config_name"/>
+    	<result property="defaultConfigInfo" column="default_config_name"/>
+    	<result property="resourceConfigInfo" column="resource_config_name"/>
+    	<result property="cloud_config_file" column="cloud_config_file"/>
+    	<result property="deployStatus" column="deploy_status"/>
+    	<result property="taskId" column="task_id"/>
+	</resultMap>
+
+
+    <select id="selectCfDeploymentList" resultMap="cfdeployment">
+        select
+            id
+            ,iaas_type
+            ,cf_deployment_config_name
+            ,network_config_name
+            ,default_config_name
+            ,resource_config_name
+            ,instance_config_name
+            ,credential_config_name
+            ,cloud_config_file
+            ,deploy_status
+            ,task_id
+            ,create_user_id
+            ,create_date
+            ,update_user_id
+            ,update_date
+        from
+            ieda_hb_cfDeployment
+        <if test="installStatus == 'installAble'">
+            where deploy_status is null
+            or deploy_status = '';
+        </if>
+        <if test="installStatus != 'installAble'">
+            where deploy_status is not null
+            or deploy_status != '';
+        </if>
+    </select>
+</mapper>
