@@ -42,7 +42,6 @@ public class CfController extends BaseController{
     
     final private static Logger LOGGER = LoggerFactory.getLogger(CfController.class);
     
-    
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description : CF 설치 화면 이동

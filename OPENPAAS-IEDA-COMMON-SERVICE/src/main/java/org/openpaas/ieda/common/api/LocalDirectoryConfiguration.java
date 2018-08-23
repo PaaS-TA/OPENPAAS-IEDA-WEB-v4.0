@@ -23,7 +23,7 @@ public class LocalDirectoryConfiguration {
     final private static String HYBRID_CREDENTIAL_DIR = BASE_DIR + SEPARATOR + "hybird_credential";
     final private static String PROJECT_STATIC_DIR      = System.getProperty("user.dir") + SEPARATOR + "src/main/resources/static";
     final private static String CF_CREDENTIAL_DIR       = BASE_DIR + SEPARATOR + "cf_credential";
-    
+    final private static String HYBRID_CF_CREDENTIAL_DIR = BASE_DIR + SEPARATOR + "hybird_cf_credential";
     final private static String MANIFEST_TEMPLATE_DIR   = PROJECT_STATIC_DIR + SEPARATOR + "deploy_template";
     final private static String GENERATE_CERTS_DIR      = PROJECT_STATIC_DIR + SEPARATOR + "generate-certs";
     
@@ -243,6 +243,19 @@ public class LocalDirectoryConfiguration {
             throw new CommonException("notfound.credential.local.exception", "Credential 파일 저장 위치가 존재 하지 않습니다.", HttpStatus.NOT_FOUND);
         }
         return HYBRID_CREDENTIAL_DIR;
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : Hybrid CF Credential 파일 위치를 검사하고 없으면 생성하여 응답
+     * @title : getGenerateCredentialDir
+     * @return : String
+    *****************************************************************/
+    public static String getGenerateHybridCfCredentialDir(){
+        if(!checkAndMakeDirectory(HYBRID_CF_CREDENTIAL_DIR)) {
+            throw new CommonException("notfound.credential.local.exception", "Credential 파일 저장 위치가 존재 하지 않습니다.", HttpStatus.NOT_FOUND);
+        }
+        return HYBRID_CF_CREDENTIAL_DIR;
     }
     
     

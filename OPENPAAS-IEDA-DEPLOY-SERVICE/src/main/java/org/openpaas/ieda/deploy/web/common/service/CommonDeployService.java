@@ -279,7 +279,7 @@ public class CommonDeployService{
             saveKeyFileName(dto, keyFileName, principal);
             
         } catch (IOException e) {
-            throw new CommonException("conflict.credentialName.exception", "디렉터 인증서 파일 생성 중 에러가 발생 하였습니다.", HttpStatus.BAD_REQUEST);
+            throw new CommonException("conflict.credentialName.exception", "인증서 파일 생성 중 에러가 발생 하였습니다.", HttpStatus.BAD_REQUEST);
         } catch (InterruptedException e) {
             throw new CommonException("Thread.interruptedException", "서버 실행 중 에러가 발생 했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }

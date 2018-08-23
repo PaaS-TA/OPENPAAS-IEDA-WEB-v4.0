@@ -19,7 +19,7 @@ import org.openpaas.ieda.deploy.web.config.setting.service.DirectorConfigService
 import org.openpaas.ieda.deploy.web.config.stemcell.dao.StemcellManagementVO;
 import org.openpaas.ieda.deploy.web.config.stemcell.service.StemcellManagementService;
 import org.openpaas.ieda.deploy.web.config.systemRelease.service.ReleaseManagementService;
-import org.openpaas.ieda.deploy.web.information.deploy.service.DeploymentService;
+import org.openpaas.ieda.deploy.web.information.deployment.service.DeploymentService;
 import org.openpaas.ieda.deploy.web.information.iassConfig.dao.IaasConfigMgntVO;
 import org.openpaas.ieda.deploy.web.information.iassConfig.service.IaasConfigMgntService;
 import org.openpaas.ieda.deploy.web.information.release.service.ReleaseService;

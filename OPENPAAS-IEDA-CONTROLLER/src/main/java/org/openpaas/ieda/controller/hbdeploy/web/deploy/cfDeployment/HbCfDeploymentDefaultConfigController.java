@@ -43,14 +43,14 @@ public class HbCfDeploymentDefaultConfigController extends BaseController{
     @RequestMapping(value = "/deploy/hbCfDeployment/defaultConfig/list", method = RequestMethod.GET)
     public ResponseEntity<HashMap<String, Object>> getRecourceConfigInfoList() {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbCfDeployment/defaultConfig/list"); }
-        List<HbCfDeploymentDefaultConfigVO> DefaultConfigList = service.getDefaultConfigInfoList();
+        List<HbCfDeploymentDefaultConfigVO> defaultConfigList = service.getDefaultConfigInfoList();
         HashMap<String, Object> list = new HashMap<String, Object>();
         int size =0;
-        if( DefaultConfigList.size() > 0  ) {
-            size = DefaultConfigList.size();
+        if( defaultConfigList.size() > 0  ) {
+            size = defaultConfigList.size();
         }
         list.put("total", size);
-        list.put("records", DefaultConfigList);
+        list.put("records", defaultConfigList);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
     

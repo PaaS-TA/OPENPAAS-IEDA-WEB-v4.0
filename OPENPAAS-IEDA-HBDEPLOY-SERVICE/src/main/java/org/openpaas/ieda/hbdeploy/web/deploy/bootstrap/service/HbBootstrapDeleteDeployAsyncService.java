@@ -11,7 +11,7 @@ import java.util.Locale;
 
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.deploy.web.common.service.CommonDeployUtils;
-import org.openpaas.ieda.hbdeploy.api.director.utility.DirectorRestHelper;
+import org.openpaas.ieda.hbdeploy.api.director.utility.HbDirectorRestHelper;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigDAO;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dao.HbBootstrapDAO;
@@ -65,14 +65,14 @@ public class HbBootstrapDeleteDeployAsyncService{
                 status = "done";
                 resultMessage = "BOOTSTRAP 삭제가 완료되었습니다.";
                 bootstrapDao.deleteBootstrapInfo(dto);
-                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList("BOOTSTRAP를 삭제했습니다."));
+                HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList("BOOTSTRAP를 삭제했습니다."));
                 
             }else{
                 File credentialFile = new File(HYBRID_CREDENTIAL_FILE+vo.getDefaultConfigVo().getCredentialKeyName());
                 
                 if(!credentialFile.exists()){
                     status = "error";
-                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList("BOOTSTRAP 디렉터 인증서가 존재 하지 않습니다."));
+                    HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList("BOOTSTRAP 디렉터 인증서가 존재 하지 않습니다."));
                 }
                 String deployFile = DEPLOYMENT_DIR + vo.getDeploymentFile();
                 File file = new File(deployFile);
@@ -94,7 +94,7 @@ public class HbBootstrapDeleteDeployAsyncService{
                     String info = null;
                     while ((info = bufferedReader.readLine()) != null){
                         accumulatedBuffer.append(info).append("\n");
-                        DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList(info));
+                        HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList(info));
                     }
                     accumulatedLog = accumulatedBuffer.toString();
                 } else {
@@ -118,17 +118,17 @@ public class HbBootstrapDeleteDeployAsyncService{
                        //설치 관리자 삭제
                     deleteDirectorConfigInfo(vo.getIaasType(), vo.getDefaultConfigVo().getDirectorName());
                 }
-                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList(resultMessage));
+                HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList(resultMessage));
             }
         }catch(RuntimeException e){
             status = "error";
             e.printStackTrace();
             CommonDeployUtils.deleteFile(LOCK_DIR, "hybird_bootstrap.lock");
-            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList("BOOTSTRAP 삭제 중 Exception이 발생하였습니다."));
+            HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList("BOOTSTRAP 삭제 중 Exception이 발생하였습니다."));
         } catch ( Exception e) {
             status = "error";
             CommonDeployUtils.deleteFile(LOCK_DIR, "hybird_bootstrap.lock");
-            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList("BOOTSTRAP 삭제 중 Exception이 발생하였습니다."));
+            HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList("BOOTSTRAP 삭제 중 Exception이 발생하였습니다."));
         }finally {
             if(status.toLowerCase().equalsIgnoreCase("error")){
                 vo.setDeployStatus(message.getMessage("common.deploy.status.failed", null, Locale.KOREA));

@@ -17,9 +17,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class HbCfDeploymentResourceConfigService {
-	@Autowired private MessageSource message;
+    @Autowired private MessageSource message;
     @Autowired private  HbCfDeploymentResourceConfigDAO cfDeploymentResourceDao;
-
+    
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : Resource 정보 목록 조회
+     * @title : getResourceConfigInfoList
+     * @return : List< HbCfDeploymentResourceConfigVO>
+    *****************************************************************/
     public List< HbCfDeploymentResourceConfigVO> getResourceConfigInfoList() {
         List< HbCfDeploymentResourceConfigVO> list = cfDeploymentResourceDao.selectCfDeploymentResourceConfigInfoList();
         return list;
@@ -36,7 +42,6 @@ public class HbCfDeploymentResourceConfigService {
         HbCfDeploymentResourceConfigVO vo = null;
         int count = cfDeploymentResourceDao.selectCfDeploymentResourceConfigByName(dto.getResourceConfigName());
         if(dto.getId() == null){
-        //if( StringUtils.isEmpty(dto.getId().toString())){
             vo = new HbCfDeploymentResourceConfigVO();
             vo.setCreateUserId(principal.getName());
             if(count > 0){
@@ -54,17 +59,17 @@ public class HbCfDeploymentResourceConfigService {
             vo.setResourceConfigName(dto.getResourceConfigName());
             vo.setIaasType(dto.getIaasType());
             vo.setStemcellName(dto.getStemcellName());
+            vo.setStemcellVersion(dto.getStemcellVersion());
             vo.setInstanceTypeS(dto.getInstanceTypeS());
             vo.setInstanceTypeM(dto.getInstanceTypeM());
             vo.setInstanceTypeL(dto.getInstanceTypeL());
-            vo.setCreateDate(vo.getCreateDate());
+            vo.setDirectorInfo(dto.getDirectorInfo());
             vo.setUpdateUserId(principal.getName());
         }
         if( dto.getId() == null ){
-        //if( StringUtils.isEmpty(dto.getId().toString())){
-        	cfDeploymentResourceDao.insertCfDeploymentResourceConfigInfo(vo);
+            cfDeploymentResourceDao.insertCfDeploymentResourceConfigInfo(vo);
         }else{
-        	cfDeploymentResourceDao.updateCfDeploymentResourceConfigInfo(vo);
+            cfDeploymentResourceDao.updateCfDeploymentResourceConfigInfo(vo);
         }
     }
     
@@ -80,8 +85,5 @@ public class HbCfDeploymentResourceConfigService {
                     message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
         }
         cfDeploymentResourceDao.deleteCfDeploymentResourceConfigInfo(dto);
-        
     }
-
-    
 }

@@ -103,6 +103,7 @@ $(function() {
            ],
            onSelect : function(event) {
                event.onComplete = function() {
+                   $('#installVmBtn').attr('disabled', false);
                }
            },onDblClick: function (event) {
              var grid = this;
@@ -114,6 +115,7 @@ $(function() {
              }, 150);
            },onUnselect : function(event) {
                event.onComplete = function() {
+                   $('#installVmBtn').attr('disabled', true);
                }
            },onLoad:function(event){
                if(event.xhr.status == 403){
@@ -227,7 +229,6 @@ $(function() {
             onOpen:function(event){
                 event.onComplete = function(){
                     getBootstrapCpiInfo();
-                    getBootstrapDefaultInfo();
                     getBootstrapDefaultInfo();
                     getBootstrapNetworkInfo();
                     getBootstrapResourceInfo();
@@ -859,6 +860,7 @@ function doButtonStyle(){
     $('#modifyBtn').attr('disabled', true);
     $('#deleteBtn').attr('disabled', true);
     $('#deleteVmBtn').attr('disabled', true);
+    $('#installVmBtn').attr('disabled', true);
 }
  
 /******************************************************************

@@ -5,22 +5,32 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.openpaas.ieda.controller.common.BaseController;
+import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigVO;
+import org.openpaas.ieda.hbdeploy.web.config.setting.service.HbDirectorConfigService;
+import org.openpaas.ieda.hbdeploy.web.config.stemcell.dao.HbStemcellManagementVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentResourceConfigVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dto.HbCfDeploymentResourceConfigDTO;
+import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.service.HbCfDeploymentResourceConfigService;
+import org.openpaas.ieda.hbdeploy.web.information.stemcell.service.HbStemcellService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.service.HbCfDeploymentResourceConfigService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class HbCfDeploymentResourceConfigController extends BaseController{
+    
     @Autowired private HbCfDeploymentResourceConfigService service;
-	private final static Logger LOGGER = LoggerFactory.getLogger(HbCfDeploymentResourceConfigController.class);
+    @Autowired private HbDirectorConfigService directorService;
+    @Autowired private HbStemcellService stemcellService;
+    
+    private final static Logger LOGGER = LoggerFactory.getLogger(HbCfDeploymentResourceConfigController.class);
+    
     /***************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
      * @description : Hybrid CfDeployment 리소스 정보 화면 이동
@@ -77,5 +87,45 @@ public class HbCfDeploymentResourceConfigController extends BaseController{
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbCfDeployment/resourceConfig/delete"); }
         service.deleteResourceConfigInfo(dto, principal);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    
+    /***************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : 설치 관리자 정보 목록 조회(전체)
+     * @title : getHbDirectorListByIaas
+     * @return : ResponseEntity<HashMap<String,Object>>
+    ***************************************************/
+    @RequestMapping(value="/config/hbCfDeployment/resourceConfig/list/director/{iaasType}", method=RequestMethod.GET)
+    public ResponseEntity<HashMap<String, Object>> getHbDirectorListByIaas(@PathVariable String iaasType) {
+        if(LOGGER.isInfoEnabled()){ LOGGER.info("=============================> HB 설치 관리자  정보 목록 조회 요청"); }
+        HashMap<String, Object> listResult = new HashMap<String, Object>();
+        List<HbDirectorConfigVO> contents = directorService.getDirectorListByIaas(iaasType);
+        int size = 0;
+        if( contents != null ) {
+            size = contents.size();
+        }
+        listResult.put("total", size);
+        listResult.put("records", contents);
+        return new ResponseEntity<HashMap<String, Object> >(listResult, HttpStatus.OK);
+    }
+    
+    /***************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : 업로드 한 스템셀 목록 조회
+     * @title : getHbUploadedStemcellList
+     * @return : ResponseEntity<HashMap<String,Object>>
+    ***************************************************/
+    @RequestMapping(value="/config/hbCfDeployment/resourceConfig/list/stemcells/{directorId}", method=RequestMethod.GET)
+    public ResponseEntity<HashMap<String, Object>> getHbUploadedStemcellList(@PathVariable int directorId) {
+        if(LOGGER.isInfoEnabled()){ LOGGER.info("=============================> HB 설치 관리자  정보 목록 조회 요청"); }
+        HashMap<String, Object> listResult = new HashMap<String, Object>();
+        List<HbStemcellManagementVO> contents = stemcellService.getStemcellList(directorId);
+        int size = 0;
+        if( contents != null ) {
+            size = contents.size();
+        }
+        listResult.put("total", size);
+        listResult.put("records", contents);
+        return new ResponseEntity<HashMap<String, Object> >(listResult, HttpStatus.OK);
     }
 }
