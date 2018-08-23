@@ -138,7 +138,6 @@ function doSearch(directorInfo) {
         doSearchLocalReleases();
     }
 }
-
 /********************************************************
  * 설명 : 업로드된 릴리즈 조회
  * 기능 : doSearchUploadedReleases

@@ -317,6 +317,8 @@ instance_groups:
   stemcell: default
   networks:
   - name: default
+  - name: vip
+  
   jobs:
   - name: consul_agent
     release: consul

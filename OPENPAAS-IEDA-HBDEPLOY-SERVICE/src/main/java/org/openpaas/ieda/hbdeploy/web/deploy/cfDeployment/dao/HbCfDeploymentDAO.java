@@ -14,4 +14,6 @@ public interface HbCfDeploymentDAO {
     *****************************************************************/
 	List<HbCfDeploymentVO> selectCfDeploymentList(@Param("installStatus")String installStatus);
 	
+	
+	
 }

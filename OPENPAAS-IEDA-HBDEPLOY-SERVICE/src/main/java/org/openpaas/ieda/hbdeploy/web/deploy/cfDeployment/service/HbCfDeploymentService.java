@@ -12,6 +12,12 @@ public class HbCfDeploymentService {
     
     @Autowired HbCfDeploymentDAO hbCfDeploymentDAO;
     
+    /***************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : CF Deployment 정보 조회
+     * @title : getHbBCfDeploymentList
+     * @return : List<HbCfDeploymentVO>
+    ***************************************************/
     public List<HbCfDeploymentVO> getHbBCfDeploymentList(String installStatus) {
         List<HbCfDeploymentVO> CfDeploymentList = hbCfDeploymentDAO.selectCfDeploymentList(installStatus);
         return CfDeploymentList;

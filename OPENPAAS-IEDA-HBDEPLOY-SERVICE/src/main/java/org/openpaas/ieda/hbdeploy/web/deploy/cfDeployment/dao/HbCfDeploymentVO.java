@@ -16,6 +16,14 @@ public class HbCfDeploymentVO {
     private String taskId;
     private String createUserId;//등록자 아이디
     private String updateUserId;//수정자 아이디
+    
+    private HbCfDeploymentCredentialConfigVO hbCfDeploymentCredentialConfigVO;
+    private HbCfDeploymentDefaultConfigVO hbCfDeploymentDefaultConfigVO;
+    private HbCfDeploymentInstanceConfigVO hbCfDeploymentInstanceConfigVO;
+    private HbCfDeploymentNetworkConfigVO hbCfDeploymentNetworkConfigVO;
+    private HbCfDeploymentResourceConfigVO hbCfDeploymentResourceConfigVO;
+    
+    
     private Date createDate;//등록일
     private Date updateDate;//수정일
     
@@ -108,5 +116,35 @@ public class HbCfDeploymentVO {
     }
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+    public HbCfDeploymentCredentialConfigVO getHbCfDeploymentCredentialConfigVO() {
+        return hbCfDeploymentCredentialConfigVO;
+    }
+    public void setHbCfDeploymentCredentialConfigVO(HbCfDeploymentCredentialConfigVO hbCfDeploymentCredentialConfigVO) {
+        this.hbCfDeploymentCredentialConfigVO = hbCfDeploymentCredentialConfigVO;
+    }
+    public HbCfDeploymentDefaultConfigVO getHbCfDeploymentDefaultConfigVO() {
+        return hbCfDeploymentDefaultConfigVO;
+    }
+    public void setHbCfDeploymentDefaultConfigVO(HbCfDeploymentDefaultConfigVO hbCfDeploymentDefaultConfigVO) {
+        this.hbCfDeploymentDefaultConfigVO = hbCfDeploymentDefaultConfigVO;
+    }
+    public HbCfDeploymentInstanceConfigVO getHbCfDeploymentInstanceConfigVO() {
+        return hbCfDeploymentInstanceConfigVO;
+    }
+    public void setHbCfDeploymentInstanceConfigVO(HbCfDeploymentInstanceConfigVO hbCfDeploymentInstanceConfigVO) {
+        this.hbCfDeploymentInstanceConfigVO = hbCfDeploymentInstanceConfigVO;
+    }
+    public HbCfDeploymentNetworkConfigVO getHbCfDeploymentNetworkConfigVO() {
+        return hbCfDeploymentNetworkConfigVO;
+    }
+    public void setHbCfDeploymentNetworkConfigVO(HbCfDeploymentNetworkConfigVO hbCfDeploymentNetworkConfigVO) {
+        this.hbCfDeploymentNetworkConfigVO = hbCfDeploymentNetworkConfigVO;
+    }
+    public HbCfDeploymentResourceConfigVO getHbCfDeploymentResourceConfigVO() {
+        return hbCfDeploymentResourceConfigVO;
+    }
+    public void setHbCfDeploymentResourceConfigVO(HbCfDeploymentResourceConfigVO hbCfDeploymentResourceConfigVO) {
+        this.hbCfDeploymentResourceConfigVO = hbCfDeploymentResourceConfigVO;
     }
 }
