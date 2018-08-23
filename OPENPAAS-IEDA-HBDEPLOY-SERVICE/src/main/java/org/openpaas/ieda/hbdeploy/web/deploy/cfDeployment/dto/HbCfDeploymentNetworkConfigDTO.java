@@ -18,28 +18,25 @@ public class HbCfDeploymentNetworkConfigDTO {
     private Array subnetRange;
     private Array subnetGateway;
     private Array subnetDns;
+    private Array subnetReservedIp;
     private Array subnetReservedFrom;
     private Array subnetReservedTo;
+    private Array subnetStaticIp;
     private Array subnetStaticFrom;
     private Array subnetStaticTo;
-    private String subnetId1;
-    private String securityGroup1;
-    private String subnetRange1;
-    private String subnetGateway1;
-    private String subnetDns1;
-    private String subnetReservedFrom1;
-    private String subnetReservedTo1;
-    private String subnetStaticFrom1;
-    private String subnetStaticTo1;
-    private String subnetId2;
-    private String securityGroup2;
-    private String subnetRange2;
-    private String subnetGateway2;
-    private String subnetDns2;
-    private String subnetReservedFrom2;
-    private String subnetReservedTo2;
-    private String subnetStaticFrom2;
-    private String subnetStaticTo2;
+    private Array availabilityZone;
+    private String subnetIdString;
+    private String securityGroupString;
+    private String subnetRangeString;
+    private String subnetGatewayString;
+    private String subnetDnsString;
+    private String subnetReservedIpString;
+    private String subnetReservedFromString;
+    private String subnetReservedToString;
+    private String subnetStaticIpString;
+    private String subnetStaticFromString;
+    private String subnetStaticToString;
+    private String availabilityZoneString;
 	private String createUserId;//등록자 아이디
     private String updateUserId;//수정자 아이디
     private Date createDate;//등록일
@@ -75,11 +72,100 @@ public class HbCfDeploymentNetworkConfigDTO {
     public void setPublicStaticIp(String publicStaticIp) {
         this.publicStaticIp = publicStaticIp;
     }
+
+
 	public Array getSubnetId() {
 		return subnetId;
 	}
 	public void setSubnetId(Array subnetId) {
 		this.subnetId = subnetId;
+	}
+	public Array getSubnetStaticTo() {
+		return subnetStaticTo;
+	}
+	public void setSubnetStaticTo(Array subnetStaticTo) {
+		this.subnetStaticTo = subnetStaticTo;
+	}
+	public Array getAvailabilityZone() {
+		return availabilityZone;
+	}
+	public void setAvailabilityZone(Array availabilityZone) {
+		this.availabilityZone = availabilityZone;
+	}
+	public void setSubnetStaticFrom(Array subnetStaticFrom) {
+		this.subnetStaticFrom = subnetStaticFrom;
+	}
+	public String getSubnetIdString() {
+		return subnetIdString;
+	}
+	public void setSubnetIdString(String subnetIdString) {
+		this.subnetIdString = subnetIdString;
+	}
+	public String getSecurityGroupString() {
+		return securityGroupString;
+	}
+	public void setSecurityGroupString(String securityGroupString) {
+		this.securityGroupString = securityGroupString;
+	}
+	public String getSubnetRangeString() {
+		return subnetRangeString;
+	}
+	public void setSubnetRangeString(String subnetRangeString) {
+		this.subnetRangeString = subnetRangeString;
+	}
+	public String getSubnetGatewayString() {
+		return subnetGatewayString;
+	}
+	public void setSubnetGatewayString(String subnetGatewayString) {
+		this.subnetGatewayString = subnetGatewayString;
+	}
+	public String getSubnetDnsString() {
+		return subnetDnsString;
+	}
+	public void setSubnetDnsString(String subnetDnsString) {
+		this.subnetDnsString = subnetDnsString;
+	}
+	public String getSubnetReservedIpString() {
+		return subnetReservedIpString;
+	}
+	public void setSubnetReservedIpString(String subnetReservedIpString) {
+		this.subnetReservedIpString = subnetReservedIpString;
+	}
+	public String getSubnetReservedFromString() {
+		return subnetReservedFromString;
+	}
+	public void setSubnetReservedFromString(String subnetReservedFromString) {
+		this.subnetReservedFromString = subnetReservedFromString;
+	}
+	public String getSubnetReservedToString() {
+		return subnetReservedToString;
+	}
+	public void setSubnetReservedToString(String subnetReservedToString) {
+		this.subnetReservedToString = subnetReservedToString;
+	}
+	public String getSubnetStaticIpString() {
+		return subnetStaticIpString;
+	}
+	public void setSubnetStaticIpString(String subnetStaticIpString) {
+		this.subnetStaticIpString = subnetStaticIpString;
+	}
+	public String getSubnetStaticFromString() {
+		return subnetStaticFromString;
+	}
+	public void setSubnetStaticFromString(String subnetStaticFromString) {
+		this.subnetStaticFromString = subnetStaticFromString;
+	}
+	public String getSubnetStaticToString() {
+		return subnetStaticToString;
+	}
+	public void setSubnetStaticToString(String subnetStaticToString) {
+		this.subnetStaticToString = subnetStaticToString;
+	}
+	public String getAvailabilityZoneString() {
+		return availabilityZoneString;
+	}
+	public void setAvailabilityZoneString(String availabilityZoneString) {
+		this.availabilityZoneString = availabilityZoneString;
 	}
 	public Array getSecurityGroup() {
 		return securityGroup;
@@ -90,6 +176,7 @@ public class HbCfDeploymentNetworkConfigDTO {
 	public Array getSubnetRange() {
 		return subnetRange;
 	}
+
 	public void setSubnetRange(Array subnetRange) {
 		this.subnetRange = subnetRange;
 	}
@@ -105,6 +192,12 @@ public class HbCfDeploymentNetworkConfigDTO {
 	public void setSubnetDns(Array subnetDns) {
 		this.subnetDns = subnetDns;
 	}
+	public Array getSubnetReservedIp() {
+		return subnetReservedIp;
+	}
+	public void setSubnetReservedIp(Array subnetReservedIp) {
+		this.subnetReservedIp = subnetReservedIp;
+	}
 	public Array getSubnetReservedFrom() {
 		return subnetReservedFrom;
 	}
@@ -117,126 +210,16 @@ public class HbCfDeploymentNetworkConfigDTO {
 	public void setSubnetReservedTo(Array subnetReservedTo) {
 		this.subnetReservedTo = subnetReservedTo;
 	}
+	public Array getSubnetStaticIp() {
+		return subnetStaticIp;
+	}
+	public void setSubnetStaticIp(Array subnetStaticIp) {
+		this.subnetStaticIp = subnetStaticIp;
+	}
 	public Array getSubnetStaticFrom() {
 		return subnetStaticFrom;
 	}
-	public String getSubnetStaticTo1() {
-		return subnetStaticTo1;
-	}
-	public void setSubnetStaticTo1(String subnetStaticTo1) {
-		this.subnetStaticTo1 = subnetStaticTo1;
-	}
-	public void setSubnetStaticFrom(Array subnetStaticFrom) {
-		this.subnetStaticFrom = subnetStaticFrom;
-	}
-	public Array getSubnetStaticTo() {
-		return subnetStaticTo;
-	}
-	public void setSubnetStaticTo(Array subnetStaticTo) {
-		this.subnetStaticTo = subnetStaticTo;
-	}
-	public String getSubnetId1() {
-		return subnetId1;
-	}
-	public void setSubnetId1(String subnetId1) {
-		this.subnetId1 = subnetId1;
-	}
-	public String getSecurityGroup1() {
-		return securityGroup1;
-	}
-	public void setSecurityGroup1(String securityGroup1) {
-		this.securityGroup1 = securityGroup1;
-	}
-	public String getSubnetRange1() {
-		return subnetRange1;
-	}
-	public void setSubnetRange1(String subnetRange1) {
-		this.subnetRange1 = subnetRange1;
-	}
-	public String getSubnetGateway1() {
-		return subnetGateway1;
-	}
-	public void setSubnetGateway1(String subnetGateway1) {
-		this.subnetGateway1 = subnetGateway1;
-	}
-	public String getSubnetDns1() {
-		return subnetDns1;
-	}
-	public void setSubnetDns1(String subnetDns1) {
-		this.subnetDns1 = subnetDns1;
-	}
-	public String getSubnetReservedFrom1() {
-		return subnetReservedFrom1;
-	}
-	public void setSubnetReservedFrom1(String subnetReservedFrom1) {
-		this.subnetReservedFrom1 = subnetReservedFrom1;
-	}
-	public String getSubnetReservedTo1() {
-		return subnetReservedTo1;
-	}
-	public void setSubnetReservedTo1(String subnetReservedTo1) {
-		this.subnetReservedTo1 = subnetReservedTo1;
-	}
-	public String getSubnetStaticFrom1() {
-		return subnetStaticFrom1;
-	}
-	public void setSubnetStaticFrom1(String subnetStaticFrom1) {
-		this.subnetStaticFrom1 = subnetStaticFrom1;
-	}
-	public String getSubnetId2() {
-		return subnetId2;
-	}
-	public void setSubnetId2(String subnetId2) {
-		this.subnetId2 = subnetId2;
-	}
-	public String getSecurityGroup2() {
-		return securityGroup2;
-	}
-	public void setSecurityGroup2(String securityGroup2) {
-		this.securityGroup2 = securityGroup2;
-	}
-	public String getSubnetRange2() {
-		return subnetRange2;
-	}
-	public void setSubnetRange2(String subnetRange2) {
-		this.subnetRange2 = subnetRange2;
-	}
-	public String getSubnetGateway2() {
-		return subnetGateway2;
-	}
-	public void setSubnetGateway2(String subnetGateway2) {
-		this.subnetGateway2 = subnetGateway2;
-	}
-	public String getSubnetDns2() {
-		return subnetDns2;
-	}
-	public void setSubnetDns2(String subnetDns2) {
-		this.subnetDns2 = subnetDns2;
-	}
-	public String getSubnetReservedFrom2() {
-		return subnetReservedFrom2;
-	}
-	public void setSubnetReservedFrom2(String subnetReservedFrom2) {
-		this.subnetReservedFrom2 = subnetReservedFrom2;
-	}
-	public String getSubnetReservedTo2() {
-		return subnetReservedTo2;
-	}
-	public void setSubnetReservedTo2(String subnetReservedTo2) {
-		this.subnetReservedTo2 = subnetReservedTo2;
-	}
-	public String getSubnetStaticFrom2() {
-		return subnetStaticFrom2;
-	}
-	public void setSubnetStaticFrom2(String subnetStaticFrom2) {
-		this.subnetStaticFrom2 = subnetStaticFrom2;
-	}
-	public String getSubnetStaticTo2() {
-		return subnetStaticTo2;
-	}
-	public void setSubnetStaticTo2(String subnetStaticTo2) {
-		this.subnetStaticTo2 = subnetStaticTo2;
-	}
+	
 	public String getCreateUserId() {
 		return createUserId;
 	}

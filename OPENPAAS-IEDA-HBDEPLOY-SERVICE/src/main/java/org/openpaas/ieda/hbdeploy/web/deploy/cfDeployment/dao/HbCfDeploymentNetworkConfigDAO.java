@@ -28,7 +28,7 @@ public interface HbCfDeploymentNetworkConfigDAO {
      * @title : insertHbCfDeploymentNetworkConfigInfo
      * @return : HbCfDeploymentNetworkConfigVO
     *****************************************************************/
-    void insertHbCfDeploymentNetworkConfigInfo(@Param("network")HbCfDeploymentNetworkConfigVO vo);
+    List<HbCfDeploymentNetworkConfigVO> insertHbCfDeploymentNetworkConfigInfo(@Param("network")HbCfDeploymentNetworkConfigVO vo);
 
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
