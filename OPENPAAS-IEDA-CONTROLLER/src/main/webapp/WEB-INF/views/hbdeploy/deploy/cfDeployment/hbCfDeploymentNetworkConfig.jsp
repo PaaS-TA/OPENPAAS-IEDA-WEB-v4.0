@@ -51,13 +51,13 @@ var resourceLayout = {
                        }
                    }},
                    { field: 'publicStaticIp', caption: 'Public IP', size:'150px', style:'text-align:center;'},
-                   { field: 'subnetId1', caption: '서브넷 ID', size:'150px', style:'text-align:center;'},
-                   { field: 'securityGroup1', caption: '보안그룹', size:'150px', style:'text-align:center;'},
-                   { field: 'subnetRange1', caption: '서브넷 주소 범위', size:'150px', style:'text-align:center;'},
-                   { field: 'subnetGateway1', caption: '게이트웨이 ', size:'150px', style:'text-align:center;'},
-                   { field: 'subnetDns1', caption: 'DNS', size:'150px', style:'text-align:center;'},
-                   { field: 'subnetReservedIp1', caption: '할당 제외 대역', size:'150px', style:'text-align:center;'},
-                   { field: 'subnetStaticFrom1', caption: '할당 제외 대역 시작점 IP', size:'150px', style:'text-align:center;'},
+                   { field: 'subnetId', caption: '서브넷 ID', size:'150px', style:'text-align:center;'},
+                   { field: 'securityGroup', caption: '보안그룹', size:'150px', style:'text-align:center;'},
+                   { field: 'subnetRange', caption: '서브넷 주소 범위', size:'150px', style:'text-align:center;'},
+                   { field: 'subnetGateway', caption: '게이트웨이 ', size:'150px', style:'text-align:center;'},
+                   { field: 'subnetDns', caption: 'DNS', size:'150px', style:'text-align:center;'},
+                   { field: 'subnetReservedIp', caption: '할당 제외 대역', size:'150px', style:'text-align:center;'},
+                   { field: 'subnetStaticIP', caption: '할당 대역', size:'150px', style:'text-align:center;'},
 
                    ],
             onSelect : function(event) {
@@ -232,36 +232,46 @@ function registHbCfDeploymentNetworkConfigInfo(){
     networkConfigInfo.push(networkInfo);
     
     var external = {
-            seq                : 0,
+            
             direction          : "External",
             publicStaticIp     : $("input[name='publicStaticIp']").val(),
     }
     networkConfigInfo.push(external);
     
     //Internal
-    var form = "defaultNetworkInfoDiv_1";
-    var cnt = 1
-    if( $("#"+form).find(".panel-body").length > 1 ){
-        cnt = $("#"+form).find(".panel-body").length;
-    }
-    for(var i=1; i < cnt; i++){    
-    	var   internal = {
-                direction              : "Internal",
-                subnetId               : $("input[name='subnetId"+i+"']").val(),
-                securityGroup          : $("input[name='securityGroup"+i+"']").val(),
-                subnetRange            : $("input[name='subnetRange"+i+"']").val(),
-                subnetGateway          : $("input[name='subnetGateway"+i+"'']").val(),
-                subnetDns              : $("input[name='subnetDns"+i+"]").val(),
-                subnetReservedFrom     : $("input[name='subnetReservedFrom"+i+"']").val(),
-                subnetReservedTo       : $("input[name='subnetReservedTo"+i+"']").val(),
-                subnetReservedIp       : $("input[name='subnetReservedIp"+i+"']").val(),
-                subnetStaticFrom       : $("input[name='subnetStaticFrom"+i+"']").val(),
-                subnetStaticTo         : $("input[name='subnetStaticTo"+i+"']").val(),
-                subnetStaticIp         : $("input[name='subnetStaticIp"+i+"']").val()   
-        }
+
+    var internal = {
+            
+            subnetId1               : $("input[name='subnetId1']").val(),
+            securityGroup1          : $("input[name='securityGroup1']").val(),
+            subnetRange1            : $("input[name='subnetRange1']").val(),
+            subnetGateway1          : $("input[name='subnetGateway1']").val(),
+            subnetDns1              : $("input[name='subnetDns1']").val(),
+            subnetReservedFrom1     : $("input[name='subnetReservedFrom1']").val(),
+            subnetReservedTo1       : $("input[name='subnetReservedTo1']").val(),
+            subnetStaticFrom1       : $("input[name='subnetStaticFrom1']").val(),
+            subnetStaticTo1         : $("input[name='subnetStaticTo1']").val(),
+
     }
     networkConfigInfo.push(internal);
-
+    
+    if($("input[name='subnetId_2']").val() != null){
+    	
+	    var internal2 = {
+	            subnetId2               : $("input[name='subnetId_2']").val(),
+	            securityGroup2          : $("input[name='securityGroup_2']").val(),
+	            subnetRange2            : $("input[name='subnetRange_2']").val(),
+	            subnetGateway2          : $("input[name='subnetGateway_2']").val(),
+	            subnetDns2              : $("input[name='subnetDns_2']").val(),
+	            subnetReservedFrom2     : $("input[name='subnetReservedFrom_2']").val(),
+	            subnetReservedTo2       : $("input[name='subnetReservedTo_2']").val(),
+	            subnetStaticFrom2       : $("input[name='subnetStaticFrom_2']").val(),
+	            subnetStaticTo2         : $("input[name='subnetStaticTo_2']").val(),
+	    }
+	    networkConfigInfo.push(internal2);
+    }
+   
+   console.log( JSON.stringify(networkConfigInfo) +"TEST PUT AAA BBB CCC");
     $.ajax({
         type : "PUT",
         url : "/deploy/hbCfDeployment/networkConfig/save",
@@ -329,6 +339,7 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
      
      var index = Number(preDiv.split("_")[1])+1;
      var div= preDiv.split("_")[0] + "_"+ index;
+     
      var body_div= "<div class='panel-body'>";
      var field_div_label="<div class='w2ui-field'>"+"<label style='text-align: left; width: 36%; font-size: 11px;'>";
      var text_style="type='text' style='display:inline-blcok; width:70%;'";
@@ -512,16 +523,16 @@ function resetForm(status){
     $("input[name=networkName]").val("");
     $("select[name=iaasType]").val("");
     $("select[name=publicStaticIp]").val("");
-    $("input[name=subnetId_1]").val("");
-    $("input[name=securityGroup_1]").val("");
-    $("input[name=subnetRange_1]").val("");
-    $("input[name=subnetGateway_1]").val("");
-    $("input[name=subnetDns_1]").val("");
-    $("input[name=subnetReservedFrom_1]").val("");
-    $("input[name=subnetReservedTo_1]").val("");
-    $("input[name=subnetStaticFrom_1]").val("");
-    $("input[name=subnetStaticTo_1]").val("");
-    $("input[name=availabilityZone_1]").val("");
+    $("input[name=subnetId1]").val("");
+    $("input[name=securityGroup1]").val("");
+    $("input[name=subnetRange1]").val("");
+    $("input[name=subnetGateway1]").val("");
+    $("input[name=subnetDns1]").val("");
+    $("input[name=subnetReservedFrom1]").val("");
+    $("input[name=subnetReservedTo1]").val("");
+    $("input[name=subnetStaticFrom1]").val("");
+    $("input[name=subnetStaticTo1]").val("");
+    $("input[name=availabilityZone1]").val("");
     $("input[name=subnetId_2]").val("");
     $("input[name=securityGroup_2]").val("");
     $("input[name=subnetRange_2]").val("");

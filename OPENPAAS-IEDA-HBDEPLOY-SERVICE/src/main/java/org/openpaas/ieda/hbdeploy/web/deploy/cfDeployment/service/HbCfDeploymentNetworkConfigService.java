@@ -1,6 +1,7 @@
 package org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.service;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -28,10 +29,24 @@ public class HbCfDeploymentNetworkConfigService {
      * @title : getNetworkConfigInfoList selectCfDeploymentNetworkConfigInfoList
      * @return : List< HbCfDeploymentNetworkConfigVO>
     *****************************************************************/
-    public List< HbCfDeploymentNetworkConfigVO> getNetworkConfigInfoList() {
-    	
+    public List< HbCfDeploymentNetworkConfigDTO> getNetworkConfigInfoList() {
+        List< HbCfDeploymentNetworkConfigDTO> networkList = new ArrayList<HbCfDeploymentNetworkConfigDTO>();
         List< HbCfDeploymentNetworkConfigVO> list = cfDeploymentNetworkDao.selectHbCfDeploymentNetworkConfigInfoList();
-        return list;
+        if(! list.isEmpty()){
+            int recid = 0;
+            for( HbCfDeploymentNetworkConfigVO vo :list){
+                HbCfDeploymentNetworkConfigDTO networkInfo = new HbCfDeploymentNetworkConfigDTO();
+                networkInfo.setRecid(recid++);
+                networkInfo.setId(vo.getId());
+                networkInfo.setIaasType(vo.getIaasType());
+                //external network
+                networkInfo.setPublicStaticIp(vo.getPublicStaticIp());
+                //internal network
+                networkInfo  = setNetworkInfoList(networkInfo, vo);
+                networkList.add(networkInfo);
+            }
+        }
+        return networkList;
     }
     
     /****************************************************************
@@ -41,9 +56,9 @@ public class HbCfDeploymentNetworkConfigService {
      * @return : void
     *****************************************************************/
     @Transactional
-    public void saveNetworkConfigInfo(HbCfDeploymentNetworkConfigDTO dto, Principal principal) {
-        HbCfDeploymentNetworkConfigVO vo = null;
-        int count = cfDeploymentNetworkDao.selectHbCfDeploymentNetworkConfigByName(dto.getNetworkName());
+    public void saveNetworkConfigInfo(List<HbCfDeploymentNetworkConfigDTO> dto, Principal principal) {
+    	List<HbCfDeploymentNetworkConfigDTO>  vo = null;
+/*        int count = cfDeploymentNetworkDao.selectHbCfDeploymentNetworkConfigByName(dto.getNetworkName());
         if(dto.getId() == null){
         //if( StringUtils.isEmpty(dto.getId().toString())){
             vo = new HbCfDeploymentNetworkConfigVO();
@@ -65,76 +80,104 @@ public class HbCfDeploymentNetworkConfigService {
             vo.setNetworkName(dto.getNetworkName());
             vo.setPublicStaticIp(dto.getPublicStaticIp());
             
+            vo.setSubnetId1(dto.getSubnetId1());
+            vo.setSecurityGroup1(dto.getSecurityGroup1());
+            vo.setSubnetRange1(dto.getSubnetRange1());
+            vo.setSubnetGateway1(dto.getSubnetGateway());
+            vo.setSubnetDns1(dto.getSubnetDns());
+            vo.setSubnetReservedFrom1(dto.getSubnetReservedFrom());
+            vo.setSubnetReservedTo1(dto.getSubnetReservedTo());
+            vo.setSubnetStaticFrom1(dto.getSubnetStaticFrom());
+            vo.setSubnetStaticTo1(dto.getSubnetStaticTo());
+            if(dto.getAvailabilityZone1() != null){
+                vo.setAvailabilityZone1(dto.getAvailabilityZone1());
+            }
             
-            vo.setSubnetId(dto.getSubnetId());
-            vo.setSecurityGroup(dto.getSecurityGroup());
-            vo.setSubnetRange(dto.getSubnetRange());
-            vo.setSubnetGateway(dto.getSubnetGateway());
-            vo.setSubnetDns(dto.getSubnetDns());
-            vo.setSubnetReservedFrom(dto.getSubnetReservedFrom());
-            vo.setSubnetReservedTo(dto.getSubnetReservedTo());
-            vo.setSubnetStaticFrom(dto.getSubnetStaticFrom());
-            vo.setSubnetStaticTo(dto.getSubnetStaticTo());
+            if(dto.getSubnetId2() != null){
+                
+                vo.setSubnetId2(dto.getSubnetId2());
+                vo.setSecurityGroup2(dto.getSecurityGroup2());
+                vo.setSubnetRange2(dto.getSubnetRange2());
+                vo.setSubnetGateway2(dto.getSubnetGateway2());
+                vo.setSubnetDns2(dto.getSubnetDns2());
+                vo.setSubnetReservedFrom2(dto.getSubnetReservedFrom2());
+                vo.setSubnetReservedTo2(dto.getSubnetReservedTo2());
+                vo.setSubnetStaticFrom2(dto.getSubnetStaticFrom2());
+                vo.setSubnetStaticTo2(dto.getSubnetStaticTo2());
+                
+                if( dto.getAvailabilityZone2() != null){
+                    vo.setAvailabilityZone2(dto.getAvailabilityZone2());
+                }
+            }
             
             vo.setCreateUserId(principal.getName());
             vo.setCreateDate(vo.getCreateDate());
             vo.setUpdateDate(vo.getUpdateDate());
             vo.setUpdateUserId(principal.getName());
-/*            if(dto.getSubnetReservedFrom2() !=null && dto.getSubnetReservedTo2() != null){
-                vo.setSubnetReservedFrom2(dto.getSubnetReservedFrom2());
-                vo.setSubnetReservedTo2(dto.getSubnetReservedTo2());
-            }*/
+
         }
         
         if( dto.getId() == null ){
         //if( StringUtils.isEmpty(dto.getId().toString())){
             cfDeploymentNetworkDao.insertHbCfDeploymentNetworkConfigInfo(vo);
-            setNetworkInfoList(dto, vo);
+            
         }else{
             cfDeploymentNetworkDao.updateHbCfDeploymentNetworkConfigInfo(vo);
-            setNetworkInfoList(dto, vo);
-        }
+        }*/
     }
+    
     
     public HbCfDeploymentNetworkConfigDTO setNetworkInfoList(HbCfDeploymentNetworkConfigDTO cfListInfo, HbCfDeploymentNetworkConfigVO vo){
         List<HbCfDeploymentNetworkConfigVO> networks = cfDeploymentNetworkDao.insertHbCfDeploymentNetworkConfigInfo(vo);
         String br = "";
-        int cnt = 0;
-        String subnetRange , subnetGateway , subnetDns , subnetReservedIp, subnetReservedFrom, subnetReservedTo;
-        subnetRange  = subnetGateway = subnetDns = subnetReservedIp = subnetReservedFrom = subnetReservedTo = "";
-        String subnetStaticIp ,subnetId , securityGroup, availabilityZone, publicStaticIp;
-        subnetStaticIp  = subnetId = securityGroup = availabilityZone = publicStaticIp = "";
+        //int cnt = 0;
+        String subnetRange , subnetGateway , subnetDns , subnetReservedIp;
+        subnetRange  = subnetGateway = subnetDns = subnetReservedIp  = "";
+        String subnetStaticIp ,subnetId , securityGroup, availabilityZone;
+        subnetStaticIp  = subnetId = securityGroup = availabilityZone = "";
         
         if(networks  != null){
             for(HbCfDeploymentNetworkConfigVO networkVO: networks){
                 if( "internal".equalsIgnoreCase(networkVO.getDirection() )){
-                    cnt ++;
+                 /* cnt ++;
                     if( cnt > 1  && cnt < networks.size() ){
-                        br = ""; 
                     }else {
-                        br = "<br>";
+                    }*/
+                    subnetId = networkVO.getSubnetId1() ;
+                    securityGroup = networkVO.getSecurityGroup1();
+                    subnetRange = networkVO.getSubnetRange1();
+                    subnetGateway = networkVO.getSubnetGateway1();
+                    subnetDns = networkVO.getSubnetDns1();
+                    subnetReservedIp = (networkVO.getSubnetReservedFrom1() + " - " +  networkVO.getSubnetReservedTo1());
+                    subnetStaticIp = networkVO.getSubnetStaticFrom1() +" - " + networkVO.getSubnetStaticTo1();
+                    if( networkVO.getAvailabilityZone1() != null){
+                        availabilityZone = networkVO.getAvailabilityZone1();
                     }
-                    subnetId += networkVO.getSubnetId() + br;
-                    securityGroup += networkVO.getSecurityGroup() + br;
-                    subnetRange += networkVO.getSubnetRange()  + br;
-                    subnetGateway += networkVO.getSubnetGateway() + br;
-                    subnetDns += networkVO.getSubnetDns() + br;
-                    subnetReservedIp += (networkVO.getSubnetReservedFrom() + " - " +  networkVO.getSubnetReservedTo() + br);
-                    subnetStaticIp += networkVO.getSubnetStaticFrom() +" - " + networkVO.getSubnetStaticTo() + br;
-                    availabilityZone += networkVO.getAvailabilityZone() + br;
-                } else {
-                    publicStaticIp += networkVO.getPublicStaticIp();
+                    if(networkVO.getSubnetId2() !=null){
+                        br = "<br>";
+                        
+                        subnetId = subnetId + br + networkVO.getSubnetId2();
+                        securityGroup = securityGroup + br + networkVO.getSecurityGroup2();
+                        subnetRange = subnetRange + br + networkVO.getSubnetRange2();
+                        subnetGateway = subnetGateway + br + networkVO.getSubnetGateway2();
+                        subnetDns = subnetDns + br + networkVO.getSubnetDns1();
+                        subnetReservedIp = subnetReservedIp + br +  (networkVO.getSubnetReservedFrom2() + " - " +  networkVO.getSubnetReservedTo2());
+                        subnetStaticIp = subnetStaticIp + br + networkVO.getSubnetStaticFrom2() +" - " + networkVO.getSubnetStaticTo2();
+                        if( networkVO.getAvailabilityZone2() != null){
+                            availabilityZone = networkVO.getAvailabilityZone2();
+                        }
+                    }
                 }
             }
             
-            cfListInfo.setSubnetIdString(subnetId);
-            cfListInfo.setSecurityGroupString(securityGroup);
-            cfListInfo.setSubnetRangeString(subnetRange);
-            cfListInfo.setSubnetGatewayString(subnetGateway);
-            cfListInfo.setSubnetDnsString(subnetDns);
-            cfListInfo.setSubnetReservedIpString(subnetReservedIp);
-            cfListInfo.setSubnetStaticIpString(subnetStaticIp);
-            cfListInfo.setAvailabilityZoneString(availabilityZone);
+            cfListInfo.setSubnetId(subnetId);
+            cfListInfo.setSecurityGroup(securityGroup);
+            cfListInfo.setSubnetRange(subnetRange);
+            cfListInfo.setSubnetGateway(subnetGateway);
+            cfListInfo.setSubnetDns(subnetDns);
+            cfListInfo.setSubnetReservedIp(subnetReservedIp);
+            cfListInfo.setSubnetStaticIp(subnetStaticIp);
+            cfListInfo.setAvailabilityZone(availabilityZone);
         }
         return cfListInfo;
     }
@@ -152,4 +195,5 @@ public class HbCfDeploymentNetworkConfigService {
         }
         cfDeploymentNetworkDao.deleteHbCfDeploymentNetworkConfigInfo(dto);
     }
+
 }

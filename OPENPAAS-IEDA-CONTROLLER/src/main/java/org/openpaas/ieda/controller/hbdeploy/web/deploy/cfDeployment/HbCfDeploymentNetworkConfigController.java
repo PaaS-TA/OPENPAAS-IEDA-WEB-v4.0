@@ -44,7 +44,7 @@ public class HbCfDeploymentNetworkConfigController  extends BaseController{
     @RequestMapping(value = "/deploy/hbCfDeployment/networkConfig/list", method = RequestMethod.GET)
     public ResponseEntity<HashMap<String, Object>> getRecourceConfigInfoList() {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbCfDeployment/networkConfig/list"); }
-        List<HbCfDeploymentNetworkConfigVO> NetworkConfigList = service.getNetworkConfigInfoList();
+        List<HbCfDeploymentNetworkConfigDTO> NetworkConfigList = service.getNetworkConfigInfoList();
         HashMap<String, Object> list = new HashMap<String, Object>();
         int size =0;
         if( NetworkConfigList.size() > 0  ) {
@@ -62,7 +62,7 @@ public class HbCfDeploymentNetworkConfigController  extends BaseController{
      * @return : ResponseEntity<>
     *****************************************************************/
     @RequestMapping(value = "/deploy/hbCfDeployment/networkConfig/save", method = RequestMethod.PUT)
-    public ResponseEntity<?> saveNetworkConfigInfo(@RequestBody HbCfDeploymentNetworkConfigDTO dto, Principal principal) {
+    public ResponseEntity<?> saveNetworkConfigInfo(@RequestBody List<HbCfDeploymentNetworkConfigDTO> dto, Principal principal) {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbCfDeployment/networkConfig/save"); }
         service.saveNetworkConfigInfo(dto, principal);
         return new ResponseEntity<>(HttpStatus.CREATED);
