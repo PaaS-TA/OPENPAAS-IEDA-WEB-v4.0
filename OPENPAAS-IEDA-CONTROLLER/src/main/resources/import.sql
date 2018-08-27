@@ -16,7 +16,7 @@ INSERT INTO ieda_common_code VALUES ( '201', 'UBUNTU', '201', '우분투' , 'Ubu
 INSERT INTO ieda_common_code VALUES ( '211', 'TRUSTY', '211', 'Trusty' , 'Ubuntu Trusty', '0', 201, null, 200, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '203', 'WINDOWS', '203', 'Windows' , 'Windows', '2', null, null, 200, 'SYSTEM', now(), 'SYSTEM', now() );
 
-INSERT INTO ieda_common_code VALUES ( '231', '2012R2', '231', '2012R2' , 'Windows 2012R2', '0', 203, null, 200, 'SYSTEM', now(), 'SYSTEM', now() );
+INSERT INTO ieda_common_code VALUES ( '231', '2016R', '231', '2016R' , 'Windows 2016R', '0', 203, null, 200, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '314', 'DEPLOY', '1000', 'Deploy' , 'Deploy', '0', null, null, null, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '315', 'DEPLOY_TYPE', '1100', '배포 유형' , '배포 유형(bootstrap/bosh/cf/diego)', '0', null, null, 1000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '316', 'DEPLOY_TYPE_BOOTSTRAP', '1101', 'BOOTSTRAP' , 'BootStrap 배포', '1', 1100, null, 1000, 'SYSTEM', now(), 'SYSTEM', now() );
