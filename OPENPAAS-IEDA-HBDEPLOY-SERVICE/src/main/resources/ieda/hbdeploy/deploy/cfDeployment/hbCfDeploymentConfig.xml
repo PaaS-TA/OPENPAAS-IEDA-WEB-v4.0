@@ -3,18 +3,24 @@
 
 <mapper namespace="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentDAO">
 
-	<resultMap id="cfdeployment" type="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentVO">
-		<id property="id" column="id"/>
-    	<result property="recid" column="id"/>
-    	<result property="cfDeploymentConfigName" column="cf_deployment_config_name"/>
-    	<result property="iaasType" column="iaas_type"/>
-    	<result property="networkConfigInfo" column="network_config_name"/>
-    	<result property="defaultConfigInfo" column="default_config_name"/>
-    	<result property="resourceConfigInfo" column="resource_config_name"/>
-    	<result property="cloud_config_file" column="cloud_config_file"/>
-    	<result property="deployStatus" column="deploy_status"/>
-    	<result property="taskId" column="task_id"/>
-	</resultMap>
+    <resultMap id="cfdeployment" type="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentVO">
+        <id property="id" column="id"/>
+        <result property="recid" column="id"/>
+        <result property="cfDeploymentConfigName" column="cf_deployment_config_name"/>
+        <result property="iaasType" column="iaas_type"/>
+        <result property="networkConfigInfo" column="network_config_name"/>
+        <result property="defaultConfigInfo" column="default_config_name"/>
+        <result property="resourceConfigInfo" column="resource_config_name"/>
+        <result property="cloud_config_file" column="cloud_config_file"/>
+        <result property="deployStatus" column="deploy_status"/>
+        <result property="taskId" column="task_id"/>
+        <collection property="defaultConfig" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentDefaultConfigVO"  javaType="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentDefaultConfigVO">
+        	<result property="id" column="id"/>
+        	<result property="defaultConfigName" column="default_config_name"/>
+        	<result property="deploymentName" column="default_config_name"/>
+    	</collection>
+        
+    </resultMap>
 
 
     <select id="selectCfDeploymentList" resultMap="cfdeployment">

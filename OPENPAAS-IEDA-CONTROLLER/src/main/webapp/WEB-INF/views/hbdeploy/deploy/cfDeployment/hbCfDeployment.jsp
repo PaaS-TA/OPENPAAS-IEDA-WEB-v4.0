@@ -7,6 +7,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="spring" uri = "http://www.springframework.org/tags" %>
 <script type="text/javascript">
 
 /******************************************************************
@@ -18,6 +19,9 @@ var installStatus ="";//설치 상태
 var installClient = "";//설치 client
 var deleteClient = "";//삭제 client
 var cfDeploymentName = new Array();
+var text_required_msg = '<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
+var text_injection_msg='<spring:message code="common.text.validate.sqlInjection.message"/>';//입력하신 값은 입력하실 수 없습니다.
+var select_required_msg='<spring:message code="common.select.vaildate.required.message"/>';//을(를) 선택하세요.
 $(function() {
     /********************************************************
      * 설명 :  cfDeployment 목록 설정
@@ -1035,13 +1039,13 @@ function popupComplete(){
                    <div class="w2ui-field">
                        <label style="width:40%; text-align: left;padding-left: 20px;">CF Deployment 정보 별칭</label>
                        <div>
-                           <input class="form-control" name = "cfDeploymentConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="CF Deployment 정보 별칭을 입력 하세요."/>
+                           <input class="form-control" name = "cfDeploymentConfigName" type="text"  maxlength="100" style="width: 350px; margin-left: 20px;" placeholder="CF Deployment 정보 별칭을 입력 하세요."/>
                        </div>
                    </div>
                   <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;">클라우드 인프라 환경</label>
                        <div>
-                           <select class="form-control" onchange="" name="iaasType" style="width: 320px; margin-left: 20px;">
+                           <select class="form-control" onchange="" name="iaasType" style="width: 350px; margin-left: 20px;">
                                <option value="">인프라 환경을 선택하세요.</option>
                                <option value="aws">AWS</option>
                                <option value="openstack">Openstack</option>
@@ -1051,7 +1055,7 @@ function popupComplete(){
                    <div class="w2ui-field">
                       <label style="width:40%;text-align: left;padding-left: 20px;">CF Deployment 기본 정보 별칭</label>
                       <div style="width: 60%">
-                          <select class="form-control" name="defaultConfigInfo" onchange="" style="width: 320px; margin-left: 20px;">
+                          <select class="form-control" name="defaultConfigInfo" onchange="" style="width: 350px; margin-left: 20px;">
                               <option value="">CF Deployment 기본 정보를 선택하세요.</option>
                           </select>
                       </div>
@@ -1059,7 +1063,7 @@ function popupComplete(){
                     <div class="w2ui-field">
                       <label style="width:40%;text-align: left;padding-left: 20px;">CF Deployment 네트워크 정보 별칭</label>
                       <div style="width: 60%">
-                          <select class="form-control" name="networkConfigInfo" onchange="" style="width: 320px; margin-left: 20px;">
+                          <select class="form-control" name="networkConfigInfo" onchange="" style="width: 350px; margin-left: 20px;">
                               <option value="">CF Deployment 네트워크 정보를 선택하세요.</option>
                           </select>
                       </div>
@@ -1067,7 +1071,7 @@ function popupComplete(){
                     <div class="w2ui-field">
                       <label style="width:40%;text-align: left;padding-left: 20px;">CF Deployment 인증서 정보 별칭</label>
                       <div style="width: 60%">
-                          <select class="form-control" name="credentialConfigInfo" onchange="" style="width: 320px; margin-left: 20px;">
+                          <select class="form-control" name="credentialConfigInfo" onchange="" style="width: 350px; margin-left: 20px;">
                               <option value="">CF Deployment 인증서 정보를 선택하세요.</option>
                           </select>
                       </div>
@@ -1075,7 +1079,7 @@ function popupComplete(){
                     <div class="w2ui-field">
                       <label style="width:40%;text-align: left;padding-left: 20px;">CF Deployment 리소스 정보 별칭</label>
                       <div style="width: 60%">
-                          <select class="form-control" name="resourceConfigInfo" onchange="" style="width: 320px; margin-left: 20px;">
+                          <select class="form-control" name="resourceConfigInfo" onchange="" style="width: 350px; margin-left: 20px;">
                               <option value="">CF Deployment 리소스 정보를 선택하세요.</option>
                           </select>
                       </div>
@@ -1083,7 +1087,7 @@ function popupComplete(){
                     <div class="w2ui-field">
                       <label style="width:40%;text-align: left;padding-left: 20px;">CF Deployment 인스턴스 정보 별칭</label>
                       <div style="width: 60%">
-                          <select class="form-control" name="instanceConfigInfo" onchange="" style="width: 320px; margin-left: 20px;">
+                          <select class="form-control" name="instanceConfigInfo" onchange="" style="width: 350px; margin-left: 20px;">
                               <option value="">CF Deployment 인스턴스 정보를 선택하세요.</option>
                           </select>
                       </div>
@@ -1155,27 +1159,51 @@ $(function() {
         ignore : "",
         onfocusout: true,
         rules: {
-            roleName : {
+        	cfDeploymentConfigName : {
                 required : function(){
-                  return checkEmpty( $(".w2ui-msg-body input[name='roleName']").val() );
-                    }, sqlInjection : function(){
-                      return $(".w2ui-msg-body input[name='roleName']").val();
-                    }
+                  return checkEmpty( $(".w2ui-msg-body input[name='cfDeploymentConfigName']").val() );
+                }, sqlInjection : function(){
+                      return $(".w2ui-msg-body input[name='cfDeploymentConfigName']").val();
+                }
             },
-            roleDescription : {
+            iaasType : {
                 required : function(){
-                  return checkEmpty( $(".w2ui-msg-body input[name='roleDescription']").val() );
-                    }, sqlInjection : function(){
-                      return $(".w2ui-msg-body input[name='roleDescription']").val();
-                    }
-             }
-        }, messages: {
-            roleName: { 
-                 required:  "권한 그룹명" + text_required_msg
+                  return checkEmpty( $(".w2ui-msg-body select[name='iaasType']").val() );
+                }
             },
-            roleDescription: { 
-                required:  "설명" + text_required_msg
+            defaultConfigInfo : {
+                 required : function(){
+                     return checkEmpty( $(".w2ui-msg-body select[name='defaultConfigInfo']").val() );
+                   }
+            },
+            networkConfigInfo : {
+                required : function(){
+                    return checkEmpty( $(".w2ui-msg-body select[name='networkConfigInfo']").val() );
+                  }
+            },
+            credentialConfigInfo : {
+                required : function(){
+                    return checkEmpty( $(".w2ui-msg-body select[name='credentialConfigInfo']").val() );
+                  }
+            },
+            resourceConfigInfo : {
+                required : function(){
+                    return checkEmpty( $(".w2ui-msg-body select[name='resourceConfigInfo']").val() );
+                  }
+            },
+            instanceConfigInfo : {
+                required : function(){
+                    return checkEmpty( $(".w2ui-msg-body select[name='instanceConfigInfo']").val() );
+                  }
             }
+        }, messages: {
+        	cfDeploymentConfigName: { cfDeploymentConfigName:  "CF Deployment 정보 별칭" + text_required_msg },
+            iaasType: { required:  "인프라 환경" + select_required_msg },
+            defaultConfigInfo: { required:  "기본 정보" + select_required_msg },
+            networkConfigInfo: { required:  "네트워크 정보" + select_required_msg },
+            credentialConfigInfo: { required:  "인증서 정보" + select_required_msg },
+            resourceConfigInfo: { required:  "리소스 정보" + select_required_msg },
+            instanceConfigInfo: { required:  "인스턴스 정보" + select_required_msg }
         }, unhighlight: function(element) {
             setSuccessStyle(element);
         },errorPlacement: function(error, element) {

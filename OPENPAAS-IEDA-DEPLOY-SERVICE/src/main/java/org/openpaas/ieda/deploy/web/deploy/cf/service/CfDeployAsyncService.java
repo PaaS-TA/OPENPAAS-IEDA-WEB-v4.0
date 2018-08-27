@@ -117,7 +117,7 @@ public class CfDeployAsyncService {
             }
             
             if( accumulatedLog.contains("Failed deploying") || accumulatedLog.contains("Failed") || accumulatedLog.contains("error") 
-                || accumulatedLog.contains("invalid") || accumulatedLog.contains("not support") || accumulatedLog.contains("Expected") || accumulatedLog.contains("expected") ){
+                || accumulatedLog.contains("invalid") || accumulatedLog.contains("not support") || accumulatedLog.contains("Expected") || accumulatedLog.contains("expected") || accumulatedLog.contains("refused") ){
                 status = "error";
                 DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
             } else {

@@ -378,9 +378,9 @@ function getCfDeployment(iaas) {
                <div class="panel-heading"><b>인증서 정보 </b></div>
                <div class="panel-body" style="height:615px; overflow-y:auto;">
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;"> 인증서 명</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;"> 인증서 별칭</label>
                        <div>
-                           <input class="form-control" name = "credentialConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="인증서 명을 입력 하세요."/>
+                           <input class="form-control" name = "credentialConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="인증서 별칭을 입력 하세요."/>
                        </div>
                    </div>
                    
@@ -402,6 +402,14 @@ function getCfDeployment(iaas) {
                             </select>
                       </div>
                   </div>
+                  
+                   <div class="w2ui-field">
+                       <label style="width:40%;text-align: left;padding-left: 20px;">CF 도메인 </label>
+                       <div>
+                           <input class="form-control"  name="domain" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="CF 도메인을 입력하세요."/>
+                       </div>
+                   </div>
+                   
                    <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;"> 국가 코드</label>
                        <div>
@@ -419,14 +427,6 @@ function getCfDeployment(iaas) {
                            <input class="form-control"  name="city" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="도시를 입력하세요."/>
                        </div>
                    </div>
-
-                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;"> 도메인 </label>
-                       <div>
-                           <input class="form-control"  name="domain" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="도메인을 입력하세요."/>
-                       </div>
-                   </div>
-                   
                     <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;"> 회사 명 </label>
                        <div>
@@ -512,7 +512,7 @@ $(function() {
             }
         }, messages: {
             credentialConfigName: { 
-                required:  "기본  별칭"+text_required_msg
+                required:  "인증서 별칭"+text_required_msg
             }, iaasType: { 
                 required:  "클라우드 인프라 환경 타입"+select_required_msg,
             }, cfdeployment: { 

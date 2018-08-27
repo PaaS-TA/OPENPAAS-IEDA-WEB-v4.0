@@ -41,7 +41,7 @@ var resourceLayout = {
             columns:[
                    { field: 'recid', hidden: true },
                    { field: 'id', hidden: true },
-                   { field: 'defaultConfigName', caption: '배포 명', size:'20%', style:'text-align:center;' },
+                   { field: 'defaultConfigName', caption: '배포 명 & 기본 정보 별칭', size:'20%', style:'text-align:center;' },
                    { field: 'iaasType', caption: '인프라 환경 타입', size:'20%', style:'text-align:center;' ,render: function(record){ 
                        if(record.iaasType.toLowerCase() == "aws"){
                            return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
@@ -356,9 +356,9 @@ function resetForm(status){
                <div class="panel-heading"><b>기본 정보</b></div>
                <div class="panel-body" style="height:615px; overflow-y:auto;">
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">배포 명</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;">배포 명 & 기본 정보 별칭</label>
                        <div>
-                           <input class="form-control" name = "defaultConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="배포 명을 입력 하세요."/>
+                           <input class="form-control" name = "defaultConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="배포명 & 기본 정보 별칭을 입력 하세요."/>
                        </div>
                    </div>
                    
@@ -381,15 +381,15 @@ function resetForm(status){
                        </div>
                    </div>
                     <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;"> 도메인 </label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;"> CF 도메인 </label>
                        <div>
-                           <input class="form-control"  name="domain" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="도메인을 입력하세요."/>
+                           <input class="form-control"  name="domain" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="CF 도메인을 입력하세요."/>
                        </div>
                    </div>
                     <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;"> 기본 조직명 </label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;"> CF 기본 조직명 </label>
                        <div>
-                           <input class="form-control" name="domainOrganization" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="기본 조직명을 입력하세요."/>
+                           <input class="form-control" name="domainOrganization" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="CF 기본 조직명을 입력하세요."/>
                        </div>
                    </div>
                    <div class="w2ui-field">
@@ -448,7 +448,7 @@ $(function() {
             }
         }, messages: {
             defaultConfigName: { 
-                required:  "기본  별칭"+text_required_msg
+                required:  "배포 명 & 기본 정보 별칭"+text_required_msg
             }, iaasType: { 
                 required:  "클라우드 인프라 환경 타입"+select_required_msg,
             }, cfDeploymentVersion: { 
