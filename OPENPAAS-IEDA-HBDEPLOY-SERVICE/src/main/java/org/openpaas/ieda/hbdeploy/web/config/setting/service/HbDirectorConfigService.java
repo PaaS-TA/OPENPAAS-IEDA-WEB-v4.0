@@ -46,7 +46,7 @@ public class HbDirectorConfigService  {
     
     final private static String BASE_DIR = System.getProperty("user.home");
     final private static String SEPARATOR = System.getProperty("file.separator");
-    final private static String CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateCredentialDir() + SEPARATOR;
+    final private static String HYBRID_CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateHybridCredentialDir() + SEPARATOR;
     private final static Logger LOGGER = LoggerFactory.getLogger(HbDirectorConfigService.class);
     
     /****************************************************************
@@ -219,7 +219,7 @@ public class HbDirectorConfigService  {
     public void boshEnvAliasLoginSequence(HbDirectorConfigVO directorConfig){
         OutputStreamWriter fileWriter = null;
         try {
-            String boshCredentialFile = CREDENTIAL_DIR+directorConfig.getCredentialFile();
+            String boshCredentialFile = HYBRID_CREDENTIAL_DIR+directorConfig.getCredentialFile();
             InputStream input = new FileInputStream(new File( boshCredentialFile));
             Yaml yaml = new Yaml();
             // 파일을 로드하여 Map<String, Object>에 parse한다.
@@ -337,7 +337,7 @@ public class HbDirectorConfigService  {
     *****************************************************************/
     public void uploadCredentialKeyFile(MultipartHttpServletRequest request) {
         Iterator<String> itr =  request.getFileNames();
-        File keyPathFile = new File(CREDENTIAL_DIR);
+        File keyPathFile = new File(HYBRID_CREDENTIAL_DIR);
         if (!keyPathFile.isDirectory()){
             boolean result = keyPathFile.mkdir();
             LOGGER.debug("Credential key path file directory create :: " + result);
@@ -346,7 +346,7 @@ public class HbDirectorConfigService  {
             BufferedOutputStream stream = null;
             MultipartFile mpf = request.getFile(itr.next());
             try { 
-                String keyFilePath = CREDENTIAL_DIR + mpf.getOriginalFilename();
+                String keyFilePath = HYBRID_CREDENTIAL_DIR + mpf.getOriginalFilename();
                 byte[] bytes = mpf.getBytes();
                 File isKeyFile = new File(keyFilePath);
                 stream = new BufferedOutputStream(new FileOutputStream(isKeyFile));
