@@ -748,7 +748,6 @@ CREATE TABLE ieda_hb_cfDeployment_instance_config
   id                                    INT(11)      NOT NULL auto_increment,
   iaas_type                             VARCHAR(100) NOT NULL,
   instance_config_name                  VARCHAR(100) NOT NULL,
-  release_version                       VARCHAR(100) NOT NULL,
   adapter                               VARCHAR(100) NOT NULL,
   api                                   VARCHAR(100) NOT NULL,
   cc_worker                             VARCHAR(100) NOT NULL,

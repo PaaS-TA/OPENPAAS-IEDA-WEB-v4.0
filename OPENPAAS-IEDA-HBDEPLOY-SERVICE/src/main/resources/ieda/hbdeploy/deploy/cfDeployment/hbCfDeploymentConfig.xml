@@ -15,10 +15,10 @@
         <result property="deployStatus" column="deploy_status"/>
         <result property="taskId" column="task_id"/>
         <collection property="defaultConfig" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentDefaultConfigVO"  javaType="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentDefaultConfigVO">
-        	<result property="id" column="id"/>
-        	<result property="defaultConfigName" column="default_config_name"/>
-        	<result property="deploymentName" column="default_config_name"/>
-    	</collection>
+            <result property="id" column="id"/>
+            <result property="defaultConfigName" column="default_config_name"/>
+            <result property="deploymentName" column="default_config_name"/>
+        </collection>
         
     </resultMap>
 
@@ -51,4 +51,5 @@
             or deploy_status != '';
         </if>
     </select>
+    
 </mapper>

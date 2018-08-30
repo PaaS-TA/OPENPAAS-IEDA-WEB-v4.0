@@ -11,7 +11,7 @@
     <result property="api" column="API"/>
     <result property="ccWorker" column="CC_WORKER"/>
     <result property="consul" column="CONSUL"/>
-    <result property="database" column="DATABASE"/>
+    <result property="theDatabase" column="THE_DATABASE"/>
     <result property="diegoApi" column="DIEGO_API"/>   
     <result property="diegoCell" column="DIEGO_CELL"/>
     <result property="doppler" column="DOPPLER"/>
@@ -56,11 +56,38 @@
     ORDER BY id;
 </select>
 
+<select id="selectHbCfDeploymentInstanceConfigInfo" resultMap="hbCfDeploymentInstanceConfig">
+    select 
+        id as id
+        ,instance_config_name as instance_config_name
+        ,iaas_type as iaas_type
+        ,adapter as adapter
+        ,api as api
+        ,cc_worker as cc_worker
+        ,consul as consul
+        ,the_database as the_database
+        ,diego_api as diego_api
+        ,diego_cell as diego_cell
+        ,doppler as doppler
+        ,haproxy as haproxy
+        ,log_api as log_api
+        ,nats as nats
+        ,router as router
+        ,singleton_blobstore as singleton_blobstore
+        ,tcp_router as tcp_router
+        ,uaa as uaa
+        ,create_user_id as create_user_id
+        ,create_date as create_date
+        ,update_user_id as update_user_id
+        ,update_date as update_date
+    from ieda_hb_cfDeployment_instance_config
+    where id = #{id}
+</select>
+
 <insert id="insertHbCfDeploymentInstanceConfigInfo">
         insert into
         ieda_hb_cfDeployment_instance_config(
-             id
-            ,iaas_type
+            iaas_type
             ,instance_config_name
             ,adapter
             ,api 
@@ -82,8 +109,7 @@
             ,update_user_id
             ,update_date
         )value(
-             #{instance.id}
-            ,#{instance.iaasType}
+            #{instance.iaasType}
             ,#{instance.instanceConfigName}
             ,#{instance.adapter}
             ,#{instance.api}
@@ -98,7 +124,7 @@
             ,#{instance.nats}
             ,#{instance.router}             
             ,#{instance.singletonBlobstore}
-            ,#{instance.tcpRouter}                                                
+            ,#{instance.tcpRouter}
             ,#{instance.uaa} 
             ,#{instance.createUserId}
             ,now()
@@ -123,8 +149,8 @@
         ,log_api = #{instance.logApi}
         ,nats = #{instance.nats}
         ,router = #{instance.router}             
-        ,adapter =# {instance.singletonBlobstore}
-        ,tcp_router = #{instance.tcpRouter}                                                
+        ,singleton_blobstore = #{instance.singletonBlobstore}
+        ,tcp_router = #{instance.tcpRouter}
         ,uaa = #{instance.uaa}
         ,update_user_id = #{instance.updateUserId}
         ,update_date = now()
@@ -141,7 +167,7 @@
 </select>
 
 
-<select id="selectHbCfJobTemplatesByReleaseVersion" resultType="hashMap">
+<select id="selectHbCfJobTemplateByReleaseVersion" resultType="hashMap">
     /** ieda.hbdeploy.deploy.cfDeployment.selectHbCfJobTemplatesByReleaseVersion  **/
     <![CDATA[
          Select
@@ -161,5 +187,14 @@
         ORDER BY seq;
     ]]>
 </select>
+
+<delete id="deleteHbCfDeploymentInstanceConfigInfo">
+        delete from 
+            ieda_hb_cfDeployment_instance_config
+        where
+            id = #{instance.id}
+        and
+            instance_config_name = #{instance.instanceConfigName}
+</delete>
 
 </mapper>

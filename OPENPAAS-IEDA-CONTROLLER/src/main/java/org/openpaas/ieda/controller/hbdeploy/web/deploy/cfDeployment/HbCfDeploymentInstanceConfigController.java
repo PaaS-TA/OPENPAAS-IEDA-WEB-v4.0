@@ -62,7 +62,7 @@ public class HbCfDeploymentInstanceConfigController extends BaseController{
     *****************************************************************/
     @RequestMapping(value="/deploy/hbCfDeployment/instanceConfig/job/list/{version}/{deployType}", method=RequestMethod.GET)
     public ResponseEntity<List<HashMap<String, String>>> getHbCfJobList(@PathVariable String version, @PathVariable String deployType){
-        if(LOGGER.isInfoEnabled()){ LOGGER.info("====================================> /deploy/hbCfDeployment/instanceConfig/job/list/"+version+deployType); }
+        if(LOGGER.isInfoEnabled()){ LOGGER.info("====================================> /deploy/hbCfDeployment/instanceConfig/job/list/"+version+"/"+deployType); }
         List<HashMap<String, String>> list = service.getHbCfJobTemplateList(version,deployType);
         return new ResponseEntity<List<HashMap<String, String>>>(list, HttpStatus.OK);
     }

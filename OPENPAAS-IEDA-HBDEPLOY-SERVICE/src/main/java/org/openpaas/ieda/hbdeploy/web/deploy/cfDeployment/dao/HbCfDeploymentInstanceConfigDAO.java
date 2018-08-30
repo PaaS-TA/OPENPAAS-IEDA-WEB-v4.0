@@ -16,7 +16,7 @@ public interface HbCfDeploymentInstanceConfigDAO {
     *****************************************************************/
     List<HbCfDeploymentInstanceConfigVO> selectHbCfDeploymentInstanceConfigInfoList();
 
-    HbCfDeploymentInstanceConfigVO selectHbCfDeploymentInstanceConfigInfo(@Param("id")int id, @Param("iaas")String iaas);
+    HbCfDeploymentInstanceConfigVO selectHbCfDeploymentInstanceConfigInfo(@Param("id")int id);
 
     List<HashMap<String, String>> selectHbCfJobTemplateByReleaseVersion(@Param("map") HashMap<String, String> map);
 
