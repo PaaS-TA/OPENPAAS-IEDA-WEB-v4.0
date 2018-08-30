@@ -144,7 +144,7 @@ $(function(){
                 yes_text    : "확인",
                 no_text        : "취소",
                 yes_callBack: function(event){
-                    (record.recid, record.networkName);
+                    deleteHbCfDeploymentNetworkConfigInfo(record.recid, record.networkName);
                 },
                 no_callBack    : function(){
                     w2ui['network_Grid'].clear();

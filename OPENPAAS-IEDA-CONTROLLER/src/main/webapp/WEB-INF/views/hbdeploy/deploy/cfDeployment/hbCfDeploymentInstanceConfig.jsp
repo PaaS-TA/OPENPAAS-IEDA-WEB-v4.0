@@ -315,6 +315,7 @@ function doSearch() {
     w2ui['instance_grid'].clear();
     w2ui['instance_grid'].load('/deploy/hbCfDeployment/instanceConfig/list');
     doButtonStyle(); 
+
 }
 
 /********************************************************
@@ -426,6 +427,7 @@ function resetForm(status){
         w2ui['instance_grid'].clear();
         $("select[name=iaasType]").html("<option value=''>인프라 환경을 선택하세요.</option>");
         doSearch();
+        
     }
     document.getElementById("cfDetailForm").reset();
 }
