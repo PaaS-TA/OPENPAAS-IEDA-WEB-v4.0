@@ -376,7 +376,7 @@ function resetForm(status){
                        <label style="width:40%;text-align: left;padding-left: 20px;">CF Deployment 버전 명</label>
                        <div>
                            <select class="form-control" id="cfDeploymentVersion" name="cfDeploymentVersion"  style="width: 320px; margin-left: 20px;">
-                               <option value=""> 클라우드 인라프 환경을  먼저 선택하세요.</option>
+                               <option value=""> 클라우드 인 환경을  먼저 선택하세요.</option>
                            </select>
                        </div>
                    </div>

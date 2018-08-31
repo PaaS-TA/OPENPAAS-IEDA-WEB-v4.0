@@ -490,67 +490,67 @@ $(function() {
         rules: {
             instanceConfigName: { 
                 required: function(){
-                    return checkEmpty( $("input[name='instanceConfigName']").val() );
+                    return checkEmpty( $("input[name=instanceConfigName]").val() );
                 }
             }, iaasType: { 
                 required: function(){
-                    return checkEmpty( $("select[name='iaasType']").val() );
+                    return checkEmpty( $("select[name=iaasType]").val() );
                 }
             }, adapter: {
                 required: function(){
-                    return checkEmpty( $("input[name='adapter']").val() );
+                    return checkEmpty( $("input[name=adapter]").val() );
                 }
             }, ccWorker: {
                 required: function(){
-                    return checkEmpty( $("input[name='ccWorker']").val() );
+                    return checkEmpty( $("input[name=cc_worker]").val() );
                 }
             }, consul: {
                 required: function(){
-                    return checkEmpty( $("input[name='consul']").val() );
+                    return checkEmpty( $("input[name=consul]").val() );
                 }
             }, theDatabase: {
                 required: function(){
-                    return checkEmpty( $("input[name='theDatabase']").val() );
+                    return checkEmpty( $("input[name=theDatabase]").val() );
                 }
             }, diegoApi: {
                 required: function(){
-                    return checkEmpty( $("input[name='diegoApi']").val() );
+                    return checkEmpty( $("input[name=diego_api]").val() );
                 }
             }, diegoCell: {
                 required: function(){
-                    return checkEmpty( $("input[name='diegoCell']").val() );
+                    return checkEmpty( $("input[name=diego_cell]").val() );
                 }
             }, doppler: {
                 required: function(){
-                    return checkEmpty( $("input[name='doppler']").val() );
+                    return checkEmpty( $("input[name=doppler]").val() );
                 }
             }, haproxy: {
                 required: function(){
-                    return checkEmpty( $("input[name='haproxy']").val() );
+                    return checkEmpty( $("input[name=ha_proxy]").val() );
                 }
             }, logApi: {
                 required: function(){
-                    return checkEmpty( $("input[name='logApi']").val() );
+                    return checkEmpty( $("input[name=log_api]").val() );
                 }
             }, nats: {
                 required: function(){
-                    return checkEmpty( $("input[name='nats']").val() );
+                    return checkEmpty( $("input[name=nats]").val() );
                 }
             }, router: {
                 required: function(){
-                    return checkEmpty( $("input[name='router']").val() );
+                    return checkEmpty( $("input[name=router]").val() );
                 }
             }, singletonBlobstore: {
                 required: function(){
-                    return checkEmpty( $("input[name='singletonBlobstore']").val() );
+                    return checkEmpty( $("input[name=singleton_blobstore]").val() );
                 }
             }, tcpRouter: {
                 required: function(){
-                    return checkEmpty( $("input[name='tcpRouter']").val() );
+                    return checkEmpty( $("input[name=tcp_router]").val() );
                 }
             }, uaa: {
                 required: function(){
-                    return checkEmpty( $("input[name='uaa']").val() );
+                    return checkEmpty( $("input[name=uaa]").val() );
                 }
             }
         }, messages: {

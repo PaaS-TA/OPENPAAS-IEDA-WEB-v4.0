@@ -337,17 +337,17 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
          html+=    "</div>";
          html+= "</div>";
          html+= body_div;
-             html+= field_div_label + "서브넷 아이디" + "</label>"; 
-             html+="<div style=' width: 60%;'>"+"<input name='subnetId_"+index+"'" + text_style +" placeholder='서브넷 아이디를 입력하세요.'/>"+"</div></div>";
-             
-             html+= field_div_label + "보안 그룹" + "</label>"; 
-             html+= "<div style=' width: 60%;'>"+"<input name='securityGroup_"+index+"'" + text_style +" placeholder='예) bosh-security, cf-security'/>"+"</div></div>";
-             
-             
-             if( iaas.toLowerCase() == "aws" ){
-                 html+= field_div_label + "가용 영역" + "</label>"; 
-                 html+= "<div style=' width: 60%;'>"+"<input name='availabilityZone_"+index+"'" + text_style +" placeholder='예) us-west-2'/>"+"</div></div>";
-             }
+         html+= field_div_label + "서브넷 아이디" + "</label>"; 
+         html+="<div style=' width: 60%;'>"+"<input name='subnetId_"+index+"'" + text_style +" placeholder='서브넷 아이디를 입력하세요.'/>"+"</div></div>";
+         
+         html+= field_div_label + "보안 그룹" + "</label>"; 
+         html+= "<div style=' width: 60%;'>"+"<input name='securityGroup_"+index+"'" + text_style +" placeholder='예) bosh-security, cf-security'/>"+"</div></div>";
+         
+         
+         if( iaas.toLowerCase() == "aws" ){
+             html+= field_div_label + "가용 영역" + "</label>"; 
+             html+= "<div style=' width: 60%;'>"+"<input name='availabilityZone_"+index+"'" + text_style +" placeholder='예) us-west-2'/>"+"</div></div>";
+         }
          html+= field_div_label + "서브넷 범위" + "</label>"; 
          html+= "<div style=' width: 60%;'>"+"<input name='subnetRange_"+index+"'" + text_style +" placeholder='예) 10.0.0.0/24'/>" + "</div></div>";
          

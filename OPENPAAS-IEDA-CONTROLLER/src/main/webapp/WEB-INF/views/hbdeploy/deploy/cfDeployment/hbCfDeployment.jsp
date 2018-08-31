@@ -662,7 +662,7 @@ function saveCfDeploymentInfo(){
     w2popup.lock( save_lock_msg, true); 
     cfDeploymentInfo = {
         id                     : $(".w2ui-msg-body input[name='cfDeploymentInfoId']").val(),
-        cfDeploymentConfigName    : $(".w2ui-msg-body input[name='cfDeploymentConfigName']").val(),
+        cfDeploymentConfigName : $(".w2ui-msg-body input[name='cfDeploymentConfigName']").val(),
         iaasType               : $(".w2ui-msg-body select[name='iaasType']").val(),
         networkConfigInfo      : $(".w2ui-msg-body select[name='networkConfigInfo']").val(),
         cpiConfigInfo          : $(".w2ui-msg-body select[name='cpiConfigInfo']").val(),

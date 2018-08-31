@@ -1,10 +1,12 @@
 package org.openpaas.ieda.controller.hbdeploy.web.deploy.cfDeployment;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentDefaultConfigVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentVO;
+import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dto.HbCfDeploymentDTO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.service.HbCfDeploymentDefaultConfigService;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.service.HbCfDeploymentDeleteAsyncService;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.service.HbCfDeploymentDeployAsyncService;
@@ -59,4 +61,18 @@ public class HbCfDeploymentController {
         result.put("total", total);
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
+    
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : CF Deployment 정보 저장/수정
+     * @title : saveCfDeploymentInfo
+     * @return : ResponseEntity<?>
+    *****************************************************************/
+    @RequestMapping(value = "/deploy/hbCfDeployment/install/{installStatus}", method = RequestMethod.POST)
+    public ResponseEntity<?> saveCfDeploymentInfo(@PathVariable HbCfDeploymentDTO dto, Principal principal){
+        if(LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbCfDeployment/install/{installStatus}");}
+        hbCfDeploymentSaveService.saveCfdeploymentConfigInfo(dto, principal);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+    
 }
