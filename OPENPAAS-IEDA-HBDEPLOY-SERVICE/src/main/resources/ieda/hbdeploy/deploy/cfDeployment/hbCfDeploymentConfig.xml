@@ -30,6 +30,8 @@
             <result property="networkName" column="NETWORK_NAME" />
             <result property="direction" column="DIRECTION" />
             <result property="publicStaticIp" column="PUBLIC_STATIC_IP" />
+            <result property="subnetReservedIp" column="SUBNET_RESERVED_IP" />
+            <result property="subnetStaticIp" column="SUBNET_STATIC_IP" />
             <result property="subnetId1" column="SUBNET_ID_1" />
             <result property="securityGroup1" column="SECURITY_GROUP_1" />
             <result property="subnetRange1" column="SUBNET_RANGE_1" />
@@ -39,6 +41,7 @@
             <result property="subnetReservedTo1" column="SUBNET_RESERVED_TO_1" />
             <result property="subnetStaticFrom1" column="SUBNET_STATIC_FROM_1" />
             <result property="subnetStaticTo1" column="SUBNET_STATIC_TO_1" />
+            <result property="availabilityZone1" column="AVAILABILITY_ZONE_1" />
             <result property="subnetId2" column="SUBNET_ID_2" />
             <result property="securityGroup2" column="SECURITY_GROUP_2" />
             <result property="subnetRange2" column="SUBNET_RANGE_2" />
@@ -48,6 +51,8 @@
             <result property="subnetReservedTo2" column="SUBNET_RESERVED_TO_2" />
             <result property="subnetStaticFrom2" column="SUBNET_STATIC_FROM_2" />
             <result property="subnetStaticTo2" column="SUBNET_STATIC_TO_2" />
+            <result property="availabilityZone2" column="AVAILABILITY_ZONE_2" />
+
         </collection>
         <collection property="instanceConfig" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentInstanceConfigVO" javaType="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentInstanceConfigVO">
             <result property="instanceConfigName" column ="INSTANCE_CONFIG_NAME"/>
@@ -140,6 +145,8 @@
             ,cfnetwork.network_name
             ,cfnetwork.direction
             ,cfnetwork.public_static_ip
+            ,cfnetwork.subnet_reserved_ip
+            ,cfnetwork.subnet_static_ip
             ,cfnetwork.subnet_id_1
             ,cfnetwork.security_group_1
             ,cfnetwork.subnet_range_1 
@@ -149,6 +156,7 @@
             ,cfnetwork.subnet_reserved_to_1
             ,cfnetwork.subnet_static_from_1
             ,cfnetwork.subnet_static_to_1
+            ,cfnetwork.availability_zone_1
             ,cfnetwork.subnet_id_2
             ,cfnetwork.security_group_2
             ,cfnetwork.subnet_range_2 
@@ -158,6 +166,7 @@
             ,cfnetwork.subnet_reserved_to_2
             ,cfnetwork.subnet_static_from_2
             ,cfnetwork.subnet_static_to_2
+            ,cfnetwork.availability_zone_2
             ,cfcredential.credential_config_name
             ,cfcredential.domain
             ,cfcredential.iaas_type

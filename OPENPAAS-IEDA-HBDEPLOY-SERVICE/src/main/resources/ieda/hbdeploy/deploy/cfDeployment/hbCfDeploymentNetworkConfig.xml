@@ -11,7 +11,8 @@
         <result property="networkName" column="NETWORK_NAME" />
         <result property="direction" column="DIRECTION" />
         <result property="publicStaticIp" column="PUBLIC_STATIC_IP" />
-        <result property="availabilityZone" column="AVAILABILITY_ZONE" /> 
+        <result property="subnetReservedIp" column="SUBNET_RESERVED_IP" />
+        <result property="subnetStaticIp" column="SUBNET_STATIC_IP" />
         <result property="subnetId1" column="SUBNET_ID_1" />
         <result property="securityGroup1" column="SECURITY_GROUP_1" />
         <result property="subnetRange1" column="SUBNET_RANGE_1" />
@@ -45,16 +46,15 @@
             ,network_name as network_name
             ,direction as direction 
             ,public_static_ip as public_static_ip
-            ,availability_zone as availability_zone
+            ,subnet_reserved_ip as subnet_reserved_ip
+            ,subnet_static_ip as subnet_static_ip
             ,subnet_id_1 as subnet_id_1
             ,security_group_1 as security_group_1
             ,subnet_range_1 as subnet_range_1 
             ,subnet_gateway_1 as subnet_gateway_1
             ,subnet_dns_1 as subnet_dns_1
-            ,subnet_reserved_ip as subnet_reserved_ip
             ,subnet_reserved_from_1 as subnet_reserved_from_1
             ,subnet_reserved_to_1 as subnet_reserved_to_1
-            ,subnet_static_ip as subnet_static_ip
             ,subnet_static_from_1 as subnet_static_from_1
             ,subnet_static_to_1 as subnet_static_to_1
             ,availability_zone_1 as availability_zone_1
@@ -82,6 +82,8 @@
             ,network_name
             ,direction 
             ,public_static_ip
+            ,subnet_reserved_ip
+            ,subnet_static_ip
             ,subnet_id_1
             ,security_group_1
             ,subnet_range_1
@@ -111,6 +113,8 @@
             ,#{network.networkName}
             ,#{network.direction} 
             ,#{network.publicStaticIp}
+            ,#{network.subnetReservedIp}
+            ,#{network.subnetStaticIp}
             ,#{network.subnetId1}
             ,#{network.securityGroup1}
             ,#{network.subnetRange1}
