@@ -57,7 +57,7 @@ public class HbCfDeploymentNetworkConfigService {
     *****************************************************************/
     @Transactional
     public void saveNetworkConfigInfo(List<HbCfDeploymentNetworkConfigDTO> dto, Principal principal) {
-    	List<HbCfDeploymentNetworkConfigDTO>  vo = null;
+    //	List<HbCfDeploymentNetworkConfigDTO>  vo = null;
 /*        int count = cfDeploymentNetworkDao.selectHbCfDeploymentNetworkConfigByName(dto.getNetworkName());
         if(dto.getId() == null){
         //if( StringUtils.isEmpty(dto.getId().toString())){
@@ -125,7 +125,6 @@ public class HbCfDeploymentNetworkConfigService {
             cfDeploymentNetworkDao.updateHbCfDeploymentNetworkConfigInfo(vo);
         }*/
     }
-    
     
     public HbCfDeploymentNetworkConfigDTO setNetworkInfoList(HbCfDeploymentNetworkConfigDTO cfListInfo, HbCfDeploymentNetworkConfigVO vo){
         List<HbCfDeploymentNetworkConfigVO> networks = cfDeploymentNetworkDao.insertHbCfDeploymentNetworkConfigInfo(vo);
