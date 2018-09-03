@@ -50,18 +50,17 @@ public class HbCfDeploymentInstanceConfigService {
     *****************************************************************/
     @Transactional
     public void saveHbCfInstanceConfigInfo(HbCfDeploymentInstanceConfigDTO dto, Principal principal) {
-        HbCfDeploymentInstanceConfigVO vo = null;
+        HbCfDeploymentInstanceConfigVO vo = new HbCfDeploymentInstanceConfigVO();
         int count = hbCfDeploymentInstanceDao.selectHbCfDeploymentInstanceConfigByName(dto.getInstanceConfigName());
         if(dto.getId() == null){
         //if( StringUtils.isEmpty(dto.getId().toString())){
-            vo = new HbCfDeploymentInstanceConfigVO();
             vo.setCreateUserId(principal.getName());
             if(count > 0){
                 throw new CommonException(message.getMessage("common.conflict.exception.code", null, Locale.KOREA),
                         message.getMessage("hybrid.configMgnt.alias.conflict.message.exception", null, Locale.KOREA), HttpStatus.CONFLICT);
             }
         }else{
-            vo = hbCfDeploymentInstanceDao.selectHbCfDeploymentInstanceConfigInfo(dto.getId(), dto.getIaasType().toLowerCase());
+            vo = hbCfDeploymentInstanceDao.selectHbCfDeploymentInstanceConfigInfo(dto.getId());
             if(!dto.getInstanceConfigName().equals(vo.getInstanceConfigName()) && count > 0){
                 throw new CommonException(message.getMessage("common.conflict.exception.code", null, Locale.KOREA),
                         message.getMessage("hybrid.configMgnt.alias.conflict.message.exception", null, Locale.KOREA), HttpStatus.CONFLICT);

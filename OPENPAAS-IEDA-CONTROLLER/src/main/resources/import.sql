@@ -16,7 +16,7 @@ INSERT INTO ieda_common_code VALUES ( '201', 'UBUNTU', '201', '우분투' , 'Ubu
 INSERT INTO ieda_common_code VALUES ( '211', 'TRUSTY', '211', 'Trusty' , 'Ubuntu Trusty', '0', 201, null, 200, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '203', 'WINDOWS', '203', 'Windows' , 'Windows', '2', null, null, 200, 'SYSTEM', now(), 'SYSTEM', now() );
 
-INSERT INTO ieda_common_code VALUES ( '231', '2012R2', '231', '2012R2' , 'Windows 2012R2', '0', 203, null, 200, 'SYSTEM', now(), 'SYSTEM', now() );
+INSERT INTO ieda_common_code VALUES ( '231', '2016R', '231', '2016R' , 'Windows 2016R', '0', 203, null, 200, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '314', 'DEPLOY', '1000', 'Deploy' , 'Deploy', '0', null, null, null, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '315', 'DEPLOY_TYPE', '1100', '배포 유형' , '배포 유형(bootstrap/bosh/cf/diego)', '0', null, null, 1000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '316', 'DEPLOY_TYPE_BOOTSTRAP', '1101', 'BOOTSTRAP' , 'BootStrap 배포', '1', 1100, null, 1000, 'SYSTEM', now(), 'SYSTEM', now() );
@@ -1072,3 +1072,18 @@ INSERT INTO ieda_cf_job_template VALUES ( '1012', '12', 'DEPLOY_TYPE_CF', 'sched
 INSERT INTO ieda_cf_job_template VALUES ( '1013', '13', 'DEPLOY_TYPE_CF', 'singleton-blobstore', '2.7.0', '2.7.0', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
 INSERT INTO ieda_cf_job_template VALUES ( '1014', '14', 'DEPLOY_TYPE_CF', 'tcp-router', '2.7.0', '2.7.0', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
 INSERT INTO ieda_cf_job_template VALUES ( '1015', '15', 'DEPLOY_TYPE_CF', 'uaa', '2.7.0', '2.7.0', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '2000', '0', 'DEPLOY_TYPE_HYBRID_CF', 'adapter', '287', '287', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '2001', '1', 'DEPLOY_TYPE_HYBRID_CF', 'api', '287', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '2002', '2', 'DEPLOY_TYPE_HYBRID_CF', 'cc_worker', '287', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '2003', '3', 'DEPLOY_TYPE_HYBRID_CF', 'consul', '287', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '2004', '4', 'DEPLOY_TYPE_HYBRID_CF', 'database', '287', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '2005', '5', 'DEPLOY_TYPE_HYBRID_CF', 'diego_api', '287', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '2006', '6', 'DEPLOY_TYPE_HYBRID_CF', 'diego_cell', '287', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '2007', '7', 'DEPLOY_TYPE_HYBRID_CF', 'doppler', '287', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '2008', '8', 'DEPLOY_TYPE_HYBRID_CF', 'ha_proxy', '287', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '2009', '9', 'DEPLOY_TYPE_HYBRID_CF', 'log_api', '287', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '2010', '10', 'DEPLOY_TYPE_HYBRID_CF', 'nats', '287', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '2011', '11', 'DEPLOY_TYPE_HYBRID_CF', 'router', '287', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '2012', '12', 'DEPLOY_TYPE_HYBRID_CF', 'singleton_blobstore', '287', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '2013', '13', 'DEPLOY_TYPE_HYBRID_CF', 'tcp_router', '287', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '2014', '14', 'DEPLOY_TYPE_HYBRID_CF', 'uaa', '287', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());

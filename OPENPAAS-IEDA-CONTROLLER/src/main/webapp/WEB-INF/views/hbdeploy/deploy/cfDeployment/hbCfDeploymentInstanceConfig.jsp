@@ -15,7 +15,7 @@
 var text_required_msg = '<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
 var select_required_msg = '<spring:message code="common.select.vaildate.required.message"/>';//을(를) 선택하세요.
 var search_data_fail_msg = '클라우드 인프라 환경을 선택하세요.';
-var instanceConfigInfo = "";//인스턴스 정보
+var instanceConfigInfo = [];//인스턴스 정보
 var iaas = "";
 var jobsInfo=[];
 var resourceLayout = {
@@ -42,7 +42,7 @@ var resourceLayout = {
             columns:[
                    { field: 'recid', hidden: true },
                    { field: 'id', hidden: true },
-                   { field: 'instanceConfigName', caption: '인스턴스 정보 별칭', size:'100px', style:'text-align:center;' },
+                   { field: 'instanceConfigName', caption: '인스턴스 정보 별칭', size:'120px', style:'text-align:center;' },
                    { field: 'iaasType', caption: '인프라 환경 타입', size:'100px', style:'text-align:center;' ,render: function(record){ 
                        if(record.iaasType.toLowerCase() == "aws"){
                            return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
@@ -70,7 +70,7 @@ var resourceLayout = {
             onSelect : function(event) {
                 event.onComplete = function() {
                     $('#deleteBtn').attr('disabled', false);
-                    settingResourceInfo();
+                    settingInstanceInfo();
                     return;
                 }
             },
@@ -120,12 +120,12 @@ var resourceLayout = {
 }
 
 $(function(){
-	settingCfJobs();
+    getNetworkInfo();
     $('#instance_grid').w2layout(resourceLayout.layout2);
     w2ui.layout2.content('left', $().w2grid(resourceLayout.grid));
     w2ui['layout2'].content('main', $('#regPopupDiv').html());
     doSearch();
-    
+    //delete Btn
     $("#deleteBtn").click(function(){
         if($("#deleteBtn").attr('disabled') == "disabled") return;
         var selected = w2ui['instance_grid'].getSelection();
@@ -159,12 +159,62 @@ function settingReleaseVersion( version ){
     return version;
 }
 /********************************************************
+ * 설명 : 네트워크 설정 정보 읽어오기
+ * 기능 : getNetworkInfo
+ *********************************************************/
+function getNetworkInfo(){
+     $.ajax({
+        type: "GET",
+        url: "/deploy/hbCfDeployment/networkConfig/list",
+        contentType : "application/json",
+        async : true,
+        success : function(data, status) {
+            instanceConfigInfo = data.records;
+            settingCfJobs();
+        },
+        error : function( e, status ) {
+            w2alert("CF Deployment 네트워크 정보 "+search_data_fail_msg, "인스턴스 정보 ");
+        }
+     });
+ }
+
+/********************************************************
+ * 설명 : 인스턴스 수정 정보 설정
+ * 기능 : settingInstanceInfo
+ *********************************************************/
+function settingInstanceInfo(){
+    var selected = w2ui['instance_grid'].getSelection();
+    var record = w2ui['instance_grid'].get(selected);
+    if(record == null) {
+        w2alert("Instance 정보 설정 중 에러가 발생 했습니다.");
+        return;
+    }
+    iaas = record.iaasType;
+    $("input[name=instanceInfoId]").val(record.recid);
+    $("input[name=instanceConfigName]").val(record.instanceConfigName);
+    $("input[name=adapter]").val(record.adapter);
+    $("input[name=api]").val(record.api);
+    $("input[name=cc_worker]").val(record.ccWorker);
+    $("input[name=consul]").val(record.consul);
+    $("input[name=database]").val(record.theDatabase);
+    $("input[name=diego_api]").val(record.diegoApi);
+    $("input[name=diego_cell]").val(record.diegoCell);
+    $("input[name=doppler]").val(record.doppler);
+    $("input[name=ha_proxy]").val(record.haproxy);
+    $("input[name=log_api]").val(record.logApi);
+    $("input[name=nats]").val(record.nats);
+    $("input[name=router]").val(record.router);
+    $("input[name=singleton_blobstore]").val(record.singletonBlobstore);
+    $("input[name=tcp_router]").val(record.tcpRouter);
+    $("input[name=uaa]").val(record.uaa);
+    $("select[name=iaasType]").val(record.iaasType);
+ }
+ 
+/********************************************************
  * 설명 : CF Jobs 정보 설정
  * 기능 : settingCfJobs
  *********************************************************/
 function settingCfJobs(){
-    console.log("1");
-    var instanceConfigInfo ="";
     /* var instanceInfo = "";
     var release_version = defaultInfo.releaseVersion;
     release_version = settingReleaseVersion(release_version); */
@@ -177,41 +227,24 @@ function settingCfJobs(){
         url : "/deploy/hbCfDeployment/instanceConfig/job/list/"+release_version+"/"+ deploy_type,
         contentType : "application/json",
         success : function(data, status) {
-            
-            console.log(JSON.stringify(data)+ "TESTTESTTEST AAA BBB"+ status +"ccc");
-            
             if( data != null ){
                 var div = "";
                 var html = "";
-                html += '<div class="panel panel-info" style="height: 100%; overflow: auto;" >';
                 html += '<div class="panel-body">';
                 html += '<div id="cfJobListDiv">';
                 html += '<p style="color:red;">- 고급 설정 값을 변경하지 않을 경우 아래에 입력 된 기본 값으로 자동 설정됩니다.</p>';
                 html += '<p style="color:red;">- 해당 Job의 인스턴스 수는 0-100까지 입력하실 수 있습니다.</p>';
                 
-                for( var j=1; j< instanceConfigInfo.length; j++ ){
-                    html += "<p style='color: #565656;font-size: 13px;font-weight:bolder;margin-top: 20px;'>[Internal 네트워크_"+ j+ "]</p>"
-                    for( var i=0; i<data.length; i++ ){
-                        if( j == 1 && data[i].zone_z1 == "true" ){
-                            html += setJobSettingHtml(data[i], j );
-                        }else if( j == 2 && data[i].zone_z2 == "true"  ){
-                            html += setJobSettingHtml(data[i], j);
-                        }
-                    }
+                for( var i=0; i<data.length; i++ ){
+                    html += setJobSettingHtml(data[i]);
                 }
-                html +='</div></div></div>';
-               // $("#cfDetailForm").html(html);
-                $(".w2ui-msg-body #cfDetailForm").html("<div> aaaaaaaaaa </div>");
-                
-                if( jobsInfo.length > 0 ){
-                    for( var i=0; i<jobsInfo.length; i++ ){
-                        $(".w2ui-msg-body input[name='"+jobsInfo[i].job_name+"_"+jobsInfo[i].zone+"']").val(jobsInfo[i].instances);
-                    }
-                }
+                //}
+                html +='</div></div>';
+                $("#instanceSet").html(html);
             }
         },
         error : function(e, status) {
-            w2alert(JSON.parse(e.responseText).message, "CF Deployment");
+            w2alert(JSON.parse(e.responseText).message, "Instance ");
         }
     });
 }
@@ -220,10 +253,8 @@ function settingCfJobs(){
  * 설명 : CF 고급 설정 HTML 설정
  * 기능 : setJobSettingHtml
  *********************************************************/
-function setJobSettingHtml(data, j){
-	 console.log(data.job_name+"TEST DATA BBB");
+function setJobSettingHtml(data){
     var html = "";
-    if( !(diegoUse == "true" && ( data.job_name == "hm9000" || data.job_name == "stats" || data.job_name == "runner")) ){
         html += '<ul class="w2ui-field" style="border: 1px solid #c5e3f3;padding: 10px;">';
         html +=     '<li style="display:inline-block; width:35%;">';
         html +=         '<label style="text-align: left;font-size:11px;">'+data.job_name+'</label>';
@@ -231,19 +262,45 @@ function setJobSettingHtml(data, j){
         html +=     '<li style="display:inline-block; width:60%;vertical-align:middle; line-height:3; text-align:right;">';
         html +=         '<ul>';
         html +=             '<li>';
-        html +=                 '<label style="display:inline-block;">인스턴스 수 : </label>&nbsp;&nbsp;&nbsp;';
-        if( iaas.toLowerCase() == "vsphere" && networkInfo.length > 2 && j == 1 && ( data.job_name == "consul" || data.job_name == "etcd" ) ){
+        html +=                 '<label style="display:inline-block;">인스턴스 수 : </label>&nbsp;';
+        html +=                 '<input class="form-control" style="width:30%; display:inline-block;" onblur="instanceControl(this);" onfocusin="instanceControl(this);" onfocusout="instanceControl(this);" maxlength="1" type="number" min="0" max="100" value="1" id="'+data.id+'" name="'+data.job_name+'"/>';
+/*         if( iaas.toLowerCase() == "vsphere" && networkInfo.length > 2 && ( data.job_name == "consul" || data.job_name == "etcd" ) ){
             //vsphere Internal 네트워크가 2개 이상일 경우 etcd_z1, consul_z1의 instance 2 
-            html +=                 '<input class="form-control" style="width:60%; display:inline-block;" onblur="instanceControl(this);" onfocusin="instanceControl(this);" onfocusout="instanceControl(this);" maxlength="1" type="number" min="0" max="3" value="2" id="'+data.id+'" name="'+data.job_name+'_z'+j+'"/>';
+            html +=                 '<input class="form-control" style="width:30%; display:inline-block;" onblur="instanceControl(this);" onfocusin="instanceControl(this);" onfocusout="instanceControl(this);" maxlength="1" type="number" min="0" max="100" value="2" id="'+data.id+'" name="'+data.job_name+'"/>';
         }else{
-            html +=                 '<input class="form-control" style="width:60%; display:inline-block;" onblur="instanceControl(this);" onfocusin="instanceControl(this);" onfocusout="instanceControl(this);" maxlength="1" type="number" min="0" max="3" value="1" id="'+data.id+'" name="'+data.job_name+'_z'+j+'"/>';
-        }
+            html +=                 '<input class="form-control" style="width:30%; display:inline-block;" onblur="instanceControl(this);" onfocusin="instanceControl(this);" onfocusout="instanceControl(this);" maxlength="1" type="number" min="0" max="100" value="1" id="'+data.id+'" name="'+data.job_name+'"/>';
+        } */
         html +=              '</li>';
         html +=         '</ul>';
         html +=     '</li>';
         html += '</ul>';
-    }
     return html;
+}
+
+/********************************************************
+ * 설명 : CF Jobs 유효성 추가
+ * 기능 : instanceControl
+ *********************************************************/
+function instanceControl(e){
+     if ( e.value != "" && e.value >=0 && e.value<=100) {
+         if( $(e).parent().find("p").length > 0 ){
+             $(e).parent().find("p").remove();
+         }
+     }else{
+         var name = $(e).attr("name");
+         if( jobsInfo.length >0 ){
+             for( var i=0; i<jobsInfo.length; i++ ){
+                 if( $(e).attr("name") == jobsInfo[i].job_name+"_"+jobsInfo[i].zone ){
+//                      e.value= jobsInfo[i].instances;
+                 }
+             }
+         }else{
+//              $(e).val("1");
+         }
+         if( $(e).parent().find("p").length == 0 ){
+             $(e).parent().append("<p>100까지 숫자만 입력 가능 합니다.</p>"); 
+         }
+     }
 }
 
 /********************************************************
@@ -258,7 +315,73 @@ function doSearch() {
     w2ui['instance_grid'].clear();
     w2ui['instance_grid'].load('/deploy/hbCfDeployment/instanceConfig/list');
     doButtonStyle(); 
+
 }
+
+/********************************************************
+ * 설명 : 인스턴스 정보 등록
+ * 기능 : saveResourceInfo
+ *********************************************************/
+function registHbCfDeploymnetInstanceConfigInfo() {
+    instanceConfigInfo = {
+            id                 : $("input[name=instanceInfoId]").val(),
+            iaasType           : $("select[name=iaasType]").val(),
+            instanceConfigName : $("input[name=instanceConfigName]").val(),
+            adapter            : $("input[name=adapter]").val(),
+            api                : $("input[name=api]").val(),
+            ccWorker           : $("input[name=cc_worker]").val(),
+            consul             : $("input[name=consul]").val(),
+            theDatabase        : $("input[name=database]").val(),
+            diegoApi           : $("input[name=diego_api]").val(),
+            diegoCell          : $("input[name=diego_cell]").val(),
+            doppler            : $("input[name=doppler]").val(),
+            haproxy            : $("input[name=ha_proxy]").val(),
+            logApi             : $("input[name=log_api]").val(),
+            nats               : $("input[name=nats]").val(),
+            router             : $("input[name=router]").val(),
+            singletonBlobstore : $("input[name=singleton_blobstore]").val(),
+            tcpRouter          : $("input[name=tcp_router]").val(),
+            uaa                : $("input[name=uaa]").val()
+    }
+        //Server send Cf Info
+        $.ajax({
+            type : "PUT",
+            url : "/deploy/hbCfDeployment/instanceConfig/save",
+            contentType : "application/json",
+            data : JSON.stringify(instanceConfigInfo),
+            success : function(data, status) {
+                doSearch();
+            },
+            error : function(e, status) {
+                w2alert("Instance 등록에 실패 하였습니다.", "Instance 등록");
+            }
+        }); 
+}
+
+/********************************************************
+ * 설명 : 인스턴스 정보 삭제
+ * 기능 : deleteHbCfDeploymnetInstanceConfigInfo
+ *********************************************************/
+function deleteHbCfDeploymnetInstanceConfigInfo(id, instanceConfigName){
+     var instanceRequestInfo = {
+            id: id,
+            instanceConfigName: instanceConfigName
+     };
+     $.ajax({
+        type: "DELETE",
+        url: "/deploy/hbCfDeployment/instanceConfig/delete",
+        data : JSON.stringify(instanceRequestInfo),
+        contentType : "application/json",
+        async : true,
+        success : function(data, status) {
+            doSearch();
+        },
+        error : function(request, status, error) {
+            var errorResult = JSON.parse(request.responseText);
+            w2alert(errorResult.message);
+        }
+     });
+ }
 
 /********************************************************
  * 설명 : 초기 버튼 스타일
@@ -304,6 +427,7 @@ function resetForm(status){
         w2ui['instance_grid'].clear();
         $("select[name=iaasType]").html("<option value=''>인프라 환경을 선택하세요.</option>");
         doSearch();
+        
     }
     document.getElementById("cfDetailForm").reset();
 }
@@ -319,14 +443,13 @@ function resetForm(status){
 
 </div>
 
-
 <div id="regPopupDiv" hidden="" >
-   <!--  <form id="settingForm" action="POST" > -->
-    <input type="hidden" name="resourceInfoId" />
+  <form id="cfDetailForm" action="POST" >
+    <input type="hidden" name="instanceInfoId" />
         <div class="w2ui-page page-0" style="">
            <div class="panel panel-default">
                <div class="panel-heading"><b>인스턴스 정보 ( CF 고급 설정 ) </b></div>
-               <div class="panel-body" style="height:205px; overflow-y:auto;">
+               <div class="panel-body" style="height:240px; overflow-y:auto;">
                    <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;">인스턴스 정보 별칭</label>
                        <div>
@@ -343,16 +466,16 @@ function resetForm(status){
                            </select>
                        </div>
                    </div>
-                   <div class="w2ui-field">
-                   </div>
                </div>
-               <form id="cfDetailForm" style="width:100%; height:400px;"></form>
+               <div class="panel-heading" style="position:relative"><b>인스턴스 설정</b></div>
+                   <div class="panel-body" id="instanceSet" style="padding:5px 5% 10px 5%;">
+                   </div> 
            </div>
         </div>
-    <!-- </form> -->
+    </form>
     
     <div id="regPopupBtnDiv" style="text-align: center; margin-top: 5px;">
-        <span id="installBtn" onclick="$('#cfDetailForm').submit();" class="btn btn-primary">등록</span>
+        <span id="addBtn" onclick="$('#cfDetailForm').submit();" class="btn btn-primary">등록</span>
         <span id="resetBtn" onclick="resetForm('reset');" class="btn btn-info">취소</span>
         <span id="deleteBtn" class="btn btn-danger">삭제</span>
     </div>
@@ -367,21 +490,105 @@ $(function() {
         rules: {
             instanceConfigName: { 
                 required: function(){
-                    return checkEmpty( $("input[name='instanceConfigName']").val() );
+                    return checkEmpty( $("input[name=instanceConfigName]").val() );
                 }
             }, iaasType: { 
                 required: function(){
-                    return checkEmpty( $("select[name='iaasType']").val() );
+                    return checkEmpty( $("select[name=iaasType]").val() );
+                }
+            }, adapter: {
+                required: function(){
+                    return checkEmpty( $("input[name=adapter]").val() );
+                }
+            }, ccWorker: {
+                required: function(){
+                    return checkEmpty( $("input[name=cc_worker]").val() );
+                }
+            }, consul: {
+                required: function(){
+                    return checkEmpty( $("input[name=consul]").val() );
+                }
+            }, theDatabase: {
+                required: function(){
+                    return checkEmpty( $("input[name=theDatabase]").val() );
+                }
+            }, diegoApi: {
+                required: function(){
+                    return checkEmpty( $("input[name=diego_api]").val() );
+                }
+            }, diegoCell: {
+                required: function(){
+                    return checkEmpty( $("input[name=diego_cell]").val() );
+                }
+            }, doppler: {
+                required: function(){
+                    return checkEmpty( $("input[name=doppler]").val() );
+                }
+            }, haproxy: {
+                required: function(){
+                    return checkEmpty( $("input[name=ha_proxy]").val() );
+                }
+            }, logApi: {
+                required: function(){
+                    return checkEmpty( $("input[name=log_api]").val() );
+                }
+            }, nats: {
+                required: function(){
+                    return checkEmpty( $("input[name=nats]").val() );
+                }
+            }, router: {
+                required: function(){
+                    return checkEmpty( $("input[name=router]").val() );
+                }
+            }, singletonBlobstore: {
+                required: function(){
+                    return checkEmpty( $("input[name=singleton_blobstore]").val() );
+                }
+            }, tcpRouter: {
+                required: function(){
+                    return checkEmpty( $("input[name=tcp_router]").val() );
+                }
+            }, uaa: {
+                required: function(){
+                    return checkEmpty( $("input[name=uaa]").val() );
                 }
             }
-            
         }, messages: {
             instanceConfigName: { 
                 required:  "인스턴스 별칭"+text_required_msg
             }, iaasType: { 
-                required:  "클라우드 인프라 환경 타입"+select_required_msg,
+                required:  "클라우드 인프라 환경 타입"+text_required_msg,
+            }, adapter: { 
+                required:  "adapter"+text_required_msg,
+            }, api: { 
+                required:  "api"+text_required_msg,
+            }, ccWorker: { 
+                required:  "ccWorker"+text_required_msg,
+            }, consul: { 
+                required:  "consul"+text_required_msg,
+            }, theDatabase: { 
+                required:  "theDatabase"+text_required_msg,
+            }, diegoApi: { 
+                required:  "diegoApi"+text_required_msg,
+            }, diegoCell: { 
+                required:  "diegoCell"+text_required_msg,
+            }, doppler: { 
+                required:  "doppler"+text_required_msg,
+            }, haproxy: { 
+                required:  "haproxy"+text_required_msg,
+            }, logApi: { 
+                required:  "logApi"+text_required_msg,
+            }, nats: { 
+                required:  "nats"+text_required_msg,
+            }, router: { 
+                required:  "router"+text_required_msg,
+            }, singletonBlobstore: { 
+                required:  "singletonBlobstore"+text_required_msg,
+            }, tcpRouter: { 
+                required:  "tcpRouter"+text_required_msg,
+            }, uaa: { 
+                required:  "uaa"+text_required_msg,
             }
-            
         }, unhighlight: function(element) {
             setHybridSuccessStyle(element);
         },errorPlacement: function(error, element) {
@@ -392,7 +599,7 @@ $(function() {
                 setHybridInvalidHandlerStyle(errors, validator);
             }
         }, submitHandler: function (form) {
-        	registHbCfDeploymnetInstanceConfigInfo();
+            registHbCfDeploymnetInstanceConfigInfo();
         }
     });
 });

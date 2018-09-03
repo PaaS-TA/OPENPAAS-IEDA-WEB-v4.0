@@ -193,7 +193,11 @@
             ,subnet_gateway_1 as subnet_gateway_1
             ,subnet_dns_1 as subnet_dns_1
             ,subnet_reserved_from_1 as subnet_reserved_from_1
+<<<<<<< HEAD
             ,subnet_reserved_to_1 as subnet_reserved_to_1
+=======
+            ,subnet_reserved_to_1 as subnet_reserved_to_1            
+>>>>>>> 60d49532ecf2cf3d6ab594cda743728fc65e5f1e
             ,subnet_static_from_1 as subnet_static_from_1
             ,subnet_static_to_1 as subnet_static_to_1
             ,availability_zone_1 as availability_zone_1

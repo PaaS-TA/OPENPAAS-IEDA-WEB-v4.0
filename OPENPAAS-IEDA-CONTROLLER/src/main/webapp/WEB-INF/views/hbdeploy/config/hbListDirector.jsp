@@ -352,7 +352,7 @@ function setCredentialKeyPathList(fileList){
 function getCredsKeyPathFileList(){
     $.ajax({
         type : "GET",
-        url : "/common/deploy/creds/list",
+        url : "/common/deploy/hybridCreds/list",
         contentType : "application/json",
         async : true,
         success : function(data, status) {
@@ -427,6 +427,13 @@ function credsChangeKeyPathStyle( showDiv, hideDiv ){
      $(".w2ui-msg-body "+ hideDiv).hide();
      $(".w2ui-msg-body "+ hideDiv +" p").remove();
      $(".w2ui-msg-body "+ showDiv).show();
+}
+/******************************************************************
+ * Function : openBrowse
+ * 설명 : 공통 File upload Browse Button
+ ***************************************************************** */
+function openBrowse(){
+    $(".w2ui-msg-body input[name='keyPathFile']").click();
 }
 </script>
 

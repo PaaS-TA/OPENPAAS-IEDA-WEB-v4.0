@@ -198,11 +198,21 @@ $(function() {
              ],
          onSelect : function(event) {
              event.onComplete = function() {
+                 $('#modifyVmBtn').attr('disabled', false);
                  $('#deleteVmBtn').attr('disabled', false);
                  return;
              }
+         },onDblClick: function (event) {
+             var grid = this;
+             // need timer for nicer visual effect that record was selected
+             setTimeout(function () {
+                 w2ui['config_bootstrapGrid2'].add( $.extend({}, grid.get(event.recid), { selected : false }) );
+                 grid.selectNone();
+                 grid.remove(event.recid);
+             }, 150);
          },onUnselect : function(event) {
              event.onComplete = function() {
+                 $('#modifyVmBtn').attr('disabled', true);
                  $('#deleteVmBtn').attr('disabled', true);
                  return;
              }
@@ -254,7 +264,7 @@ $(function() {
         w2popup.open({
             width   : 730,
             height  : 460,
-            title : '<b>이종 BOOTSTRAP 정보 등록</b>',
+            title : '<b>이종 BOOTSTRAP 정보 수정</b>',
             body : $("#bootstrapRegistInfoDiv").html(),
             buttons: $("#bootstrapRegistInfoBtnDiv").html(),
             modal : true,
@@ -362,6 +372,41 @@ $(function() {
     doSearch();
 });
 
+/******************************************************************
+ * 설명 : BootStrap 수정 버튼
+ ***************************************************************** */
+ $("#modifyVmBtn").click(function(){
+     if($("#modifyVmBtn").attr('disabled') == "disabled") return;
+     
+     var selected = w2ui['config_bootstrapGrid3'].getSelection();
+     if( selected.length == 0 ){
+         w2alert("선택된 정보가 없습니다.", "BOOTSTRAP 등록 정보 수정");
+         return;
+     }
+     var record = w2ui['config_bootstrapGrid3'].get(selected);
+     bootstrapInfo = record;
+     w2popup.open({
+         width   : 730,
+         height  : 460,
+         title : '<b>이종 BOOTSTRAP 정보 수정</b>',
+         body : $("#bootstrapModifyRegistInfoDiv").html(),
+         buttons: $("#bootstrapModifyRegistInfoBtnDiv").html(),
+         modal : true,
+         onOpen:function(event){
+             event.onComplete = function(){
+                 $(".w2ui-msg-body input[name='bootstrapInfoId']").val(record.id)
+                 $(".w2ui-msg-body input[name='bootstrapConfigName']").val(record.bootstrapConfigName)
+                 $(".w2ui-msg-body select[name='iaasType']").val(record.iaasType)
+                 getBootstrapCpiInfo();
+                 getBootstrapDefaultInfo();
+                 getBootstrapDefaultInfo();
+                 getBootstrapNetworkInfo();
+                 getBootstrapResourceInfo();
+             }
+         },onClose:function(event){
+         }
+     });
+  });
 
 /******************************************************************
  * 기능 : privateInstallPopup
@@ -861,6 +906,7 @@ function doButtonStyle(){
     $('#deleteBtn').attr('disabled', true);
     $('#deleteVmBtn').attr('disabled', true);
     $('#installVmBtn').attr('disabled', true);
+    $('#modifyVmBtn').attr('disabled', true);
 }
  
 /******************************************************************
@@ -984,7 +1030,10 @@ function popupComplete(){
     
     <div class="pdt20"> 
         <div class="title fl">배포 한 Private/Public BOOTSTRAP 목록 </div>
-        <div class="fr"> 
+        <div class="fr">
+            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
+            <span id="modifyVmBtn" class="btn btn-info"  style="width:120px">VM 수정</span>
+            </sec:authorize>
             <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
             <span id="deleteVmBtn" class="btn btn-danger"  style="width:120px">VM 삭제</span>
             </sec:authorize>
@@ -1054,6 +1103,71 @@ function popupComplete(){
         <div class="w2ui-buttons" id="bootstrapRegistInfoBtnDiv" hidden="true">
             <button class="btn" id="registBootstrapInfoBtn" onclick="$('#settingForm').submit();">확인</button>
             <button class="btn" id="popClose" onclick="w2popup.close();">취소</button>
+        </div>
+    </form>
+</div>
+
+<div id="bootstrapModifyRegistInfoDiv" style="width:100%;height:100%;" hidden="true">
+    <form id="settingModifyForm" action="POST">
+    <input class="form-control" name = "bootstrapInfoId" type="hidden"/>
+        <div class="w2ui-page page-0" style="margin-top:30px;padding:0 3%;">
+            <div class="panel panel-info"> 
+                <div class="panel-heading" style = "text-align: left; font-size:15px;"><b>이종 BOOTSTRAP 설치 정보</b></div>
+                <div class="panel-body" style="padding:5px 5% 7px 5%;">
+                   <div class="w2ui-field">
+                       <label style="width:40%; text-align: left;padding-left: 20px;">BOOTSTRAP 정보 별칭</label>
+                       <div>
+                           <input class="form-control" name = "bootstrapConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="BOOTSTRAP 정보 별칭을 입력 하세요."/>
+                       </div>
+                   </div>
+                  <div class="w2ui-field">
+                       <label style="width:40%;text-align: left;padding-left: 20px;">클라우드 인프라 환경</label>
+                       <div>
+                           <select class="form-control" onchange="" name="iaasType" style="width: 320px; margin-left: 20px;">
+                               <option value="">수정할 인프라 환경을 선택하세요.</option>
+                               <option value="aws">AWS</option>
+                               <option value="openstack">Openstack</option>
+                           </select>
+                       </div>
+                   </div>
+                   <div class="w2ui-field">
+                      <label style="width:40%;text-align: left;padding-left: 20px;">BOOTSTRAP CPI 정보 별칭</label>
+                      <div style="width: 60%">
+                          <select class="form-control" name="cpiConfigInfo" onchange="" style="width: 320px; margin-left: 20px;">
+                              <option value="">수정할 BOOTSTRAP CPI 정보를 선택하세요.</option>
+                          </select>
+                      </div>
+                   </div>
+                   <div class="w2ui-field">
+                      <label style="width:40%;text-align: left;padding-left: 20px;">BOOTSTRAP 기본 정보 별칭</label>
+                      <div style="width: 60%">
+                          <select class="form-control" name="defaultConfigInfo" onchange="" style="width: 320px; margin-left: 20px;">
+                              <option value="">수정할 BOOTSTRAP 기본 정보를 선택하세요.</option>
+                          </select>
+                      </div>
+                    </div>
+                    <div class="w2ui-field">
+                      <label style="width:40%;text-align: left;padding-left: 20px;">BOOTSTRAP 네트워크 정보 별칭</label>
+                      <div style="width: 60%">
+                          <select class="form-control" name="networkConfigInfo" onchange="" style="width: 320px; margin-left: 20px;">
+                              <option value="">수정할 BOOTSTRAP 네트워크 정보를 선택하세요.</option>
+                          </select>
+                      </div>
+                    </div>
+                    <div class="w2ui-field">
+                      <label style="width:40%;text-align: left;padding-left: 20px;">BOOTSTRAP 리소스 정보 별칭</label>
+                      <div style="width: 60%">
+                          <select class="form-control" name="resourceConfigInfo" onchange="" style="width: 320px; margin-left: 20px;">
+                              <option value="">수정할 BOOTSTRAP 리소스 정보를 선택하세요.</option>
+                          </select>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="w2ui-buttons" id="bootstrapModifyRegistInfoBtnDiv" hidden="true">
+            <button class="btn" id="modifyRegistBootstrapInfoBtn" onclick="$('#settingForm').submit();">확인</button>
+            <button class="btn" id="popModifyRegistClose" onclick="w2popup.close();">취소</button>
         </div>
     </form>
 </div>

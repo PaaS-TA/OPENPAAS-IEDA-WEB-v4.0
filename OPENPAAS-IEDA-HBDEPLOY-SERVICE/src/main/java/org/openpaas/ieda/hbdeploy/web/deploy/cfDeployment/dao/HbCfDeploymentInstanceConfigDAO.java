@@ -10,13 +10,13 @@ public interface HbCfDeploymentInstanceConfigDAO {
 
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : 인스턴 목록 조회
+     * @description : 인스턴스 목록 조회
      * @title : selectHbCfDeploymentInstanceConfigInfoList
      * @return : List<HbCfDeploymentInstanceConfigVO>
     *****************************************************************/
     List<HbCfDeploymentInstanceConfigVO> selectHbCfDeploymentInstanceConfigInfoList();
 
-    HbCfDeploymentInstanceConfigVO selectHbCfDeploymentInstanceConfigInfo(@Param("id")int id, @Param("iaas")String iaas);
+    HbCfDeploymentInstanceConfigVO selectHbCfDeploymentInstanceConfigInfo(@Param("id")int id);
 
     List<HashMap<String, String>> selectHbCfJobTemplateByReleaseVersion(@Param("map") HashMap<String, String> map);
 
