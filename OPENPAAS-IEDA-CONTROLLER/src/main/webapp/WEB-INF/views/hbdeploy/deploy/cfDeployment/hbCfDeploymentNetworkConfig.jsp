@@ -241,7 +241,7 @@ function registHbCfDeploymentNetworkConfigInfo(){
     //Internal
 
     var internal = {
-            
+    		direction               : "Internal",
             subnetId1               : $("input[name='subnetId1']").val(),
             securityGroup1          : $("input[name='securityGroup1']").val(),
             subnetRange1            : $("input[name='subnetRange1']").val(),
@@ -258,6 +258,7 @@ function registHbCfDeploymentNetworkConfigInfo(){
     if($("input[name='subnetId_2']").val() != null){
     	
 	    var internal2 = {
+	    		direction               : "Internal",
 	            subnetId2               : $("input[name='subnetId_2']").val(),
 	            securityGroup2          : $("input[name='securityGroup_2']").val(),
 	            subnetRange2            : $("input[name='subnetRange_2']").val(),

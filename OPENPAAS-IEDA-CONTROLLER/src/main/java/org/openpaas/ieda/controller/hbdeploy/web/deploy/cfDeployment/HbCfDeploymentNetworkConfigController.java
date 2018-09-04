@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.openpaas.ieda.controller.common.BaseController;
-import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentNetworkConfigVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dto.HbCfDeploymentNetworkConfigDTO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.service.HbCfDeploymentNetworkConfigService;
 import org.slf4j.Logger;
