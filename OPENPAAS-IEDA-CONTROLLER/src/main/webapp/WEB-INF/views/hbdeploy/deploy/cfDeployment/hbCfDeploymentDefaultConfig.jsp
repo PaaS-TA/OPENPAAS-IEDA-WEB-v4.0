@@ -266,7 +266,6 @@ function deleteHbCfDeploymentDefaultConfigInfo(id, defaultConfigName){
             if( data != null){
                 option = "<option value=''>CF Deployment를 선택하세요.</option>";
                 data.map(function(obj) {
-                    console.log( obj.releaseType +"TEST data"+ obj.templateVersion +"TEST AAA");
                       if( defaultConfigInfo.releaseName == obj.releaseType && defaultConfigInfo.releaseVersion == obj.templateVersion){
                        option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"' selected>"+obj.releaseType+"/"+obj.templateVersion+"</option>";
                     }else{

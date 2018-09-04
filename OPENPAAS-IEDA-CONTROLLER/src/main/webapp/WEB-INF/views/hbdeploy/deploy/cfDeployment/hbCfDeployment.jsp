@@ -1019,7 +1019,7 @@ function popupComplete(){
         <div class="title fl">배포 한 Private/Public CF Deployment 목록 </div>
         <div class="fr"> 
             <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
-            <span id="modifyVmBtn" class="btn btn-info" style="width:120px">정보 수정</span>
+            <span id="modifyVmBtn" class="btn btn-info" style="width:120px">VM 수정</span>
             </sec:authorize>
             <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
             <span id="deleteVmBtn" class="btn btn-danger"  style="width:120px">VM 삭제</span>

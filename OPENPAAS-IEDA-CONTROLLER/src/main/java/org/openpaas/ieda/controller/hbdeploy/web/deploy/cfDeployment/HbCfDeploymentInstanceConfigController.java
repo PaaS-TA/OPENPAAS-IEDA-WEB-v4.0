@@ -46,7 +46,7 @@ public class HbCfDeploymentInstanceConfigController extends BaseController{
         List<HbCfDeploymentInstanceConfigVO> InstanceConfigList = service.getHbCfInstanceConfigInfoList();
         HashMap<String, Object> list = new HashMap<String, Object>();
         int size =0;
-        if( InstanceConfigList.size() > 0  ) {
+        if( InstanceConfigList != null && InstanceConfigList.size() > 0  ) {
             size = InstanceConfigList.size();
         }
         list.put("total", size);

@@ -55,7 +55,7 @@
           password: ((diego_database_password))
           tag: admin
         - name: routing-api
-          password: mq3ap2n8udsf2ebgb0e4
+          password: ((routing_api_database_password))
           tag: admin
         - name: network_policy
           password: ((network_policy_database_password))
@@ -75,7 +75,6 @@
 - type: replace
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/ccdb
   value:
-    address: 
     databases:
     - name: cloud_controller
       tag: cc
@@ -112,7 +111,6 @@
 - type: replace
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaadb
   value:
-    #address: 13.209.113.203
     databases:
     - name: uaa
       tag: uaa
@@ -120,7 +118,7 @@
     port: 5524
     roles:
     - name: uaa
-      password: uwc0j4t7nbl6xz3wo915
+      password: ((uaa_database_password))
       tag: admin
 - type: replace
   path: /instance_groups/name=diego-api/jobs/name=bbs/properties/diego/bbs/sql

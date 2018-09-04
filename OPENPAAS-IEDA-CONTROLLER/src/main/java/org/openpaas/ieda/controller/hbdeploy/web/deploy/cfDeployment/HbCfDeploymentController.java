@@ -4,6 +4,9 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.validation.Valid;
+
+import org.openpaas.ieda.deploy.web.deploy.cf.dto.CfParamDTO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentDefaultConfigVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dto.HbCfDeploymentDTO;
@@ -17,8 +20,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -73,6 +79,20 @@ public class HbCfDeploymentController {
         if(LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbCfDeployment/install/{installStatus}");}
         hbCfDeploymentSaveService.saveCfdeploymentConfigInfo(dto, principal);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+    
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : CF Deployment 플랫폼 설치
+     * @title : installCf
+     * @return : ResponseEntity<?>
+    *****************************************************************/
+    @MessageMapping("/deploy/hbCfDeployment/install/cfInstall")
+    @SendTo("/deploy/hbCfDeployment/install/logs")
+    public ResponseEntity<?> installCfDeployment(@RequestBody @Valid HbCfDeploymentDTO dto, Principal principal){
+        if(LOGGER.isInfoEnabled()){ LOGGER.info("==================================> /deploy/hbCfDeployment/install/cfInstall"); }
+        hbCfDeploymentDeployAsyncService.deployAsync(dto, principal, "cf");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     
 }
