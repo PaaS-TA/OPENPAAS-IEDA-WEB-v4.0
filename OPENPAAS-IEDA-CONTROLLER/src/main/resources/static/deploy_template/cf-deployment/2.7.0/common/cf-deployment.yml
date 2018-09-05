@@ -317,8 +317,6 @@ instance_groups:
   stemcell: default
   networks:
   - name: default
-  - name: vip
-  
   jobs:
   - name: consul_agent
     release: consul
@@ -445,6 +443,13 @@ instance_groups:
             authorities: routing.routes.read
             authorized-grant-types: client_credentials
             secret: "((uaa_clients_tcp_router_secret))"
+          portalclient:
+            authorities: uaa.resource
+            authorized-grant-types: authorization_code,client_credentials,refresh_token
+            scope: cloud_controller_service_permissions.read,openid,cloud_controller.read,cloud_controller.write,cloud_controller.admin
+            redirect-uri: "((uaa_clients_portalclient_redirect_uri))"
+            secret: "((uaa_clients_portalclinet_secret))"
+            autoapprove: openid,cloud_controller_service_permissions.read
       uaadb:
         databases:
         - name: uaa

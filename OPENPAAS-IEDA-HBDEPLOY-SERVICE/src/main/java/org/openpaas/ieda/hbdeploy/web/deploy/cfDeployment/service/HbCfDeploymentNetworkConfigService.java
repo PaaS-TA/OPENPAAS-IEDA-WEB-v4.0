@@ -2,6 +2,8 @@ package org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.service;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 
 @Service
@@ -29,24 +32,17 @@ public class HbCfDeploymentNetworkConfigService {
      * @title : getNetworkConfigInfoList selectCfDeploymentNetworkConfigInfoList
      * @return : List< HbCfDeploymentNetworkConfigVO>
     *****************************************************************/
-    public List< HbCfDeploymentNetworkConfigDTO> getNetworkConfigInfoList() {
-        List< HbCfDeploymentNetworkConfigDTO> networkList = new ArrayList<HbCfDeploymentNetworkConfigDTO>();
+    public List< HbCfDeploymentNetworkConfigVO> getNetworkConfigInfoList() {
+        List< HbCfDeploymentNetworkConfigVO> resultList = new ArrayList<HbCfDeploymentNetworkConfigVO>();
         List< HbCfDeploymentNetworkConfigVO> list = cfDeploymentNetworkDao.selectHbCfDeploymentNetworkConfigInfoList();
         if(! list.isEmpty()){
-            int recid = 0;
             for( HbCfDeploymentNetworkConfigVO vo :list){
-                HbCfDeploymentNetworkConfigDTO networkInfo = new HbCfDeploymentNetworkConfigDTO();
-                networkInfo.setRecid(recid++);
-                networkInfo.setId(vo.getId());
-                networkInfo.setIaasType(vo.getIaasType());
-                //external network
-                networkInfo.setPublicStaticIp(vo.getPublicStaticIp());
-                //internal network
-                networkInfo  = setNetworkInfoList(networkInfo, vo);
-                networkList.add(networkInfo);
+                HbCfDeploymentNetworkConfigVO networkInfo = new HbCfDeploymentNetworkConfigVO();
+                networkInfo  = setNetworkInfoList(vo);
+                resultList.add(networkInfo);
             }
         }
-        return networkList;
+        return resultList;
     }
     
     /****************************************************************
@@ -55,247 +51,116 @@ public class HbCfDeploymentNetworkConfigService {
      * @title : saveNetworkConfigInfo
      * @return : void
     *****************************************************************/
+    @SuppressWarnings("rawtypes")
     @Transactional
-    public void saveNetworkConfigInfo(List<HbCfDeploymentNetworkConfigDTO> dtoList, Principal principal) {
-
-        HbCfDeploymentNetworkConfigDTO dto = new HbCfDeploymentNetworkConfigDTO();
-
-        String iaasType ="";
-        String networkName="";
-        String publicStaticIp = "";
-       // String direction= "";
-        String subnetId1= "";
-        String securityGroup1="";
-        String subnetRange1 = "";
-        String subnetGateway1 = "";
-        String subnetDns1 = "";
-        String subnetReservedFrom1 = "";
-        String subnetReservedTo1 = "";
-        String subnetStaticFrom1 = "";
-        String subnetStaticTo1 = "";
-        String availabilityZone1 = "";
-        String subnetId2= "";
-        String securityGroup2="";
-        String subnetRange2 = "";
-        String subnetGateway2 = "";
-        String subnetDns2 = "";
-        String subnetReservedFrom2 = "";
-        String subnetReservedTo2 = "";
-        String subnetStaticFrom2 = "";
-        String subnetStaticTo2 = "";
-        String availabilityZone2 = "";
-        
-        
-        for(int i = 0; i< dtoList.size(); i++){
-            if(dtoList.get(i).getIaasType()!=null){
-            	iaasType += dtoList.get(i).getIaasType();
-            }
-            if(dtoList.get(i).getNetworkName()!=null){
-            	networkName += dtoList.get(i).getNetworkName(); 
-            }
-            if(dtoList.get(i).getPublicStaticIp()!=null){
-            	publicStaticIp += dtoList.get(i).getPublicStaticIp();  
-            }
-/*            if(dtoList.get(i).getDirection()!=null){
-            	direction += dtoList.get(i).getDirection();
-            }*/
-            if(dtoList.get(i).getSubnetId1()!=null){
-            	subnetId1 += dtoList.get(i).getSubnetId1();
-            }
-            if(dtoList.get(i).getSecurityGroup1()!=null){
-            	securityGroup1 += dtoList.get(i).getSecurityGroup1();
-            }
-            if(dtoList.get(i).getSubnetRange1()!=null){
-            	subnetRange1 += dtoList.get(i).getSubnetRange1();
-            }
-            if(dtoList.get(i).getSubnetGateway1()!=null){
-            	subnetGateway1 += dtoList.get(i).getSubnetGateway1();
-            }
-            if(dtoList.get(i).getSubnetDns1()!=null){
-            	subnetDns1 += dtoList.get(i).getSubnetDns1();
-            }
-            if(dtoList.get(i).getSubnetReservedFrom1()!=null){
-            	subnetReservedFrom1 += dtoList.get(i).getSubnetReservedFrom1();
-            }
-            if(dtoList.get(i).getSubnetReservedTo1()!=null){
-            	subnetReservedTo1 += dtoList.get(i).getSubnetReservedTo1();
-            }
-            if(dtoList.get(i).getSubnetStaticFrom1()!=null){
-            	subnetStaticFrom1 += dtoList.get(i).getSubnetStaticFrom1();
-            }
-            if(dtoList.get(i).getSubnetStaticTo1()!=null){
-            	subnetStaticTo1 += dtoList.get(i).getSubnetStaticTo1();
-            }
-            if(dtoList.get(i).getAvailabilityZone1()!=null){
-            	availabilityZone1 += dtoList.get(i).getAvailabilityZone1();
-            	
-            }
-            
-            if(dtoList.get(i).getSubnetId2()!=null){
-                subnetId2 += dtoList.get(i).getSubnetId2();
-                securityGroup2 += dtoList.get(i).getSecurityGroup2();
-                subnetRange2 += dtoList.get(i).getSubnetRange2();
-                subnetGateway2 += dtoList.get(i).getSubnetGateway2();
-                subnetDns2 += dtoList.get(i).getSubnetDns2();
-                subnetReservedFrom2 += dtoList.get(i).getSubnetReservedFrom2();
-                subnetReservedTo2 += dtoList.get(i).getSubnetReservedTo2();
-                subnetStaticFrom2 += dtoList.get(i).getSubnetStaticFrom2();
-                subnetStaticTo2 += dtoList.get(i).getSubnetStaticTo2();
-                if(dtoList.get(i).getAvailabilityZone2()!=null)
-                    availabilityZone2 += dtoList.get(i).getAvailabilityZone2(); 
-            }
-        }
-        
-        dto.setIaasType(iaasType);
-        dto.setNetworkName(networkName);
-        dto.setPublicStaticIp(publicStaticIp);
-       // dto.setDirection(direction);
-        dto.setSubnetId1(subnetId1);
-        dto.setSecurityGroup1(securityGroup1);
-        dto.setSubnetRange1(subnetRange1);
-        dto.setSubnetGateway1(subnetGateway1);
-        dto.setSubnetDns1(subnetDns1);
-        dto.setSubnetReservedFrom1(subnetReservedFrom1);
-        dto.setSubnetReservedTo1(subnetReservedTo1);
-        dto.setSubnetStaticFrom1(subnetStaticFrom1);
-        dto.setSubnetStaticTo1(subnetStaticTo1);
-        dto.setAvailabilityZone1(availabilityZone1);
-        dto.setSubnetId2(subnetId2);
-        dto.setSecurityGroup2(securityGroup2);
-        dto.setSubnetRange2(subnetRange2);
-        dto.setSubnetGateway2(subnetGateway2);
-        dto.setSubnetDns2(subnetDns2);
-        dto.setSubnetReservedFrom2(subnetReservedFrom2);
-        dto.setSubnetReservedTo2(subnetReservedTo2);
-        dto.setSubnetStaticFrom2(subnetStaticFrom2);
-        dto.setSubnetStaticTo2(subnetStaticTo2);
-        dto.setAvailabilityZone2(availabilityZone2);
-        
+    public void saveNetworkConfigInfo(HbCfDeploymentNetworkConfigDTO dto, Principal principal) {
         int count = cfDeploymentNetworkDao.selectHbCfDeploymentNetworkConfigByName(dto.getNetworkName());
-        HbCfDeploymentNetworkConfigVO vo = new HbCfDeploymentNetworkConfigVO();
-        if(dto.getId() == null){
-        //if( StringUtils.isEmpty(dto.getId().toString())){
+        HbCfDeploymentNetworkConfigVO vo = null;
+        
+        if( StringUtils.isEmpty(dto.getId())){
+            vo = new HbCfDeploymentNetworkConfigVO();
             vo.setCreateUserId(principal.getName());
             if(count > 0){
                 throw new CommonException(message.getMessage("common.conflict.exception.code", null, Locale.KOREA),
                         message.getMessage("hybrid.configMgnt.alias.conflict.message.exception", null, Locale.KOREA), HttpStatus.CONFLICT);
             }
-        }else{
-            vo = cfDeploymentNetworkDao.selectHbCfDeploymentNetworkConfigInfo(dto.getId(), dto.getIaasType().toLowerCase());
+        } else {
+            vo = cfDeploymentNetworkDao.selectHbCfDeploymentNetworkConfigInfo(dto.getId());
             if(!dto.getNetworkName().equals(vo.getNetworkName()) && count > 0){
                 throw new CommonException(message.getMessage("common.conflict.exception.code", null, Locale.KOREA),
                         message.getMessage("hybrid.configMgnt.alias.conflict.message.exception", null, Locale.KOREA), HttpStatus.CONFLICT);
             }
         }
         
-        if( vo != null ){
+        if(vo != null){
             vo.setIaasType(dto.getIaasType());
             vo.setNetworkName(dto.getNetworkName());
-            vo.setPublicStaticIp(dto.getPublicStaticIp());
+            Iterator<?> itr = dto.getNetworkInfoList().iterator();
             
-            vo.setSubnetId1(dto.getSubnetId1());
-            vo.setSecurityGroup1(dto.getSecurityGroup1());
-            vo.setSubnetRange1(dto.getSubnetRange1());
-            vo.setSubnetGateway1(dto.getSubnetGateway1());
-            vo.setSubnetDns1(dto.getSubnetDns1());
-            vo.setSubnetReservedFrom1(dto.getSubnetReservedFrom1());
-            vo.setSubnetReservedTo1(dto.getSubnetReservedTo1());
-            vo.setSubnetStaticFrom1(dto.getSubnetStaticFrom1());
-            vo.setSubnetStaticTo1(dto.getSubnetStaticTo1());
-            if(dto.getAvailabilityZone1() != null){
-                vo.setAvailabilityZone1(dto.getAvailabilityZone1());
-            }
-            
-            if(dto.getSubnetId2() != null){
-                
-                vo.setSubnetId2(dto.getSubnetId2());
-                vo.setSecurityGroup2(dto.getSecurityGroup2());
-                vo.setSubnetRange2(dto.getSubnetRange2());
-                vo.setSubnetGateway2(dto.getSubnetGateway2());
-                vo.setSubnetDns2(dto.getSubnetDns2());
-                vo.setSubnetReservedFrom2(dto.getSubnetReservedFrom2());
-                vo.setSubnetReservedTo2(dto.getSubnetReservedTo2());
-                vo.setSubnetStaticFrom2(dto.getSubnetStaticFrom2());
-                vo.setSubnetStaticTo2(dto.getSubnetStaticTo2());
-                
-                if( dto.getAvailabilityZone2() != null){
-                    vo.setAvailabilityZone2(dto.getAvailabilityZone2());
+            while(itr.hasNext()){
+                HashMap productitem = (HashMap)itr.next();
+                if("External".equalsIgnoreCase(productitem.get("direction").toString())){
+                    vo.setPublicStaticIp(productitem.get("publicStaticIp").toString());
+                } else {
+                    if(dto.getNetworkInfoList().size() == 2){
+                        vo.setSubnetId1(productitem.get("subnetId1").toString());
+                        vo.setSecurityGroup1(productitem.get("securityGroup1").toString());
+                        if("aws".equalsIgnoreCase(vo.getIaasType())) vo.setAvailabilityZone1(productitem.get("availabilityZone1").toString());
+                        vo.setSubnetDns1(productitem.get("subnetDns1").toString());
+                        vo.setSubnetRange1(productitem.get("subnetRange1").toString());
+                        vo.setSubnetReservedFrom1(productitem.get("subnetReservedFrom1").toString());
+                        vo.setSubnetReservedTo1(productitem.get("subnetReservedTo1").toString());
+                        vo.setSubnetStaticFrom1(productitem.get("subnetStaticFrom1").toString());
+                        vo.setSubnetStaticTo1(productitem.get("subnetStaticTo1").toString());
+                        vo.setSubnetGateway1(productitem.get("subnetGateway1").toString());
+                        vo.setSubnetId2("");
+                        vo.setSecurityGroup2("");
+                        vo.setSubnetDns2("");
+                        vo.setSubnetRange2("");
+                        vo.setSubnetReservedFrom2("");
+                        vo.setSubnetReservedTo2("");
+                        vo.setSubnetStaticFrom2("");
+                        vo.setSubnetStaticTo2("");
+                        vo.setSubnetGateway2("");
+                    } else {
+                        vo.setSubnetId1(productitem.get("subnetId1").toString());
+                        vo.setSecurityGroup1(productitem.get("securityGroup1").toString());
+                        vo.setSubnetDns1(productitem.get("subnetDns1").toString());
+                        vo.setSubnetRange1(productitem.get("subnetRange1").toString());
+                        vo.setSubnetReservedFrom1(productitem.get("subnetReservedFrom1").toString());
+                        vo.setAvailabilityZone1(productitem.get("availabilityZone1").toString());
+                        vo.setSubnetReservedTo1(productitem.get("subnetReservedTo1").toString());
+                        vo.setSubnetStaticFrom1(productitem.get("subnetStaticFrom1").toString());
+                        vo.setSubnetStaticTo1(productitem.get("subnetStaticTo1").toString());
+                        vo.setSubnetGateway1(productitem.get("subnetGateway1").toString());
+                        productitem = (HashMap)itr.next();
+                        vo.setSubnetId2(productitem.get("subnetId2").toString());
+                        vo.setSecurityGroup2(productitem.get("securityGroup2").toString());
+                        vo.setSubnetDns2(productitem.get("subnetDns2").toString());
+                        vo.setSubnetRange2(productitem.get("subnetRange2").toString());
+                        if("aws".equalsIgnoreCase(vo.getIaasType())) vo.setAvailabilityZone2(productitem.get("availabilityZone2").toString());
+                        vo.setSubnetReservedFrom2(productitem.get("subnetReservedFrom2").toString());
+                        vo.setSubnetReservedTo2(productitem.get("subnetReservedTo2").toString());
+                        vo.setSubnetStaticFrom2(productitem.get("subnetStaticFrom2").toString());
+                        vo.setSubnetStaticTo2(productitem.get("subnetStaticTo2").toString());
+                        vo.setSubnetGateway2(productitem.get("subnetGateway2").toString());
+                    }
                 }
             }
-            
-            vo.setCreateUserId(principal.getName());
-            vo.setCreateDate(vo.getCreateDate());
-            vo.setUpdateDate(vo.getUpdateDate());
-            vo.setUpdateUserId(principal.getName());
-
         }
-        
-        if( dto.getId() == null ){
-        //if( StringUtils.isEmpty(dto.getId().toString())){
+        if( StringUtils.isEmpty(dto.getId()) ){
             cfDeploymentNetworkDao.insertHbCfDeploymentNetworkConfigInfo(vo);
-            
         }else{
             cfDeploymentNetworkDao.updateHbCfDeploymentNetworkConfigInfo(vo);
-        }        
-       
+        }
     }
     
-    public HbCfDeploymentNetworkConfigDTO setNetworkInfoList(HbCfDeploymentNetworkConfigDTO cfListInfo, HbCfDeploymentNetworkConfigVO vo){
-       HbCfDeploymentNetworkConfigVO networks = null;
-        String br = "";
-        //int cnt = 0;
-        String subnetRange , subnetGateway , subnetDns , subnetReservedIp;
-        subnetRange  = subnetGateway = subnetDns = subnetReservedIp  = "";
-        String subnetStaticIp ,subnetId , securityGroup, availabilityZone;
-        subnetStaticIp  = subnetId = securityGroup = availabilityZone = "";
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : Network 정보 목록 설정
+     * @title : setNetworkInfoList
+     * @return : HbCfDeploymentNetworkConfigVO
+    *****************************************************************/
+    public HbCfDeploymentNetworkConfigVO setNetworkInfoList(HbCfDeploymentNetworkConfigVO vo){
         
-        if(networks  != null){
-         //   for(HbCfDeploymentNetworkConfigVO networkVO: networks){
-        	HbCfDeploymentNetworkConfigVO networkVO = networks;
-                if( "internal".equalsIgnoreCase(networkVO.getDirection() )){
-/*                  cnt ++;
-                    if( cnt > 1  && cnt < networks.size() ){
-                    }*/
-	                    
-	                    subnetId = networkVO.getSubnetId1() ;
-	                    securityGroup = networkVO.getSecurityGroup1();
-	                    subnetRange = networkVO.getSubnetRange1();
-	                    subnetGateway = networkVO.getSubnetGateway1();
-	                    subnetDns = networkVO.getSubnetDns1();
-	                    subnetReservedIp = (networkVO.getSubnetReservedFrom1() + " - " +  networkVO.getSubnetReservedTo1());
-	                    subnetStaticIp = networkVO.getSubnetStaticFrom1() +" - " + networkVO.getSubnetStaticTo1();
-	                    if( networkVO.getAvailabilityZone1() != null){
-	                        availabilityZone = networkVO.getAvailabilityZone1();
-	                    }
-	                    if(networkVO.getSubnetId2() !=null){
-	                        br = "<br>";
-	                        
-	                        subnetId = subnetId + br + networkVO.getSubnetId2();
-	                        securityGroup = securityGroup + br + networkVO.getSecurityGroup2();
-	                        subnetRange = subnetRange + br + networkVO.getSubnetRange2();
-	                        subnetGateway = subnetGateway + br + networkVO.getSubnetGateway2();
-	                        subnetDns = subnetDns + br + networkVO.getSubnetDns1();
-	                        subnetReservedIp = subnetReservedIp + br +  (networkVO.getSubnetReservedFrom2() + " - " +  networkVO.getSubnetReservedTo2());
-	                        subnetStaticIp = subnetStaticIp + br + networkVO.getSubnetStaticFrom2() +" - " + networkVO.getSubnetStaticTo2();
-	                        if( networkVO.getAvailabilityZone2() != null){
-	                            availabilityZone = networkVO.getAvailabilityZone2();
-	                        }
-	                    }
-                    }
-                cfListInfo.setPublicStaticIp(networkVO.getPublicStaticIp());
-                cfListInfo.setNetworkName(networkVO.getNetworkName());
-                cfListInfo.setIaasType(networkVO.getIaasType());
-            //}
-            cfListInfo.setSubnetId1(subnetId);
-            cfListInfo.setSecurityGroup1(securityGroup);
-            cfListInfo.setSubnetRange1(subnetRange);
-            cfListInfo.setSubnetGateway1(subnetGateway);
-            cfListInfo.setSubnetDns1(subnetDns);
-            cfListInfo.setSubnetReservedIp(subnetReservedIp);
-            cfListInfo.setSubnetStaticIp(subnetStaticIp);
-            cfListInfo.setAvailabilityZone1(availabilityZone);
-        }
-        return cfListInfo;
+        vo.setAvailabilityZone(vo.getAvailabilityZone1());
+        vo.setSubnetId(vo.getSubnetId1());
+        vo.setSecurityGroup(vo.getSecurityGroup1());
+        vo.setSubnetRange(vo.getSubnetRange1());
+        vo.setSubnetGateway(vo.getSubnetGateway1());
+        vo.setSubnetDns(vo.getSubnetDns1());
+        vo.setSubnetReservedIp(vo.getSubnetReservedFrom1() + "-" + vo.getSubnetReservedTo1());
+        vo.setSubnetStaticIp(vo.getSubnetStaticFrom1() + "-" + vo.getSubnetStaticTo1());
+        
+        if(vo.getAvailabilityZone2() != null ) vo.setAvailabilityZone(vo.getAvailabilityZone1() + "</br>" + vo.getAvailabilityZone2());
+        if(vo.getSubnetId2() != null ) vo.setSubnetId(vo.getSubnetId1() + "</br>" + vo.getSubnetId2());
+        if(vo.getSecurityGroup2() != null ) vo.setSecurityGroup(vo.getSecurityGroup1() + "</br>" + vo.getSecurityGroup2());
+        if(vo.getSubnetRange2() != null ) vo.setSubnetRange(vo.getSubnetRange1() + "</br>" + vo.getSubnetRange2());
+        if(vo.getSubnetGateway2() != null ) vo.setSubnetGateway(vo.getSubnetGateway1() + "</br>" + vo.getSubnetGateway2());
+        if(vo.getSubnetDns2() != null ) vo.setSubnetDns(vo.getSubnetDns1() + "</br>" + vo.getSubnetDns2());
+        if(vo.getSubnetReservedFrom2() != null && vo.getSubnetReservedTo2() != null) vo.setSubnetReservedIp(vo.getSubnetReservedFrom1() + "-" + vo.getSubnetReservedTo1() + "</br>" + vo.getSubnetReservedFrom2() +"-"+ vo.getSubnetReservedTo2());
+        if(vo.getSubnetStaticFrom2() != null && vo.getSubnetStaticTo2() != null) vo.setSubnetStaticIp(vo.getSubnetStaticFrom1() + "-" + vo.getSubnetStaticTo1() + "</br>" + vo.getSubnetStaticFrom2() +"-"+ vo.getSubnetStaticTo2());
+        return vo;
     }
     
     /****************************************************************

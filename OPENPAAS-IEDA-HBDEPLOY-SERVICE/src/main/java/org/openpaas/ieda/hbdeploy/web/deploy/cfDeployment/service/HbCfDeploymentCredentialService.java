@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class HbCfDeploymentCredentialService {
@@ -50,7 +51,7 @@ public class HbCfDeploymentCredentialService {
     public void saveCredentialConfigInfo(HbCfDeploymentCredentialConfigDTO dto, Principal principal) {
         HbCfDeploymentCredentialConfigVO vo = null;
         int count = hbCfDeploymentCredentialConfigDao.selectHbCfDeploymentCredentialConfigByName(dto.getCredentialConfigName());
-        if(dto.getId() == null){
+        if( StringUtils.isEmpty(dto.getId())){
         //if( StringUtils.isEmpty(dto.getId().toString())){
             vo = new HbCfDeploymentCredentialConfigVO();
             vo.setCreateUserId(principal.getName());

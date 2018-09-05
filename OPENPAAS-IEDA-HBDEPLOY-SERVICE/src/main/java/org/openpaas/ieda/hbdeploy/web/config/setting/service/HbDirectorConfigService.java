@@ -311,7 +311,7 @@ public class HbDirectorConfigService  {
      * @title : isExistBoshEnvLogin
      * @return : boolean
     *****************************************************************/
-    public void isExistBoshEnvLogin(String directorUrl, int port, String userId, String password){
+    public String isExistBoshEnvLogin(String directorUrl, int port, String userId, String password){
         int statusResult = 0;
         try {
             HttpClient client = HbDirectorRestHelper.getHttpClient(port);
@@ -327,6 +327,8 @@ public class HbDirectorConfigService  {
             throw new CommonException("unAuthorized.director.exception",
                     "실행 권한이 없습니다. 디렉터 정보를 확인하세요.", HttpStatus.UNAUTHORIZED);
         }
+        
+        return httpStatus;
     }
     
     /****************************************************************

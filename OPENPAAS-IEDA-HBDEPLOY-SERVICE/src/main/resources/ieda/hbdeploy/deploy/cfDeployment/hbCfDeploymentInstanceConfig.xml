@@ -7,6 +7,8 @@
     <result property="recid" column="id"/>
     <result property="instanceConfigName" column ="INSTANCE_CONFIG_NAME"/>
     <result property="iaasType" column="IAAS_TYPE"/>
+    <result property="cfDeploymentName" column="CF_DEPLOYMENT_NAME"/>
+    <result property="cfDeploymentVersion" column="CF_DEPLOYMENT_VERSION"/>
     <result property="adapter" column="ADAPTER"/>
     <result property="api" column="API"/>
     <result property="ccWorker" column="CC_WORKER"/>
@@ -15,6 +17,7 @@
     <result property="diegoApi" column="DIEGO_API"/>   
     <result property="diegoCell" column="DIEGO_CELL"/>
     <result property="doppler" column="DOPPLER"/>
+    <result property="scheduler" column="SCHEDULER"/>
     <result property="haproxy" column="HAPROXY"/>    
     <result property="logApi" column="LOG_API"/>
     <result property="nats" column="NATS"/>
@@ -35,11 +38,14 @@
         ,iaas_type as iaas_type
         ,adapter as adapter
         ,api as api
+        ,cf_deployment_name as cf_deployment_name
+        ,cf_deployment_version as cf_deployment_version
         ,cc_worker as cc_worker
         ,consul as consul
         ,the_database as the_database
         ,diego_api as diego_api
         ,diego_cell as diego_cell
+        ,scheduler as scheduler
         ,doppler as doppler
         ,haproxy as haproxy
         ,log_api as log_api
@@ -61,10 +67,13 @@
         id as id
         ,instance_config_name as instance_config_name
         ,iaas_type as iaas_type
+        ,cf_deployment_name as cf_deployment_name
+        ,cf_deployment_version as cf_deployment_version
         ,adapter as adapter
         ,api as api
         ,cc_worker as cc_worker
         ,consul as consul
+        ,scheduler as scheduler
         ,the_database as the_database
         ,diego_api as diego_api
         ,diego_cell as diego_cell
@@ -88,6 +97,8 @@
         insert into
         ieda_hb_cfDeployment_instance_config(
             iaas_type
+            ,cf_deployment_name
+            ,cf_deployment_version
             ,instance_config_name
             ,adapter
             ,api 
@@ -102,6 +113,7 @@
             ,nats
             ,router
             ,singleton_blobstore
+            ,scheduler
             ,tcp_router 
             ,uaa 
             ,create_user_id
@@ -110,6 +122,8 @@
             ,update_date
         )value(
             #{instance.iaasType}
+            ,#{instance.cfDeploymentName}
+            ,#{instance.cfDeploymentVersion}
             ,#{instance.instanceConfigName}
             ,#{instance.adapter}
             ,#{instance.api}
@@ -124,6 +138,7 @@
             ,#{instance.nats}
             ,#{instance.router}             
             ,#{instance.singletonBlobstore}
+            ,#{instance.scheduler}
             ,#{instance.tcpRouter}
             ,#{instance.uaa} 
             ,#{instance.createUserId}
@@ -137,6 +152,8 @@
     UPDATE ieda_hb_cfDeployment_instance_config set
         iaas_type = #{instance.iaasType}
         ,instance_config_name = #{instance.instanceConfigName}
+        ,cf_deployment_name = #{instance.cfDeploymentName}
+        ,cf_deployment_version = #{instance.cfDeploymentVersion}
         ,adapter = #{instance.adapter}
         ,api = #{instance.api}
         ,cc_worker = #{instance.ccWorker}
@@ -146,6 +163,7 @@
         ,diego_cell = #{instance.diegoCell}
         ,doppler = #{instance.doppler}
         ,haproxy = #{instance.haproxy}
+        ,scheduler = #{instance.scheduler}
         ,log_api = #{instance.logApi}
         ,nats = #{instance.nats}
         ,router = #{instance.router}             

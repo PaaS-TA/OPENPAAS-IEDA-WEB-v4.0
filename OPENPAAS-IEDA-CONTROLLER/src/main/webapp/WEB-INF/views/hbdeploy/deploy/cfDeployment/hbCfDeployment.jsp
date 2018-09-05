@@ -14,7 +14,7 @@
  * 설명 :    변수 설정
  ***************************************************************** */
 var iaas ="";
-var cfDeploymentInfo = "";
+var cfDeploymentInfo = [];
 var installStatus ="";//설치 상태
 var installClient = "";//설치 client
 var deleteClient = "";//삭제 client
@@ -45,10 +45,12 @@ $(function() {
                     return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
                 }
             }}
-            , {field: 'cpiConfigInfo', caption: 'CPI 정보 별칭', size: '20%'}
             , {field: 'defaultConfigInfo', caption: '기본 정보 별칭', size: '20%'}
             , {field: 'networkConfigInfo', caption: '네트워크 정보 별칭', size: '20%'}
+            , {field: 'credentialConfigInfo', caption: '인증서 정보 별칭 ', size: '20%'}
             , {field: 'resourceConfigInfo', caption: '리소스 정보 별칭 ', size: '20%'}
+            , {field: 'instanceConfigInfo', caption: '인스턴스 정보 별칭 ', size: '20%'}
+            , {field: 'cloudConfigFile', caption: 'Cloud Config 파일 명 ', size: '20%'}
             ],
         onSelect : function(event) {
             event.onComplete = function() {
@@ -61,7 +63,7 @@ $(function() {
             var grid = this;
             // need timer for nicer visual effect that record was selected
             setTimeout(function () {
-                w2ui['config_cfDeploymentGrid2'].add( $.extend({}, grid.get(event.recid), { selected : false }) );
+                w2ui['config_cfDeployment_grid2'].add( $.extend({}, grid.get(event.recid), { selected : false }) );
                 grid.selectNone();
                 grid.remove(event.recid);
             }, 150);
@@ -84,34 +86,39 @@ $(function() {
      $('#config_cfDeployment_grid2').w2grid({ 
          name: 'config_cfDeployment_grid2', 
          header: '<b>cfDeployment 목록</b>',
+         style: 'text-align: center',
          columns:[
              {field: 'recid',     caption: 'recid', hidden: true}
-           , {field: 'cfDeploymentConfigName', caption: 'cfDeployment 정보 별칭', size: '20%'}
-           , {field: 'iaasType', caption: '인프라 환경 타입', size:'120px', style:'text-align:center;' ,render: function(record){ 
-               if(record.iaasType.toLowerCase() == "aws"){
-                   return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
-               }else if (record.iaasType.toLowerCase() == "openstack"){
-                   return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
-               }
-           }}
-           , {field: 'cpiConfigInfo', caption: 'CPI 정보 별칭', size: '20%'}
-           , {field: 'defaultConfigInfo', caption: '기본 정보 별칭', size: '20%'}
-           , {field: 'networkConfigInfo', caption: '네트워크 정보 별칭', size: '20%'}
-           , {field: 'resourceConfigInfo', caption: '리소스 정보 별칭 ', size: '20%'}
+             , {field: 'cfDeploymentConfigName', caption: 'CF Deployment 정보 별칭', size: '20%'}
+             , {field: 'iaasType', caption: '인프라 환경 타입', size:'120px', style:'text-align:center;' ,render: function(record){ 
+                 if(record.iaasType.toLowerCase() == "aws"){
+                     return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
+                 }else if (record.iaasType.toLowerCase() == "openstack"){
+                     return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
+                 }
+             }}
+             , {field: 'defaultConfigInfo', caption: '기본 정보 별칭', size: '20%'}
+             , {field: 'networkConfigInfo', caption: '네트워크 정보 별칭', size: '20%'}
+             , {field: 'credentialConfigInfo', caption: '인증서 정보 별칭 ', size: '20%'}
+             , {field: 'resourceConfigInfo', caption: '리소스 정보 별칭 ', size: '20%'}
+             , {field: 'instanceConfigInfo', caption: '인스턴스 정보 별칭 ', size: '20%'}
+             , {field: 'cloudConfigFile', caption: 'Cloud Config 파일 명 ', size: '20%'}
            ],
            onSelect : function(event) {
                event.onComplete = function() {
+                   $('#installVmBtn').attr('disabled', false);
                }
            },onDblClick: function (event) {
              var grid = this;
              // need timer for nicer visual effect that record was selected
              setTimeout(function () {
-                 w2ui['config_cfDeploymentGrid'].add( $.extend({}, grid.get(event.recid), { selected : false }) );
+                 w2ui['config_cfDeployment_grid'].add( $.extend({}, grid.get(event.recid), { selected : false }) );
                  grid.selectNone();
                  grid.remove(event.recid);
              }, 150);
            },onUnselect : function(event) {
                event.onComplete = function() {
+                   $('#installVmBtn').attr('disabled', true);
                }
            },onLoad:function(event){
                if(event.xhr.status == 403){
@@ -132,8 +139,8 @@ $(function() {
                  footer: true},
          style: 'text-align: center',
          columns:[
-               {field: 'recid',     caption: 'recid', hidden: true}
-             , {field: 'cfDeploymentConfigName', caption: 'cfDeployment 정보 별칭', size: '140px'}
+             {field: 'recid',     caption: 'recid', hidden: true}
+             , {field: 'cfDeploymentConfigName', caption: 'CF Deployment 정보 별칭', size: '200px'}
              , {field: 'iaasType', caption: '인프라 환경 타입', size:'120px', style:'text-align:center;' ,render: function(record){ 
                  if(record.iaasType.toLowerCase() == "aws"){
                      return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
@@ -141,56 +148,62 @@ $(function() {
                      return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
                  }
              }}
-             , {field: 'deployStatus', caption: '배포상태', size: '100px', 
+             , {field: 'deployStatus', caption: '배포상태', size: '80px', 
                  render: function(record) {
-                     if ( record.deployStatus == 'DEPLOY_STATUS_PROCESSING' )
-                         return '<span class="btn btn-primary" style="width:60px">배포중</span>';
-                     else if ( record.deployStatus == 'DEPLOY_STATUS_DONE' )
-                         return '<span class="btn btn-primary" style="width:60px">성공</span>';
-                     else    if ( record.deployStatus == 'DEPLOY_STATUS_CANCELLED' )
-                         return '<span class="btn btn-danger" style="width:60px">취소</span>';
-                     else    if ( record.deployStatus == 'DEPLOY_STATUS_FAILED' )
-                         return '<span class="btn btn-danger" style="width:60px">실패</span>';
-                     else    if ( record.deployStatus == 'DEPLOY_STATUS_DELETING' )
-                         return '<span class="btn btn-primary" style="width:60px">삭제중</span>';
-                     else
-                         return '&ndash;';
-                        }
-               }
-             , {field: 'deployLog', caption: '배포로그', size: '100px',
-                 render: function(record) {
-                     if ( (record.deployStatus == 'DEPLOY_STATUS_DONE' || record.deployStatus == 'DEPLOY_STATUS_FAILED') && record.deployLog != null ) {
-                            return '<span id="" class="btn btn-primary" style="width:60px" onClick="getHbDeployLogMsg( \''+record.id+'\',\''+record.iaasType+'\');">로그보기</span>';
-                     } else {
-                         return '&ndash;';
-                     }
+                         if ( record.deployStatus == 'DEPLOY_STATUS_DONE' )
+                             return '<span class="btn btn-primary" style="width:60px">성공</span>';
+                         else    if ( record.deployStatus == 'DEPLOY_STATUS_FAILED' )
+                             return '<span class="btn btn-danger" style="width:60px">오류</span>';
+                         else    if ( record.deployStatus == 'DEPLOY_STATUS_CANCELLED' )
+                             return '<span class="btn btn-primary" style="width:60px">취소</span>';
+                         else    if ( record.deployStatus == 'DEPLOY_STATUS_PROCESSING' )
+                             return '<span class="btn btn-primary" style="width:60px">배포중</span>';
+                         else    if ( record.deployStatus == 'DEPLOY_STATUS_DELETING' )
+                             return '<span class="btn btn-primary" style="width:60px">삭제중</span>';
+                         else
+                             return '&ndash;';
+                    }
                  }
-               }
-             , {field: 'networkConfigVo.subnetId', caption: '네트워크 ID', size: '200px'}
-             , {field: 'networkConfigVo.subnetRange', caption: '서브넷 범위', size: '100px'}
-             , {field: 'networkConfigVo.publicStaticIp', caption: '디렉터 공인 IP', size: '100px'}
-             , {field: 'networkConfigVo.privateStaticIp', caption: '디렉터 내부 IP', size: '100px'}
-             , {field: 'networkConfigVo.subnetGateway', caption: '게이트웨이', size: '100px'}
-             , {field: 'networkConfigVo.subnetDns', caption: 'DNS', size: '100px'}
-             , {field: 'defaultConfigVo.ntp', caption: 'NTP', size: '100px'}
-             , {field: 'resourceConfigVo.stemcellName', caption: '스템셀', size: '340px'}
-             , {field: 'resourceConfigVo.instanceType', caption: '인스턴스 유형', size: '100px'}
-             , {field: 'resourceConfigVo.vmPassword', caption: 'VM 비밀번호', size: '100px'}
-             , {field: 'deploymentFile', caption: '배포파일명', size: '250px',
+             , {field: 'defaultConfigInfo', caption: '배포 명 ', size: '150px'}
+             , {field: 'hbCfDeploymentDefaultConfigVO.cfDeploymentVersion', caption: 'CF Deploment ', size: '150px'}
+             , {field: 'hbCfDeploymentDefaultConfigVO.domain', caption: 'CF 도메인 ', size: '150px'}
+             , {field: 'hbCfDeploymentNetworkConfigVO.publicStaticIp', caption: 'Public IP ', size: '150px'}
+             , {field: 'hbCfDeploymentCredentialConfigVO.credentialConfigKeyFileName', caption: 'Credential File Name ', size: '200px',
                  render: function(record) {
-                     if ( record.deploymentFile != null ){
+                     if ( record.hbCfDeploymentCredentialConfigVO.credentialConfigKeyFileName != null ){
                          var deplymentParam = {
-                                 service : "cfDeployment"
-                                ,iaas    : record.iaas
+                                 service : "cf"
+                                ,iaas    : record.iaasType
                                 ,id      : record.id
                              } 
-                         var fileName = record.deploymentFile;
-                         return '<a style="color:#333;" href="/common/deploy/download/manifest/' + fileName +'" onclick="window.open(this.href); return false;">' + record.deploymentFile + '</a>';
+                         var fileName = record.hbCfDeploymentCredentialConfigVO.credentialConfigKeyFileName;
+                         return '<a style="color:#333;" href="/common/deploy/download/credential/' + fileName +'" onclick="window.open(this.href); return false;">' + record.hbCfDeploymentCredentialConfigVO.credentialConfigKeyFileName + '</a>';
                    }else {
                         return '&ndash;';
                       }
                   }
-              }
+             }
+             , {field: 'stemcell', caption: 'Stemcell', size: '350px'
+                 , render:function(record){
+                       console.log(record);
+                       return record.hbCfDeploymentResourceConfigVO.stemcellName +"/"+ record.hbCfDeploymentResourceConfigVO.stemcellVersion;
+                     }
+                 }
+             , {field: 'cloudConfigFile', caption: 'Cloud Config 파일 명 ', size: '300px',
+                 render: function(record) {
+                     if ( record.cloudConfigFile != null ){
+                         var deplymentParam = {
+                                 service : "cf"
+                                ,iaas    : record.iaasType
+                                ,id      : record.id
+                             } 
+                         var fileName = record.cloudConfigFile;
+                         return '<a style="color:#333;" href="/common/deploy/download/manifest/' + fileName +'" onclick="window.open(this.href); return false;">' + record.cloudConfigFile + '</a>';
+                   }else {
+                        return '&ndash;';
+                      }
+                  }
+             }
              ],
          onSelect : function(event) {
              event.onComplete = function() {
@@ -209,7 +222,16 @@ $(function() {
                  location.href = "/abuse";
                  event.preventDefault();
              }
+             console.log(event);
          },onError : function(event) {
+         }, onDblClick: function (event) {
+             var grid = this;
+             // need timer for nicer visual effect that record was selected
+             setTimeout(function () {
+                 w2ui['config_cfDeployment_grid2'].add( $.extend({}, grid.get(event.recid), { selected : false }) );
+                 grid.selectNone();
+                 grid.remove(event.recid);
+             }, 150);
          }
      });
     
@@ -243,25 +265,26 @@ $(function() {
     $("#modifyBtn").click(function(){
         if($("#modifyBtn").attr('disabled') == "disabled") return;
         
-        var selected = w2ui['config_cfDeploymentGrid'].getSelection();
+        var selected = w2ui['config_cfDeployment_grid'].getSelection();
         if( selected.length == 0 ){
             w2alert("선택된 정보가 없습니다.", "CF Deployment 등록 정보 수정");
             return;
         }
-        var record = w2ui['config_cfDeploymentGrid'].get(selected);
+        var record = w2ui['config_cfDeployment_grid'].get(selected);
         cfDeploymentInfo = record;
+        console.log(cfDeploymentInfo);
         w2popup.open({
-            width   : 730,
-            height  : 460,
+            width   : 900,
+            height  : 500,
             title : '<b>이종 CF Deployment 정보 등록</b>',
             body : $("#cfDeploymentRegistInfoDiv").html(),
             buttons: $("#cfDeploymentRegistInfoBtnDiv").html(),
             modal : true,
             onOpen:function(event){
                 event.onComplete = function(){
-                    $(".w2ui-msg-body input[name='cfDeploymentInfoId']").val(record.id)
-                    $(".w2ui-msg-body input[name='cfDeploymentConfigName']").val(record.cfDeploymentConfigName)
-                    $(".w2ui-msg-body select[name='iaasType']").val(record.iaasType)
+                    $(".w2ui-msg-body input[name='cfDeploymentId']").val(record.id);
+                    $(".w2ui-msg-body input[name='cfDeploymentConfigName']").val(record.cfDeploymentConfigName);
+                    $(".w2ui-msg-body select[name='iaasType']").val(record.iaasType);
                     getCfDeploymentDefaultInfo();
                     getCfDeploymentResourceInfo();
                     getCfDeploymentNetworkInfo();
@@ -274,6 +297,43 @@ $(function() {
      });
      
      
+    /******************************************************************
+     * 설명 : cfDeployment 수정 버튼
+     ***************************************************************** */
+    $("#modifyVmBtn").click(function(){
+        if($("#modifyVmBtn").attr('disabled') == "disabled") return;
+        
+        var selected = w2ui['config_cfDeployment_grid3'].getSelection();
+        if( selected.length == 0 ){
+            w2alert("선택된 정보가 없습니다.", "CF Deployment 등록 정보 수정");
+            return;
+        }
+        var record = w2ui['config_cfDeployment_grid3'].get(selected);
+        cfDeploymentInfo = record;
+        console.log(cfDeploymentInfo);
+        w2popup.open({
+            width   : 900,
+            height  : 500,
+            title : '<b>이종 CF Deployment 정보 등록</b>',
+            body : $("#cfDeploymentRegistInfoDiv").html(),
+            buttons: $("#cfDeploymentRegistInfoBtnDiv").html(),
+            modal : true,
+            onOpen:function(event){
+                event.onComplete = function(){
+                    $(".w2ui-msg-body input[name='cfDeploymentId']").val(record.id);
+                    $(".w2ui-msg-body input[name='cfDeploymentConfigName']").val(record.cfDeploymentConfigName);
+                    $(".w2ui-msg-body select[name='iaasType']").val(record.iaasType);
+                    getCfDeploymentDefaultInfo();
+                    getCfDeploymentResourceInfo();
+                    getCfDeploymentNetworkInfo();
+                    getCfDeploymentInstanceInfo();
+                    getCfDeploymentCredentialInfo();
+                }
+            },onClose:function(event){
+            }
+        });
+     });
+    
      
      
      /******************************************************************
@@ -282,8 +342,8 @@ $(function() {
     $("#deleteBtn").click(function(){
         if($("#deleteBtn").attr('disabled') == "disabled") return;
         
-        var selected = w2ui['config_cfDeploymentGrid'].getSelection();
-        var record = w2ui['config_cfDeploymentGrid'].get(selected);
+        var selected = w2ui['config_cfDeployment_grid'].getSelection();
+        var record = w2ui['config_cfDeployment_grid'].get(selected);
         var message = "";
         
         if ( record.cfDeploymentConfigName ){
@@ -299,7 +359,7 @@ $(function() {
             },
             no_text : "취소",
             no_callBack : function(event){
-                w2ui['config_cfDeploymentGrid'].clear();
+                w2ui['config_cfDeployment_grid'].clear();
                 doSearch();
             }
         });
@@ -310,9 +370,9 @@ $(function() {
     $("#installVmBtn").click(function(){
         if($("#installVmBtn").attr('disabled') == "disabled") return;
         
-        var selectAll = w2ui['config_cfDeploymentGrid2'].selectAll();
+        var selectAll = w2ui['config_cfDeployment_grid2'].selectAll();
 
-        var selected = w2ui['config_cfDeploymentGrid2'].getSelection();
+        var selected = w2ui['config_cfDeployment_grid2'].getSelection();
         
         if(selected.length == 3) {
             w2alert("최대 2개의 CF Deployment이 설치 가능 합니다. ", "cfDeployment 설치");
@@ -322,11 +382,10 @@ $(function() {
         var record = new Array();
         
         for(var i=0; i<selected.length; i++){
-            record.push(w2ui['config_cfDeploymentGrid2'].get(selected[i]));
-            createSettingFile(record[i]);
+            record.push(w2ui['config_cfDeployment_grid2'].get(selected[i]));
         }
         if(record == ""){
-            w2alert("배포할 CF Deployment 이 존재하지 않음");
+            w2alert("배포할 CF Deployment이 존재하지 않습니다.");
         }else{
             firstInstallPopup(record);
         }
@@ -338,8 +397,8 @@ $(function() {
     $("#deleteVmBtn").click(function(){
         if($("#deleteVmBtn").attr('disabled') == "disabled") return;
         
-        var selected = w2ui['config_cfDeploymentGrid3'].getSelection();
-        var record = w2ui['config_cfDeploymentGrid3'].get(selected);
+        var selected = w2ui['config_cfDeployment_grid3'].getSelection();
+        var record = w2ui['config_cfDeployment_grid3'].get(selected);
         var message = "";
         
         if ( record.cfDeploymentConfigName ){
@@ -351,11 +410,11 @@ $(function() {
             msg          : message,
             yes_text     : "확인",
             yes_callBack : function(event){
-                deletecfDeploymentVmInfo(record);
+                deleteCfDeploymentVmInfo(record);
             },
             no_text : "취소",
             no_callBack : function(event){
-                w2ui['config_cfDeploymentGrid3'].clear();
+                w2ui['config_cfDeployment_grid3'].clear();
                 doSearch();
             }
         });
@@ -371,12 +430,11 @@ $(function() {
  ***************************************************************** */
 var cfDeploymentInstallSocket = null;
 function firstInstallPopup(cfDeploymentInfo){
-    console.log(cfDeploymentInfo);
     
     var firstDeploy = cfDeploymentInfo[0];
     
     if(!lockFileSet(firstDeploy.cfDeploymentConfigName)) return;
-    var message = firstDeploy.iaasType + " cfDeployment ";
+    var message = firstDeploy.iaasType + " CF Deployment ";
     var requestParameter = {
            id : firstDeploy.id,
            iaasType: firstDeploy.iaasType
@@ -425,7 +483,7 @@ function firstInstallPopup(cfDeploymentInfo){
             }
         }, onClose : function(event){
                event.onComplete = function(){
-                   w2ui['config_cfDeploymentGrid2'].clear();
+                   w2ui['config_cfDeployment_grid2'].clear();
                    if( installClient != ""  ){
                        installClient.disconnect();
                    }
@@ -435,8 +493,8 @@ function firstInstallPopup(cfDeploymentInfo){
     });
 }
 /******************************************************************
- * 기능 : InstallPopup1
- * 설명 : Boostrap 설치1
+ * 기능 : InstallPopup
+ * 설명 : CF Deployment 설치
  ***************************************************************** */
 function secondInstallPopup(cfDeploymentInfo){
     if(installStatus != "done") return;
@@ -448,7 +506,7 @@ function secondInstallPopup(cfDeploymentInfo){
            iaasType: cfDeploymentInfo.iaasType
     };
     w2popup.open({
-        title   : cfDeploymentInfo.iaasType.toUpperCase()+" 클라우드 환경 CF Deployment 설치</b>",
+        title   : "<b>"+cfDeploymentInfo.iaasType.toUpperCase()+" 클라우드 환경 CF Deployment 설치</b>",
         width   : 800,
         height  : 620,
         modal   : true,
@@ -487,7 +545,7 @@ function secondInstallPopup(cfDeploymentInfo){
             }
         }, onClose : function(event){
                event.onComplete = function(){
-                   w2ui['config_cfDeploymentGrid2'].clear();
+                   w2ui['config_cfDeployment_grid2'].clear();
                    if( installClient != ""  ){
                        installClient.disconnect();
                    }
@@ -552,13 +610,12 @@ function getCfDeploymentNetworkInfo(){
         contentType : "application/json",
         async : true,
         success : function(data, status) {
-        	console.log(data);
             if( data.length == 0 ){
                 return;
             }
             var options = "<option value=''>CF Deployment 네트워크 정보를 선택하세요.</option>";
             for( var i=0; i<data.records.length; i++ ){
-                if( data.records[i].networkName == cfDeploymentInfo.networkName ){
+                if( data.records[i].networkName == cfDeploymentInfo.networkConfigInfo ){
                     options += "<option value='"+data.records[i].networkName+"' selected>"+data.records[i].networkName+"</option>";
                 }else options += "<option value='"+data.records[i].networkName+"'>"+data.records[i].networkName+"</option>";
             }
@@ -614,7 +671,7 @@ function getCfDeploymentInstanceInfo(){
             }
             var options = "<option value=''>CF Deployment 인스턴스 정보를 선택하세요.</option>";
             for( var i=0; i<data.records.length; i++ ){
-                if( data.records[i].instanceConfigName == cfDeploymentInfo.instanceConfigName ){
+                if( data.records[i].instanceConfigName == cfDeploymentInfo.instanceConfigInfo ){
                     options += "<option value='"+data.records[i].instanceConfigName+"' selected>"+data.records[i].instanceConfigName+"</option>";
                 }else options += "<option value='"+data.records[i].instanceConfigName+"'>"+data.records[i].instanceConfigName+"</option>";
             }
@@ -642,7 +699,7 @@ function getCfDeploymentCredentialInfo(){
             }
             var options = "<option value=''>CF Deployment 인증서 정보를 선택하세요.</option>";
             for( var i=0; i<data.records.length; i++ ){
-                if( data.records[i].credentialConfigName == cfDeploymentInfo.credentialConfigName ){
+                if( data.records[i].credentialConfigName == cfDeploymentInfo.credentialConfigInfo ){
                     options += "<option value='"+data.records[i].credentialConfigName+"' selected>"+data.records[i].credentialConfigName+"</option>";
                 }else options += "<option value='"+data.records[i].credentialConfigName+"'>"+data.records[i].credentialConfigName+"</option>";
             }
@@ -661,15 +718,16 @@ function getCfDeploymentCredentialInfo(){
 function saveCfDeploymentInfo(){
     w2popup.lock( save_lock_msg, true); 
     cfDeploymentInfo = {
-        id                     : $(".w2ui-msg-body input[name='cfDeploymentInfoId']").val(),
+        id                     : $(".w2ui-msg-body input[name='cfDeploymentId']").val(),
         cfDeploymentConfigName : $(".w2ui-msg-body input[name='cfDeploymentConfigName']").val(),
         iaasType               : $(".w2ui-msg-body select[name='iaasType']").val(),
         networkConfigInfo      : $(".w2ui-msg-body select[name='networkConfigInfo']").val(),
-        cpiConfigInfo          : $(".w2ui-msg-body select[name='cpiConfigInfo']").val(),
         defaultConfigInfo      : $(".w2ui-msg-body select[name='defaultConfigInfo']").val(),
-        resourceConfigInfo     : $(".w2ui-msg-body select[name='resourceConfigInfo']").val()
+        resourceConfigInfo     : $(".w2ui-msg-body select[name='resourceConfigInfo']").val(),
+        instanceConfigInfo     : $(".w2ui-msg-body select[name='instanceConfigInfo']").val(),
+        credentialConfigInfo     : $(".w2ui-msg-body select[name='credentialConfigInfo']").val()
     }
-    
+    console.log(cfDeploymentInfo);
     $.ajax({
         type : "PUT",
         url : "/deploy/hbCfDeployment/install/save",
@@ -680,15 +738,15 @@ function saveCfDeploymentInfo(){
             // ajax가 성공할때 처리...
             w2popup.unlock();
             w2popup.close();
-            w2ui['config_cfDeploymentGrid'].clear();
-            w2ui['config_cfDeploymentGrid2'].clear();
+            w2ui['config_cfDeployment_grid'].clear();
+            w2ui['config_cfDeployment_grid2'].clear();
             doSearch();
         },
         error : function(request, status, error) {
             // ajax가 실패할때 처리...
             w2popup.unlock();
-            w2ui['config_cfDeploymentGrid'].clear();
-            w2ui['config_cfDeploymentGrid2'].clear();
+            w2ui['config_cfDeployment_grid'].clear();
+            w2ui['config_cfDeployment_grid2'].clear();
             doSearch();
             w2popup.close();
             var errorResult = JSON.parse(request.responseText);
@@ -708,7 +766,7 @@ function deleteCfDeploymentInfo(record){
     }
     $.ajax({
         type : "DELETE",
-        url : "/deploy/hbCfDeployment/delete/data",
+        url : "/deploy/hbCfDeployment/install/delete",
         contentType : "application/json",
         async : true,
         data : JSON.stringify(cfDeploymentInfo),
@@ -716,14 +774,14 @@ function deleteCfDeploymentInfo(record){
             // ajax가 성공할때 처리...
             w2popup.unlock();
             w2popup.close();
-            w2ui['config_cfDeploymentGrid'].clear();
-            w2ui['config_cfDeploymentGrid2'].clear();
+            w2ui['config_cfDeployment_grid'].clear();
+            w2ui['config_cfDeployment_grid2'].clear();
             doSearch();
         },
         error : function(request, status, error) {
             // ajax가 실패할때 처리...
             w2popup.unlock();
-            w2ui['config_cfDeploymentGrid'].clear();
+            w2ui['config_cfDeployment_grid'].clear();
             doSearch();
             w2popup.close();
             var errorResult = JSON.parse(request.responseText);
@@ -759,10 +817,9 @@ function deleteCfDeploymentVmInfo(record){
             }
         });
     } else {
-        if(!lockFileSet(record.deploymentFile)) return;
+        if(!lockFileSet(record.cfDeploymentConfigName)) return;
         var message = "CF Deployment";
         var body = '<textarea id="deleteLogs" style="width:95%;height:90%;overflow-y:visible;resize:none;background-color: #FFF; margin:2%" readonly="readonly"></textarea>';
-        
         w2popup.open({
             width   : 700,
             height  : 500,
@@ -802,7 +859,7 @@ function deleteCfDeploymentVmInfo(record){
             }, onClose : function (event){
                 event.onComplete= function(){
                     cfDeploymentDeploymentName = [];
-                    w2ui['config_cfDeploymentGrid3'].clear();
+                    w2ui['config_cfDeployment_grid3'].clear();
                     if( deleteClient != ""  ){
                         deleteClient.disconnect();
                     }
@@ -821,55 +878,6 @@ function popupClose() {
    //grid Reload
    doSearch();
    doButtonStyle();
-}
-
-
-/******************************************************************
- * 기능 : createSettingFile
- * 설명 : 배포 파일 생성
- ***************************************************************** */
-function createSettingFile(data){
-    console.log('create'+data);
-    deploymentInfo = {
-            iaasType       : data.iaasType,
-            id : data.id
-    }
-    $.ajax({
-        type : "POST",
-        url : "/deploy/hbCfDeployment/install/createSettingFile",
-        contentType : "application/json",
-        async : true,
-        data : JSON.stringify(deploymentInfo),
-        success : function(status) {
-            getDeployInfo(data.deploymentFile);
-        },
-        error :function(request, status, error) {
-            var errorResult = JSON.parse(request.responseText);
-            w2alert(errorResult.message, "CF Deployment 배포 파일 생성");
-        }
-    });
-}
-
-/******************************************************************
- * 기능 : getDeployInfo
- * 설명 : Manifest 파일 내용 출력
- ***************************************************************** */
-function getDeployInfo(deployFileName){
-    console.log(deployFileName);
-    $.ajax({
-        type : "GET",
-        url :"/common/use/deployment/"+deployFileName,
-        contentType : "application/json",
-        async : true,
-        success : function(data, status) {
-            if(status == "success"){
-                $(".w2ui-msg-body #deployInfo").text(data);
-            }
-        },
-        error : function( e, status ) {
-            w2alert("Temp 파일을 가져오는 중 오류가 발생하였습니다. ", "cfDeployment 설치");
-        }
-    });
 }
 
 /******************************************************************
@@ -894,29 +902,6 @@ function doButtonStyle(){
     $('#deleteBtn').attr('disabled', true);
     $('#deleteVmBtn').attr('disabled', true);
     $('#installVmBtn').attr('disabled', true);
-}
- 
-/******************************************************************
- * 기능 : getDeployLogMsg
- * 설명 : 설치 로그 조회
- ***************************************************************** */
-function getHbDeployLogMsg(id,iaas){
-    $.ajax({
-        type        : "GET",
-        url         : "/deploy/hbCfDeployment/list/"+id+"/"+iaas,
-        contentType : "application/json",
-        success     : function(data, status){
-            if(!checkEmpty(data)) {
-                deployLogMsgPopup(data);
-            } else {
-                w2alert("배포 로그가 존재 하지 않습니다.",  "CF Deployment 배포로그");
-            }
-        },
-        error : function(request, status, error) {
-            var errorResult = JSON.parse(request.responseText);
-            w2alert(errorResult.message, "CF Deployment 배포로그");
-        }
-    });
 }
 
 /******************************************************************
@@ -997,7 +982,7 @@ function popupComplete(){
             <span id="modifyBtn" class="btn btn-info" style="width:120px">정보 수정</span>
             </sec:authorize>
             &nbsp;
-            <sec:authorize access="hasAuthority('DEPLOY_CFDEPLOYMENT_DELETE')">
+            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
             <span id="deleteBtn" class="btn btn-danger" style="width:120px">정보 삭제</span>
             </sec:authorize>
         </div>
@@ -1122,8 +1107,8 @@ function popupComplete(){
 <div id="InstallDiv1" style="width:100%;height:100%;" hidden="true">
     <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
         <ul class="progressStep_7" >
-            <li style="font-size: 15px; width: 370px;" class="active">1 cfDeployment Install Log</li>
-            <li style="font-size: 15px; width: 370px;" class="before">2 cfDeployment Install Log</li>
+            <li style="font-size: 15px; width: 370px;" class="active">1 CF Deployment Install Log</li>
+            <li style="font-size: 15px; width: 370px;" class="before">2 CF Deployment Install Log</li>
         </ul>
     </div>
     <div style="width:93%;height:84%;float: left;display: inline-block;margin:10px 0 0 1%;">
@@ -1138,8 +1123,8 @@ function popupComplete(){
 <div id="InstallDiv2" style="width:100%;height:100%;" hidden="true">
     <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
         <ul class="progressStep_7" >
-            <li style="font-size: 15px; width: 370px;" class="pass">1 cfDeployment Install Log</li>
-            <li style="font-size: 15px; width: 370px;" class="active">2 cfDeployment Install Log</li>
+            <li style="font-size: 15px; width: 370px;" class="pass">1 CF Deployment Install Log</li>
+            <li style="font-size: 15px; width: 370px;" class="active">2 CF Deployment Install Log</li>
         </ul>
     </div>
     <div style="width:93%;height:84%;float: left;display: inline-block;margin:10px 0 0 1%;">
@@ -1159,7 +1144,7 @@ $(function() {
         ignore : "",
         onfocusout: true,
         rules: {
-        	cfDeploymentConfigName : {
+            cfDeploymentConfigName : {
                 required : function(){
                   return checkEmpty( $(".w2ui-msg-body input[name='cfDeploymentConfigName']").val() );
                 }, sqlInjection : function(){
@@ -1197,7 +1182,7 @@ $(function() {
                   }
             }
         }, messages: {
-        	cfDeploymentConfigName: { cfDeploymentConfigName:  "CF Deployment 정보 별칭" + text_required_msg },
+            cfDeploymentConfigName: { cfDeploymentConfigName:  "CF Deployment 정보 별칭" + text_required_msg },
             iaasType: { required:  "인프라 환경" + select_required_msg },
             defaultConfigInfo: { required:  "기본 정보" + select_required_msg },
             networkConfigInfo: { required:  "네트워크 정보" + select_required_msg },
@@ -1214,7 +1199,7 @@ $(function() {
                 setInvalidHandlerStyle(errors, validator);
             }
         }, submitHandler: function (form) {
-            savecfDeploymentInfo();
+            saveCfDeploymentInfo();
         }
     });
 });

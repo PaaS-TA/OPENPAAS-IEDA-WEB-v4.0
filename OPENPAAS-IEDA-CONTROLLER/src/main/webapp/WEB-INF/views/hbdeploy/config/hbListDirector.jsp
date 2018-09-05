@@ -436,7 +436,6 @@ function openBrowse(){
     $(".w2ui-msg-body input[name='keyPathFile']").click();
 }
 </script>
-
 <div id="main">
     <div class="page_site">환경설정 및 관리 > <strong>디렉터 설정</strong></div>
     
@@ -448,10 +447,10 @@ function openBrowse(){
         <div class="title fl">AWS Cloud 디렉터 목록</div>
         <div class="fr"> 
         <!-- Btn -->
-            <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_ADD')">
+            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
             <span id="addSetting" class="btn btn-primary" style="width:130px" >설정 추가</span>
             </sec:authorize>
-            <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_DELETE')">
+            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
             <span id="deleteSetting" class="btn btn-danger" style="width:130px" >설정 삭제</span>
             </sec:authorize>
         <!-- //Btn -->
@@ -463,10 +462,10 @@ function openBrowse(){
     <div class="pdt20">
         <div class="title fl">OPENSTACK Cloud 디렉터 정보</div>
         <div class="fr"> 
-            <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_ADD')">
+            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
             <span id="addSetting2" class="btn btn-primary" style="width:130px" >설정 추가</span>
             </sec:authorize>
-            <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_DELETE')">
+            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
             <span id="deleteSetting2" class="btn btn-danger" style="width:130px" >설정 삭제</span>
         </sec:authorize>
         </div>

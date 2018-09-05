@@ -11,7 +11,8 @@ public class HbCfDeploymentVO {
     private String credentialConfigInfo;
     private String defaultConfigInfo;
     private String resourceConfigInfo;
-    private String cloud_config_file;
+    private String instanceConfigInfo;
+    private String cloudConfigFile;
     private String deployStatus; // 배포상태
     private String taskId;
     private String createUserId;//등록자 아이디
@@ -75,11 +76,11 @@ public class HbCfDeploymentVO {
     public void setResourceConfigInfo(String resourceConfigInfo) {
         this.resourceConfigInfo = resourceConfigInfo;
     }
-    public String getCloud_config_file() {
-        return cloud_config_file;
+    public String getCloudConfigFile() {
+        return cloudConfigFile;
     }
-    public void setCloud_config_file(String cloud_config_file) {
-        this.cloud_config_file = cloud_config_file;
+    public void setCloudConfigFile(String cloudConfigFile) {
+        this.cloudConfigFile = cloudConfigFile;
     }
     public String getDeployStatus() {
         return deployStatus;
@@ -146,5 +147,11 @@ public class HbCfDeploymentVO {
     }
     public void setHbCfDeploymentResourceConfigVO(HbCfDeploymentResourceConfigVO hbCfDeploymentResourceConfigVO) {
         this.hbCfDeploymentResourceConfigVO = hbCfDeploymentResourceConfigVO;
+    }
+    public String getInstanceConfigInfo() {
+        return instanceConfigInfo;
+    }
+    public void setInstanceConfigInfo(String instanceConfigInfo) {
+        this.instanceConfigInfo = instanceConfigInfo;
     }
 }

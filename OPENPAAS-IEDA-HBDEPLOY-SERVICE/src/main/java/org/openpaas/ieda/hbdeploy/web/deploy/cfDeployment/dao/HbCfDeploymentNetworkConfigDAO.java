@@ -20,7 +20,7 @@ public interface HbCfDeploymentNetworkConfigDAO {
      * @title : selectHbCfDeploymentNetworkConfigInfo
      * @return : HbCfDeploymentNetworkConfigVO
     *****************************************************************/
-    HbCfDeploymentNetworkConfigVO selectHbCfDeploymentNetworkConfigInfo(@Param("id")int id, @Param("iaas")String iaas);
+    HbCfDeploymentNetworkConfigVO selectHbCfDeploymentNetworkConfigInfo(@Param("id")int id);
     
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화

@@ -1,6 +1,7 @@
 package org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.Principal;
@@ -11,11 +12,12 @@ import java.util.Locale;
 
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.common.exception.CommonException;
-import org.openpaas.ieda.deploy.api.director.utility.DirectorRestHelper;
 import org.openpaas.ieda.deploy.web.common.dao.CommonDeployDAO;
 import org.openpaas.ieda.deploy.web.common.dao.ManifestTemplateVO;
+import org.openpaas.ieda.hbdeploy.api.director.utility.HbDirectorRestHelper;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigDAO;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigVO;
+import org.openpaas.ieda.hbdeploy.web.config.setting.service.HbDirectorConfigService;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentDAO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dto.HbCfDeploymentDTO;
@@ -29,26 +31,37 @@ import org.springframework.util.StringUtils;
 
 @Service
 public class HbCfDeploymentDeployAsyncService {
-	
+    
     @Autowired private SimpMessagingTemplate messagingTemplate;
     @Autowired private HbDirectorConfigDAO directorConfigDao;
+    @Autowired private HbDirectorConfigService directorConfigService;
     @Autowired private HbCfDeploymentDAO cfDeploymentDao;
-    @Autowired private HbCfDeploymentService cfService;
+    @Autowired private HbCfDeploymentService cfDeploymentService;
     @Autowired private MessageSource message;
     @Autowired private CommonDeployDAO commonDao;
     
     private final static String SEPARATOR = System.getProperty("file.separator");
+    private final static String KEY_DIR = LocalDirectoryConfiguration.getLockDir()+SEPARATOR;
     private final static String MANIFEST_TEMPLATE_DIR = LocalDirectoryConfiguration.getManifastTemplateDir();
     final private static String HYBRID_CF_CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateHybridCfCredentialDir();
     private final static String DEPLOYMENT_DIR = LocalDirectoryConfiguration.getDeploymentDir();
     
-	public void deploy(HbCfDeploymentDTO dto, Principal principal, String platform) {
+    public void deploy(HbCfDeploymentDTO dto, Principal principal, String platform) {
+        
         String deploymentFileName = "";
-        String messageEndpoint =  "/deploy/cf/install/logs"; 
-        HbCfDeploymentVO vo = new HbCfDeploymentVO();
-        //HbCfDeploymentVO vo = cfService.getCfInfo(dto.getId());
-        ManifestTemplateVO result = commonDao.selectManifetTemplate(vo.getIaasType(), vo.getHbCfDeploymentDefaultConfigVO().getCfDeploymentVersion(), "HBCFDEPLOYMENT", vo.getHbCfDeploymentDefaultConfigVO());
-        deploymentFileName = vo != null ? vo.getHbCfDeploymentDefaultConfigVO().getdeployment : "";
+        String messageEndpoint =  "/deploy/hbCfDeployment/install/logs";
+        
+        HbCfDeploymentVO vo = cfDeploymentService.getHbCfDeploymentInfo(dto.getId());
+        
+        String cfDeploymentType = vo.getHbCfDeploymentDefaultConfigVO().getCfDeploymentVersion().split("/")[0];
+        String cfDeploymentVersion =  vo.getHbCfDeploymentDefaultConfigVO().getCfDeploymentVersion().split("/")[1];
+        
+        ManifestTemplateVO result = commonDao.selectManifetTemplate(vo.getIaasType(), cfDeploymentVersion, "CFDEPLOYMENT", cfDeploymentType);
+        if(result == null){
+            throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), 
+                    "설치 가능한 CF Deployment 버전을 확인 하세요.", HttpStatus.BAD_REQUEST);
+        }
+        deploymentFileName = vo != null ? vo.getCloudConfigFile() : "";
         
         if ( StringUtils.isEmpty(deploymentFileName) ) {
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), 
@@ -57,11 +70,24 @@ public class HbCfDeploymentDeployAsyncService {
         String cloudConfigFile = DEPLOYMENT_DIR + SEPARATOR + deploymentFileName; 
         String errorMessage = message.getMessage("common.internalServerError.message", null, Locale.KOREA);
         String status = "";
-        
+        cfDeploymentService.commonCreateCloudConfig(vo, result);
         try {
+            HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("CF Deployment Deploy Starting...."));
+            HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Director Info Checking.... "));
             BufferedReader bufferedReader = null;
             String accumulatedLog= null;
-            HbDirectorConfigVO directorInfo = directorConfigDao.selectHbDirectorConfigBySeq(1);
+            HbDirectorConfigVO directorInfo = directorConfigDao.selectHbDirectorConfigBySeq(Integer.parseInt(vo.getHbCfDeploymentResourceConfigVO().getDirectorInfo()));
+            String httpStatus = directorConfigService.isExistBoshEnvLogin(directorInfo.getDirectorUrl(), directorInfo.getDirectorPort(), directorInfo.getUserId(), directorInfo.getUserPassword());
+            if(!"200".equals(httpStatus)){
+                HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("디렉터 정보를 확인 하세요."));
+                if(vo != null){
+                    String deployStatus = message.getMessage("common.deploy.status.error", null, Locale.KOREA);
+                    vo.setDeployStatus(deployStatus);
+                    vo.setUpdateUserId(principal.getName());
+                    saveDeployStatus(vo);
+                }
+            }
+            HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Director Info Check Succeed...."));
             List<String> cmd = new ArrayList<String>(); //bosh cloud config 명령어 실행 줄 Cloud Config 관련 Rest API를 아직 지원 안하는 것 같음 2018.08.01
             cmd.add("bosh");
             cmd.add("-e");
@@ -105,7 +131,7 @@ public class HbCfDeploymentDeployAsyncService {
             StringBuffer accumulatedBuffer = new StringBuffer();
             while ((info = bufferedReader.readLine()) != null){
                 accumulatedBuffer.append(info).append("\n");
-                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList(info));
+                HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList(info));
             }
             if( accumulatedBuffer != null ) {
                 accumulatedLog = accumulatedBuffer.toString();
@@ -114,19 +140,25 @@ public class HbCfDeploymentDeployAsyncService {
             if( accumulatedLog.contains("Failed deploying") || accumulatedLog.contains("Failed") || accumulatedLog.contains("error") 
                 || accumulatedLog.contains("invalid") || accumulatedLog.contains("not support") || accumulatedLog.contains("Expected") || accumulatedLog.contains("expected") || accumulatedLog.contains("refused") ){
                 status = "error";
-                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
+                HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
             } else {
                 status = "done";
                 vo.setDeployStatus( message.getMessage("common.deploy.status.done", null,  Locale.KOREA ) );
-                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "done", Arrays.asList("", "CF-Deployment 설치가 완료되었습니다."));
+                HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "done", Arrays.asList("", "CF-Deployment 설치가 완료되었습니다."));
             }
             
         }catch (RuntimeException e) {
             status = "error";
-            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
+            HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
         }catch ( Exception e) {
             status = "error";
-            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(errorMessage));
+            HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(errorMessage));
+        }finally {
+            //동시 설치 방지 lock 파일 삭제
+            File lockFile = new File(KEY_DIR + "hybird_cfDeployment.lock");
+            if(lockFile.exists()){
+                lockFile.delete();
+            }
         } 
         String deployStatus = message.getMessage("common.deploy.status."+status.toLowerCase(), null, Locale.KOREA);
         if ( vo != null ) {
@@ -134,8 +166,12 @@ public class HbCfDeploymentDeployAsyncService {
             vo.setUpdateUserId(principal.getName());
             saveDeployStatus(vo);
         }
-	}
-	
+    }
+    
+    private void saveDeployStatus(HbCfDeploymentVO vo) {
+    	cfDeploymentDao.updateCfDeploymentConfigInfo(vo);
+    }
+
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
      * @description : CF Job 인스턴스 수 설정
@@ -164,14 +200,41 @@ public class HbCfDeploymentDeployAsyncService {
      * @return : void
     *****************************************************************/
     private void setJobSetting(List<String> cmd, HbCfDeploymentVO vo, ManifestTemplateVO result) {
-        if (vo.getJobs()!=null && vo.getJobs().size()!=0 ){
-            for(int i=0; i<vo.getJobs().size(); i++){
-                cmd.add("-v");
-                cmd.add(vo.getJobs().get(i).get("job_name")+"_instance="+String.valueOf(vo.getHbCfDeploymentInstanceConfigVO().get(i).get("instances"))+"");
-            }
-            cmd.add("-o");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getOptionResourceTemplate());
-        }
+        cmd.add("-v");
+        cmd.add("adapter_instance="+vo.getHbCfDeploymentInstanceConfigVO().getAdapter()+"");
+        cmd.add("-v");
+        cmd.add("api_instance="+vo.getHbCfDeploymentInstanceConfigVO().getApi()+"");
+        cmd.add("-v");
+        cmd.add("cc-worker_instance="+vo.getHbCfDeploymentInstanceConfigVO().getCcWorker()+"");
+        cmd.add("-v");
+        cmd.add("consul_instance="+vo.getHbCfDeploymentInstanceConfigVO().getConsul()+"");
+        cmd.add("-v");
+        cmd.add("diego-api_instance="+vo.getHbCfDeploymentInstanceConfigVO().getDiegoApi()+"");
+        cmd.add("-v");
+        cmd.add("database_instance="+vo.getHbCfDeploymentInstanceConfigVO().getTheDatabase()+"");
+        cmd.add("-v");
+        cmd.add("diego-cell_instance="+vo.getHbCfDeploymentInstanceConfigVO().getDiegoCell()+"");
+        cmd.add("-v");
+        cmd.add("doppler_instance="+vo.getHbCfDeploymentInstanceConfigVO().getDoppler()+"");
+        cmd.add("-v");
+        cmd.add("haproxy_instance="+vo.getHbCfDeploymentInstanceConfigVO().getHaproxy()+"");
+        cmd.add("-v");
+        cmd.add("log-api_instance="+vo.getHbCfDeploymentInstanceConfigVO().getLogApi()+"");
+        cmd.add("-v");
+        cmd.add("nats_instance="+vo.getHbCfDeploymentInstanceConfigVO().getNats()+"");
+        cmd.add("-v");
+        cmd.add("router_instance="+vo.getHbCfDeploymentInstanceConfigVO().getRouter()+"");
+        cmd.add("-v");
+        cmd.add("singleton-blobstore_instance="+vo.getHbCfDeploymentInstanceConfigVO().getSingletonBlobstore()+"");
+        cmd.add("-v");
+        cmd.add("tcp-router_instance="+vo.getHbCfDeploymentInstanceConfigVO().getTcpRouter()+"");
+        cmd.add("-v");
+        cmd.add("uaa_instance="+vo.getHbCfDeploymentInstanceConfigVO().getUaa()+"");
+        cmd.add("-v");
+        cmd.add("scheduler_instance="+vo.getHbCfDeploymentInstanceConfigVO().getScheduler()+"");
+        
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getOptionResourceTemplate());
     }
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
@@ -180,17 +243,14 @@ public class HbCfDeploymentDeployAsyncService {
      * @return : void
     *****************************************************************/
     private void setPublicNetworkIpUse(List<String> cmd, HbCfDeploymentVO vo, ManifestTemplateVO result) {
-        if(vo.getNetworks() != null && vo.getNetworks().size() != 0){
-            for( int i=0; i<vo.getNetworks().size(); i++ ){
-                if("external".equals(vo.getNetworks().get(i).getNet().toLowerCase()) 
-                    && ( vo.getNetworks().get(i).getPublicStaticIp() != null && !vo.getNetworks().get(i).getPublicStaticIp().isEmpty())){
-                    cmd.add("-v");
-                    cmd.add("haproxy_public_ip="+vo.getNetworks().get(i).getPublicStaticIp()+"");
-                    cmd.add("-o");
-                    cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonOptionTemplate());
-                }
+        if(vo.getHbCfDeploymentNetworkConfigVO() != null){
+            if(( vo.getHbCfDeploymentNetworkConfigVO().getPublicStaticIp() != null && !vo.getHbCfDeploymentNetworkConfigVO().getPublicStaticIp().isEmpty())){
+                cmd.add("-v");
+                cmd.add("haproxy_public_ip="+vo.getHbCfDeploymentNetworkConfigVO().getPublicStaticIp()+"");
+                cmd.add("-o");
+                cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonOptionTemplate());
             }
-            if(vo.getNetworks().size() == 3){
+            if(vo.getHbCfDeploymentNetworkConfigVO().getSubnetId2() != null && !"".equals(vo.getHbCfDeploymentNetworkConfigVO().getSubnetId2())){
                 cmd.add("-o");
                 cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getOptionNetworkTemplate());
             }
@@ -207,10 +267,15 @@ public class HbCfDeploymentDeployAsyncService {
         cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getOptionEtc());
     }
     
-    
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : 비동기 호출
+     * @title : deployAsync
+     * @return : void
+    *****************************************************************/
     @Async
     public void deployAsync(HbCfDeploymentDTO dto, Principal principal, String platform) {
-    	deploy(dto, principal, platform);
+        deploy(dto, principal, platform);
     }
     
 }

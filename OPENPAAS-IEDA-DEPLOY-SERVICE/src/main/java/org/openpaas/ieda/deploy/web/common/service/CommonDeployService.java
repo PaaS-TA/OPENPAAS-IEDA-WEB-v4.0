@@ -67,6 +67,7 @@ public class CommonDeployService{
     final private static String CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateCredentialDir();
     final private static Logger LOGGER = LoggerFactory.getLogger(CommonDeployService.class);
     final private static String CF_CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateCfDeploymentCredentialDir();
+    final private static String HYBRID_CF_CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateHybridCfCredentialDir();
     final private static String MANIFEST_TEMPLATE_DIR = LocalDirectoryConfiguration.getManifastTemplateDir();
     
     
@@ -446,5 +447,32 @@ public class CommonDeployService{
         String messageValue = message.getMessage(messageCode, null, Locale.KOREA);
         return messageValue;
     }
+
+	public void downloadCredentialFile(String fileName, HttpServletResponse response) {
+        File file = new File(HYBRID_CF_CREDENTIAL_DIR + SEPARATOR +fileName +".yml");
+        try {
+            if( file.exists() ){ //파일이 있으면
+                //파일 타입 확인
+                String mimeType= URLConnection.guessContentTypeFromName(file.getName());
+                if( StringUtils.isEmpty(mimeType) ){
+                    mimeType = "application/octet-stream";
+                }
+                response.setContentType(mimeType);
+                //웹에 다운로드
+                response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".yml"); 
+                response.setContentLength((int)file.length());
+                InputStream inputStream = new BufferedInputStream(new FileInputStream(file)); 
+                //파일복사
+           
+                FileCopyUtils.copy(inputStream, response.getOutputStream());
+            }
+        } catch (IOException e) {
+            throw new CommonException(getMessageValue("common.internalServerError.exception.code"),
+                    getMessageValue("common.internalServerError.message"), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e){
+            throw new CommonException(getMessageValue("common.internalServerError.exception.code"),
+                    getMessageValue("common.internalServerError.message"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+	}
     
 }

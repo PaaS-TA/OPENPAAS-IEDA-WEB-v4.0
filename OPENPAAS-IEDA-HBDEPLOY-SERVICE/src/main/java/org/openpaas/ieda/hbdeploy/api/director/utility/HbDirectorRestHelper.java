@@ -164,6 +164,17 @@ public class HbDirectorRestHelper {
     
     /***************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : 배포삭제 URI 생성
+     * @title : getDeleteDeploymentURI
+     * @return : String
+    ***************************************************/
+    public static String getDeleteDeploymentURI(String host, int port, String deploymentName) {
+        return UriComponentsBuilder.newInstance().scheme(HTTPS).host(host).port(port).path("deployments/{name}")
+                .queryParam("force", "true").build().expand(deploymentName).toUri().toString();
+    }
+    
+    /***************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
      * @description : Task Id 추출
      * @title : getTaskId
      * @return : String

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.openpaas.ieda.controller.common.BaseController;
+import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentNetworkConfigVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dto.HbCfDeploymentNetworkConfigDTO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.service.HbCfDeploymentNetworkConfigService;
 import org.slf4j.Logger;
@@ -43,7 +44,7 @@ public class HbCfDeploymentNetworkConfigController  extends BaseController{
     @RequestMapping(value = "/deploy/hbCfDeployment/networkConfig/list", method = RequestMethod.GET)
     public ResponseEntity<HashMap<String, Object>> getRecourceConfigInfoList() {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbCfDeployment/networkConfig/list"); }
-        List<HbCfDeploymentNetworkConfigDTO> NetworkConfigList = service.getNetworkConfigInfoList();
+        List<HbCfDeploymentNetworkConfigVO> NetworkConfigList = service.getNetworkConfigInfoList();
         HashMap<String, Object> list = new HashMap<String, Object>();
         int size =0;
         if( NetworkConfigList.size() > 0  ) {
@@ -61,7 +62,7 @@ public class HbCfDeploymentNetworkConfigController  extends BaseController{
      * @return : ResponseEntity<>
     *****************************************************************/
     @RequestMapping(value = "/deploy/hbCfDeployment/networkConfig/save", method = RequestMethod.PUT)
-    public ResponseEntity<?> saveNetworkConfigInfo(@RequestBody List<HbCfDeploymentNetworkConfigDTO> dto, Principal principal) {
+    public ResponseEntity<?> saveNetworkConfigInfo(@RequestBody HbCfDeploymentNetworkConfigDTO dto, Principal principal) {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbCfDeployment/networkConfig/save"); }
         service.saveNetworkConfigInfo(dto, principal);
         return new ResponseEntity<>(HttpStatus.CREATED);

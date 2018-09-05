@@ -6,8 +6,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.openpaas.ieda.deploy.web.deploy.cf.dto.CfParamDTO;
-import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentDefaultConfigVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dto.HbCfDeploymentDTO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.service.HbCfDeploymentDefaultConfigService;
@@ -35,7 +33,6 @@ public class HbCfDeploymentController {
     @Autowired private HbCfDeploymentSaveService hbCfDeploymentSaveService;
     @Autowired private HbCfDeploymentDeployAsyncService hbCfDeploymentDeployAsyncService;
     @Autowired private HbCfDeploymentDeleteAsyncService hbCfDeploymentDeleteAsyncService;
-    @Autowired private HbCfDeploymentDefaultConfigService service;
     
     final private static Logger LOGGER = LoggerFactory.getLogger(HbCfDeploymentController.class);
     
@@ -60,7 +57,7 @@ public class HbCfDeploymentController {
     @RequestMapping(value = "/deploy/hbCfDeployment/list/{installStatus}", method = RequestMethod.GET)
     public ResponseEntity<HashMap<String, Object>> getHbCfDeploymenList(@PathVariable String installStatus) {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbBootstrap/list/{installStatus}"); }
-        List<HbCfDeploymentVO> content = hbCfDeploymentService.getHbBCfDeploymentList(installStatus);
+        List<HbCfDeploymentVO> content = hbCfDeploymentService.getHbCfDeploymentList(installStatus);
         HashMap<String, Object> result = new HashMap<String, Object>();
         int total = content != null ? content.size() : 0;
         result.put("records", content);
@@ -74,11 +71,24 @@ public class HbCfDeploymentController {
      * @title : saveCfDeploymentInfo
      * @return : ResponseEntity<?>
     *****************************************************************/
-    @RequestMapping(value = "/deploy/hbCfDeployment/install/{installStatus}", method = RequestMethod.POST)
-    public ResponseEntity<?> saveCfDeploymentInfo(@PathVariable HbCfDeploymentDTO dto, Principal principal){
-        if(LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbCfDeployment/install/{installStatus}");}
+    @RequestMapping(value = "/deploy/hbCfDeployment/install/save", method = RequestMethod.PUT)
+    public ResponseEntity<?> saveCfDeploymentInfo(@RequestBody HbCfDeploymentDTO dto, Principal principal){
+        if(LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbCfDeployment/install/save");}
         hbCfDeploymentSaveService.saveCfdeploymentConfigInfo(dto, principal);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+    
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : CF Deployment 정보 삭제
+     * @title : deleteCfDeploymentInfo
+     * @return : ResponseEntity<?>
+    *****************************************************************/
+    @RequestMapping(value = "/deploy/hbCfDeployment/install/delete", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteCfDeploymentInfo(@RequestBody HbCfDeploymentDTO dto, Principal principal){
+        if(LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbCfDeployment/install/delete");}
+        hbCfDeploymentSaveService.deleteCfdeploymentConfigInfo(dto, principal);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
     /****************************************************************
@@ -87,11 +97,25 @@ public class HbCfDeploymentController {
      * @title : installCf
      * @return : ResponseEntity<?>
     *****************************************************************/
-    @MessageMapping("/deploy/hbCfDeployment/install/cfInstall")
+    @MessageMapping("/deploy/hbCfDeployment/install/cfDeploymentInstall")
     @SendTo("/deploy/hbCfDeployment/install/logs")
     public ResponseEntity<?> installCfDeployment(@RequestBody @Valid HbCfDeploymentDTO dto, Principal principal){
         if(LOGGER.isInfoEnabled()){ LOGGER.info("==================================> /deploy/hbCfDeployment/install/cfInstall"); }
         hbCfDeploymentDeployAsyncService.deployAsync(dto, principal, "cf");
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : CF Deployment 플랫폼 삭제
+     * @title : deleteCfDeployment
+     * @return : ResponseEntity<?>
+    *****************************************************************/
+    @MessageMapping("/deploy/hbCfDeployment/delete/instance")
+    @SendTo("/deploy/hbCfDeployment/delete/logs")
+    public ResponseEntity<?> deleteCfDeployment(@RequestBody @Valid HbCfDeploymentDTO dto, Principal principal){
+        if(LOGGER.isInfoEnabled()){ LOGGER.info("==================================> /deploy/hbCfDeployment/install/cfInstall"); }
+        hbCfDeploymentDeleteAsyncService.deleteDeployAsync(dto, "cf", principal);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     

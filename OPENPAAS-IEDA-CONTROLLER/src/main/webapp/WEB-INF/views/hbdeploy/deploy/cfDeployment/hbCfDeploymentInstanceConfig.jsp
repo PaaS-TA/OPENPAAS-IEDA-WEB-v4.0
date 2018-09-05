@@ -42,6 +42,8 @@ var resourceLayout = {
             columns:[
                    { field: 'recid', hidden: true },
                    { field: 'id', hidden: true },
+                   { field: 'cfDeploymentName', hidden: true },
+                   { field: 'cfDeploymentVersion', hidden: true },
                    { field: 'instanceConfigName', caption: '인스턴스 정보 별칭', size:'120px', style:'text-align:center;' },
                    { field: 'iaasType', caption: '인프라 환경 타입', size:'100px', style:'text-align:center;' ,render: function(record){ 
                        if(record.iaasType.toLowerCase() == "aws"){
@@ -61,11 +63,11 @@ var resourceLayout = {
                    { field: 'haproxy', caption: 'Haproxy', size:'90px', style:'text-align:center;'},
                    { field: 'logApi', caption: 'Log-Api', size:'90px', style:'text-align:center;'},
                    { field: 'nats', caption: 'Nats', size:'90px', style:'text-align:center;'},
+                   { field: 'scheduler', caption: 'Scheduler', size:'90px', style:'text-align:center;'},
                    { field: 'router', caption: 'Router', size:'90px', style:'text-align:center;'},
                    { field: 'singletonBlobstore', caption: 'Singleton-Blobstore', size:'130px', style:'text-align:center;'},
                    { field: 'tcpRouter', caption: 'Tcp-Router', size:'90px', style:'text-align:center;'},
                    { field: 'uaa', caption: 'Uaa', size:'90px', style:'text-align:center;'}
-
                   ],
             onSelect : function(event) {
                 event.onComplete = function() {
@@ -156,30 +158,34 @@ $(function(){
  * 기능 : getCfDeployment
  *********************************************************/
  function getCfDeploymentVersionList(iaasType) {
-    var option ="";
-    $.ajax({
-        type : "GET",
-        url :"/common/deploy/list/releaseInfo/cfDeployment/"+iaasType, 
-        contentType : "application/json",
-        success : function(data, status) {
-            releases = new Array();
-            if( data != null){
-                option = "<option value=''>CF Deployment를 선택하세요.</option>";
-                data.map(function(obj) {
-                      if( instanceConfigInfo.releaseName == obj.releaseType && instanceConfigInfo.releaseVersion == obj.templateVersion){
-                       option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"' selected>"+obj.releaseType+"/"+obj.templateVersion+"</option>";
-                    }else{
-                    option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"'>"+obj.releaseType+"/"+obj.templateVersion+"</option>";    
-                    } 
-                });
+    if(iaasType!=""){
+        var option ="";
+        $.ajax({
+            type : "GET",
+            url :"/common/deploy/list/releaseInfo/cfDeployment/"+iaasType, 
+            contentType : "application/json",
+            success : function(data, status) {
+                releases = new Array();
+                if( data != null){
+                    option = "<option value=''>CF Deployment를 선택하세요.</option>";
+                    data.map(function(obj) {
+                          if( instanceConfigInfo.cfDeploymentName == obj.releaseType && instanceConfigInfo.cfDeploymentVersion == obj.templateVersion){
+                           option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"' selected>"+obj.releaseType+"/"+obj.templateVersion+"</option>";
+                        }else{
+                        option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"'>"+obj.releaseType+"/"+obj.templateVersion+"</option>";    
+                        } 
+                    });
+                }
+                $("select#cfDeploymentVersion").html(option);
+            },
+            error : function(e, status) {
+                w2popup.unlock();
+                w2alert("Cf Deployment List 를 가져오는데 실패하였습니다.", "CF Deployment");
             }
-            $("select#cfDeploymentVersion").html(option);
-        },
-        error : function(e, status) {
-            w2popup.unlock();
-            w2alert("Cf Deployment List 를 가져오는데 실패하였습니다.", "CF Deployment");
-        }
-    });
+        });
+    } else {
+    	$("select[name=cfDeploymentVersion]").html("<option value='' >CF Deployment를 선택하세요.</option>");
+    }
 } 
 
 /********************************************************
@@ -194,23 +200,15 @@ function settingInstanceInfo(){
         return;
     }
     iaas = record.iaasType;
+    instanceConfigInfo = {
+        cfDeploymentName : record.cfDeploymentName,
+        cfDeploymentVersion : record.cfDeploymentVersion
+    };
+    getCfDeploymentVersionList(iaas);
+    settingCfJobs(record.cfDeploymentName+"/"+record.cfDeploymentVersion, "settingInfo", record);
+    
     $("input[name=instanceInfoId]").val(record.recid);
     $("input[name=instanceConfigName]").val(record.instanceConfigName);
-    $("input[name=adapter]").val(record.adapter);
-    $("input[name=api]").val(record.api);
-    $("input[name=cc_worker]").val(record.ccWorker);
-    $("input[name=consul]").val(record.consul);
-    $("input[name=database]").val(record.theDatabase);
-    $("input[name=diego_api]").val(record.diegoApi);
-    $("input[name=diego_cell]").val(record.diegoCell);
-    $("input[name=doppler]").val(record.doppler);
-    $("input[name=ha_proxy]").val(record.haproxy);
-    $("input[name=log_api]").val(record.logApi);
-    $("input[name=nats]").val(record.nats);
-    $("input[name=router]").val(record.router);
-    $("input[name=singleton_blobstore]").val(record.singletonBlobstore);
-    $("input[name=tcp_router]").val(record.tcpRouter);
-    $("input[name=uaa]").val(record.uaa);
     $("select[name=iaasType]").val(record.iaasType);
  }
  
@@ -218,7 +216,7 @@ function settingInstanceInfo(){
  * 설명 : CF Jobs 정보 설정
  * 기능 : settingCfJobs
  *********************************************************/
-function settingCfJobs(value){
+function settingCfJobs(value, type, record){
     if( checkEmpty(value) || value == "undefined/undefined"){
         w2alert("CF Deployment 버전을 확인하세요.");
     } else {
@@ -240,8 +238,27 @@ function settingCfJobs(value){
                     for( var i=0; i<data.length; i++ ){
                         html += setJobSettingHtml(data[i]);
                     }
+                    
                     html +='</div></div>';
                     $("#instanceSet").html(html);
+                    if(type=="settingInfo"){
+                        $("input[name=adapter]").val(record.adapter);
+                        $("input[name=api]").val(record.api);
+                        $("input[name=cc-worker]").val(record.ccWorker);
+                        $("input[name=consul]").val(record.consul);
+                        $("input[name=database]").val(record.theDatabase);
+                        $("input[name=diego-api]").val(record.diegoApi);
+                        $("input[name=diego-cell]").val(record.diegoCell);
+                        $("input[name=doppler]").val(record.doppler);
+                        $("input[name=haproxy]").val(record.haproxy);
+                        $("input[name=log-api]").val(record.logApi);
+                        $("input[name=scheduler]").val(record.scheduler);
+                        $("input[name=nats]").val(record.nats);
+                        $("input[name=router]").val(record.router);
+                        $("input[name=singleton-blobstore]").val(record.singletonBlobstore);
+                        $("input[name=tcp-router]").val(record.tcpRouter);
+                        $("input[name=uaa]").val(record.uaa);
+                    }
                 }
             },
             error : function(e, status) {
@@ -265,7 +282,7 @@ function setJobSettingHtml(data){
         html +=         '<ul>';
         html +=             '<li>';
         html +=                 '<label style="display:inline-block;">인스턴스 수 : </label>&nbsp;';
-        html +=                 '<input class="form-control" style="width:30%; display:inline-block;" onblur="instanceControl(this);" onfocusin="instanceControl(this);" onfocusout="instanceControl(this);" maxlength="1" type="number" min="0" max="100" value="1" id="'+data.id+'" name="'+data.job_name+'"/>';
+        html +=                 '<input class="form-control" style="width:30%; display:inline-block;" onblur="instanceControl(this);" onfocusin="instanceControl(this);" onfocusout="instanceControl(this);" maxlength="100" type="number" min="0" max="100" value="1" id="'+data.id+'" name="'+data.job_name+'"/>';
         html +=              '</li>';
         html +=         '</ul>';
         html +=     '</li>';
@@ -319,15 +336,22 @@ function doSearch() {
  * 기능 : saveResourceInfo
  *********************************************************/
 function registHbCfDeploymnetInstanceConfigInfo() {
+    var cfdeploymentInfo = $("select[name=cfDeploymentVersion]").val();
+    var cfDeploymentName = cfdeploymentInfo.split("/")[0];
+    var cfDeploymentVersion = cfdeploymentInfo.split("/")[1];
+    
     instanceConfigInfo = {
             id                 : $("input[name=instanceInfoId]").val(),
             iaasType           : $("select[name=iaasType]").val(),
+            cfDeploymentName   : cfDeploymentName,
+            cfDeploymentVersion: cfDeploymentVersion,
             instanceConfigName : $("input[name=instanceConfigName]").val(),
             adapter            : $("input[name=adapter]").val(),
             api                : $("input[name=api]").val(),
             ccWorker           : $("input[name=cc-worker]").val(),
             consul             : $("input[name=consul]").val(),
             theDatabase        : $("input[name=database]").val(),
+            scheduler          : $("input[name=scheduler]").val(),
             diegoApi           : $("input[name=diego-api]").val(),
             diegoCell          : $("input[name=diego-cell]").val(),
             doppler            : $("input[name=doppler]").val(),
@@ -418,13 +442,14 @@ function resetForm(status){
     $(".panel-body").find("p").remove();
     $(".panel-body").children().children().children().css("borderColor", "#bbb");
     $("input[name=instanceConfigName]").val("");
+    $("input[name=instanceInfoId]").val("");
     $("select[name=iaasType]").val("");
+    $("select[name=cfDeploymentVersion]").html("<option value='' >CF Deployment를 선택하세요.</option>");
     if(status=="reset"){
         w2ui['instance_grid'].clear();
-        $("select[name=iaasType]").html("<option value=''>인프라 환경을 선택하세요.</option>");
         doSearch();
-        
     }
+    $("#instanceSet").html("");
     document.getElementById("cfDetailForm").reset();
 }
 

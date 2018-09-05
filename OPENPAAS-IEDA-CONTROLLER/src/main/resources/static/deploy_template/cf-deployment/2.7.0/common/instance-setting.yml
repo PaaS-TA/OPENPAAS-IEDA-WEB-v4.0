@@ -15,7 +15,6 @@
   path: /instance_groups/name=consul/instances
   value: ((consul_instance))
   
-  
 - type: replace
   path: /instance_groups/name=diego-api/instances
   value: ((diego-api_instance))

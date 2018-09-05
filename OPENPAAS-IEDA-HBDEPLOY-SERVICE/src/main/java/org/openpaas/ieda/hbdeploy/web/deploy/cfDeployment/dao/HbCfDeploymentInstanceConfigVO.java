@@ -8,7 +8,8 @@ public class HbCfDeploymentInstanceConfigVO {
     private Integer recid;
     private String instanceConfigName; // 
     private String iaasType; // 클라우드 인프라 환경 타입
-    
+    private String cfDeploymentName;
+    private String cfDeploymentVersion;
     private String adapter;
     private String api;
     private String ccWorker;
@@ -24,6 +25,7 @@ public class HbCfDeploymentInstanceConfigVO {
     private String singletonBlobstore;
     private String tcpRouter;
     private String uaa;
+    private String scheduler;
 
     private String createUserId;//등록자 아이디
     private String updateUserId;//수정자 아이디
@@ -60,6 +62,18 @@ public class HbCfDeploymentInstanceConfigVO {
     public void setIaasType(String iaasType) {
         this.iaasType = iaasType;
     }
+    public String getCfDeploymentName() {
+        return cfDeploymentName;
+    }
+    public void setCfDeploymentName(String cfDeploymentName) {
+        this.cfDeploymentName = cfDeploymentName;
+    }
+    public String getCfDeploymentVersion() {
+        return cfDeploymentVersion;
+    }
+    public void setCfDeploymentVersion(String cfDeploymentVersion) {
+        this.cfDeploymentVersion = cfDeploymentVersion;
+    }
     public String getAdapter() {
         return adapter;
     }
@@ -91,12 +105,12 @@ public class HbCfDeploymentInstanceConfigVO {
         this.diegoApi = diegoApi;
     }
     public String getDoppler() {
-		return doppler;
-	}
-	public void setDoppler(String doppler) {
-		this.doppler = doppler;
-	}
-	public String getDiegoCell() {
+        return doppler;
+    }
+    public void setDoppler(String doppler) {
+        this.doppler = doppler;
+    }
+    public String getDiegoCell() {
         return diegoCell;
     }
     public void setDiegoCell(String diegoCell) {
@@ -143,6 +157,12 @@ public class HbCfDeploymentInstanceConfigVO {
     }
     public void setUaa(String uaa) {
         this.uaa = uaa;
+    }
+    public String getScheduler() {
+        return scheduler;
+    }
+    public void setScheduler(String scheduler) {
+        this.scheduler = scheduler;
     }
     public String getCreateUserId() {
         return createUserId;

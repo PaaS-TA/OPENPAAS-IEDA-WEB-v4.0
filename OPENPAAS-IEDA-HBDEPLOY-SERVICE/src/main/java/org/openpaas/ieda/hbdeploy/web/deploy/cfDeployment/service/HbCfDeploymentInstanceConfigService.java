@@ -73,6 +73,8 @@ public class HbCfDeploymentInstanceConfigService {
             vo.setApi(dto.getApi());
             vo.setCcWorker(dto.getCcWorker());
             vo.setConsul(dto.getConsul());
+            vo.setCfDeploymentName(dto.getCfDeploymentName());
+            vo.setCfDeploymentVersion(dto.getCfDeploymentVersion());
             vo.setTheDatabase(dto.getTheDatabase());
             vo.setDiegoApi(dto.getDiegoApi());
             vo.setDiegoCell(dto.getDiegoCell());
@@ -80,6 +82,7 @@ public class HbCfDeploymentInstanceConfigService {
             vo.setHaproxy(dto.getHaproxy());
             vo.setLogApi(dto.getLogApi());
             vo.setNats(dto.getNats());
+            vo.setScheduler(dto.getScheduler());
             vo.setRouter(dto.getRouter());
             vo.setSingletonBlobstore(dto.getSingletonBlobstore());
             vo.setTcpRouter(dto.getTcpRouter());

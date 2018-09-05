@@ -3,7 +3,7 @@ package org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dto;
 import java.util.Date;
 
 public class HbCfDeploymentDTO {
-    private Integer recid;
+    
     private Integer id;
     private String cfDeploymentConfigName;
     private String iaasType;
@@ -11,7 +11,8 @@ public class HbCfDeploymentDTO {
     private String credentialConfigInfo;
     private String defaultConfigInfo;
     private String resourceConfigInfo;
-    private String cloud_config_file;
+    private String instanceConfigInfo;
+    private String cloudConfigFile;
     private String deployStatus; // 배포상태
     private String taskId;
     private String createUserId;//등록자 아이디
@@ -19,12 +20,6 @@ public class HbCfDeploymentDTO {
     private Date createDate;//등록일
     private Date updateDate;//수정일
     
-    public Integer getRecid() {
-        return recid;
-    }
-    public void setRecid(Integer recid) {
-        this.recid = recid;
-    }
     public Integer getId() {
         return id;
     }
@@ -67,11 +62,11 @@ public class HbCfDeploymentDTO {
     public void setResourceConfigInfo(String resourceConfigInfo) {
         this.resourceConfigInfo = resourceConfigInfo;
     }
-    public String getCloud_config_file() {
-        return cloud_config_file;
+    public String getCloudConfigFile() {
+        return cloudConfigFile;
     }
-    public void setCloud_config_file(String cloud_config_file) {
-        this.cloud_config_file = cloud_config_file;
+    public void setCloudConfigFile(String cloudConfigFile) {
+        this.cloudConfigFile = cloudConfigFile;
     }
     public String getDeployStatus() {
         return deployStatus;
@@ -108,6 +103,12 @@ public class HbCfDeploymentDTO {
     }
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+    public String getInstanceConfigInfo() {
+        return instanceConfigInfo;
+    }
+    public void setInstanceConfigInfo(String instanceConfigInfo) {
+        this.instanceConfigInfo = instanceConfigInfo;
     }
     
 }

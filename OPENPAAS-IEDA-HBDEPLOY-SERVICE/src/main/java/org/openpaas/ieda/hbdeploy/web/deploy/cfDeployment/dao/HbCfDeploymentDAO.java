@@ -1,8 +1,10 @@
 package org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dto.HbCfDeploymentDTO;
 
 public interface HbCfDeploymentDAO {
     
@@ -28,7 +30,7 @@ public interface HbCfDeploymentDAO {
      * @title : insertCfDeploymentConfigInfo
      * @return : void
     *****************************************************************/
-    void insertCfDeploymentConfigInfo(@Param("vo")HbCfDeploymentVO vo);
+    void insertCfDeploymentConfigInfo(@Param("vo") HbCfDeploymentVO vo);
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
@@ -37,4 +39,21 @@ public interface HbCfDeploymentDAO {
      * @return : HbCfDeploymentVO
     *****************************************************************/
     HbCfDeploymentVO selectCfDeploymentConfigInfo(@Param("id")int id);
+    
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description :  CF Deployment 설치 정보 수정
+     * @title : updateCfDeploymentConfigInfo
+     * @return : void
+    *****************************************************************/
+    void updateCfDeploymentConfigInfo(@Param("vo") HbCfDeploymentVO vo);
+    
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description :  CF Deployment 설치 정보 삭제
+     * @title : deleteCfDeploymentConfigInfo
+     * @return : void
+    *****************************************************************/
+    void deleteCfDeploymentConfigInfo(@Param("dto") HbCfDeploymentDTO dto);
+
 }

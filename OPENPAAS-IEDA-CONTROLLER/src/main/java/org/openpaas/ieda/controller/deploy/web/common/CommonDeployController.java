@@ -178,6 +178,19 @@ public class CommonDeployController {
         commonService.downloadDeploymentFile(fileName, response);
     }
     
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : 배포파일 브라우저 다운로드
+     * @title : downloadDeploymentFile
+     * @return : void
+    *****************************************************************/
+    @RequestMapping(value = "/common/deploy/download/credential/{fileName}", method = RequestMethod.GET)
+    public void downloadCredentialFile( @PathVariable("fileName") String fileName, HttpServletResponse response){
+        if(LOGGER.isInfoEnabled()){ LOGGER.debug("====================================> 배포파일 브라우저 다운로드 요청"); }
+        commonService.downloadCredentialFile(fileName, response);
+    }
+    
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description : 로컬 릴리즈 목록 조회
