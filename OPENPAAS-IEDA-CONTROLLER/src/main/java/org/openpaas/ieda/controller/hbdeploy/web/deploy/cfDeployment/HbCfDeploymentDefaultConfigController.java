@@ -29,7 +29,7 @@ public class HbCfDeploymentDefaultConfigController extends BaseController{
      * @return : String
     ***************************************************/
     @RequestMapping(value = "/deploy/hbCfDeployment/defaultConfig", method = RequestMethod.GET)
-    public String goNetworkConfig() {
+    public String goDefaulConfig() {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbCfDeployment/defaultConfig"); }
         return "/hbdeploy/deploy/cfDeployment/hbCfDeploymentDefaultConfig";
     }
@@ -41,7 +41,7 @@ public class HbCfDeploymentDefaultConfigController extends BaseController{
      * @return : ResponseEntity<CfDeploymentVO>
     *****************************************************************/
     @RequestMapping(value = "/deploy/hbCfDeployment/defaultConfig/list", method = RequestMethod.GET)
-    public ResponseEntity<HashMap<String, Object>> getRecourceConfigInfoList() {
+    public ResponseEntity<HashMap<String, Object>> getDefaultConfigInfoList() {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbCfDeployment/defaultConfig/list"); }
         List<HbCfDeploymentDefaultConfigVO> defaultConfigList = service.getDefaultConfigInfoList();
         HashMap<String, Object> list = new HashMap<String, Object>();

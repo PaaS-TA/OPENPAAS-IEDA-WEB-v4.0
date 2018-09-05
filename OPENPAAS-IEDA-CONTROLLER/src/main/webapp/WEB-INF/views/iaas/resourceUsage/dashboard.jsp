@@ -130,7 +130,6 @@ $( window ).resize(function() {
                         <li><img src='<c:url value="images/iaasMgnt/instance.png" />' class="instance-icon" alt="인스턴스"><span></span></li>
                         <li><span class="totalInstance">0</span><span style="font-size:22px;"> VM(s)</span></li>
                     </ul>
-                    
                 </li>
                 <li>
                     <ul class="totalResourceUsage-ul-Div" >
