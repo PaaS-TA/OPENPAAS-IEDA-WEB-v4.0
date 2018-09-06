@@ -79,7 +79,7 @@
             )
             Values
             <foreach collection="networks" item="item" index="index"   separator="," >
-                ( #{item.id}, 
+                ( #{item.id},
                 #{item.deployType}, 
                 #{index}, 
                 #{item.net},

@@ -221,7 +221,7 @@ function settingCfJobs(value, type, record){
         w2alert("CF Deployment 버전을 확인하세요.");
     } else {
         var release_version = value.split("/")[1];
-        var deploy_type = "DEPLOY_TYPE_HYBRID_CF";
+        var deploy_type = "DEPLOY_TYPE_CF";
         $.ajax({
             type : "GET",
             url : "/deploy/hbCfDeployment/instanceConfig/job/list/"+release_version+"/"+ deploy_type,

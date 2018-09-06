@@ -59,7 +59,7 @@ public class HbCfDeploymentDeleteAsyncService {
         
         HbCfDeploymentVO vo = cfDeploymentService.getHbCfDeploymentInfo(dto.getId());
         
-        deploymentName = vo != null ?vo.getCloudConfigFile() : "";
+        deploymentName = vo != null ?vo.getDefaultConfigInfo() : "";
         deploymentFileName = vo != null ? vo.getCloudConfigFile() : "";
         if ( StringUtils.isEmpty(deploymentName) ) {
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), 
@@ -104,6 +104,7 @@ public class HbCfDeploymentDeleteAsyncService {
             deleteMethod = (DeleteMethod)HbDirectorRestHelper.setAuthorization(directorInfo.getUserId(), directorInfo.getUserPassword(), (HttpMethodBase)deleteMethod);
         
             int statusCode = httpClient.executeMethod(deleteMethod);
+            
             if( statusCode == HttpStatus.MOVED_PERMANENTLY.value() || statusCode == HttpStatus.MOVED_TEMPORARILY.value() ) {
                 Header location = deleteMethod.getResponseHeader("Location");
                 String taskId = HbDirectorRestHelper.getTaskId(location.getValue());
@@ -116,7 +117,9 @@ public class HbCfDeploymentDeleteAsyncService {
             HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(errorMsg));
         } catch ( Exception e) {
             HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(errorMsg));
-        }
+        } finally {
+			
+		}
     }
     
     /****************************************************************

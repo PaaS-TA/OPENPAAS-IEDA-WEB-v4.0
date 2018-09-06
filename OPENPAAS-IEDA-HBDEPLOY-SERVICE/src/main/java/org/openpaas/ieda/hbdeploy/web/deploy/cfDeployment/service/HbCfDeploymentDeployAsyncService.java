@@ -159,7 +159,7 @@ public class HbCfDeploymentDeployAsyncService {
             if(lockFile.exists()){
                 lockFile.delete();
             }
-        } 
+        }
         String deployStatus = message.getMessage("common.deploy.status."+status.toLowerCase(), null, Locale.KOREA);
         if ( vo != null ) {
             vo.setDeployStatus(deployStatus);
