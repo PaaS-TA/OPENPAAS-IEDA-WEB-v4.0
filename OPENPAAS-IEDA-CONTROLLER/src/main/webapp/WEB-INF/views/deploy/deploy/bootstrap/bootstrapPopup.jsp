@@ -85,6 +85,7 @@ function setBootstrapData(contents){
             ntp              : contents.ntp,
             boshRelease      : contents.boshRelease,
             boshCpiRelease   : contents.boshCpiRelease,
+            boshBpmRelease   : contents.boshBpmRelease,
             osConfRelease    : contents.osConfRelease,
             enableSnapshots  : contents.enableSnapshots,
             snapshotSchedule : contents.snapshotSchedule,
@@ -433,6 +434,9 @@ function defaultInfoPop(iaas){
                             $(".w2ui-msg-body  select[name=paastaMonitoringRelease]").attr("disabled", true);
                         }
                     }
+                    if( !checkEmpty(boshInfo.boshBpmRelease) ){
+                        $(".w2ui-msg-body #bpmConfDiv").show();
+                    }
                 }else{
                     $('input:radio[name=enableSnapshots]:input[value=false]').attr("checked", true);
                     enableSnapshotsFn("false");
@@ -446,6 +450,8 @@ function defaultInfoPop(iaas){
                 getLocalBoshList('bosh');
                 //BOSH CPI 릴리즈 정보 가져오기
                 getLocalBoshCpiList('bosh_cpi', iaas);
+                //BOSH BPM 릴리즈 정보 가져오기
+                getLocalBoshList('bpm');
                 if( iaas == "Google" ){
                     getLocalBoshList('os-conf');
                 }
@@ -536,20 +542,50 @@ function getLocalBoshList(type){
                     
                 }
                 $(".w2ui-msg-body select[name='boshRelease']").html(options);
-            } else if(type= 'os_conf'){
+            } else if(type == 'os_conf'){
                 var options = "<option value=''>OS CONF 릴리즈를 선택하세요.</option>";
                 for( var i=0; i<data.length; i++ ){
                     if( data[i] == boshInfo.osConfRelease ){
                         options += "<option value='"+data[i]+"' selected>"+data[i]+"</option>";
                     }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
                 }
-                $(".w2ui-msg-body select[name='osConfRelease']").html(options)
+                $(".w2ui-msg-body select[name='osConfRelease']").html(options);
+            } else if(type == 'bpm') {
+                var options = "<option value=''>BPM 릴리즈를 선택하세요.</option>";
+                for( var i=0; i<data.length; i++ ){
+                    if( data[i] == boshInfo.boshBpmRelease ){
+                        options += "<option value='"+data[i]+"' selected>"+data[i]+"</option>";
+                    }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
+                }
+                $(".w2ui-msg-body select[name='boshBpmRelease']").html(options);
             }
         },
         error : function( e, status ) {
             w2alert("Bosh 릴리즈 "+search_data_fail_msg, "BOOTSTRAP 설치");
         }
     });
+}
+
+/******************************************************************
+ * 기능 : checkBoshVersion(selected)
+ * 설명 : BOSH 버전 체크 >> BPM Release 적용 여부 확인
+ ******************************************************************/
+function checkBoshVersion(selected){
+    if(selected == ''){
+       return ;
+    }else{
+        var versionInfo = selected.split("bosh-");
+        versionInfo = versionInfo[1].split(".tgz");
+        versionInfo = parseFloat(versionInfo);
+        if(versionInfo >= 266.2){
+            getLocalBoshList('bpm');
+            $(".w2ui-msg-body #bpmConfDiv").show();
+        }else{
+            $(".w2ui-msg-body #bpmConfDiv").hide();
+            var options = "<option value=''>BPM 릴리즈를 선택하세요.</option>";
+            $(".w2ui-msg-body select[name='boshBpmRelease']").html(options);
+        }
+    }
 }
 
  /******************************************************************
@@ -581,7 +617,6 @@ function getLocalBoshCpiList(type, iaas){
         }
     });
 }
-
 
  /******************************************************************
   * 기능 : enableSnapshotsFn
@@ -678,6 +713,7 @@ function saveDefaultInfo(type){
             boshRelease         : $(".w2ui-msg-body select[name=boshRelease]").val(),
             osConfRelease       : $(".w2ui-msg-body select[name=osConfRelease]").val(),
             boshCpiRelease      : $(".w2ui-msg-body select[name=boshCpiRelease]").val(),
+            boshBpmRelease      : $(".w2ui-msg-body select[name=boshBpmRelease]").val(),
             enableSnapshots     : $(".w2ui-msg-body input:radio[name=enableSnapshots]:checked").val(),
             snapshotSchedule    : $(".w2ui-msg-body input[name=snapshotSchedule]").val(),
             influxdbIp : influxdbIp,
@@ -1777,7 +1813,7 @@ function popupClose() {
                             <span class="glyphicon glyphicon glyphicon-question-sign boshRelase-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="hover" data-html="true" title="설치 지원 버전 목록"></span>
                         </label>
                         <div style="width: 60%">
-                            <select name="boshRelease"  class="form-control select-control">
+                            <select name="boshRelease"  class="form-control select-control" onchange="checkBoshVersion(this.value)">
                                 <option value="">BOSH 릴리즈를 선택하세요.</option>
                             </select>
                         </div>
@@ -1790,7 +1826,14 @@ function popupClose() {
                             </select>
                         </div>
                     </div>
- 
+                    <div class="w2ui-field" id="bpmConfDiv"  hidden="true">
+                        <label style="text-align:left; width:36%; font-size:11px;">BOSH BPM 릴리즈</label>
+                        <div style="width: 60%">
+                            <select name="boshBpmRelease" class="form-control select-control">
+                                <option value="">BOSH BPM 릴리즈를 선택하세요.</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="w2ui-field" id="osConfDiv" hidden="true"> 
                         <label style="text-align:left; width:36%; font-size:11px;">OS-CONF 릴리즈</label>
                         <div style="width: 60%">

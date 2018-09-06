@@ -26,6 +26,7 @@ public class BootstrapVO {
     private String credentialKeyName;
     private String boshRelease; // BOSH 릴리즈
     private String boshCpiRelease; // BOSH API 릴리즈
+    private String boshBpmRelease; // BOSH Bpm 릴리즈
     private String snapshotSchedule;//스냅샷 스케줄
     private String enableSnapshots;//스냅샷 사용 유무
     private String ntp; // NTP
@@ -351,6 +352,14 @@ public class BootstrapVO {
 
     public void setInfluxdbIp(String influxdbIp) {
         this.influxdbIp = influxdbIp;
+    }
+
+    public String getBoshBpmRelease() {
+        return boshBpmRelease;
+    }
+
+    public void setBoshBpmRelease(String boshBpmRelease) {
+        this.boshBpmRelease = boshBpmRelease;
     }
 
 }

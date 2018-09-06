@@ -328,6 +328,8 @@ public class ReleaseManagementService {
             dto.setDownloadLink(CLOUDFOUNDRYURL + dto.getReleaseType().toLowerCase() + "?v=" + dto.getReleasePathVersion());
         } else if( dto.getReleaseType().equalsIgnoreCase("os-conf")){
             dto.setDownloadLink(CLOUDFOUNDRYURL + "os-conf-release?v=" + dto.getReleasePathVersion());
+        }else if( dto.getReleaseType().equalsIgnoreCase("bpm") ){
+            dto.setDownloadLink(CLOUDFOUNDRYINCUBATORURL + dto.getReleaseType().toLowerCase() + "-release?v=" + dto.getReleasePathVersion());
         }else{
             dto.setDownloadLink(CLOUDFOUNDRYURL + dto.getReleaseType().toLowerCase()+"-release?v=" + dto.getReleasePathVersion());
         }

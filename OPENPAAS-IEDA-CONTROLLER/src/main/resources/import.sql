@@ -1037,21 +1037,26 @@ INSERT INTO ieda_role_detail VALUES ( '252', '1000', '183395', 'SYSTEM', now(), 
 
 
 #manifest tamplate info
-INSERT INTO ieda_manifest_template VALUES (1, 'BOOTSTRAP','openstack','bosh','264.7','262','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (2, 'BOOTSTRAP','aws','bosh','264.7','262','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (3, 'BOOTSTRAP','google','bosh','264.7','262','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (4, 'BOOTSTRAP','vsphere','bosh','264.7','262','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (5, 'BOOTSTRAP','azure','bosh','264.7','262','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (6, 'BOOTSTRAP','openstack','bosh','264.7','264.7','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (7, 'BOOTSTRAP','aws','bosh','264.7','264.7','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (8, 'BOOTSTRAP','google','bosh','264.7','264.7','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (9, 'BOOTSTRAP','vsphere','bosh','264.7','264.7','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (10, 'BOOTSTRAP','azure','bosh','264.7','264.7','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (11, 'CFDEPLOYMENT','aws','cf-deployment','2.7.0','2.7.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','','instance-setting.yml','use-postgres.yml','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (12, 'CFDEPLOYMENT','openstack','cf-deployment','2.7.0','2.7.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','','instance-setting.yml','use-postgres.yml','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (13, 'CFDEPLOYMENT','vsphere','cf-deployment','2.7.0','2.7.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','','instance-setting.yml','use-postgres.yml','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (14, 'CFDEPLOYMENT','google','cf-deployment','2.7.0','2.7.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','','instance-setting.yml','use-postgres.yml','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (15, 'CFDEPLOYMENT','azure','cf-deployment','2.7.0','2.7.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','','instance-setting.yml','use-postgres.yml','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (1, 'BOOTSTRAP','openstack','bosh','264.7','264.7','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (2, 'BOOTSTRAP','aws','bosh','264.7','264.7','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (3, 'BOOTSTRAP','google','bosh','264.7','264.7','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (4, 'BOOTSTRAP','vsphere','bosh','264.7','264.7','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (5, 'BOOTSTRAP','azure','bosh','264.7','264.7','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (6, 'BOOTSTRAP','openstack','bosh','266.2','266.2','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (7, 'BOOTSTRAP','aws','bosh','266.2','266.2','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (8, 'BOOTSTRAP','google','bosh','266.2','266.2','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (9, 'BOOTSTRAP','vsphere','bosh','266.2','266.2','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (10, 'BOOTSTRAP','azure','bosh','266.2','266.2','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (11, 'BOOTSTRAP','openstack','bosh','266.10','266.2','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (12, 'BOOTSTRAP','aws','bosh','266.10','266.2','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (13, 'BOOTSTRAP','google','bosh','266.10','266.2','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (14, 'BOOTSTRAP','vsphere','bosh','266.10','266.2','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (15, 'BOOTSTRAP','azure','bosh','266.10','266.2','','bootstrap.yml', 'paasta_options.yml', '','','','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (16, 'CFDEPLOYMENT','aws','cf-deployment','2.7.0','2.7.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (17, 'CFDEPLOYMENT','openstack','cf-deployment','2.7.0','2.7.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (18, 'CFDEPLOYMENT','vsphere','cf-deployment','2.7.0','2.7.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (19, 'CFDEPLOYMENT','google','cf-deployment','2.7.0','2.7.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (20, 'CFDEPLOYMENT','azure','cf-deployment','2.7.0','2.7.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','','SYSTEM',now(),'SYSTEM',now());
 
 
 

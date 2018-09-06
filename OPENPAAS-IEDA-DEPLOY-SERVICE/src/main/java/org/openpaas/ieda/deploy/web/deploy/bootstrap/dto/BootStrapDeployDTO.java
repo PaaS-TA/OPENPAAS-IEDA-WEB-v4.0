@@ -64,6 +64,7 @@ public class BootStrapDeployDTO{
         private String influxdbIp;
         private String paastaMonitoringRelease; //PaaS-TA 모니터링 사용시 릴리즈
         private String osConfRelease;
+        private String boshBpmRelease; //BOSH BPM 릴리즈 (bosh version 264 이상)
         public String getId() {
             return id;
         }
@@ -154,6 +155,13 @@ public class BootStrapDeployDTO{
         public void setOsConfRelease(String osConfRelease) {
             this.osConfRelease = osConfRelease;
         }
+        public String getBoshBpmRelease() {
+            return boshBpmRelease;
+        }
+        public void setBoshBpmRelease(String boshBpmRelease) {
+            this.boshBpmRelease = boshBpmRelease;
+        }
+        
     }
     
     public static class Network{
