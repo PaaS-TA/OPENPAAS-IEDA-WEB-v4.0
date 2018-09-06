@@ -282,7 +282,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
      * @title : testSaveCfJobsInfo
      * @return : void
     ***************************************************/
-    @Test
     public void testSaveCfJobsInfo() {
         List<HashMap<String, Object>> jobs =  setJobSettingInfoList();
         when(mockMessageSource.getMessage(any(), any(), any())).thenReturn("DEPLOY_TYPE_CF");

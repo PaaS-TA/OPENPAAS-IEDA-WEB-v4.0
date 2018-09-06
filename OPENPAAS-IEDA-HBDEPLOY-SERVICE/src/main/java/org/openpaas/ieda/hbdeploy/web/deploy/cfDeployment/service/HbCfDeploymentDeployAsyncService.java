@@ -131,6 +131,7 @@ public class HbCfDeploymentDeployAsyncService {
             StringBuffer accumulatedBuffer = new StringBuffer();
             while ((info = bufferedReader.readLine()) != null){
                 accumulatedBuffer.append(info).append("\n");
+                Thread.sleep(20);
                 HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList(info));
             }
             if( accumulatedBuffer != null ) {

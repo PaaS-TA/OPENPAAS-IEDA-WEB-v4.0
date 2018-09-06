@@ -1551,9 +1551,6 @@ instance_groups:
       client_key: ((silk_daemon.private_key))
   - name: silk-cni
     release: silk
-    properties:
-      dns_servers:
-      - 169.254.0.2
 - name: log-api
   instances: 1
   vm_type: minimal
@@ -1692,7 +1689,6 @@ instance_groups:
     release: credhub
 - name: rotate-cc-database-key
   instances: 1
-  azs: [z1]
   lifecycle: errand
   vm_type: minimal
   stemcell: default

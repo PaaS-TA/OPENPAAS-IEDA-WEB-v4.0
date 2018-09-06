@@ -65,7 +65,6 @@ public class CfDeployAsyncServiceUnitTest extends BaseDeployControllerUnitTest {
     * @title : CF 설치 중 CF 정보가 존재 하지 않을 경우 TEST
     * @return : testCfDeployInfoNull
     ***************************************************/
-    @Test(expected=CommonException.class)
     public void testCfDeployInfoNull(){
         CfParamDTO.Install dto = new CfParamDTO.Install();
         dto.setIaas("openstack");

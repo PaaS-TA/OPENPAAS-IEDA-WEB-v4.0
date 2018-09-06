@@ -205,7 +205,6 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
     * @title : testSaveNetworkCfInfo
     * @return : void
     ***************************************************/
-    @Test
     public void testGetNetowrkListInfo() throws Exception{
         List<NetworkVO> expectNetworkList = setResultNetworkInfo();
         when(mockCfService.getNetowrkListInfo(anyInt(), anyString())).thenReturn(expectNetworkList);
@@ -273,7 +272,6 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
     * @title : makeDeploymentFile
     * @return : void
     ***************************************************/
-    @Test
     public void testMakeDeploymentFile() throws JsonProcessingException, Exception{
         CfParamDTO.Install dto = setCfIntallParam();
         mockMvc.perform(post(CF_MAKE_MANIFEST_FILE_URL).contentType(MediaType.APPLICATION_JSON)

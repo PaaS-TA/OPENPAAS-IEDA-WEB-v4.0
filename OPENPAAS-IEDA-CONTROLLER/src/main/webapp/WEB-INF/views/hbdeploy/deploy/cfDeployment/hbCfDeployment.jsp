@@ -109,10 +109,17 @@ $(function() {
                    $('#installVmBtn').attr('disabled', false);
                }
            },onDblClick: function (event) {
+             var record = w2ui['config_cfDeployment_grid2'].get(event.recid);
              var grid = this;
-             // need timer for nicer visual effect that record was selected
+             var gridName = "";
+             console.log(record.deployStatus);
+             if(record.deployStatus != null){
+                 gridName = "config_cfDeployment_grid3";
+             } else {
+                 gridName = "config_cfDeployment_grid";
+             }
              setTimeout(function () {
-                 w2ui['config_cfDeployment_grid'].add( $.extend({}, grid.get(event.recid), { selected : false }) );
+                 w2ui[''+gridName+''].add( $.extend({}, grid.get(event.recid), { selected : false }) );
                  grid.selectNone();
                  grid.remove(event.recid);
              }, 150);
@@ -185,7 +192,6 @@ $(function() {
              }
              , {field: 'stemcell', caption: 'Stemcell', size: '350px'
                  , render:function(record){
-                       console.log(record);
                        return record.hbCfDeploymentResourceConfigVO.stemcellName +"/"+ record.hbCfDeploymentResourceConfigVO.stemcellVersion;
                      }
                  }
@@ -222,7 +228,6 @@ $(function() {
                  location.href = "/abuse";
                  event.preventDefault();
              }
-             console.log(event);
          },onError : function(event) {
          }, onDblClick: function (event) {
              var grid = this;
@@ -272,7 +277,6 @@ $(function() {
         }
         var record = w2ui['config_cfDeployment_grid'].get(selected);
         cfDeploymentInfo = record;
-        console.log(cfDeploymentInfo);
         w2popup.open({
             width   : 900,
             height  : 500,
@@ -310,7 +314,6 @@ $(function() {
         }
         var record = w2ui['config_cfDeployment_grid3'].get(selected);
         cfDeploymentInfo = record;
-        console.log(cfDeploymentInfo);
         w2popup.open({
             width   : 900,
             height  : 500,
@@ -460,6 +463,7 @@ function firstInstallPopup(cfDeploymentInfo){
                         if ( response.messages != null ){
                             for ( var i=0; i < response.messages.length; i++) {
                                 installLogs.append(response.messages[i] + "\n").scrollTop( installLogs[0].scrollHeight );
+                                
                             }
                             if ( response.state.toLowerCase() != "started" ) {
                                 if ( response.state.toLowerCase() == "done" )    message = message + " 설치가 완료되었습니다."; 
@@ -727,7 +731,6 @@ function saveCfDeploymentInfo(){
         instanceConfigInfo     : $(".w2ui-msg-body select[name='instanceConfigInfo']").val(),
         credentialConfigInfo     : $(".w2ui-msg-body select[name='credentialConfigInfo']").val()
     }
-    console.log(cfDeploymentInfo);
     $.ajax({
         type : "PUT",
         url : "/deploy/hbCfDeployment/install/save",

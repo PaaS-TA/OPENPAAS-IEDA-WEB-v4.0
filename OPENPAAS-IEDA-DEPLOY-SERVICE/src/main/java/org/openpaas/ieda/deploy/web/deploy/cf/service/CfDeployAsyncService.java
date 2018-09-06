@@ -110,6 +110,7 @@ public class CfDeployAsyncService {
             StringBuffer accumulatedBuffer = new StringBuffer();
             while ((info = bufferedReader.readLine()) != null){
                 accumulatedBuffer.append(info).append("\n");
+                Thread.sleep(20);
                 DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList(info));
             }
             if( accumulatedBuffer != null ) {
