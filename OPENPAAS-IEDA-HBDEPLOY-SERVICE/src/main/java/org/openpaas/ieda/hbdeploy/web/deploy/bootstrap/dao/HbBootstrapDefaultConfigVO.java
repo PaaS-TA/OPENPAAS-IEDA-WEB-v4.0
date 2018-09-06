@@ -13,6 +13,7 @@ public class HbBootstrapDefaultConfigVO {
     private String credentialKeyName;
     private String boshRelease; // BOSH 릴리즈
     private String boshCpiRelease; // BOSH API 릴리즈
+    private String boshBpmRelease; // BOSH BPM 릴리즈
     private String snapshotSchedule;//스냅샷 스케줄
     private String enableSnapshots;//스냅샷 사용 유무
     private String ntp; // NTP
@@ -144,6 +145,12 @@ public class HbBootstrapDefaultConfigVO {
     }
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+    public String getBoshBpmRelease() {
+        return boshBpmRelease;
+    }
+    public void setBoshBpmRelease(String boshBpmRelease) {
+        this.boshBpmRelease = boshBpmRelease;
     }
     
 }
