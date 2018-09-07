@@ -28,6 +28,7 @@ public class HbBootstrapDefaultConfigDTO {
     private String paastaMonitoringRelease; //PaaS-TA 모니터링 사용시 릴리즈
     private String iaasType;
     private String defaultConfigName;
+    private String boshBpmRelease; // BOSH BPM 릴리즈
     
     public String getId() {
         return id;
@@ -119,4 +120,11 @@ public class HbBootstrapDefaultConfigDTO {
     public void setDefaultConfigName(String defaultConfigName) {
         this.defaultConfigName = defaultConfigName;
     }
+    public String getBoshBpmRelease() {
+        return boshBpmRelease;
+    }
+    public void setBoshBpmRelease(String boshBpmRelease) {
+        this.boshBpmRelease = boshBpmRelease;
+    }
+    
 }

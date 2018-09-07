@@ -106,16 +106,23 @@ $(function() {
                    $('#installVmBtn').attr('disabled', false);
                }
            },onDblClick: function (event) {
+             var record = w2ui['config_bootstrapGrid2'].get(event.recid);
              var grid = this;
+             var gridName = "";
+             if(record.deployStatus != null){
+                 gridName = "config_bootstrapGrid3";
+             }else{
+                 gridName = "config_bootstrapGrid";
+             }
              // need timer for nicer visual effect that record was selected
              setTimeout(function () {
-                 w2ui['config_bootstrapGrid'].add( $.extend({}, grid.get(event.recid), { selected : false }) );
+                 w2ui[''+gridName+''].add( $.extend({}, grid.get(event.recid), { selected : false }) );
                  grid.selectNone();
                  grid.remove(event.recid);
              }, 150);
            },onUnselect : function(event) {
                event.onComplete = function() {
-                   $('#installVmBtn').attr('disabled', true);
+                   
                }
            },onLoad:function(event){
                if(event.xhr.status == 403){
@@ -324,6 +331,9 @@ $(function() {
         
         if(selected.length == 3) {
             w2alert("최대 2개의 BOOTSTRAP이 설치 가능 합니다. ", "BOOTSTRAP 설치");
+            return;
+        }else if(selected.length == 0){
+            w2alert("설치할 BOOTSTRAP이 없습니다.", "BOOTSTRAP 설치");
             return;
         }
         
@@ -905,7 +915,6 @@ function doButtonStyle(){
     $('#modifyBtn').attr('disabled', true);
     $('#deleteBtn').attr('disabled', true);
     $('#deleteVmBtn').attr('disabled', true);
-    $('#installVmBtn').attr('disabled', true);
     $('#modifyVmBtn').attr('disabled', true);
 }
  

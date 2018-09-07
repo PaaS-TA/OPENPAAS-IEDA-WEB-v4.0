@@ -14,6 +14,7 @@ public class HbBootstrapListDTO {
     private String iaas; //IaaS
     private String boshRelease; //BOSH 릴리즈
     private String boshCpiRelease; //BOSH CPI 릴리즈
+    private String boshBpmRelease; //BOSH BPM 릴리즈
     private String subnetId; //서브넷 ID(NET ID)
     private String subnetRange; //서브넷 범위
     private String publicStaticIp; //디렉터 공인 IP
@@ -41,6 +42,7 @@ public class HbBootstrapListDTO {
     private String hyPubIaas; //IaaS
     private String hyPriBoshRelease; //BOSH 릴리즈
     private String hyPriBoshCpiRelease; //BOSH CPI 릴리즈
+    private String hyPriBoshBpmRelease; //BOSH BPM 릴리즈
     private String hyPriSubnetId; //서브넷 ID(NET ID)
     private String hyPriSubnetRange; //서브넷 범위
     private String hyPriPublicStaticIp; //디렉터 공인 IP
@@ -146,6 +148,12 @@ public class HbBootstrapListDTO {
     }
     public void setBoshCpiRelease(String boshCpiRelease) {
         this.boshCpiRelease = boshCpiRelease;
+    }
+    public String getBoshBpmRelease() {
+        return boshBpmRelease;
+    }
+    public void setBoshBpmRelease(String boshBpmRelease) {
+        this.boshBpmRelease = boshBpmRelease;
     }
     public void setSubnetId(String subnetId) {
         this.subnetId = subnetId;
@@ -277,6 +285,12 @@ public class HbBootstrapListDTO {
     public void setHyPriBoshCpiRelease(String hyPriBoshCpiRelease) {
         this.hyPriBoshCpiRelease = hyPriBoshCpiRelease;
     }
+    public String getHyPriBoshBpmRelease() {
+        return hyPriBoshBpmRelease;
+    }
+    public void setHyPriBoshBpmRelease(String hyPriBoshBpmRelease) {
+        this.hyPriBoshBpmRelease = hyPriBoshBpmRelease;
+    }
     public String getHyPriSubnetId() {
         return hyPriSubnetId;
     }
@@ -367,4 +381,5 @@ public class HbBootstrapListDTO {
     public void setHyPubIaas(String hyPubIaas) {
         this.hyPubIaas = hyPubIaas;
     }
+    
 }
