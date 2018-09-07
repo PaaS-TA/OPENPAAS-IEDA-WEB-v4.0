@@ -37,6 +37,7 @@ public class CfService {
     @Autowired private ResourceDAO resourceDao;
     @Autowired MessageSource message;
     @Autowired private CommonDeployDAO commonDao;
+    
     final private static String SEPARATOR = System.getProperty("file.separator");
     final private static String DEPLOYMENT_FILE = LocalDirectoryConfiguration.getDeploymentDir() + SEPARATOR;
     /****************************************************************
@@ -59,12 +60,10 @@ public class CfService {
 
                 cfInfo.setCreateDate(vo.getCreateDate());
                 cfInfo.setUpdateDate(vo.getUpdateDate());
-                cfInfo.setDiegoYn(vo.getDiegoYn());
                 cfInfo.setDeploymentName(vo.getDeploymentName());
                 cfInfo.setDirectorUuid(vo.getDirectorUuid());
                 cfInfo.setReleaseName(vo.getReleaseName());
                 cfInfo.setReleaseVersion(vo.getReleaseVersion());
-                cfInfo.setAppSshFingerprint(vo.getAppSshFingerprint());
                 
                 cfInfo.setDomain(vo.getDomain());
                 cfInfo.setDescription(vo.getDescription());

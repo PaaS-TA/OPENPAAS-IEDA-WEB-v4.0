@@ -24,7 +24,6 @@ public class CfParamDTO {
         private String loggregatorReleaseName;
         private String loggregatorReleaseVersion;
         private String cfDbType;
-        private String appSshFingerprint; //SSH 핑거프린트
         
         // 1.2 기본정보
         @NotNull
@@ -91,12 +90,6 @@ public class CfParamDTO {
         }
         public void setLoggregatorReleaseVersion(String loggregatorReleaseVersion) {
             this.loggregatorReleaseVersion = loggregatorReleaseVersion;
-        }
-        public String getAppSshFingerprint() {
-            return appSshFingerprint;
-        }
-        public void setAppSshFingerprint(String appSshFingerprint) {
-            this.appSshFingerprint = appSshFingerprint;
         }
         public String getDomain() {
             return domain;

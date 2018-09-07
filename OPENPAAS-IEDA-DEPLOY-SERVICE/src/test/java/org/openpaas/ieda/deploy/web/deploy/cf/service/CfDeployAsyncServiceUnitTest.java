@@ -85,17 +85,13 @@ public class CfDeployAsyncServiceUnitTest extends BaseDeployControllerUnitTest {
      ***************************************************/
     public CfVO setCfInfo(String type) {
         CfVO vo = new CfVO();
-        vo.setAppSshFingerprint("fingerprint");
         vo.setCountryCode("seoul");
         vo.setCreateUserId("admin");
-        vo.setDeaDiskMB(8888);
-        vo.setDeaMemoryMB(41768);
         vo.setDeploymentFile("cf-yml");
         vo.setDeploymentName("cf");
         if(type.equalsIgnoreCase("null")) vo.setDeploymentFile("");
         vo.setDeployStatus("deploy");
         vo.setDescription("cf");
-        vo.setDiegoYn("N");
         vo.setDirectorUuid("uuid");
         vo.setDomain("domain");
         vo.setDomainOrganization("paas-ta");

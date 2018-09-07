@@ -541,7 +541,6 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
     ***************************************************/
     public CfParamDTO.Default setCfDefaultParamInfo() {
         CfParamDTO.Default dto = new CfParamDTO.Default();
-        dto.setAppSshFingerprint("fingerPrint");
         dto.setDeploymentName("cf");
         dto.setDirectorUuid("uuid");
         dto.setDomain("domain");
@@ -565,12 +564,8 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
         CfVO vo = new CfVO();
         vo.setId(1);
         vo.setIaasType("openstack");
-        vo.setDeaMemoryMB(31728);
-        vo.setDeaDiskMB(8192);
         vo.setReleaseName("cf");
         vo.setReleaseVersion("222");
-        vo.setAppSshFingerprint("fingerprint");
-        vo.setDiegoYn("N");
         vo.setDeploymentName("cf");
         vo.setDeploymentFile("cf-yml");
         vo.setDomain("test.domain");

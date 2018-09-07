@@ -716,7 +716,6 @@ CREATE TABLE ieda_hb_cfDeployment_resource_config
   instance_type_s                       VARCHAR(100) NOT NULL,
   instance_type_m                       VARCHAR(100) NOT NULL,
   instance_type_l                       VARCHAR(100) NOT NULL,
-  vm_password                           VARCHAR(100) NOT NULL,
   stemcell_version                      VARCHAR(100) NOT NULL,
   director_id                           VARCHAR(100),
   instance_type_s                       VARCHAR(100) NOT NULL,

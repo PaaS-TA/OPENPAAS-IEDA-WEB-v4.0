@@ -147,7 +147,6 @@ public class HbCfDeploymentDeployAsyncService {
                 vo.setDeployStatus( message.getMessage("common.deploy.status.done", null,  Locale.KOREA ) );
                 HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "done", Arrays.asList("", "CF-Deployment 설치가 완료되었습니다."));
             }
-            
         }catch (RuntimeException e) {
             status = "error";
             HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
