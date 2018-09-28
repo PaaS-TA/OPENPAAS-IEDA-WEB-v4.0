@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentDAO">
+<mapper namespace="org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentDAO">
 
-    <resultMap id="cfdeployment" type="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentVO">
+    <resultMap id="cfdeployment" type="org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentVO">
         <id property="id" column="id"/>
         <result property="recid" column="id"/>
         <result property="cfDeploymentConfigName" column="cf_deployment_config_name"/>
@@ -20,14 +20,14 @@
         <result property="createDate" column="create_date"/>
         <result property="updateUserId" column="update_user_id"/>
         <result property="updateDate" column="update_date"/>
-        <collection property="hbCfDeploymentDefaultConfigVO" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentDefaultConfigVO"  javaType="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentDefaultConfigVO">
+        <collection property="hbCfDeploymentDefaultConfigVO" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentDefaultConfigVO"  javaType="org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentDefaultConfigVO">
             <result property="defaultConfigName" column="default_config_name"/>
             <result property="cfDeploymentVersion" column="cf_deployment_version"/>
             <result property="domain" column="domain"/>
             <result property="domainOrganization" column="domain_organization"/>
             <result property="cfDbType" column="cf_db_type"/>
         </collection>
-        <collection property="hbCfDeploymentNetworkConfigVO" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentNetworkConfigVO" javaType="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentNetworkConfigVO">
+        <collection property="hbCfDeploymentNetworkConfigVO" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentNetworkConfigVO" javaType="org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentNetworkConfigVO">
             <result property="networkName" column="NETWORK_NAME" />
             <result property="publicStaticIp" column="PUBLIC_STATIC_IP" />
             <result property="subnetReservedIp" column="SUBNET_RESERVED_IP" />
@@ -53,7 +53,7 @@
             <result property="subnetStaticTo2" column="SUBNET_STATIC_TO_2" />
             <result property="availabilityZone2" column="AVAILABILITY_ZONE_2" />
         </collection>
-        <collection property="hbCfDeploymentInstanceConfigVO" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentInstanceConfigVO" javaType="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentInstanceConfigVO">
+        <collection property="hbCfDeploymentInstanceConfigVO" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentInstanceConfigVO" javaType="org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentInstanceConfigVO">
             <result property="instanceConfigName" column ="INSTANCE_CONFIG_NAME"/>
             <result property="adapter" column="ADAPTER"/>
             <result property="api" column="API"/>
@@ -72,7 +72,7 @@
             <result property="uaa" column="UAA"/>  
             <result property="scheduler" column="SCHEDULER"/>
         </collection>
-        <collection property="hbCfDeploymentCredentialConfigVO" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentCredentialConfigVO" javaType="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentCredentialConfigVO">
+        <collection property="hbCfDeploymentCredentialConfigVO" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentCredentialConfigVO" javaType="org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentCredentialConfigVO">
             <result property="credentialConfigName" column ="CREDENTIAL_CONFIG_NAME"/>
             <result property="domain" column ="DOMAIN"/>
             <result property="countryCode" column ="COUNTRY_CODE"/>
@@ -84,7 +84,7 @@
             <result property="releaseVersion" column ="RELEASE_VERSION"/>
             <result property="emailAddress" column ="EMAIL_ADDRESS"/>
         </collection>
-        <collection property="hbCfDeploymentResourceConfigVO" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentResourceConfigVO" javaType="org.openpaas.ieda.hbdeploy.web.deploy.cfDeployment.dao.HbCfDeploymentResourceConfigVO">
+        <collection property="hbCfDeploymentResourceConfigVO" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentResourceConfigVO" javaType="org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentResourceConfigVO">
             <result property="resourceConfigName" column="resource_config_name"/>
             <result property="stemcellName" column="stemcell_name"/>
             <result property="stemcellVersion" column="stemcell_version"/>
