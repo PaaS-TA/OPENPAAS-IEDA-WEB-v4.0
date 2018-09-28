@@ -78,8 +78,6 @@ public class HbBootstrapController extends BaseController {
         return new ResponseEntity<HbBootstrapVO>(vo, HttpStatus.OK);
     }
     
-
-    
     /***************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
      * @description : BOOTSTRAP 설치 정보 저장

@@ -399,53 +399,6 @@ CREATE table ieda_cf_job_template (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
-#diego
-CREATE TABLE ieda_diego
-(
-  id                                INT(11)       NOT NULL AUTO_INCREMENT,
-  iaas_type                         VARCHAR(255)  NOT NULL,
-  deployment_name                   VARCHAR(100),
-  director_uuid                     VARCHAR(100),
-  diego_release_name                VARCHAR(100),
-  diego_release_version             VARCHAR(100),
-  cflinuxfs2_rootfs_release_name    VARCHAR(100),
-  cflinuxfs2_rootfs_release_version VARCHAR(100),
-  cf_deployment                     VARCHAR(255),
-  garden_release_name               VARCHAR(100),
-  garden_release_version            VARCHAR(100),
-  etcd_release_name                 VARCHAR(100),
-  etcd_release_version              VARCHAR(100),
-  paasta_monitoring_use             VARCHAR(100),
-  cadvisor_driver_ip                VARCHAR(100),
-  key_file                          VARCHAR(100),
-  deployment_file                   VARCHAR(255),
-  deploy_status                     VARCHAR(100),
-  task_id                           INT(11),
-  create_user_id                    VARCHAR(255)  NOT NULL,
-  create_date                       DATE          NOT NULL,
-  update_user_id                    VARCHAR(255)  NOT NULL,
-  update_date                       DATE          NOT NULL,
-  user_add_ssh                      LONGTEXT NULL,
-  osconf_release_name               VARCHAR(255) NULL,
-  osconf_release_version            VARCHAR(255) NULL,
-  PRIMARY KEY (id)
-) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
-
-CREATE TABLE ieda_cf_diego
-(
-  id                                INT(11)       NOT NULL AUTO_INCREMENT,
-  cf_id                             INT(11),
-  diego_id                          INT(11),
-  iaas_type                         VARCHAR(255),
-  create_user_id                    VARCHAR(255)  NOT NULL,
-  create_date                       DATE          NOT NULL,
-  update_user_id                    VARCHAR(255)  NOT NULL,
-  update_date                       DATE          NOT NULL,
-  PRIMARY KEY (id)
-) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
-
-## SET GLOBAL innodb_file_format=Barracuda;
-## SET GLOBAL innodb_file_per_table=ON;
 
 CREATE TABLE ieda_service_pack
 (
@@ -568,9 +521,10 @@ CREATE TABLE ieda_bootstrap_resource_config
 (
   id                                    INT(11)      NOT NULL auto_increment,
   iaas_type                             VARCHAR(100) NOT NULL,
-  resource_config_name                   VARCHAR(100) NOT NULL,
-  stemcell_name                             VARCHAR(100) NOT NULL,
-  instance_type                     VARCHAR(100) NOT NULL,
+  resource_config_name                  VARCHAR(100) NOT NULL,
+  stemcell_name                         VARCHAR(100) NOT NULL,
+  instance_type                         VARCHAR(100) NOT NULL,
+  vm_password                           VARCHAR(100) NOT NULL,
   create_user_id                        VARCHAR(255) NOT NULL,
   create_date                           DATE         NOT NULL,
   update_user_id                        VARCHAR(255) NOT NULL,
@@ -807,20 +761,13 @@ ALTER TABLE ieda_system_releases AUTO_INCREMENT=1000;
 ALTER TABLE ieda_manifest_template AUTO_INCREMENT=1000;
 ALTER TABLE ieda_manifest AUTO_INCREMENT=1000;
 ALTER TABLE ieda_bootstrap AUTO_INCREMENT=1000;
-ALTER TABLE ieda_bosh AUTO_INCREMENT=1000;
 ALTER TABLE ieda_cf AUTO_INCREMENT=1000;
-ALTER TABLE ieda_diego AUTO_INCREMENT=1000;
-ALTER TABLE ieda_cf_diego AUTO_INCREMENT=1000;
 ALTER TABLE ieda_service_pack AUTO_INCREMENT=1000;
 ALTER TABLE ieda_iaas_account AUTO_INCREMENT=1000;
 ALTER TABLE ieda_iaas_config AUTO_INCREMENT=1000;
-ALTER TABLE ieda_job_template AUTO_INCREMENT=1000;
 ALTER TABLE ieda_cf_job_template AUTO_INCREMENT=1000;
 ALTER TABLE ieda_director_credential AUTO_INCREMENT=1000;
 ALTER TABLE ieda_hybrid_director_config AUTO_INCREMENT=1000;
-ALTER TABLE ieda_hybrid_bootstrap AUTO_INCREMENT=1000;
-ALTER TABLE ieda_private_bootstrap AUTO_INCREMENT=1000;
-ALTER TABLE ieda_public_bootstrap AUTO_INCREMENT=1000;
 ALTER TABLE ieda_bootstrap_credential_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_bootstrap_cpi_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_bootstrap_default_config AUTO_INCREMENT=1000;

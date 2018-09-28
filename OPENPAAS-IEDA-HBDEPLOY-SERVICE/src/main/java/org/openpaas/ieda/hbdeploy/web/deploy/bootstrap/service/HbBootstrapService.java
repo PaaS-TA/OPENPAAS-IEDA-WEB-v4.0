@@ -239,7 +239,6 @@ public class HbBootstrapService {
             items.add(new ReplaceItemDTO("[paastaMonitoringRelease]", ""));
             items.add(new ReplaceItemDTO("[influxdbIp]", ""));
         }
-        
         items.add(new ReplaceItemDTO("[publicStaticIp]", vo.getNetworkConfigVo().getPublicStaticIp()));
         items.add(new ReplaceItemDTO("[privateStaticIp]", vo.getNetworkConfigVo().getPrivateStaticIp()));
         items.add(new ReplaceItemDTO("[subnetId]", vo.getNetworkConfigVo().getSubnetId()));

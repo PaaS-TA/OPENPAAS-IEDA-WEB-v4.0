@@ -184,7 +184,7 @@ $(function(){
             }
         });
     } else {
-    	$("select[name=cfDeploymentVersion]").html("<option value='' >CF Deployment를 선택하세요.</option>");
+        $("select[name=cfDeploymentVersion]").html("<option value='' >CF Deployment를 선택하세요.</option>");
     }
 } 
 
@@ -504,10 +504,15 @@ function resetForm(status){
     </form>
     
     <div id="regPopupBtnDiv" style="text-align: center; margin-top: 5px;">
-        <span id="addBtn" onclick="$('#cfDetailForm').submit();" class="btn btn-primary">등록</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBCF_INSTANCE_ADD')">
+            <span id="addBtn" onclick="$('#cfDetailForm').submit();" class="btn btn-primary">등록</span>
+        </sec:authorize>
         <span id="resetBtn" onclick="resetForm('reset');" class="btn btn-info">취소</span>
-        <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBCF_INSTANCE_DELETE')">
+            <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        </sec:authorize>
     </div>
+
 </div>
 <script>
 $(function() {

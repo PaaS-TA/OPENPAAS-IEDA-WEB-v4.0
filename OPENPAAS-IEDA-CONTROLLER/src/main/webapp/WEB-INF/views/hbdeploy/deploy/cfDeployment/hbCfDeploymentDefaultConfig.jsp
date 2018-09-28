@@ -160,8 +160,8 @@ function settingDefaultInfo(){
     var cfDeployment = record.cfDeploymentVersion;
     
     defaultConfigInfo = {
-    	releaseName : cfDeployment.split("/")[0],
-    	releaseVersion : cfDeployment.split("/")[1]
+        releaseName : cfDeployment.split("/")[0],
+        releaseVersion : cfDeployment.split("/")[1]
     }
     getCfDeploymentVersionList(iaas);
     
@@ -318,7 +318,7 @@ function clearMainPage() {
  * 기능 : resetForm
  *********************************************************/
 function resetForm(status){
-	
+    
     $(".panel-body").find("p").remove();
     $(".panel-body").children().children().children().css("borderColor", "#bbb");
     $("input[name=defaultConfigName]").val("");
@@ -413,9 +413,13 @@ function resetForm(status){
         </div>
     </form>
     <div id="regPopupBtnDiv" style="text-align: center; margin-top: 5px;">
-        <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBCF_DEFAULT_ADD')">
+            <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+        </sec:authorize>
         <span id="resetBtn" onclick="resetForm('reset');" class="btn btn-info">취소</span>
-        <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBCF_DEFAULT_DELETE')">
+            <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        </sec:authorize>
     </div>
 </div>
 <script>
@@ -475,7 +479,7 @@ $(function() {
                 setHybridInvalidHandlerStyle(errors, validator);
             }
         }, submitHandler: function (form) {
-        	registHbCfDeploymentDefaultConfigInfo();
+            registHbCfDeploymentDefaultConfigInfo();
         }
     });
 });

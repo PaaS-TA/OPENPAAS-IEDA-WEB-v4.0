@@ -23,7 +23,6 @@ import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.deploy.web.common.base.BaseDeployControllerUnitTest;
 import org.openpaas.ieda.deploy.web.common.dao.CommonDeployDAO;
 import org.openpaas.ieda.deploy.web.common.dao.ManifestTemplateVO;
-import org.openpaas.ieda.deploy.web.common.dto.ReplaceItemDTO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dao.CfDAO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dao.CfVO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dto.CfListDTO;
@@ -45,19 +44,19 @@ import org.springframework.test.context.web.WebAppConfiguration;
 public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
 
     @InjectMocks
-    CfService mockCfService;
+    private CfService mockCfService;
     @Mock
-    CfDAO mockCfDAO;
+    private CfDAO mockCfDAO;
     @Mock
-    CommonDeployDAO mockCommonDeployDAO;
+    private CommonDeployDAO mockCommonDeployDAO;
     @Mock
-    NetworkDAO mockNetworkDAO;
+    private NetworkDAO mockNetworkDAO;
     @Mock
-    ResourceDAO mockResourceDAO;
+    private ResourceDAO mockResourceDAO;
     @Mock
-    CommonCodeDAO mockCommonCodeDAO;
+    private CommonCodeDAO mockCommonCodeDAO;
     @Mock
-    MessageSource mockMessageSource;
+    private MessageSource mockMessageSource;
 
 
 

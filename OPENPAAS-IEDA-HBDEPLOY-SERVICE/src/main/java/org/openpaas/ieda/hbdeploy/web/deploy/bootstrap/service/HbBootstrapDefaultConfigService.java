@@ -65,10 +65,10 @@ public class HbBootstrapDefaultConfigService {
             vo.setBoshRelease(dto.getBoshRelease().trim());
             vo.setCredentialKeyName(dto.getCredentialKeyName());
             vo.setNtp(dto.getNtp());
-            vo.setBoshCpiRelease(dto.getBoshCpiRelease().trim());
-            vo.setBoshBpmRelease(dto.getBoshBpmRelease().trim());
-            vo.setEnableSnapshots(dto.getEnableSnapshots().trim());
-            vo.setSnapshotSchedule(dto.getSnapshotSchedule().trim());
+            vo.setBoshCpiRelease(dto.getBoshCpiRelease());
+            vo.setBoshBpmRelease(dto.getBoshBpmRelease());
+            vo.setEnableSnapshots(dto.getEnableSnapshots());
+            vo.setSnapshotSchedule(dto.getSnapshotSchedule());
             vo.setUpdateUserId(principal.getName());
             vo.setPaastaMonitoringUse(dto.getPaastaMonitoringUse());
             vo.setPaastaMonitoringIp(dto.getPaastaMonitoringIp());

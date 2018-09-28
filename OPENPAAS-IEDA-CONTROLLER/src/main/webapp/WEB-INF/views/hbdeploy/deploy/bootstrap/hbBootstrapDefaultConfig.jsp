@@ -528,7 +528,7 @@ function settingDefaultInfo(){
     }
     if( !checkEmpty(record.paastaMonitoringUse) ){
         if( record.paastaMonitoringUse == "true"){
-        	
+            
             $("input[name='paastaMonitoring']").attr("checked", true);
             $("input[name='ingestorIp']").removeAttr("disabled");
             $("input[name='ingestorIp']").val(record.paastaMonitoringIp);
@@ -766,20 +766,20 @@ function resetForm(status){
                         </div>
                     </div>
                     <div class="w2ui-field">
-                        <label style="width:40%;text-align: left;padding-left: 20px;">PaaS-TA 모니터링 Ingestor 서버 IP</label>
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Ingestor 서버 IP</label>
                         <div>
                             <input class="form-control" name = "ingestorIp" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)10.0.0.0"/>
                         </div>
                     </div>
                     
                     <div class="w2ui-field">
-                        <label style="width:40%;text-align: left;padding-left: 20px;">PaaS-TA 모니터링 Influxdb 서버 IP</label>
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Influxdb 서버 IP</label>
                         <div>
                             <input class="form-control" name = "influxdbIp" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)10.0.0.0"/>
                         </div>
                     </div>
                     <div class="w2ui-field"> 
-                        <label style="width:40%;text-align: left;padding-left: 20px;">PaaS-TA 모니터링 릴리즈</label>
+                        <label style="width:40%;text-align: left;padding-left: 20px;">모니터링 릴리즈</label>
                         <div>
                             <select name="paastaMonitoringRelease" class="form-control" style="width: 320px; margin-left: 20px;">
                                 <option value="">PaaS-TA 모니터링 릴리즈를 선택하세요.</option>
@@ -791,9 +791,14 @@ function resetForm(status){
         </div>
     </form>
     <div id="regPopupBtnDiv" style="text-align: center; margin-top: 5px;">
-        <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_DEFAULT_ADD')">
+            <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+        </sec:authorize>
         <span id="resetBtn" onclick="resetForm('reset');" class="btn btn-info">취소</span>
-        <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_DEFAULT_DELETE')">
+            <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        </sec:authorize>
+        
     </div>
 </div>
 

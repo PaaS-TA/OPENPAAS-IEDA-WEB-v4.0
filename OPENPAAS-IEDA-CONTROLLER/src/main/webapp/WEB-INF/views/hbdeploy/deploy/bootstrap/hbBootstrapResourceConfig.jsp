@@ -246,7 +246,7 @@ function deleteBootstrapResourceConfigInfo(id, resourceConfigName){
  * 설명 : 스템셀 목록 조회
  ***************************************************************** */
 function getStemcellList(iaas){
-	
+    
     var url = "/common/deploy/stemcell/list/bootstrap/" + iaas;
     $.ajax({
         type : "GET",
@@ -262,7 +262,7 @@ function getStemcellList(iaas){
                     option += "<option "+ obj.stemcellFileName +">"+obj.stemcellFileName+"</option>";
                 });
             }else if (data.records.length == 0){
-            	if (iaas == 'nothing'){
+                if (iaas == 'nothing'){
                     option = "<option value=''>인프라 환경을 먼저 선택하세요.</option>";
                 }else{
                     option = "<option value=''>스템셀이 없습니다.</option>";
@@ -383,9 +383,13 @@ function resetForm(status){
         </div>
     </form>
     <div id="regPopupBtnDiv" style="text-align: center; margin-top: 5px;">
-        <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_RESOURCE_ADD')">
+            <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+        </sec:authorize>
         <span id="resetBtn" onclick="resetForm('reset');" class="btn btn-info">취소</span>
-        <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_RESOURCE_DELETE')">
+            <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        </sec:authorize>
     </div>
 </div>
 <script>
@@ -439,7 +443,7 @@ $(function() {
                 setHybridInvalidHandlerStyle(errors, validator);
             }
         }, submitHandler: function (form) {
-        	registBootstrapResourceConfigInfo();
+            registBootstrapResourceConfigInfo();
         }
     });
 });

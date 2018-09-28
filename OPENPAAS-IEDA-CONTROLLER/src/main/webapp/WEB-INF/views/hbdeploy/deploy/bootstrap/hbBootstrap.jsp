@@ -1011,15 +1011,15 @@ function popupComplete(){
     <div class="pdt20"> 
         <div class="title fl">배포 가능 한 Private/Public BOOTSTRAP 목록 (더블 클릭) </div>
         <div class="fr"> 
-            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_INSTALL_ADD')">
             <span id="installBtn" class="btn btn-primary"  style="width:120px">정보 등록</span>
             </sec:authorize>
             &nbsp;
-            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_INSTALL_ADD')">
             <span id="modifyBtn" class="btn btn-info" style="width:120px">정보 수정</span>
             </sec:authorize>
             &nbsp;
-            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_DELETE')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_INSTALL_DELETE')">
             <span id="deleteBtn" class="btn btn-danger" style="width:120px">정보 삭제</span>
             </sec:authorize>
         </div>
@@ -1030,7 +1030,7 @@ function popupComplete(){
     <div class="pdt20"> 
         <div class="title fl">배포 할 Private/Public BOOTSTRAP 목록 (더블 클릭)</div>
         <div class="fr"> 
-            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_INSTALL_ADD')">
             <span id="installVmBtn" class="btn btn-primary"  style="width:120px">VM 설치</span>
             </sec:authorize>
         </div>
@@ -1040,10 +1040,10 @@ function popupComplete(){
     <div class="pdt20"> 
         <div class="title fl">배포 한 Private/Public BOOTSTRAP 목록 </div>
         <div class="fr">
-            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_INSTALL_ADD')">
             <span id="modifyVmBtn" class="btn btn-info"  style="width:120px">VM 수정</span>
             </sec:authorize>
-            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_INSTALL_DELETE')">
             <span id="deleteVmBtn" class="btn btn-danger"  style="width:120px">VM 삭제</span>
             </sec:authorize>
         </div>
