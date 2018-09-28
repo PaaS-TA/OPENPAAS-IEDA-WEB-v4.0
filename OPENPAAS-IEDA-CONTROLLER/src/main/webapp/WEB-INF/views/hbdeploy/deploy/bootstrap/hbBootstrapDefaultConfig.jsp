@@ -190,9 +190,9 @@ function checkBoshVersion(selected){
     }else{
         var versionInfo = selected.split("bosh-");
         versionInfo = versionInfo[1].split(".tgz");
-        versionInfo = parseFloat(versionInfo);
+        versionInfo = parseInt(versionInfo);
         console.log(versionInfo);
-        if(versionInfo >= 266.2){
+        if(versionInfo >= 266){
             getLocalBoshList('bpm');
             $("#bpmConfDiv").show();
         }else{
