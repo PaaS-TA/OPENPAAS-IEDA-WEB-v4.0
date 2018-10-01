@@ -38,7 +38,7 @@ public class HbCfDeploymentResourceConfigController extends BaseController{
      * @return : String
     ***************************************************/
     @RequestMapping(value = "/deploy/hbCfDeployment/resourceConfig", method = RequestMethod.GET)
-    public String goNetworkConfig() {
+    public String goResourceConfig() {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbCfDeployment/resourceConfig"); }
         return "/hbdeploy/deploy/cfDeployment/hbCfDeploymentResourceConfig";
     }

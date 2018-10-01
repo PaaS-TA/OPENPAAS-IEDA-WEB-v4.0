@@ -42,7 +42,7 @@ public class HbCfDeploymentNetworkConfigController  extends BaseController{
      * @return : ResponseEntity<CfDeploymentVO>
     *****************************************************************/
     @RequestMapping(value = "/deploy/hbCfDeployment/networkConfig/list", method = RequestMethod.GET)
-    public ResponseEntity<HashMap<String, Object>> getRecourceConfigInfoList() {
+    public ResponseEntity<HashMap<String, Object>> getNetworkConfigInfoList() {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbCfDeployment/networkConfig/list"); }
         List<HbCfDeploymentNetworkConfigVO> NetworkConfigList = service.getNetworkConfigInfoList();
         HashMap<String, Object> list = new HashMap<String, Object>();
