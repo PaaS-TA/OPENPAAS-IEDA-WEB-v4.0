@@ -89,14 +89,14 @@ public class CfDeleteDeployAsyncService {
             
             DeleteMethod deleteMethod = new DeleteMethod(DirectorRestHelper.getDeleteDeploymentURI(defaultDirector.getDirectorUrl(), defaultDirector.getDirectorPort(), deploymentName));
             deleteMethod = (DeleteMethod)DirectorRestHelper.setAuthorization(defaultDirector.getUserId(), defaultDirector.getUserPassword(), (HttpMethodBase)deleteMethod);
-        
+            
             int statusCode = httpClient.executeMethod(deleteMethod);
             if( statusCode == HttpStatus.MOVED_PERMANENTLY.value() || statusCode == HttpStatus.MOVED_TEMPORARILY.value() ) {
                 Header location = deleteMethod.getResponseHeader("Location");
                 String taskId = DirectorRestHelper.getTaskId(location.getValue());
                 DirectorRestHelper.trackToTask(defaultDirector, messagingTemplate, messageEndpoint, httpClient, taskId, "event", principal.getName());
             }else {
-                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "done", Arrays.asList("CF 삭제가 완료되었습니다."));
+                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "done", Arrays.asList("CF 삭제에 실패 하였습니다."));
             }
             deleteCfInfo(vo);
         } catch(RuntimeException e){

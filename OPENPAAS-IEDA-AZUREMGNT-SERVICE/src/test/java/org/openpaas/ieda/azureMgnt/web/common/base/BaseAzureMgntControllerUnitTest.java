@@ -24,7 +24,6 @@ public class BaseAzureMgntControllerUnitTest {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(auth);
         securityContext.getAuthentication().getPrincipal();
-        
         return auth;
     }
 }

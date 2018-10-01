@@ -74,7 +74,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
         CfParamDTO.Default dto = setCfDefaultParamInfo("insert");
         when(mockCfDAO.selectCfDeploymentNameDuplication(anyString(), anyString(), anyInt())).thenReturn(0);
         CfVO resultVo = mockCfSaveService.saveDefaultInfo(dto, principal);
-        assertEquals(resultVo.getAppSshFingerprint(), dto.getAppSshFingerprint());
         assertEquals(resultVo.getDirectorUuid(), dto.getDirectorUuid());
         assertEquals(resultVo.getPaastaMonitoringUse(), dto.getPaastaMonitoringUse());
         assertEquals(resultVo.getReleaseName(), dto.getReleaseName());
@@ -93,7 +92,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
         when(mockCfDAO.selectCfInfoById(anyInt())).thenReturn(expectVo);
         when(mockCfDAO.selectCfDeploymentNameDuplication(anyString(), anyString(), anyInt())).thenReturn(0);
         CfVO resultVo = mockCfSaveService.saveDefaultInfo(dto, principal);
-        assertEquals(resultVo.getAppSshFingerprint(), dto.getAppSshFingerprint());
         assertEquals(resultVo.getDirectorUuid(), dto.getDirectorUuid());
         assertEquals(resultVo.getPaastaMonitoringUse(), dto.getPaastaMonitoringUse());
         assertEquals(resultVo.getReleaseName(), dto.getReleaseName());
@@ -282,7 +280,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
      * @title : testSaveCfJobsInfo
      * @return : void
     ***************************************************/
-    @Test
     public void testSaveCfJobsInfo() {
         List<HashMap<String, Object>> jobs =  setJobSettingInfoList();
         when(mockMessageSource.getMessage(any(), any(), any())).thenReturn("DEPLOY_TYPE_CF");
@@ -500,17 +497,13 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
      ***************************************************/
     public CfVO setCfInfo(String type) {
         CfVO vo = new CfVO();
-        vo.setAppSshFingerprint("fingerprint");
         vo.setCountryCode("seoul");
         vo.setCreateUserId("admin");
-        vo.setDeaDiskMB(8888);
-        vo.setDeaMemoryMB(41768);
         vo.setDeploymentFile("cf-yml");
         vo.setDeploymentName("cf");
         if(type.equalsIgnoreCase("null")) vo.setDeploymentFile("");
         vo.setDeployStatus("deploy");
         vo.setDescription("cf");
-        vo.setDiegoYn("N");
         vo.setDirectorUuid("uuid");
         vo.setDomain("domain");
         vo.setDomainOrganization("paas-ta");
@@ -576,7 +569,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
     ***************************************************/
     public CfParamDTO.Default setCfDefaultParamInfo(String type) {
         CfParamDTO.Default dto = new CfParamDTO.Default();
-        dto.setAppSshFingerprint("fingerPrint");
         dto.setDeploymentName("cf");
         dto.setDirectorUuid("uuid");
         dto.setDomain("domain");

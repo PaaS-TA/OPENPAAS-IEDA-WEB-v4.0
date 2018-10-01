@@ -453,9 +453,13 @@ function getCfDeployment(iaas) {
         </div>
     </form>
     <div id="regPopupBtnDiv" style="text-align: center; margin-top: 5px;">
-        <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+    	<sec:authorize access="hasAuthority('DEPLOY_HBCF_CREDENTIAL_ADD')">
+        	<span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+        </sec:authorize>
         <span id="resetBtn" onclick="resetForm('reset');" class="btn btn-info">취소</span>
-        <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBCF_CREDENTIAL_DELETE')">
+        	<span id="deleteBtn" class="btn btn-danger">삭제</span>
+        </sec:authorize>
     </div>
 </div>
 <script>

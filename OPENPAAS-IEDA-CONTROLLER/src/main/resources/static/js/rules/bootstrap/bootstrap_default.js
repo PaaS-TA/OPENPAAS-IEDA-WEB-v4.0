@@ -30,6 +30,12 @@ $(function() {
                 required: function(){
                     return checkEmpty( $(".w2ui-msg-body select[name='boshCpiRelease']").val() );
                 }
+            }, boshBpmRelease: { 
+                required: function(){
+                    if(!($(".w2ui-msg-body select[name='boshRelease']").val()=='bosh-264.7.0.tgz')){
+                        return checkEmpty( $(".w2ui-msg-body select[name='boshBpmRelease']").val() );
+                    }else return false;
+                }
             }, snapshotSchedule: { 
                 required: function(){
                     if( $(".w2ui-msg-body input:radio[name=enableSnapshots]:checked").val() == "true"){
@@ -74,6 +80,8 @@ $(function() {
                 required:  "BOSH 릴리즈" + select_required_msg
             }, boshCpiRelease: { 
                 required:  "BOSH CPI 릴리즈"+select_required_msg
+            }, boshBpmRelease: { 
+                required:  "BOSH BPM 릴리즈"+select_required_msg
             }, snapshotSchedule: { 
                 required:  "스냅샷 스케쥴"+text_required_msg
             }, ingestorIp: {

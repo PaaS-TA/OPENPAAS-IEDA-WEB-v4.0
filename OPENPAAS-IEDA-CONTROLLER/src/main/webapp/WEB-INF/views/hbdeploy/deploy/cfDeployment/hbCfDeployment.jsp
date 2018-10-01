@@ -106,19 +106,24 @@ $(function() {
            ],
            onSelect : function(event) {
                event.onComplete = function() {
-                   $('#installVmBtn').attr('disabled', false);
                }
            },onDblClick: function (event) {
+             var record = w2ui['config_cfDeployment_grid2'].get(event.recid);
              var grid = this;
-             // need timer for nicer visual effect that record was selected
+             var gridName = "";
+             console.log(record.deployStatus);
+             if(record.deployStatus != null){
+                 gridName = "config_cfDeployment_grid3";
+             } else {
+                 gridName = "config_cfDeployment_grid";
+             }
              setTimeout(function () {
-                 w2ui['config_cfDeployment_grid'].add( $.extend({}, grid.get(event.recid), { selected : false }) );
+                 w2ui[''+gridName+''].add( $.extend({}, grid.get(event.recid), { selected : false }) );
                  grid.selectNone();
                  grid.remove(event.recid);
              }, 150);
            },onUnselect : function(event) {
                event.onComplete = function() {
-                   $('#installVmBtn').attr('disabled', true);
                }
            },onLoad:function(event){
                if(event.xhr.status == 403){
@@ -165,7 +170,7 @@ $(function() {
                     }
                  }
              , {field: 'defaultConfigInfo', caption: '배포 명 ', size: '150px'}
-             , {field: 'hbCfDeploymentDefaultConfigVO.cfDeploymentVersion', caption: 'CF Deploment ', size: '150px'}
+             , {field: 'hbCfDeploymentDefaultConfigVO.cfDeploymentVersion', caption: 'CF Deployment ', size: '150px'}
              , {field: 'hbCfDeploymentDefaultConfigVO.domain', caption: 'CF 도메인 ', size: '150px'}
              , {field: 'hbCfDeploymentNetworkConfigVO.publicStaticIp', caption: 'Public IP ', size: '150px'}
              , {field: 'hbCfDeploymentCredentialConfigVO.credentialConfigKeyFileName', caption: 'Credential File Name ', size: '200px',
@@ -185,7 +190,6 @@ $(function() {
              }
              , {field: 'stemcell', caption: 'Stemcell', size: '350px'
                  , render:function(record){
-                       console.log(record);
                        return record.hbCfDeploymentResourceConfigVO.stemcellName +"/"+ record.hbCfDeploymentResourceConfigVO.stemcellVersion;
                      }
                  }
@@ -222,7 +226,6 @@ $(function() {
                  location.href = "/abuse";
                  event.preventDefault();
              }
-             console.log(event);
          },onError : function(event) {
          }, onDblClick: function (event) {
              var grid = this;
@@ -272,7 +275,6 @@ $(function() {
         }
         var record = w2ui['config_cfDeployment_grid'].get(selected);
         cfDeploymentInfo = record;
-        console.log(cfDeploymentInfo);
         w2popup.open({
             width   : 900,
             height  : 500,
@@ -310,7 +312,6 @@ $(function() {
         }
         var record = w2ui['config_cfDeployment_grid3'].get(selected);
         cfDeploymentInfo = record;
-        console.log(cfDeploymentInfo);
         w2popup.open({
             width   : 900,
             height  : 500,
@@ -460,6 +461,7 @@ function firstInstallPopup(cfDeploymentInfo){
                         if ( response.messages != null ){
                             for ( var i=0; i < response.messages.length; i++) {
                                 installLogs.append(response.messages[i] + "\n").scrollTop( installLogs[0].scrollHeight );
+                                
                             }
                             if ( response.state.toLowerCase() != "started" ) {
                                 if ( response.state.toLowerCase() == "done" )    message = message + " 설치가 완료되었습니다."; 
@@ -727,7 +729,6 @@ function saveCfDeploymentInfo(){
         instanceConfigInfo     : $(".w2ui-msg-body select[name='instanceConfigInfo']").val(),
         credentialConfigInfo     : $(".w2ui-msg-body select[name='credentialConfigInfo']").val()
     }
-    console.log(cfDeploymentInfo);
     $.ajax({
         type : "PUT",
         url : "/deploy/hbCfDeployment/install/save",
@@ -901,7 +902,6 @@ function doButtonStyle(){
     $('#modifyVmBtn').attr('disabled', true);
     $('#deleteBtn').attr('disabled', true);
     $('#deleteVmBtn').attr('disabled', true);
-    $('#installVmBtn').attr('disabled', true);
 }
 
 /******************************************************************
@@ -974,15 +974,15 @@ function popupComplete(){
     <div class="pdt20"> 
         <div class="title fl">배포 가능 한 Private/Public CF Deployment 목록 (더블 클릭) </div>
         <div class="fr"> 
-            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBCF_INSTALL')">
             <span id="installBtn" class="btn btn-primary"  style="width:120px">정보 등록</span>
             </sec:authorize>
             &nbsp;
-            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBCF_INSTALL')">
             <span id="modifyBtn" class="btn btn-info" style="width:120px">정보 수정</span>
             </sec:authorize>
             &nbsp;
-            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBCF_DELETE')">
             <span id="deleteBtn" class="btn btn-danger" style="width:120px">정보 삭제</span>
             </sec:authorize>
         </div>
@@ -993,7 +993,7 @@ function popupComplete(){
     <div class="pdt20"> 
         <div class="title fl">배포 할 Private/Public CF Deployment 목록 (더블 클릭)</div>
         <div class="fr"> 
-            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBCF_INSTALL')">
             <span id="installVmBtn" class="btn btn-primary"  style="width:120px">VM 설치</span>
             </sec:authorize>
         </div>
@@ -1003,10 +1003,10 @@ function popupComplete(){
     <div class="pdt20"> 
         <div class="title fl">배포 한 Private/Public CF Deployment 목록 </div>
         <div class="fr"> 
-            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBCF_INSTALL')">
             <span id="modifyVmBtn" class="btn btn-info" style="width:120px">VM 수정</span>
             </sec:authorize>
-            <sec:authorize access="hasAuthority('DEPLOY_BOOTSTRAP_INSTALL')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBCF_DELETE')">
             <span id="deleteVmBtn" class="btn btn-danger"  style="width:120px">VM 삭제</span>
             </sec:authorize>
         </div>

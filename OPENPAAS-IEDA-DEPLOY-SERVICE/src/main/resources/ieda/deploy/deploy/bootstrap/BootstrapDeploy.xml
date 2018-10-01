@@ -20,6 +20,7 @@
     <result property="credentialKeyName" column ="CREDENTIAL_KEY_NAME"/>
     <result property="boshRelease" column ="BOSH_RELEASE"/>
     <result property="boshCpiRelease" column ="BOSH_CPI_RELEASE"/>
+    <result property="boshBpmRelease" column ="BOSH_BPM_RELEASE"/>
     <result property="osConfRelease" column ="OS_CONF_RELEASE"/>
     <result property="snapshotSchedule" column ="SNAPSHOT_SCHEDULE"/>
     <result property="enableSnapshots" column ="ENABLE_SNAPSHOTS"/>
@@ -87,6 +88,7 @@
     Select  bootstrap.id as id
         ,bootstrap.iaas_type as iaas_type
         ,bootstrap.bosh_cpi_release as bosh_cpi_release
+        ,bootstrap.bosh_bpm_release as bosh_bpm_release
         ,bootstrap.os_conf_release as os_conf_release
         ,bootstrap.bosh_password as bosh_password
         ,bootstrap.bosh_release as bosh_release
@@ -125,6 +127,7 @@ Order by iaas_type asc, update_date asc
             ,bootstrap.iaas_config_id as config_id
             ,bootstrap.iaas_type as iaas_type
             ,bootstrap.bosh_cpi_release as bosh_cpi_release
+            ,bootstrap.bosh_bpm_release as bosh_bpm_release
             ,bootstrap.os_conf_release as os_conf_release
             ,bootstrap.bosh_password as bosh_password
             ,bootstrap.bosh_release as bosh_release
@@ -237,6 +240,7 @@ Order by iaas_type asc, update_date asc
     Update ieda_bootstrap Set
         iaas_config_id = #{bootstrap.iaasConfigId}
         ,bosh_cpi_release = #{bootstrap.boshCpiRelease}
+        ,bosh_bpm_release = #{bootstrap.boshBpmRelease}
         ,bosh_password = #{bootstrap.boshPassword}
         ,ntp= #{bootstrap.ntp}
         ,bosh_release = #{bootstrap.boshRelease}

@@ -45,7 +45,6 @@ public class HbDeploymentsController extends BaseController {
     public ResponseEntity<HashMap<String, Object>> listDeployment(@PathVariable String directorId){
         if(LOGGER.isInfoEnabled()){ LOGGER.info("================================> 설치 정보 목록을 조회 요청"); }
         List<DeploymentInfoDTO> contents = deploymentService.listDeployment(directorId);
-        System.out.println("111");
         HashMap<String, Object> result = new HashMap<String, Object>();
         int size = 0;
         

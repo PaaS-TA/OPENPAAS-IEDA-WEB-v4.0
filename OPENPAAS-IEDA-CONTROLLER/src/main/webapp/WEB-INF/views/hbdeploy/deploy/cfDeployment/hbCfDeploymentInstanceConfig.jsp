@@ -184,7 +184,7 @@ $(function(){
             }
         });
     } else {
-    	$("select[name=cfDeploymentVersion]").html("<option value='' >CF Deployment를 선택하세요.</option>");
+        $("select[name=cfDeploymentVersion]").html("<option value='' >CF Deployment를 선택하세요.</option>");
     }
 } 
 
@@ -221,7 +221,7 @@ function settingCfJobs(value, type, record){
         w2alert("CF Deployment 버전을 확인하세요.");
     } else {
         var release_version = value.split("/")[1];
-        var deploy_type = "DEPLOY_TYPE_HYBRID_CF";
+        var deploy_type = "DEPLOY_TYPE_CF";
         $.ajax({
             type : "GET",
             url : "/deploy/hbCfDeployment/instanceConfig/job/list/"+release_version+"/"+ deploy_type,
@@ -504,10 +504,15 @@ function resetForm(status){
     </form>
     
     <div id="regPopupBtnDiv" style="text-align: center; margin-top: 5px;">
-        <span id="addBtn" onclick="$('#cfDetailForm').submit();" class="btn btn-primary">등록</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBCF_INSTANCE_ADD')">
+            <span id="addBtn" onclick="$('#cfDetailForm').submit();" class="btn btn-primary">등록</span>
+        </sec:authorize>
         <span id="resetBtn" onclick="resetForm('reset');" class="btn btn-info">취소</span>
-        <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBCF_INSTANCE_DELETE')">
+            <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        </sec:authorize>
     </div>
+
 </div>
 <script>
 $(function() {

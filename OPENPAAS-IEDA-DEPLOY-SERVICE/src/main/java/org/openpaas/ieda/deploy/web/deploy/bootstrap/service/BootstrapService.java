@@ -78,6 +78,7 @@ public class BootstrapService {
                 dto.setIaas(vo.getIaasType());
                 dto.setBoshRelease(vo.getBoshRelease());
                 dto.setBoshCpiRelease(vo.getBoshCpiRelease());
+                dto.setBoshBpmRelease(vo.getBoshBpmRelease());
                 dto.setSubnetId(vo.getSubnetId());
                 dto.setSubnetRange(vo.getSubnetRange());
                 dto.setPublicStaticIp(vo.getPublicStaticIp());
@@ -295,6 +296,7 @@ public class BootstrapService {
         items.add(new ReplaceItemDTO("[directorName]", vo.getDirectorName()));
         items.add(new ReplaceItemDTO("[boshRelease]", RELEASE_DIR + SEPARATOR + vo.getBoshRelease()));
         items.add(new ReplaceItemDTO("[boshCpiRelease]", RELEASE_DIR + SEPARATOR + vo.getBoshCpiRelease()));
+        items.add(new ReplaceItemDTO("[boshBpmRelease]", RELEASE_DIR + SEPARATOR + vo.getBoshBpmRelease()));
         items.add(new ReplaceItemDTO("[enableSnapshot]", vo.getEnableSnapshots()));
         items.add(new ReplaceItemDTO("[snapshotSchedule]", vo.getSnapshotSchedule()));
         items.add(new ReplaceItemDTO("[ntp]", vo.getNtp()));

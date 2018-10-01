@@ -54,6 +54,7 @@ var defaultLayout = {
                    { field: 'credentialKeyName', caption: '디렉터 인증서', size:'180px', style:'text-align:center;'},
                    { field: 'boshRelease', caption: 'BOSH 릴리즈', size:'130px', style:'text-align:center;'},
                    { field: 'boshCpiRelease', caption: 'BOSH CPI 릴리즈', size:'180px', style:'text-align:center;'},
+                   { field: 'boshBpmRelease', caption: 'BOSH BPM 릴리즈', size:'180px', style:'text-align:center;'},
                    { field: 'ntp', caption: 'NTP 서버', size:'120px', style:'text-align:center;'}
                   ],
             onSelect : function(event) {
@@ -162,12 +163,44 @@ function getLocalBoshList(type){
                     
                 }
                 $("select[name='boshRelease']").html(options);
+            }else if(type == "bpm"){
+                var options = "<option value=''>BPM 릴리즈를 선택하세요.</option>";
+                for( var i=0; i<data.length; i++ ){
+                    if( data[i] == boshInfo.boshBpmRelease ){
+                        options += "<option value='"+data[i]+"' selected >"+data[i]+"</option>";
+                    }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
+                    
+                }
+                $("select[name='boshBpmRelease']").html(options);
             }
         },
         error : function( e, status ) {
             w2alert("Bosh 릴리즈 "+search_data_fail_msg, "BOOTSTRAP 설치");
         }
     });
+}
+
+/******************************************************************
+ * 기능 : checkBoshVersion(selected)
+ * 설명 : BOSH 버전 체크 >> BPM Release 적용 여부 확인
+ ******************************************************************/
+function checkBoshVersion(selected){
+    if(selected == ''){
+       return ;
+    }else{
+        var versionInfo = selected.split("bosh-");
+        versionInfo = versionInfo[1].split(".tgz");
+        versionInfo = parseInt(versionInfo);
+        console.log(versionInfo);
+        if(versionInfo >= 266){
+            getLocalBoshList('bpm');
+            $("#bpmConfDiv").show();
+        }else{
+            $("#bpmConfDiv").hide();
+            var options = "<option value=''>BPM 릴리즈를 선택하세요.</option>";
+            $("select[name='boshBpmRelease']").html(options);
+        }
+    }
 }
 
 /********************************************************
@@ -382,6 +415,8 @@ function getInitBoshReleaseList(iaasType){
     getLocalPaasTAMonitoringReleaseList('BOSH_MONITORING_AGENT');
     //BOSH 릴리즈 정보 가져오기
     getLocalBoshList('bosh');
+    //BPM 릴리즈 정보 가져오기
+    getLocalBoshList('bpm');
     
 
 }
@@ -437,6 +472,7 @@ function registBootstrapDefaultConfigInfo(){
             boshRelease         : $("select[name=boshRelease]").val(),
             osConfRelease       : $("select[name=osConfRelease]").val(),
             boshCpiRelease      : $("select[name=boshCpiRelease]").val(),
+            boshBpmRelease      : $("select[name=boshBpmRelease]").val(),
             enableSnapshots     : $("input:radio[name=enableSnapshots]:checked").val(),
             snapshotSchedule    : $("input[name=snapshotSchedule]").val(),
             influxdbIp : influxdbIp,
@@ -492,7 +528,7 @@ function settingDefaultInfo(){
     }
     if( !checkEmpty(record.paastaMonitoringUse) ){
         if( record.paastaMonitoringUse == "true"){
-        	
+            
             $("input[name='paastaMonitoring']").attr("checked", true);
             $("input[name='ingestorIp']").removeAttr("disabled");
             $("input[name='ingestorIp']").val(record.paastaMonitoringIp);
@@ -506,6 +542,9 @@ function settingDefaultInfo(){
             $("input[name='paastaMonitoring']").attr("checked", false);
             //$("select[name=paastaMonitoringRelease]").attr("disabled", true);
         }
+    }
+    if( !checkEmpty(record.boshBpmRelease) ){
+        $("#bpmConfDiv").show();
     }
     getInitBoshReleaseList(iaas);
     
@@ -583,6 +622,7 @@ function resetForm(status){
     
     $("select[name=boshCpiRelease]").html("<option value='' >BOSH CPI 릴리즈를 선택하세요.</option>");
     $("select[name=boshCpiRelease]").attr("disabled", "disabled");
+    $("select[name=boshBpmRelease]").html("<option value='' >BOSH BPM 릴리즈를 선택하세요.</option>");
     $("input[name='paastaMonitoring']").attr("checked", false);
     $("select[name=paastaMonitoringRelease]").html("<option value='' >PaaS-TA 모니터링 릴리즈를 선택하세요.</option>");
     $("select[name=paastaMonitoringRelease]").attr("disabled", "disabled");
@@ -668,7 +708,7 @@ function resetForm(status){
                            <span class="glyphicon glyphicon glyphicon-question-sign boshRelase-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="hover" data-html="true" title="설치 지원 버전 목록"></span>
                        </label>
                        <div>
-                           <select class="form-control" disabled name="boshRelease" style="width: 320px; margin-left: 20px;">
+                           <select class="form-control" disabled name="boshRelease" style="width: 320px; margin-left: 20px;" onchange="checkBoshVersion(this.value)">
                                <option value="" >BOSH 릴리즈를 선택하세요.</option>
                            </select>
                        </div>
@@ -679,6 +719,15 @@ function resetForm(status){
                        <div>
                            <select class="form-control" disabled  name="boshCpiRelease" style="width: 320px; margin-left: 20px;">
                                <option value="" >BOSH CPI 릴리즈를 선택하세요.</option>
+                           </select>
+                       </div>
+                   </div>
+                   
+                   <div class="w2ui-field" id="bpmConfDiv" hidden="true">
+                       <label style="width:40%;text-align: left;padding-left: 20px;">BOSH BPM 릴리즈</label>
+                       <div>
+                           <select class="form-control" name="boshBpmRelease" style="width: 320px; margin-left: 20px;">
+                               <option value="" >BOSH BPM 릴리즈를 선택하세요.</option>
                            </select>
                        </div>
                    </div>
@@ -717,20 +766,20 @@ function resetForm(status){
                         </div>
                     </div>
                     <div class="w2ui-field">
-                        <label style="width:40%;text-align: left;padding-left: 20px;">PaaS-TA 모니터링 Ingestor 서버 IP</label>
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Ingestor 서버 IP</label>
                         <div>
                             <input class="form-control" name = "ingestorIp" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)10.0.0.0"/>
                         </div>
                     </div>
                     
                     <div class="w2ui-field">
-                        <label style="width:40%;text-align: left;padding-left: 20px;">PaaS-TA 모니터링 Influxdb 서버 IP</label>
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Influxdb 서버 IP</label>
                         <div>
                             <input class="form-control" name = "influxdbIp" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)10.0.0.0"/>
                         </div>
                     </div>
                     <div class="w2ui-field"> 
-                        <label style="width:40%;text-align: left;padding-left: 20px;">PaaS-TA 모니터링 릴리즈</label>
+                        <label style="width:40%;text-align: left;padding-left: 20px;">모니터링 릴리즈</label>
                         <div>
                             <select name="paastaMonitoringRelease" class="form-control" style="width: 320px; margin-left: 20px;">
                                 <option value="">PaaS-TA 모니터링 릴리즈를 선택하세요.</option>
@@ -742,9 +791,14 @@ function resetForm(status){
         </div>
     </form>
     <div id="regPopupBtnDiv" style="text-align: center; margin-top: 5px;">
-        <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_DEFAULT_ADD')">
+            <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+        </sec:authorize>
         <span id="resetBtn" onclick="resetForm('reset');" class="btn btn-info">취소</span>
-        <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_DEFAULT_DELETE')">
+            <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        </sec:authorize>
+        
     </div>
 </div>
 
@@ -777,6 +831,12 @@ $(function() {
             }, boshCpiRelease: { 
                 required: function(){
                     return checkEmpty( $("select[name='boshCpiRelease']").val() );
+                }
+            }, boshBpmRelease: { 
+                required: function(){
+                    if(!($("select[name='boshRelease']").val()=='bosh-264.7.0.tgz')){
+                        return checkEmpty( $(".w2ui-msg-body select[name='boshBpmRelease']").val() );
+                    }else return false;
                 }
             }, snapshotSchedule: { 
                 required: function(){
@@ -844,6 +904,8 @@ $(function() {
                 required:  "BOSH 릴리즈" + select_required_msg
             }, boshCpiRelease: { 
                 required:  "BOSH CPI 릴리즈"+select_required_msg
+            }, boshBpmRelease: { 
+                required:  "BOSH BPM 릴리즈"+select_required_msg
             }, snapshotSchedule: { 
                 required:  "스냅샷 스케쥴"+text_required_msg
             }, ingestorIp: {

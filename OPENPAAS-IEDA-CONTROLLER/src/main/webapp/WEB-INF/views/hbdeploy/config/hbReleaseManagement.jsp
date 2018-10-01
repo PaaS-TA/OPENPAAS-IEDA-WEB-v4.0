@@ -807,10 +807,10 @@ $(window).resize(function() {
         <div class="title fl">Common 릴리즈 목록</div>
         <div class="fr"> 
             <!-- Btn -->
-            <sec:authorize access="hasAuthority('CONFIG_RELEASE_REGIST')">
+            <sec:authorize access="hasAuthority('CONFIG_HBRELEASE_ADD')">
             <span id="doRegist" class="btn btn-primary" style="width:120px" >등록</span>
             </sec:authorize>
-            <sec:authorize access="hasAuthority('CONFIG_RELEASE_DELETE')">
+            <sec:authorize access="hasAuthority('CONFIG_HBRELEASE_DELETE')">
             <span id="doDelete" class="btn btn-danger" style="width:120px" >삭제</span>
             </sec:authorize>
             <!-- //Btn -->

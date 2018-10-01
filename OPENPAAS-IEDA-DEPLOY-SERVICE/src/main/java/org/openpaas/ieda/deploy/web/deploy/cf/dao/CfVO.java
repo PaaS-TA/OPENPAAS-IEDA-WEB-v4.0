@@ -12,7 +12,6 @@ public class CfVO {
     
     private Integer id; //id
     private String iaasType; //iaas 유형
-    private String diegoYn;//diego 사용 유무
     
     private Date createDate; //생성알자
     private String createUserId;//생성자
@@ -26,9 +25,6 @@ public class CfVO {
     private String releaseVersion; //릴리즈 버전
     private String loggregatorReleaseName;
     private String loggregatorReleaseVersion;
-    private String appSshFingerprint;//SSH 핑거프린트
-    private Integer deaMemoryMB; //deaDiskMB
-    private Integer deaDiskMB; //deaDiskMB
     private String cfDbType;
     
     // 1.2 기본정보
@@ -85,12 +81,6 @@ public class CfVO {
     }
     public void setIaasType(String iaasType) {
         this.iaasType = iaasType;
-    }
-    public String getDiegoYn() {
-        return diegoYn;
-    }
-    public void setDiegoYn(String diegoYn) {
-        this.diegoYn = diegoYn;
     }
     public Date getCreateDate() {
         return createDate;
@@ -154,25 +144,6 @@ public class CfVO {
 
     public void setLoggregatorReleaseVersion(String loggregatorReleaseVersion) {
         this.loggregatorReleaseVersion = loggregatorReleaseVersion;
-    }
-
-    public String getAppSshFingerprint() {
-        return appSshFingerprint;
-    }
-    public void setAppSshFingerprint(String appSshFingerprint) {
-        this.appSshFingerprint = appSshFingerprint;
-    }
-    public Integer getDeaMemoryMB() {
-        return deaMemoryMB;
-    }
-    public void setDeaMemoryMB(Integer deaMemoryMB) {
-        this.deaMemoryMB = deaMemoryMB;
-    }
-    public Integer getDeaDiskMB() {
-        return deaDiskMB;
-    }
-    public void setDeaDiskMB(Integer deaDiskMB) {
-        this.deaDiskMB = deaDiskMB;
     }
     public String getDomain() {
         return domain;

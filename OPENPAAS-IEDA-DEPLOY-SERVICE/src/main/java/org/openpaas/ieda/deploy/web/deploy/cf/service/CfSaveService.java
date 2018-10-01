@@ -58,7 +58,6 @@ public class CfSaveService {
         vo.setReleaseVersion(dto.getReleaseVersion());
         vo.setLoggregatorReleaseName(dto.getLoggregatorReleaseName());
         vo.setLoggregatorReleaseVersion(dto.getLoggregatorReleaseVersion());
-        vo.setAppSshFingerprint(dto.getAppSshFingerprint());
         vo.setUserAddSsh(dto.getUserAddSsh());
         vo.setOsConfReleaseName(dto.getOsConfReleaseName());
         vo.setOsConfReleaseVersion(dto.getOsConfReleaseVersion());

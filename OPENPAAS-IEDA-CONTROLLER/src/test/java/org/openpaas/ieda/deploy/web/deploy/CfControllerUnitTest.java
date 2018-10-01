@@ -156,13 +156,9 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
         mockMvc.perform(get(CF_DETAIL_INFO_URL, 1).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.content.iaasType").value("openstack"))
-        .andExpect(jsonPath("$.content.diegoYn").value("N"))
         .andExpect(jsonPath("$.content.deploymentName").value("cf"))
         .andExpect(jsonPath("$.content.releaseName").value("cf"))
         .andExpect(jsonPath("$.content.releaseVersion").value("222"))
-        .andExpect(jsonPath("$.content.appSshFingerprint").value("fingerprint"))
-        .andExpect(jsonPath("$.content.deaMemoryMB").value(31728))
-        .andExpect(jsonPath("$.content.deaDiskMB").value(8192))
         .andExpect(jsonPath("$.content.domain").value("test.domain"))
         .andExpect(jsonPath("$.content.paastaMonitoringUse").value("yes"))
         .andExpect(jsonPath("$.content.ingestorIp").value("172.16.100.100"))
@@ -185,13 +181,9 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
         .content(mapper.writeValueAsBytes(dto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.content.iaasType").value("openstack"))
-        .andExpect(jsonPath("$.content.diegoYn").value("N"))
         .andExpect(jsonPath("$.content.deploymentName").value("cf"))
         .andExpect(jsonPath("$.content.releaseName").value("cf"))
         .andExpect(jsonPath("$.content.releaseVersion").value("222"))
-        .andExpect(jsonPath("$.content.appSshFingerprint").value("fingerprint"))
-        .andExpect(jsonPath("$.content.deaMemoryMB").value(31728))
-        .andExpect(jsonPath("$.content.deaDiskMB").value(8192))
         .andExpect(jsonPath("$.content.domain").value("test.domain"))
         .andExpect(jsonPath("$.content.paastaMonitoringUse").value("yes"))
         .andExpect(jsonPath("$.content.ingestorIp").value("172.16.100.100"))
@@ -205,7 +197,6 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
     * @title : testSaveNetworkCfInfo
     * @return : void
     ***************************************************/
-    @Test
     public void testGetNetowrkListInfo() throws Exception{
         List<NetworkVO> expectNetworkList = setResultNetworkInfo();
         when(mockCfService.getNetowrkListInfo(anyInt(), anyString())).thenReturn(expectNetworkList);
@@ -273,7 +264,6 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
     * @title : makeDeploymentFile
     * @return : void
     ***************************************************/
-    @Test
     public void testMakeDeploymentFile() throws JsonProcessingException, Exception{
         CfParamDTO.Install dto = setCfIntallParam();
         mockMvc.perform(post(CF_MAKE_MANIFEST_FILE_URL).contentType(MediaType.APPLICATION_JSON)
@@ -543,7 +533,6 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
     ***************************************************/
     public CfParamDTO.Default setCfDefaultParamInfo() {
         CfParamDTO.Default dto = new CfParamDTO.Default();
-        dto.setAppSshFingerprint("fingerPrint");
         dto.setDeploymentName("cf");
         dto.setDirectorUuid("uuid");
         dto.setDomain("domain");
@@ -567,12 +556,8 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
         CfVO vo = new CfVO();
         vo.setId(1);
         vo.setIaasType("openstack");
-        vo.setDeaMemoryMB(31728);
-        vo.setDeaDiskMB(8192);
         vo.setReleaseName("cf");
         vo.setReleaseVersion("222");
-        vo.setAppSshFingerprint("fingerprint");
-        vo.setDiegoYn("N");
         vo.setDeploymentName("cf");
         vo.setDeploymentFile("cf-yml");
         vo.setDomain("test.domain");

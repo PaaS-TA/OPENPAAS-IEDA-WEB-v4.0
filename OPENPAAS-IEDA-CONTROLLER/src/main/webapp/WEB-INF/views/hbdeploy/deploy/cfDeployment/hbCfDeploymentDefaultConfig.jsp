@@ -15,7 +15,7 @@
 var text_required_msg = '<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
 var select_required_msg='<spring:message code="common.select.vaildate.required.message"/>';//을(를) 선택하세요.
 var search_data_fail_msg ='클라우드 인프라 환경을 선택하세요.';
-var defaultConfigInfo = "";//기본 정보
+var defaultConfigInfo = [];//기본 정보
 var iaas = "";
 var resourceLayout = {
         layout2: {
@@ -154,12 +154,18 @@ function settingDefaultInfo(){
     $("input[name=defaultInfoId]").val(record.recid);
     $("input[name=defaultConfigName]").val(record.defaultConfigName);
     $("select[name=iaasType]").val(record.iaasType);
-    $("select[name=cfDeploymentVersion]").html("<option value='"+record.cfDeploymentVersion+"' selected >"+record.cfDeploymentVersion+"</option>");
     $("input[name=domain]").val(record.domain);
     $("input[name=domainOrganization]").val(record.domainOrganization);
     
-    option += "<option value='"+record.cfDbType+"' selected >"+record.cfDbType+"</option>";
+    var cfDeployment = record.cfDeploymentVersion;
     
+    defaultConfigInfo = {
+        releaseName : cfDeployment.split("/")[0],
+        releaseVersion : cfDeployment.split("/")[1]
+    }
+    getCfDeploymentVersionList(iaas);
+    
+    option += "<option value='"+record.cfDbType+"' selected >"+record.cfDbType+"</option>";
      if("mySql" == record.cfDbType){
         option += "<option value='postgres'> Postgres </option>";
        }else{
@@ -173,7 +179,7 @@ function settingDefaultInfo(){
  * 기능 : doSearch
  *********************************************************/
 function doSearch() {
-    defaultConfigInfo="";//기본 정보
+    defaultConfigInfo=[];//기본 정보
     iaas = "";
     resetForm();
     
@@ -312,7 +318,7 @@ function clearMainPage() {
  * 기능 : resetForm
  *********************************************************/
 function resetForm(status){
-	
+    
     $(".panel-body").find("p").remove();
     $(".panel-body").children().children().children().css("borderColor", "#bbb");
     $("input[name=defaultConfigName]").val("");
@@ -407,9 +413,13 @@ function resetForm(status){
         </div>
     </form>
     <div id="regPopupBtnDiv" style="text-align: center; margin-top: 5px;">
-        <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBCF_DEFAULT_ADD')">
+            <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+        </sec:authorize>
         <span id="resetBtn" onclick="resetForm('reset');" class="btn btn-info">취소</span>
-        <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBCF_DEFAULT_DELETE')">
+            <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        </sec:authorize>
     </div>
 </div>
 <script>
@@ -469,7 +479,7 @@ $(function() {
                 setHybridInvalidHandlerStyle(errors, validator);
             }
         }, submitHandler: function (form) {
-        	registHbCfDeploymentDefaultConfigInfo();
+            registHbCfDeploymentDefaultConfigInfo();
         }
     });
 });

@@ -17,6 +17,7 @@
     <result property="credentialKeyName" column ="CREDENTIAL_KEY_NAME"/>
     <result property="boshRelease" column ="BOSH_RELEASE"/>
     <result property="boshCpiRelease" column ="BOSH_CPI_RELEASE"/>
+    <result property="boshBpmRelease" column = "BOSH_BPM_RELEASE"/>
     <result property="osConfRelease" column ="OS_CONF_RELEASE"/>
     <result property="snapshotSchedule" column ="SNAPSHOT_SCHEDULE"/>
     <result property="enableSnapshots" column ="ENABLE_SNAPSHOTS"/>
@@ -37,6 +38,7 @@
         ,credential_key_name
         ,boshRelease
         ,bosh_cpi_release
+        ,bosh_bpm_release
         ,enable_snapshots
         ,snapshot_schedule
         ,paasta_monitoring_use
@@ -57,6 +59,7 @@
         ,credential_key_name
         ,boshRelease
         ,bosh_cpi_release
+        ,bosh_bpm_release
         ,enable_snapshots
         ,snapshot_schedule
         ,paasta_monitoring_use
@@ -76,6 +79,7 @@
         ,#{default.credentialKeyName}
         ,#{default.boshRelease}
         ,#{default.boshCpiRelease}
+        ,#{default.boshBpmRelease}
         ,#{default.enableSnapshots}
         ,#{default.snapshotSchedule}
         ,#{default.paastaMonitoringUse}
@@ -99,6 +103,7 @@
         ,boshRelease = #{default.boshRelease}
         ,ntp = #{default.ntp}
         ,bosh_cpi_release = #{default.boshCpiRelease}
+        ,bosh_bpm_release = #{default.boshBpmRelease}
         ,enable_snapshots = #{default.enableSnapshots}
         ,snapshot_schedule = #{default.snapshotSchedule}
         ,paasta_monitoring_use = #{default.paastaMonitoringUse}
@@ -122,6 +127,7 @@
         ,credential_key_name
         ,boshRelease
         ,bosh_cpi_release
+        ,bosh_bpm_release
         ,enable_snapshots
         ,snapshot_schedule
         ,paasta_monitoring_use

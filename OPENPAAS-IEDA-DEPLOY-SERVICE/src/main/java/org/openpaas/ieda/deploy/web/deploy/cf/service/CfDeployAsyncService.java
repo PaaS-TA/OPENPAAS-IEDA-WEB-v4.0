@@ -110,6 +110,7 @@ public class CfDeployAsyncService {
             StringBuffer accumulatedBuffer = new StringBuffer();
             while ((info = bufferedReader.readLine()) != null){
                 accumulatedBuffer.append(info).append("\n");
+                Thread.sleep(20);
                 DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList(info));
             }
             if( accumulatedBuffer != null ) {
@@ -147,7 +148,7 @@ public class CfDeployAsyncService {
      * @title : setDefualtInfo
      * @return : void
     *****************************************************************/
-    private void setDefualtInfo(List<String> cmd, CfVO vo, ManifestTemplateVO result) {
+    public void setDefualtInfo(List<String> cmd, CfVO vo, ManifestTemplateVO result) {
         cmd.add("--vars-store="+CF_CREDENTIAL_DIR+ SEPARATOR +vo.getKeyFile()+"");
         cmd.add("-v");
         cmd.add("deployment_name="+vo.getDeploymentName()+"");
@@ -170,7 +171,7 @@ public class CfDeployAsyncService {
      * @title : setPublicNetworkIpUse
      * @return : void
     *****************************************************************/
-    private void setJobSetting(List<String> cmd, CfVO vo, ManifestTemplateVO result) {
+    public void setJobSetting(List<String> cmd, CfVO vo, ManifestTemplateVO result) {
         if (vo.getJobs()!=null && vo.getJobs().size()!=0 ){
             for(int i=0; i<vo.getJobs().size(); i++){
                 cmd.add("-v");
@@ -186,7 +187,7 @@ public class CfDeployAsyncService {
      * @title : setPublicNetworkIpUse
      * @return : void
     *****************************************************************/
-    private void setPublicNetworkIpUse(List<String> cmd, CfVO vo, ManifestTemplateVO result) {
+    public void setPublicNetworkIpUse(List<String> cmd, CfVO vo, ManifestTemplateVO result) {
         if(vo.getNetworks() != null && vo.getNetworks().size() != 0){
             for( int i=0; i<vo.getNetworks().size(); i++ ){
                 if("external".equals(vo.getNetworks().get(i).getNet().toLowerCase()) 
@@ -209,7 +210,7 @@ public class CfDeployAsyncService {
      * @title : postgresDbUse
      * @return : CfVO
     *****************************************************************/
-    private void postgresDbUse(List<String> cmd, ManifestTemplateVO result) {
+    public void postgresDbUse(List<String> cmd, ManifestTemplateVO result) {
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getOptionEtc());
     }

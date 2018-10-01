@@ -23,7 +23,6 @@ import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.deploy.web.common.base.BaseDeployControllerUnitTest;
 import org.openpaas.ieda.deploy.web.common.dao.CommonDeployDAO;
 import org.openpaas.ieda.deploy.web.common.dao.ManifestTemplateVO;
-import org.openpaas.ieda.deploy.web.common.dto.ReplaceItemDTO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dao.CfDAO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dao.CfVO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dto.CfListDTO;
@@ -45,19 +44,19 @@ import org.springframework.test.context.web.WebAppConfiguration;
 public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
 
     @InjectMocks
-    CfService mockCfService;
+    private CfService mockCfService;
     @Mock
-    CfDAO mockCfDAO;
+    private CfDAO mockCfDAO;
     @Mock
-    CommonDeployDAO mockCommonDeployDAO;
+    private CommonDeployDAO mockCommonDeployDAO;
     @Mock
-    NetworkDAO mockNetworkDAO;
+    private NetworkDAO mockNetworkDAO;
     @Mock
-    ResourceDAO mockResourceDAO;
+    private ResourceDAO mockResourceDAO;
     @Mock
-    CommonCodeDAO mockCommonCodeDAO;
+    private CommonCodeDAO mockCommonCodeDAO;
     @Mock
-    MessageSource mockMessageSource;
+    private MessageSource mockMessageSource;
 
 
 
@@ -90,11 +89,9 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
         when(mockResourceDAO.selectResourceInfo(anyInt(), anyString())).thenReturn(expectResource);
         List<CfListDTO> resultList = mockCfService.getCfLIst("openstack", "cf");
         for (int i = 0; i < resultList.size(); i++) {
-            assertEquals(expectCfList.get(i).getAppSshFingerprint(), resultList.get(i).getAppSshFingerprint());
             assertEquals(expectCfList.get(i).getDeploymentFile(), resultList.get(i).getDeploymentFile());
             assertEquals(expectCfList.get(i).getDeploymentName(), resultList.get(i).getDeploymentName());
             assertEquals(expectCfList.get(i).getDeployStatus(), resultList.get(i).getDeployStatus());
-            assertEquals(expectCfList.get(i).getDiegoYn(), resultList.get(i).getDiegoYn());
             assertEquals(expectCfList.get(i).getIngestorIp(), resultList.get(i).getIngestorIp());
             assertEquals(expectCfList.get(i).getPaastaMonitoringUse(), resultList.get(i).getPaastaMonitoringUse());
             assertEquals(expectCfList.get(i).getTaskId(), resultList.get(i).getTaskId());
@@ -120,11 +117,9 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
         when(mockResourceDAO.selectResourceInfo(anyInt(), anyString())).thenReturn(expectResource);
         List<CfListDTO> resultList = mockCfService.getCfLIst("openstack", "cf");
         for (int i = 0; i < resultList.size(); i++) {
-            assertEquals(expectCfList.get(i).getAppSshFingerprint(), resultList.get(i).getAppSshFingerprint());
             assertEquals(expectCfList.get(i).getDeploymentFile(), resultList.get(i).getDeploymentFile());
             assertEquals(expectCfList.get(i).getDeploymentName(), resultList.get(i).getDeploymentName());
             assertEquals(expectCfList.get(i).getDeployStatus(), resultList.get(i).getDeployStatus());
-            assertEquals(expectCfList.get(i).getDiegoYn(), resultList.get(i).getDiegoYn());
             assertEquals(expectCfList.get(i).getIngestorIp(), resultList.get(i).getIngestorIp());
             assertEquals(expectCfList.get(i).getPaastaMonitoringUse(), resultList.get(i).getPaastaMonitoringUse());
             assertEquals(expectCfList.get(i).getTaskId(), resultList.get(i).getTaskId());
@@ -145,15 +140,11 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
         when(mockMessageSource.getMessage(anyString(), anyObject(), anyObject())).thenReturn("DEPLOY_TYPE_CF");
         when(mockCfDAO.selectCfInfoById(anyInt())).thenReturn(expectCfInfo);
         CfVO resultCfInfo = mockCfService.getCfInfo(1);
-        assertEquals(expectCfInfo.getAppSshFingerprint(), resultCfInfo.getAppSshFingerprint());
         assertEquals(expectCfInfo.getCountryCode(), resultCfInfo.getCountryCode());
         assertEquals(expectCfInfo.getCreateUserId(), resultCfInfo.getCreateUserId());
-        assertEquals(expectCfInfo.getDeaDiskMB(), resultCfInfo.getDeaDiskMB());
-        assertEquals(expectCfInfo.getDeaMemoryMB(), resultCfInfo.getDeaMemoryMB());
         assertEquals(expectCfInfo.getDeploymentFile(), resultCfInfo.getDeploymentFile());
         assertEquals(expectCfInfo.getDeployStatus(), resultCfInfo.getDeployStatus());
         assertEquals(expectCfInfo.getDescription(), resultCfInfo.getDescription());
-        assertEquals(expectCfInfo.getDiegoYn(), resultCfInfo.getDiegoYn());
         assertEquals(expectCfInfo.getDirectorUuid(), resultCfInfo.getDirectorUuid());
     }
     
@@ -293,18 +284,14 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
      ***************************************************/
     public CfVO setCfInfo(String type) {
         CfVO vo = new CfVO();
-        vo.setAppSshFingerprint("fingerprint");
         vo.setNetworks(setNetworkInfoList("default"));
         vo.setNetwork(vo.getNetworks().get(0));
         vo.setCountryCode("seoul");
         vo.setCreateUserId("admin");
-        vo.setDeaDiskMB(8888);
-        vo.setDeaMemoryMB(41768);
         vo.setDeploymentFile("cf-yml");
         vo.setDeploymentName("cf");
         vo.setDeployStatus("deploy");
         vo.setDescription("cf");
-        vo.setDiegoYn("N");
         vo.setDirectorUuid("uuid");
         vo.setDomain("domain");
         vo.setDomainOrganization("paas-ta");
@@ -324,11 +311,9 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
         vo.setLocalityName("mapo");
         vo.setLoginSecret("test");
         vo.setResource(setResourceInfo());
-        if(type.equals("diego")) vo.setDiegoYn("true");
         if(type.equals("paas-ta")) {
             vo.setPaastaMonitoringUse("true");
             vo.setNetworks(setNetworkInfoList("size"));
-            vo.setDiegoYn("true");
         }
         if(type.equals("vsphere")){
             vo.setIaasType("vsphere");
@@ -492,18 +477,14 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
     public List<CfVO> setCfInfoList() {
         List<CfVO> list = new ArrayList<CfVO>();
         CfVO vo = new CfVO();
-        vo.setAppSshFingerprint("fingerprint");
         vo.setNetworks(setNetworkInfoList("default"));
         vo.setNetwork(vo.getNetworks().get(0));
         vo.setCountryCode("seoul");
         vo.setCreateUserId("admin");
-        vo.setDeaDiskMB(8888);
-        vo.setDeaMemoryMB(41768);
         vo.setDeploymentFile("cf-yml");
         vo.setDeploymentName("cf");
         vo.setDeployStatus("deploy");
         vo.setDescription("cf");
-        vo.setDiegoYn("N");
         vo.setDirectorUuid("uuid");
         vo.setDomain("domain");
         vo.setDomainOrganization("paas-ta");
@@ -524,16 +505,12 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
         vo.setLoginSecret("test");
         vo.getId();
         vo.getIaasType();
-        vo.getDiegoYn();
         vo.getCreateUserId();
         vo.getUpdateUserId();
         vo.getDeploymentName();
         vo.getDirectorUuid();
         vo.getReleaseName();
         vo.getReleaseVersion();
-        vo.getAppSshFingerprint();
-        vo.getDeaMemoryMB();
-        vo.getDeaDiskMB();
         vo.getDomain();
         vo.getDescription();
         vo.getDomainOrganization();

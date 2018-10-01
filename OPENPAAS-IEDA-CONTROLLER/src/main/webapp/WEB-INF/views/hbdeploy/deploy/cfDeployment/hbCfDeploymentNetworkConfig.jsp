@@ -729,9 +729,13 @@ function delInternalNetwork(preDiv, index){
         </div>
     </form>
     <div id="regPopupBtnDiv" style="text-align: center; margin-top: 5px;">
-        <span id="installBtn" onclick="$('#defaultNetworkInfoForm').submit();" class="btn btn-primary">등록</span>
+    	<sec:authorize access="hasAuthority('DEPLOY_HBCF_NETWORK_ADD')">
+        	<span id="installBtn" onclick="$('#defaultNetworkInfoForm').submit();" class="btn btn-primary">등록</span>
+        </sec:authorize>
         <span id="resetBtn" onclick="resetForm('reset');" class="btn btn-info">취소</span>
-        <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBCF_NETWORK_DELETE')">
+        	<span id="deleteBtn" class="btn btn-danger">삭제</span>
+        </sec:authorize>
     </div>
 </div>
 

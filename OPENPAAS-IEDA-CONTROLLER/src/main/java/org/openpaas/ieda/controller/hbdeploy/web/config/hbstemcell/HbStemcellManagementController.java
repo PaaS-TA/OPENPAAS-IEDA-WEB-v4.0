@@ -10,7 +10,6 @@ import javax.validation.Valid;
 import org.openpaas.ieda.controller.deploy.web.config.stemcell.StemcellManagementController;
 import org.openpaas.ieda.deploy.web.config.stemcell.dao.StemcellManagementVO;
 import org.openpaas.ieda.deploy.web.config.stemcell.dto.StemcellManagementDTO;
-import org.openpaas.ieda.deploy.web.config.stemcell.service.StemcellManagementUploadService;
 import org.openpaas.ieda.hbdeploy.web.config.stemcell.dao.HbStemcellManagementVO;
 import org.openpaas.ieda.hbdeploy.web.config.stemcell.dto.HbStemcellManagementDTO;
 import org.openpaas.ieda.hbdeploy.web.config.stemcell.service.HbStemcellManagementDownloadAsyncService;
