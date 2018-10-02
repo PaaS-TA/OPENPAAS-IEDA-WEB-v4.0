@@ -501,7 +501,7 @@ function secondInstallPopup(bootstrapInfo){
            iaasType: bootstrapInfo.iaasType
     };
     w2popup.open({
-        title   : bootstrapInfo.iaasType.toUpperCase()+" 클라우드 환경 BOOTSTRAP 설치</b>",
+        title   : "<b>"+ bootstrapInfo.iaasType.toUpperCase()+" 클라우드 환경 BOOTSTRAP 설치</b>",
         width   : 800,
         height  : 620,
         modal   : true,

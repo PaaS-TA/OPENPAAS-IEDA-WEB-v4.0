@@ -54,6 +54,16 @@ public class CredentialManagementServiceUnitTest extends BaseDeployControllerUni
         principal = getLoggined();
     }
     
+    @Test
+    public void test(){
+    	String boshRelease = "bosh-266.10.0.tgz";
+        String releaseVersion = boshRelease.replaceAll("[^0-9]", "");
+        String releaseName = boshRelease.replaceAll("[^A-Za-z]", "");
+        
+        System.out.println(releaseVersion);
+        System.out.println(releaseName);
+    }
+    
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description : 디렉터 인증서 목록 조회 UNIT TEST

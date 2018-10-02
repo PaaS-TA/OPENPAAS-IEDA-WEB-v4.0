@@ -105,6 +105,7 @@ public class CommonDeployService{
                 Files.setPosixFilePermissions(Paths.get(keyFilePath), pfp);
                 
             } catch (IOException e) {
+            	e.printStackTrace();
                 throw new CommonException(message.getMessage("common.internalServerError.exception.code", null, Locale.KOREA),
                         message.getMessage("common.internalServerError.message", null, Locale.KOREA), HttpStatus.INTERNAL_SERVER_ERROR);
             } finally {

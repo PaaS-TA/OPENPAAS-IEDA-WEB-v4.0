@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.httpclient.HttpClient;
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.deploy.api.director.utility.DirectorRestHelper;
@@ -19,6 +20,7 @@ import org.openpaas.ieda.deploy.web.config.setting.service.DirectorConfigService
 import org.openpaas.ieda.deploy.web.deploy.cf.dao.CfDAO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dao.CfVO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dto.CfParamDTO;
+import org.openpaas.ieda.hbdeploy.api.director.utility.HbDirectorRestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -111,21 +113,19 @@ public class CfDeployAsyncService {
             while ((info = bufferedReader.readLine()) != null){
                 accumulatedBuffer.append(info).append("\n");
                 Thread.sleep(20);
-                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList(info));
+                if(info.contains("Release")){
+                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList(info));
+                }
+                if(info.contains("Preparing deployment: Preparing deployment")){
+                    String taskId = info.split(" ")[1];
+                    HttpClient httpClient = DirectorRestHelper.getHttpClient(directorInfo.getDirectorPort());
+                    status = DirectorRestHelper.trackToTask(directorInfo, messagingTemplate, messageEndpoint, httpClient, taskId, "event", principal.getName());
+                }
             }
             if( accumulatedBuffer != null ) {
                 accumulatedLog = accumulatedBuffer.toString();
             }
             
-            if( accumulatedLog.contains("Failed deploying") || accumulatedLog.contains("Failed") || accumulatedLog.contains("error") 
-                || accumulatedLog.contains("invalid") || accumulatedLog.contains("not support") || accumulatedLog.contains("Expected") || accumulatedLog.contains("expected") || accumulatedLog.contains("refused") ){
-                status = "error";
-                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
-            } else {
-                status = "done";
-                vo.setDeployStatus( message.getMessage("common.deploy.status.done", null,  Locale.KOREA ) );
-                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "done", Arrays.asList("", "CF-Deployment 설치가 완료되었습니다."));
-            }
             
         }catch (RuntimeException e) {
             status = "error";

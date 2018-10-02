@@ -380,7 +380,10 @@ function resetForm(status){
     $("select[name=directorInfo]").attr("disabled", "disabled");
     $("select[name=stemcellName]").attr("disabled", "disabled");
     $("select[name=directorInfo]").html("<option value=''>디렉터 정보를 선택하세요.</option>");
+    $("select[name=directorInfo]").val("")
     $("select[name=stemcellName]").html("<option value=''>스템셀을 선택하세요.</option>");
+    $("select[name=stemcellName]").val("")
+    directorInfo = [];
     if(status=="reset"){
         w2ui['resource_GroupGrid'].clear();
         doSearch();

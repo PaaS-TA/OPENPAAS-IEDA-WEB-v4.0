@@ -6,10 +6,10 @@
 #infra_account_mgnt_wrap ul > li > ul.vSphere-box {margin-right:0; }
 #infra_account_mgnt_wrap ul > li > ul > li:nth-of-type(2){ border-bottom: 1px solid gray; margin-bottom: 10px;}
 #infra_account_mgnt_wrap ul > li > ul > li { text-align:center; font-size:15px; font-weight:bolder; color:#2196f3  }
-#infra_account_mgnt_wrap .aws-icon {  width:60%; margin-top:15%; margin-bottom:15px;  }
-#infra_account_mgnt_wrap .openstack-icon {  width:60%; margin-top:17%; margin-bottom:10px; }
-#infra_account_mgnt_wrap .google-icon {  width:60%; margin-top:3%; margin-bottom:15px;}
-#infra_account_mgnt_wrap .vSphere-icon {  width:60%; margin-top:20%; margin-bottom:15px; }
+#infra_account_mgnt_wrap .aws-icon {  width:60%; margin-top:10%; margin-bottom:15px;  }
+#infra_account_mgnt_wrap .openstack-icon {  width:60%; margin-top:13%; margin-bottom:10px; }
+#infra_account_mgnt_wrap .google-icon {  width:60%; margin-top:0%; margin-bottom:15px;}
+#infra_account_mgnt_wrap .vSphere-icon {  width:60%; margin-top:18%; margin-bottom:15px; }
 #infra_account_mgnt_wrap .azure-icon {  width:55%; margin-top:20%; margin-bottom:15px; }
 
 #main .well { background-color:#fff; border:1px solid #dcdcdc; border-radius:20px; }
