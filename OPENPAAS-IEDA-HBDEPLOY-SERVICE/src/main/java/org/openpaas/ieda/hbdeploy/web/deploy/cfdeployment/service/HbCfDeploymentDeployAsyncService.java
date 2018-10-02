@@ -141,7 +141,6 @@ public class HbCfDeploymentDeployAsyncService {
                     String taskId = info.split(" ")[1];
                     HttpClient httpClient = HbDirectorRestHelper.getHttpClient(directorInfo.getDirectorPort());
                     status = HbDirectorRestHelper.trackToTask(directorInfo, messagingTemplate, messageEndpoint, httpClient, taskId, "event", principal.getName());
-                    return;
                 }
             }
             if( accumulatedBuffer != null ) {

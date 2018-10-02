@@ -537,14 +537,14 @@ td {
                     <div class="w2ui-field">
                         <label style="width:36%;text-align: left; padding-left: 20px;">Resource Group</label>
                          <div id="resourceGroupInfoDiv">
-                            <select id="resourceGroupInfo" name="resourceGroupName" onClick = "azureResourceGroupOnchange(this.value, 'selected')" class="select" style="width:300px; font-size: 15px; height: 32px;"></select>
+                            <select id="resourceGroupInfo" name="resourceGroupName" onClick = "azureResourceGroupOnchange(this.value, 'selected')" class="select" style="width:300px; "></select>
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="width:36%;text-align: left; padding-left: 20px;">Location</label>
                          <div id="locationInfoDiv">
-                         <div id="locationInfo" style="width:300px; font-size: 15px; height: 26px; border: 1px solid #ccc; border-radius:2px; padding-left:5px; line-height:26px; background-color: #eee; color:#777 !important;" >리소스 그룹의 리전 명</div>
-                                <input id ="locationVal" name="location" hidden="true" readonly='readonly'  style="width:300px; font-size: 15px; height: 32px;"/> 
+                         <div id="locationInfo" style="width:300px; border: 1px solid #ccc; border-radius:2px; padding-left:5px; line-height:26px; background-color: #eee; color:#777 !important;" >리소스 그룹의 리전 명</div>
+                                <input id ="locationVal" name="location" hidden="true" readonly='readonly'  style="width:300px; "/> 
                         </div>
                     </div>
                     <div class="w2ui-field">

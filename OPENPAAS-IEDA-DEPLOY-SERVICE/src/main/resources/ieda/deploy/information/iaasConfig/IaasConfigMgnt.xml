@@ -160,7 +160,6 @@
       From ieda_iaas_config
     Where iaas_type = #{config.iaasType}
        And iaas_config_alias = #{config.iaasConfigAlias}
-       And id != #{config.id}
 </select>
 
 <insert id="insertIaasConfigInfo">

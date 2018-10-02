@@ -48,7 +48,15 @@ $(function() {
                    ,{field: 'nameTag', caption: 'Name', size: '20%', style: 'text-align:center', info: true}
                    ,{field: 'routeTableId', caption: 'Route Table ID', size: '20%', style: 'text-align:center'}
                    ,{field: 'associationCnt', caption: 'Explicitly Associated With', size: '20%', style: 'text-align:center'}
-                   ,{field: 'mainYN', caption: 'Main', size: '30%', style: 'text-align:center'} 
+                   ,{field: 'mainYN', caption: 'Main', size: '30%', style: 'text-align:center',
+                        render: function(record) {
+                            if(record.mainYN == false) {
+                                return "N";
+                            }else {
+                                return "Y";
+                            }
+                        }
+                   }
                    ,{field: 'vpcId', caption: 'VPC', size: '30%', style: 'text-align:center'}
                    ],
         onSelect: function(event) {
@@ -98,7 +106,8 @@ $(function() {
                      {field: 'recid',     caption: 'recid', hidden: true}
                    , {field: 'accountId',     caption: 'accountId', hidden: true}
                    , {field: 'routeTableId',     caption: 'routeTableId', hidden: true}
-                   , {field: 'destinationIpv4CidrBlock', caption: 'Destination', size: '50%', style: 'text-align:center'}
+                   , {field: 'destinationIpv4CidrBlock', caption: 'IPv4Destination', size: '50%', style: 'text-align:center'}
+                   , {field: 'ipv6CidrBlock', caption: 'IPv6Destination', size: '50%', style: 'text-align:center'}
                    , {field: 'targetId', caption: 'Target', size: '50%', style: 'text-align:center'}
                    , {field: 'status', caption: 'Status', size: '50%', style: 'text-align:center'}
                    , {field: 'propagatedYN', caption: 'Propagated', size: '50%', style: 'text-align:center'}
@@ -295,20 +304,18 @@ function setAssociateSubnetId(accountId){
         contentType : "application/json",
         async : true,
         success : function(data, status) {
+            console.log(data);
             subnetInfoArray = data;
             if( data!=null && data.length!=0 ){
                 var subnetInfo = "";
                 subnetInfo += "<select style='width:400px;' name='selectSubnetId' onchange='onchangesubnetInfo(this.value)';>";
+                subnetInfo += "<option seleted value=''>서브넷을 선택하세요.</option>";
                 for( var i=0; i<data.length; i++ ){
                     if(data[i].check != true && data[i].associationId == null){
                         subnetInfo += "<option value="+data[i].subnetId+">"+data[i].subnetId+"</option>"
-                        subnetInfo += "<option seleted value=''>서브넷을 선택하세요.</option>";
                     }
                 }
-                if($(".w2ui-msg-body select[name='selectSubnetId']").val()==""){
-                    subnetInfo += "<option value=''>사용 가능한 서브넷이 없습니다.</option>";
-                }
-                subnetInfo += "<select>";
+                subnetInfo += "</select>";
                 $(".w2ui-msg-body #subnetId").html(subnetInfo);
                 
             }else {
@@ -572,9 +579,9 @@ function setAwsTargetList(){
                var result = "";
                if(data != null && data.length != 0){
                    for(var i=0; i<data.length; i++){
-                	   
-                	   var splited =  data[i].split(" |");
-                	   result += "<option value='"+ splited[0] +"' >";
+                       
+                       var splited =  data[i].split(" |");
+                       result += "<option value='"+ splited[0] +"' >";
                        result += data[i];
                        result += "</option>"; 
                    }

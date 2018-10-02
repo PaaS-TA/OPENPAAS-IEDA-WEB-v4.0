@@ -85,9 +85,6 @@
         And common_access_user= #{account.commonAccessUser}
     </if>
     <choose>
-        <when test="account.iaasType == 'Openstack'">
-            And common_access_endpoint = #{account.commonAccessEndpoint} 
-        </when>
         <when test="account.iaasType == 'Google'">
             And common_project=#{account.commonProject}
             And google_json_key=#{account.googleJsonKeyPath}

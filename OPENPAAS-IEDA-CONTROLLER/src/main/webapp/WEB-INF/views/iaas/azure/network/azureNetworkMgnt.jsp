@@ -350,7 +350,6 @@ function addNewSubnet(){
  * 설명 : 해당 Supscription 에 대한  Azure 리소스 그룹 목록 조회 기능
  *********************************************************/
  function setAzureResourceGroupList(){
-	 w2popup.lock('', true);
      accountId = $("select[name='accountId']").val();
      $.ajax({
             type : "GET",
@@ -372,7 +371,6 @@ function addNewSubnet(){
                     result = "<option value=''>리소스 그룹이 존재 하지 않습니다.</option>"
                 }
                 $("#resourceGroupInfoDiv #resourceGroupInfo").html(result);
-                w2popup.unlock();
             },
             error : function(request, status, error) {
                 w2popup.unlock();

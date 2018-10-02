@@ -258,6 +258,8 @@ $(function() {
                     getCfDeploymentCredentialInfo();
                 }
             },onClose:function(event){
+                w2ui['config_cfDeployment_grid'].clear();
+                doSearch();
             }
         });
      });
@@ -294,6 +296,8 @@ $(function() {
                     getCfDeploymentCredentialInfo();
                 }
             },onClose:function(event){
+                w2ui['config_cfDeployment_grid'].clear();
+                doSearch();
             }
         });
      });
@@ -331,6 +335,8 @@ $(function() {
                     getCfDeploymentCredentialInfo();
                 }
             },onClose:function(event){
+                w2ui['config_cfDeployment_grid3'].clear();
+                doSearch();
             }
         });
      });

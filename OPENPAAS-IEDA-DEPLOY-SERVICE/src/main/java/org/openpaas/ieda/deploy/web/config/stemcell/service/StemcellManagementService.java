@@ -339,7 +339,12 @@ public class StemcellManagementService {
     public String setStemcellDownLoadSubUrlByVersionType(StemcellManagementDTO.Regist dto) {
         String subUrl = "";
             if(dto.getLight().toLowerCase().equalsIgnoreCase("true")){
-                subUrl = "light-bosh-stemcell";
+                if("azure".equalsIgnoreCase(dto.getIaasType()) && "windows".equalsIgnoreCase(dto.getOsName()) && "version".equalsIgnoreCase(dto.getFileType())){
+                    String windowsStemcellVersionLink = dto.getStemcellVersion().split("\\.")[0]+"/";
+                    subUrl = windowsStemcellVersionLink+"light-bosh-stemcell";
+                }
+                else subUrl = "light-bosh-stemcell";
+                
             }else{
                 subUrl = "bosh-stemcell";
             }

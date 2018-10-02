@@ -9,6 +9,7 @@
     <result property="iaasType" column="iaas_type"/>
     <result property="resourceConfigName" column="resource_config_name"/>
     <result property="stemcellName" column="stemcell_name"/>
+    <result property="stemcellVersion" column="stemcell_version"/>
     <result property="instanceTypeS" column="instance_type_s"/>
     <result property="instanceTypeM" column="instance_type_m"/>
     <result property="instanceTypeL" column="instance_type_l"/>

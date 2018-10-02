@@ -15,7 +15,7 @@
 var text_required_msg = '<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
 var select_required_msg='<spring:message code="common.select.vaildate.required.message"/>';//을(를) 선택하세요.
 var search_data_fail_msg ='클라우드 인프라 환경을 선택하세요.';
-var resourceConfigInfo = "";//리소스 정보
+var resourceConfigInfo = [];//리소스 정보
 var iaas = "";
 var resourceLayout = {
         layout2: {
@@ -153,7 +153,7 @@ function settingResourceInfo(){
     $("input[name=resourceConfigName]").val(record.resourceConfigName);
     $("select[name=iaasType]").val(record.iaasType);
     //$("select[name=iaasConfigId]").val(record.iaasConfigAlias);
-    $("select[name=stemcellName]").html("<option value='"+record.stemcellName+"' selected >"+record.stemcellName+"</option>");
+    getStemcellList(iaas);
     $("input[name=instanceType]").val(record.instanceType);
     $("input[name=vmPassword]").val(record.vmPassword);
 }
@@ -163,7 +163,7 @@ function settingResourceInfo(){
  * 기능 : doSearch
  *********************************************************/
 function doSearch() {
-    resourceConfigInfo="";//리소스 정보
+    resourceConfigInfo = [];//리소스 정보
     iaas = "";
     resetForm();
     
@@ -313,6 +313,7 @@ function resetForm(status){
     $("input[name=instanceType]").val("");
     $("input[name=vmPassword]").val("");
     $("input[name=resourceInfoId]").val("");
+    resourceConfigInfo = [];
     if(status=="reset"){
         w2ui['resource_GroupGrid'].clear();
         $("select[name=stemcellName]").html("<option value=''>인프라 환경을 먼저 선택하세요.</option>");
@@ -329,7 +330,6 @@ function resetForm(status){
         <div class="title fl"> 리소스 정보 목록</div>
     </div>
     <div id="resource_GroupGrid" style="width:100%;  height:700px;"></div>
-
 </div>
 
 
@@ -346,7 +346,6 @@ function resetForm(status){
                            <input class="form-control" name = "resourceConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="리소스 별칭을 입력 하세요."/>
                        </div>
                    </div>
-                   
                    <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;">클라우드 인프라 환경</label>
                        <div>
@@ -362,7 +361,7 @@ function resetForm(status){
                        <div>
                            <select class="form-control" name="stemcellName" id="stemcellName" style="width: 320px; margin-left: 20px;">
                                <option value="">스템셀을 선택하세요.</option>
-                           </select>                           
+                           </select>
                        </div>
                    </div>
                    <div class="w2ui-field">
@@ -394,8 +393,6 @@ function resetForm(status){
 </div>
 <script>
 $(function() {
-    
-    
     $("#settingForm").validate({
         ignore : [],
         //onfocusout: function(element) {$(element).valid()},

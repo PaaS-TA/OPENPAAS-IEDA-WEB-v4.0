@@ -60,6 +60,7 @@ public class HbIaasConfigMgntService {
     ***************************************************/
     public void saveIaasConfigInfo(String iaasType, HbIaasConfigMgntDTO dto, Principal principal){
         HbIaasConfigMgntVO vo =null;
+        int checkAccountNameCnt = dao.selectIaasConfigDuplicationByConfigName(dto);
          //등록
         if( StringUtils.isEmpty(dto.getId()) ){
             vo =  new HbIaasConfigMgntVO();
@@ -72,16 +73,21 @@ public class HbIaasConfigMgntService {
                 throw new CommonException(message.getMessage("iaas.configMgnt.conflict.code.exception", null, Locale.KOREA), 
                         message.getMessage("iaas.configMgnt.conflict.message.exception",null, Locale.KOREA), HttpStatus.CONFLICT);
             }
+            if(checkAccountNameCnt >  0){
+                throw new CommonException(message.getMessage("iaas.configMgnt.conflict.code.exception", null, Locale.KOREA), 
+                        message.getMessage("iaas.configMgnt.configAlias.conflict.message.exception",null, Locale.KOREA), HttpStatus.CONFLICT);
+            }
         }else{
             vo =  dao.selectIaasConfigInfo(principal.getName(), iaasType, Integer.parseInt(dto.getId()));
+            if(!dto.getIaasConfigAlias().equals(vo.getIaasConfigAlias()) && checkAccountNameCnt >  0){
+                throw new CommonException(message.getMessage("iaas.configMgnt.conflict.code.exception", null, Locale.KOREA), 
+                        message.getMessage("iaas.configMgnt.configAlias.conflict.message.exception",null, Locale.KOREA), HttpStatus.CONFLICT);
+            }
         }   
         vo.setIaasConfigAlias( dto.getIaasConfigAlias());
         //환경 설정 name 중복체크
-        int checkAccountNameCnt = dao.selectIaasConfigDuplicationByConfigName(vo);
-        if(checkAccountNameCnt >  0){
-                throw new CommonException(message.getMessage("iaas.configMgnt.conflict.code.exception", null, Locale.KOREA), 
-                        message.getMessage("iaas.configMgnt.configAlias.conflict.message.exception",null, Locale.KOREA), HttpStatus.CONFLICT);
-        }
+        
+
         vo.setAccountId(Integer.parseInt(dto.getAccountId()));
         vo.setCommonRegion( dto.getCommonRegion() );
         vo.setCommonKeypairName( dto.getCommonKeypairName());

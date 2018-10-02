@@ -373,7 +373,9 @@ function registHbCfDeploymnetInstanceConfigInfo() {
                 doSearch();
             },
             error : function(e, status) {
-                w2alert("Instance 등록에 실패 하였습니다.", "Instance 등록");
+                w2popup.unlock();
+                var errorResult = JSON.parse(e.responseText);
+                w2alert(errorResult.message, "기본 정보 저장");
             }
         }); 
 }
@@ -444,6 +446,7 @@ function resetForm(status){
     $("input[name=instanceConfigName]").val("");
     $("input[name=instanceInfoId]").val("");
     $("select[name=iaasType]").val("");
+    instanceConfigInfo = [];
     $("select[name=cfDeploymentVersion]").html("<option value='' >CF Deployment를 선택하세요.</option>");
     if(status=="reset"){
         w2ui['instance_grid'].clear();

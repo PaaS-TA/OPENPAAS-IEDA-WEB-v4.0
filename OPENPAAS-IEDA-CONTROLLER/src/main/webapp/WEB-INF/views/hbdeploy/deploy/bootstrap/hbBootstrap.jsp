@@ -251,6 +251,8 @@ $(function() {
                     getBootstrapResourceInfo();
                 }
             },onClose:function(event){
+                w2ui['config_bootstrapGrid'].clear();
+                doSearch();
             }
         });
      });
@@ -287,6 +289,8 @@ $(function() {
                     getBootstrapResourceInfo();
                 }
             },onClose:function(event){
+                w2ui['config_bootstrapGrid'].clear();
+                doSearch();
             }
         });
      });
@@ -414,6 +418,8 @@ $(function() {
                  getBootstrapResourceInfo();
              }
          },onClose:function(event){
+             w2ui['config_bootstrapGrid3'].clear();
+             doSearch();
          }
      });
   });

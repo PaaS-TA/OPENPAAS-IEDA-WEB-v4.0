@@ -44,18 +44,19 @@ var resourceLayout = {
             columns:[
                    { field: 'recid', hidden: true },
                    { field: 'id', hidden: true },
-                   { field: 'resourceConfigName', caption: '리소스 정보 별칭', size:'50%', style:'text-align:center;' },
-                   { field: 'iaasType', caption: '인프라 환경 타입', size:'50%', style:'text-align:center;' ,render: function(record){ 
+                   { field: 'resourceConfigName', caption: '리소스 정보 별칭', size:'150px', style:'text-align:center;' },
+                   { field: 'iaasType', caption: '인프라 환경 타입', size:'120px', style:'text-align:center;' ,render: function(record){ 
                        if(record.iaasType.toLowerCase() == "aws"){
                            return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
                        }else if (record.iaasType.toLowerCase() == "openstack"){
                            return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
                        }
                    }},
-                   { field: 'stemcellName', caption: '스템셀 명', size:'50%', style:'text-align:center;'},
-                   { field: 'instanceTypeS', caption: '인스턴스 유형 S', size:'60%', style:'text-align:center;'},
-                   { field: 'instanceTypeM', caption: '인스턴스 유형 M', size:'60%', style:'text-align:center;'},
-                   { field: 'instanceTypeL', caption: '인스턴스 유형 L', size:'60%', style:'text-align:center;'},
+                   { field: 'stemcellName', caption: '스템셀 명', size:'300px', style:'text-align:center;'},
+                   { field: 'stemcellVersion', caption: '스템셀 버전', size:'100px', style:'text-align:center;'},
+                   { field: 'instanceTypeS', caption: '인스턴스 유형 S', size:'100px', style:'text-align:center;'},
+                   { field: 'instanceTypeM', caption: '인스턴스 유형 M', size:'100px', style:'text-align:center;'},
+                   { field: 'instanceTypeL', caption: '인스턴스 유형 L', size:'100px', style:'text-align:center;'},
                   ],
             onSelect : function(event) {
                 event.onComplete = function() {
