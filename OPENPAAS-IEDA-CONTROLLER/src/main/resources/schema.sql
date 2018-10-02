@@ -523,13 +523,8 @@ CREATE TABLE ieda_bootstrap_resource_config
   iaas_type                             VARCHAR(100) NOT NULL,
   resource_config_name                  VARCHAR(100) NOT NULL,
   stemcell_name                         VARCHAR(100) NOT NULL,
-<<<<<<< HEAD
-  vm_password                           VARCHAR(100) NOT NULL,
-  instance_type                         VARCHAR(100) NOT NULL,
-=======
   instance_type                         VARCHAR(100) NOT NULL,
   vm_password                           VARCHAR(100) NOT NULL,
->>>>>>> c4f2db82bc804a0d2ca989b91dbb87cf1c8febdc
   create_user_id                        VARCHAR(255) NOT NULL,
   create_date                           DATE         NOT NULL,
   update_user_id                        VARCHAR(255) NOT NULL,
