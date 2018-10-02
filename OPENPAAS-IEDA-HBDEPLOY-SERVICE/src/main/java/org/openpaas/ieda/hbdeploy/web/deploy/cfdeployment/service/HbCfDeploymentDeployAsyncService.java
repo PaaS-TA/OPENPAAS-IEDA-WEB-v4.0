@@ -135,7 +135,7 @@ public class HbCfDeploymentDeployAsyncService {
                 accumulatedBuffer.append(info).append("\n");
                 Thread.sleep(20);
                 if(info.contains("Release")){
-                    HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList(info));
+                    HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Release Download Check:::"+info));
                 }
                 if(info.contains("Preparing deployment: Preparing deployment")){
                     String taskId = info.split(" ")[1];
@@ -151,7 +151,7 @@ public class HbCfDeploymentDeployAsyncService {
             HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
         }catch ( Exception e) {
             status = "error";
-            HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(errorMessage));
+            HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
         }finally {
             //동시 설치 방지 lock 파일 삭제
             File lockFile = new File(KEY_DIR + "hybird_cfDeployment.lock");

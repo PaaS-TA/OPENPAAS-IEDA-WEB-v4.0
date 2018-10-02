@@ -470,7 +470,7 @@ function firstInstallPopup(cfDeploymentInfo){
                                 
                             }
                             if ( response.state.toLowerCase() != "started" ) {
-                                if ( response.state.toLowerCase() == "done" )    message = message + " 설치가 완료되었습니다."; 
+                                if ( response.state.toLowerCase() == "done" )    message = message + " 설치가 완료되었습니다.";
                                 if ( response.state.toLowerCase() == "error" ) message = message + " 설치 중 오류가 발생하였습니다.";
                                 if ( response.state.toLowerCase() == "cancelled" ) message = message + " 설치 중 취소되었습니다.";
                                 

@@ -113,7 +113,7 @@ public class CfDeployAsyncService {
                 accumulatedBuffer.append(info).append("\n");
                 Thread.sleep(20);
                 if(info.contains("Release")){
-                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList(info));
+                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Release Download Check:::"+info));
                 }
                 if(info.contains("Preparing deployment: Preparing deployment")){
                     String taskId = info.split(" ")[1];

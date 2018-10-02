@@ -1,5 +1,6 @@
 package org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.service;
 
+import java.io.File;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +41,7 @@ public class HbCfDeploymentDeleteAsyncService {
     
     private final static String SEPARATOR = System.getProperty("file.separator");
     private final static String DEPLOYMENT_DIR = LocalDirectoryConfiguration.getDeploymentDir();
-    
+    private final static String KEY_DIR = LocalDirectoryConfiguration.getLockDir()+SEPARATOR;
     final static private String CF_MESSAGE_ENDPOINT =  "/deploy/hbCfDeployment/delete/logs";
     
     /****************************************************************
@@ -115,8 +116,12 @@ public class HbCfDeploymentDeleteAsyncService {
         } catch ( Exception e) {
             HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(errorMsg));
         } finally {
-			
-		}
+            //동시 설치 방지 lock 파일 삭제
+            File lockFile = new File(KEY_DIR + "hybird_cfDeployment.lock");
+            if(lockFile.exists()){
+                lockFile.delete();
+            }
+        }
     }
     
     /****************************************************************

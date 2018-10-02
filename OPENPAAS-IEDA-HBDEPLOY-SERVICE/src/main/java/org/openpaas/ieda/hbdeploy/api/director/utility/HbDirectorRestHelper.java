@@ -353,11 +353,11 @@ public class HbDirectorRestHelper {
                 } 
                 else if (taskInfo.getState().equalsIgnoreCase("error")) {
                     sendTaskOutput(userId, messageTemplate, messageEndpoint, ERROR, Arrays.asList("", "An error occurred while executing the task " + taskId));
-                    status = ERROR;                    
+                    status = ERROR;
                 } 
                 else if (taskInfo.getState().equalsIgnoreCase("cancelled")) {
-                    sendTaskOutput(userId, messageTemplate, messageEndpoint, DONE, Arrays.asList("", "Task " + taskId + ""));
-                    status = DONE;
+                    sendTaskOutput(userId, messageTemplate, messageEndpoint, CANCELLED, Arrays.asList("", "Task " + taskId + ""));
+                    status = CANCELLED;
                 }
 
                 Thread.sleep(THREAD_SLEEP_TIME);
