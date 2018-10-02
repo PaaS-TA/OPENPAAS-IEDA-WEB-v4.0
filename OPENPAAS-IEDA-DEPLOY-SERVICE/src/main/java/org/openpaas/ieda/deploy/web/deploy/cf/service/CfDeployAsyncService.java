@@ -20,7 +20,6 @@ import org.openpaas.ieda.deploy.web.config.setting.service.DirectorConfigService
 import org.openpaas.ieda.deploy.web.deploy.cf.dao.CfDAO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dao.CfVO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dto.CfParamDTO;
-import org.openpaas.ieda.hbdeploy.api.director.utility.HbDirectorRestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -125,7 +124,6 @@ public class CfDeployAsyncService {
             if( accumulatedBuffer != null ) {
                 accumulatedLog = accumulatedBuffer.toString();
             }
-            
             
         }catch (RuntimeException e) {
             status = "error";
