@@ -121,8 +121,10 @@ function saveAzureKeypairInfo(){
         async : true,
         data : JSON.stringify(rgInfo),
         success : function(status) {
-            w2popup.unlock();
-            w2popup.close();
+            w2alert(rgInfo.keypairName+' 생성이 완료되었습니다.','',function(){
+                w2popup.unlock();
+                w2popup.close();
+            });
             accountId = rgInfo.accountId;
             doSearch();
         }, error : function(request, status, error) {
