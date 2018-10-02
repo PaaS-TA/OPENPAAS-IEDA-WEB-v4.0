@@ -542,7 +542,7 @@ function getLocalBoshList(type){
                     
                 }
                 $(".w2ui-msg-body select[name='boshRelease']").html(options);
-            } else if(type == 'os_conf'){
+            } else if(type == 'os-conf'){
                 var options = "<option value=''>OS CONF 릴리즈를 선택하세요.</option>";
                 for( var i=0; i<data.length; i++ ){
                     if( data[i] == boshInfo.osConfRelease ){
@@ -577,7 +577,7 @@ function checkBoshVersion(selected){
         var versionInfo = selected.split("bosh-");
         versionInfo = versionInfo[1].split(".tgz");
         versionInfo = parseFloat(versionInfo);
-        if(versionInfo >= 266.2){
+        if(versionInfo >= 266){
             getLocalBoshList('bpm');
             $(".w2ui-msg-body #bpmConfDiv").show();
         }else{
