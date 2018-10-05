@@ -4,6 +4,7 @@
 
     <groupId>org.openpaas.ieda</groupId>
     <artifactId>OPENPAAS-IEDA-WEB</artifactId>
+
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
