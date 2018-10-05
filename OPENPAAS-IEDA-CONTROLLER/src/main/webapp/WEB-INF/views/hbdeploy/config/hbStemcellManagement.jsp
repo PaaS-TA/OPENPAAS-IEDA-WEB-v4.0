@@ -712,10 +712,10 @@ function setRegistType(value){
         <div class="title fl">AWS 스템셀 목록</div>
         <div class="fr"> 
             <!-- Btn -->
-            <sec:authorize access="hasAuthority('CONFIG_STEMCELL_REGIST')">
+            <sec:authorize access="hasAuthority('CONFIG_HBSTEMCELL_ADD')">
             <span id="doRegist" class="btn btn-primary" style="width:120px" >등록</span>
             </sec:authorize>
-            <sec:authorize access="hasAuthority('CONFIG_STEMCELL_DELETE')">
+            <sec:authorize access="hasAuthority('CONFIG_HBSTEMCELL_DELETE')">
             <span id="doDelete" class="btn btn-danger" style="width:120px" >삭제</span>
             </sec:authorize>
             <!-- //Btn -->

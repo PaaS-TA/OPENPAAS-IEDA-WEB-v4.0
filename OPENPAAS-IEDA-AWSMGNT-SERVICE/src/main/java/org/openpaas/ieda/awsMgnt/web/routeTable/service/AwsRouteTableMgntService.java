@@ -26,11 +26,11 @@ import com.amazonaws.services.ec2.model.Vpc;
 @Service
 public class AwsRouteTableMgntService {
     @Autowired
-    AwsRouteTableMgntApiService awsRouteTableMgntApiService;
+    private AwsRouteTableMgntApiService awsRouteTableMgntApiService;
     @Autowired
-    CommonIaasService commonIaasService;
+    private CommonIaasService commonIaasService;
     @Autowired
-    MessageSource message;
+    private MessageSource message;
 
     /***************************************************
      * @project : AWS 인프라 관리 대시보드
@@ -79,7 +79,6 @@ public class AwsRouteTableMgntService {
                         } else {
                             // do nothing
                         }
-
                         if (subnetId != null) {
                             k++;
                             awsrouteTableVO.setAssociationCnt(k - 1);
@@ -87,7 +86,6 @@ public class AwsRouteTableMgntService {
                             awsrouteTableVO.setAssociationCnt(0);
                         }
                     }
-
                 } else {
                     awsrouteTableVO.setAssociationCnt(0);
                 }
@@ -136,6 +134,7 @@ public class AwsRouteTableMgntService {
 
                     Route route = routeTable.getRoutes().get(j);
                     awsRTmgntVo.setDestinationIpv4CidrBlock(route.getDestinationCidrBlock());
+                    awsRTmgntVo.setIpv6CidrBlock(route.getDestinationIpv6CidrBlock());
                     awsRTmgntVo.setTargetId(route.getGatewayId());
                     if (route.getNatGatewayId() != null) {
                         awsRTmgntVo.setTargetId(route.getNatGatewayId());

@@ -95,165 +95,166 @@ private Principal principal = null;
      * @return : List<PublicIPAddress>
      ***************************************************/
     public List<PublicIPAddress> getResultPublicIpListInfo(){
-    	List<PublicIPAddress> list = new ArrayList<PublicIPAddress>();
-    	PublicIPAddress ipaddress = new PublicIPAddress(){
+        List<PublicIPAddress> list = new ArrayList<PublicIPAddress>();
+        PublicIPAddress ipaddress = new PublicIPAddress(){
 
-			@Override
-			public String type() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public String type() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public String regionName() {
-				// TODO Auto-generated method stub
-				return "us-west-2";
-			}
+            @Override
+            public String regionName() {
+                // TODO Auto-generated method stub
+                return "us-west-2";
+            }
 
-			@Override
-			public Region region() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public Region region() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public Map<String, String> tags() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public Map<String, String> tags() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public String key() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public String key() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public String id() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public String id() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public String name() {
-				// TODO Auto-generated method stub
-				return "test-publicIpName";
-			}
+            @Override
+            public String name() {
+                // TODO Auto-generated method stub
+                return "test-publicIpName";
+            }
 
-			@Override
-			public String resourceGroupName() {
-				// TODO Auto-generated method stub
-				return "test-resourceGroupName";
-			}
+            @Override
+            public String resourceGroupName() {
+                // TODO Auto-generated method stub
+                return "test-resourceGroupName";
+            }
 
-			@Override
-			public NetworkManager manager() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public NetworkManager manager() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public PublicIPAddressInner inner() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public PublicIPAddressInner inner() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public PublicIPAddress refresh() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public PublicIPAddress refresh() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public Observable<PublicIPAddress> refreshAsync() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public Observable<PublicIPAddress> refreshAsync() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public Update update() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public Update update() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public IPVersion version() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public IPVersion version() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public String ipAddress() {
-				// TODO Auto-generated method stub
-				return "104.43.242.133";
-			}
+            @Override
+            public String ipAddress() {
+                // TODO Auto-generated method stub
+                return "104.43.242.133";
+            }
 
-			@Override
-			public String leafDomainLabel() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public String leafDomainLabel() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public String fqdn() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public String fqdn() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public String reverseFqdn() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public String reverseFqdn() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public IPAllocationMethod ipAllocationMethod() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public IPAllocationMethod ipAllocationMethod() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public int idleTimeoutInMinutes() {
-				// TODO Auto-generated method stub
-				return 4;
-			}
+            @Override
+            public int idleTimeoutInMinutes() {
+                // TODO Auto-generated method stub
+                return 4;
+            }
 
-			@Override
-			public LoadBalancerPublicFrontend getAssignedLoadBalancerFrontend() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public LoadBalancerPublicFrontend getAssignedLoadBalancerFrontend() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public boolean hasAssignedLoadBalancer() {
-				// TODO Auto-generated method stub
-				return false;
-			}
+            @Override
+            public boolean hasAssignedLoadBalancer() {
+                // TODO Auto-generated method stub
+                return false;
+            }
 
-			@Override
-			public NicIPConfiguration getAssignedNetworkInterfaceIPConfiguration() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public NicIPConfiguration getAssignedNetworkInterfaceIPConfiguration() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public boolean hasAssignedNetworkInterface() {
-				// TODO Auto-generated method stub
-				return false;
-			}
+            @Override
+            public boolean hasAssignedNetworkInterface() {
+                // TODO Auto-generated method stub
+                return false;
+            }
 
-			@Override
-			public Set<AvailabilityZoneId> availabilityZones() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            @Override
+            public Set<AvailabilityZoneId> availabilityZones() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-			@Override
-			public PublicIPSkuType sku() {
-				// TODO Auto-generated method stub
-				return PublicIPSkuType.BASIC;
-			}};
-    	list.add(ipaddress);
+            @Override
+            public PublicIPSkuType sku() {
+                // TODO Auto-generated method stub
+                return PublicIPSkuType.BASIC;
+            }
+            };
+        list.add(ipaddress);
         return list;
     }
     
@@ -277,7 +278,7 @@ private Principal principal = null;
     * @return : AzurePublicIpMgntDTO
     ***************************************************/
     public AzurePublicIpMgntDTO setAzurePublicIpInfo() {
-    	AzurePublicIpMgntDTO dto = new AzurePublicIpMgntDTO();
+        AzurePublicIpMgntDTO dto = new AzurePublicIpMgntDTO();
         dto.setAccountId(1);
         dto.setPublicIpName("test-publicIpName");
         dto.setResourceGroupName("test-resourceGroupName");

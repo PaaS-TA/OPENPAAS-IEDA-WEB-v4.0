@@ -18,7 +18,7 @@ import org.springframework.util.StringUtils;
 
 @Service
 public class HbBootstrapCpiConfigService {
-	
+    
     @Autowired private MessageSource message;
     @Autowired private HbBootstrapCpiConfigDAO bootstrapCpiDao;
     
@@ -45,7 +45,6 @@ public class HbBootstrapCpiConfigService {
         int count = bootstrapCpiDao.selectBootstrapCpiConfigByName(dto.getCpiName());
         if( StringUtils.isEmpty(dto.getCpiInfoId())){
             vo = new HbBootstrapCpiConfigVO();
-            vo.setIaasType(dto.getIaasType());
             vo.setCreateUserId(principal.getName());
             if(count > 0){
                 throw new CommonException(message.getMessage("common.conflict.exception.code", null, Locale.KOREA),
@@ -59,6 +58,7 @@ public class HbBootstrapCpiConfigService {
             }
         }
         if( vo != null ){
+            vo.setIaasType(dto.getIaasType());
             vo.setCpiName(dto.getCpiName());
             vo.setIaasConfigId(Integer.parseInt(dto.getIaasConfigId()));
             vo.setIaasType(dto.getIaasType());

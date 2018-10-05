@@ -46,7 +46,7 @@
 <script type="text/javascript" src="<c:url value='/webjars/w2ui/1.4.2/w2ui.min.js'/>"></script>
 
 <!-- Common -->
-<script type="text/javascript" src="<c:url value='/js/common.js?ver=3'/>"></script>
+<script type="text/javascript" src="<c:url value='/js/common.js?ver=4'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/common-iaas.js'/>"></script>
 
 <!-- RSA 암호화 js -->

@@ -252,9 +252,9 @@ public class AzureSecurityGroupMgntServiceUnitTest extends BaseAzureMgntControll
      ***************************************************/
     @Test
     public void testCreateAzureSecurityGroup(){
-    	getAzureAccountInfo();
-    	AzureSecurityGroupMgntDTO dto = setAzureSecurityGroupInfo();
-    	mockAzureSecurityGroupMgntService.createAzureSecurityGroup(dto, principal);
+        getAzureAccountInfo();
+        AzureSecurityGroupMgntDTO dto = setAzureSecurityGroupInfo();
+        mockAzureSecurityGroupMgntService.createAzureSecurityGroup(dto, principal);
     }   
     
     /***************************************************
@@ -265,9 +265,9 @@ public class AzureSecurityGroupMgntServiceUnitTest extends BaseAzureMgntControll
      ***************************************************/
     @Test
     public void testCreateAzureInboundRules(){
-    	getAzureAccountInfo();
-    	AzureSecurityGroupMgntDTO dto = setAzureInboundRules();
-    	mockAzureSecurityGroupMgntService.createAzureInboundRules(dto, principal);
+        getAzureAccountInfo();
+        AzureSecurityGroupMgntDTO dto = setAzureInboundRules();
+        mockAzureSecurityGroupMgntService.createAzureInboundRules(dto, principal);
     } 
     
     /***************************************************
@@ -277,7 +277,7 @@ public class AzureSecurityGroupMgntServiceUnitTest extends BaseAzureMgntControll
      * @return : AzureSecurityGroupMgntDTO
      ***************************************************/
     private AzureSecurityGroupMgntDTO setAzureInboundRules() {
-    	AzureSecurityGroupMgntDTO dto = new AzureSecurityGroupMgntDTO();
+        AzureSecurityGroupMgntDTO dto = new AzureSecurityGroupMgntDTO();
         dto.setAccountId(1);
         dto.setSecurityGroupName("test-securityGroupName");
         dto.setPriority(100);
@@ -288,9 +288,9 @@ public class AzureSecurityGroupMgntServiceUnitTest extends BaseAzureMgntControll
         dto.setDestination("v-network");
         dto.setAction("Allow");
         return dto;
-	}
+    }
 
-	/***************************************************
+    /***************************************************
      * @project : 인프라 관리 대시보드
      * @description : Azure SecurityGroup 삭제 TEST
      * @title : testDeleteSecurityGroupInfo
@@ -298,9 +298,9 @@ public class AzureSecurityGroupMgntServiceUnitTest extends BaseAzureMgntControll
      ***************************************************/
     @Test
     public void testDeleteSecurityGroupInfo(){
-    	getAzureAccountInfo();
-    	AzureSecurityGroupMgntDTO dto = setAzureSecurityGroupInfo();
-    	mockAzureSecurityGroupMgntService.deleteAzureSecurityGroup(dto, principal);
+        getAzureAccountInfo();
+        AzureSecurityGroupMgntDTO dto = setAzureSecurityGroupInfo();
+        mockAzureSecurityGroupMgntService.deleteAzureSecurityGroup(dto, principal);
     }
     
     /***************************************************
@@ -310,7 +310,7 @@ public class AzureSecurityGroupMgntServiceUnitTest extends BaseAzureMgntControll
     * @return : AzureSecurityGroupMgntDTO
     ***************************************************/
     public AzureSecurityGroupMgntDTO setAzureSecurityGroupInfo() {
-    	AzureSecurityGroupMgntDTO dto = new AzureSecurityGroupMgntDTO();
+        AzureSecurityGroupMgntDTO dto = new AzureSecurityGroupMgntDTO();
         dto.setAccountId(1);
         dto.setSecurityGroupName("test-securityGroupName");
         dto.setSubscriptionName("test-subscriptionName");

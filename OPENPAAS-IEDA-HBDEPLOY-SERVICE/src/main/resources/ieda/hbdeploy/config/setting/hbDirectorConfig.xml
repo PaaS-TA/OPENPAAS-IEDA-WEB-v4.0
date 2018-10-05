@@ -93,7 +93,7 @@
         From 
             ieda_hybrid_director_config 
         Where 
-            director_url=#{directorUrl}    
+            director_url=#{directorUrl}
     </select>
     
     
@@ -165,4 +165,29 @@
            And director_name = #{director_name}
     </select>
     
+    <select id="selectHbDirectorConfigByIaas" resultMap="hbDirectorConfigVo">
+         Select 
+            ieda_director_config_seq, 
+            create_date, 
+            current_deployment, 
+            director_type, 
+            director_cpi, 
+            director_name, 
+            director_port, 
+            director_url, 
+            director_uuid, 
+            director_version, 
+            update_date, 
+            user_id, 
+            user_password,
+            credential_file
+        From 
+            ieda_hybrid_director_config 
+            <if test="iaasType == 'aws'">
+                where director_cpi = 'aws_cpi'
+            </if>
+            <if test="iaasType == 'openstack'">
+                where director_cpi = 'openstack_cpi'
+            </if>
+    </select>
 </mapper>

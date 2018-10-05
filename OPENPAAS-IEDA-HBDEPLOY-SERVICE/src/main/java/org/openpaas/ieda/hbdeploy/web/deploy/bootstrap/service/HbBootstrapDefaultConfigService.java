@@ -45,7 +45,6 @@ public class HbBootstrapDefaultConfigService {
         int count = bootstrapDefaultDao.selectBootstrapDefaultConfigByName(dto.getDefaultConfigName());
         if( StringUtils.isEmpty(dto.getId())){
             vo = new HbBootstrapDefaultConfigVO();
-            vo.setIaasType(dto.getIaasType());
             vo.setCreateUserId(principal.getName());
             if(count > 0){
                 throw new CommonException(message.getMessage("common.conflict.exception.code", null, Locale.KOREA),
@@ -59,15 +58,17 @@ public class HbBootstrapDefaultConfigService {
             }
         }
         if( vo != null ){
+            vo.setIaasType(dto.getIaasType());
             vo.setDefaultConfigName(dto.getDefaultConfigName());
             vo.setDeploymentName(dto.getDeploymentName().trim());
             vo.setDirectorName(dto.getDirectorName().trim());
             vo.setBoshRelease(dto.getBoshRelease().trim());
             vo.setCredentialKeyName(dto.getCredentialKeyName());
             vo.setNtp(dto.getNtp());
-            vo.setBoshCpiRelease(dto.getBoshCpiRelease().trim());
-            vo.setEnableSnapshots(dto.getEnableSnapshots().trim());
-            vo.setSnapshotSchedule(dto.getSnapshotSchedule().trim());
+            vo.setBoshCpiRelease(dto.getBoshCpiRelease());
+            vo.setBoshBpmRelease(dto.getBoshBpmRelease());
+            vo.setEnableSnapshots(dto.getEnableSnapshots());
+            vo.setSnapshotSchedule(dto.getSnapshotSchedule());
             vo.setUpdateUserId(principal.getName());
             vo.setPaastaMonitoringUse(dto.getPaastaMonitoringUse());
             vo.setPaastaMonitoringIp(dto.getPaastaMonitoringIp());

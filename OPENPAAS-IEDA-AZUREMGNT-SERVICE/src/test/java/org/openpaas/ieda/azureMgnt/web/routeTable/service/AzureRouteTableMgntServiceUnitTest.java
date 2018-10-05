@@ -323,7 +323,9 @@ public class AzureRouteTableMgntServiceUnitTest extends BaseAzureMgntControllerU
                             public NetworkPeerings peerings() {
                                 // TODO Auto-generated method stub
                                 return null;
-                            }};
+                            }
+
+                            };
                         return network;
                     }
 
@@ -462,7 +464,9 @@ public class AzureRouteTableMgntServiceUnitTest extends BaseAzureMgntControllerU
                             public Set<String> networkInterfaceIds() {
                                 // TODO Auto-generated method stub
                                 return null;
-                            }};
+                            }
+
+                            };
                         return securityGroup;
                     }
 
@@ -564,7 +568,9 @@ public class AzureRouteTableMgntServiceUnitTest extends BaseAzureMgntControllerU
                             public Map<String, Route> routes() {
                                 // TODO Auto-generated method stub
                                 return null;
-                            }};
+                            }
+
+                            };
 
                         return routeTable;
                     }
@@ -573,7 +579,9 @@ public class AzureRouteTableMgntServiceUnitTest extends BaseAzureMgntControllerU
                     public String routeTableId() {
                         // TODO Auto-generated method stub
                         return null;
-                    }};
+                    }
+
+                   };
                     
                     subnetList.add(subnet);
                 return subnetList;

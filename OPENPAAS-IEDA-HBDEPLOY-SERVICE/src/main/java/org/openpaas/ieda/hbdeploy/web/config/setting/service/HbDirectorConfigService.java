@@ -1,12 +1,14 @@
 package org.openpaas.ieda.hbdeploy.web.config.setting.service;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File
 ;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.security.Principal;
@@ -14,16 +16,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.common.web.security.SessionInfoDTO;
-import org.openpaas.ieda.deploy.api.director.dto.DirectorInfoDTO;
-import org.openpaas.ieda.deploy.api.director.utility.DirectorRestHelper;
+import org.openpaas.ieda.hbdeploy.api.director.dto.DirectorInfoDTO;
+import org.openpaas.ieda.hbdeploy.api.director.utility.HbDirectorRestHelper;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigDAO;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigVO;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dto.HbDirectorConfigDTO;
@@ -46,8 +46,54 @@ public class HbDirectorConfigService  {
     
     final private static String BASE_DIR = System.getProperty("user.home");
     final private static String SEPARATOR = System.getProperty("file.separator");
-    final private static String CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateCredentialDir() + SEPARATOR;
+    final private static String HYBRID_CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateHybridCredentialDir() + SEPARATOR;
     private final static Logger LOGGER = LoggerFactory.getLogger(HbDirectorConfigService.class);
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : Url을 통한 디렉터 정보 조회
+     * @title : getSelectedDirectorByUrl
+     * @return : HbDirectorConfigVO
+    *****************************************************************/
+    public HbDirectorConfigVO getSelectedDirectorByUrl(String directorUrl){
+        List<HbDirectorConfigVO> listvo = dao.selectHbDirectorConfigByDirectorUrl(directorUrl);
+        HbDirectorConfigVO selectedDirector = new HbDirectorConfigVO();
+        if(listvo != null){
+            selectedDirector = listvo.get(0);
+        }else{
+            throw new CommonException("notfound.director.exception",
+                    "해당하는 디렉터가 존재하지 않습니다.", HttpStatus.NOT_FOUND);
+        }
+        if( selectedDirector != null ) {
+            boolean flag = checkDirectorConnect(selectedDirector.getDirectorUrl(),
+                                                 selectedDirector.getDirectorPort(),
+                                                 selectedDirector.getUserId(),
+                                                 selectedDirector.getUserPassword());
+            selectedDirector.setConnect(flag);
+        }
+        return selectedDirector;
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : HttpClient에 요청하여 설치관리자 존재 유무 확인
+     * @title : checkDirectorConnect
+     * @return : boolean
+    *****************************************************************/
+    public boolean checkDirectorConnect(String directorUrl, int port, String userId, String password) {
+        boolean flag = true;
+        try {
+            HttpClient client = HbDirectorRestHelper.getHttpClient(port);
+            GetMethod get = new GetMethod(HbDirectorRestHelper.getInfoURI(directorUrl, port)); 
+            get = (GetMethod)HbDirectorRestHelper.setAuthorization(userId, password, (HttpMethodBase)get); 
+            client.executeMethod(get);
+        } catch (RuntimeException e) {
+            if( LOGGER.isErrorEnabled() ){ LOGGER.error( e.getMessage() );}
+        } catch (Exception e) {
+            return false;
+        }
+        return flag;
+    }
     
     /***************************************************
      * @param directorType 
@@ -76,9 +122,9 @@ public class HbDirectorConfigService  {
     public DirectorInfoDTO getDirectorInfo(String directorUrl, int port, String userId, String password) {
         DirectorInfoDTO info = null;
         try {
-            HttpClient client = DirectorRestHelper.getHttpClient(port);
-            GetMethod get = new GetMethod(DirectorRestHelper.getInfoURI(directorUrl, port)); 
-            get = (GetMethod)DirectorRestHelper.setAuthorization(userId, password, (HttpMethodBase)get); 
+            HttpClient client = HbDirectorRestHelper.getHttpClient(port);
+            GetMethod get = new GetMethod(HbDirectorRestHelper.getInfoURI(directorUrl, port)); 
+            get = (GetMethod)HbDirectorRestHelper.setAuthorization(userId, password, (HttpMethodBase)get); 
             client.executeMethod(get);
         
             ObjectMapper mapper = new ObjectMapper();
@@ -173,7 +219,7 @@ public class HbDirectorConfigService  {
     public void boshEnvAliasLoginSequence(HbDirectorConfigVO directorConfig){
         OutputStreamWriter fileWriter = null;
         try {
-            String boshCredentialFile = CREDENTIAL_DIR+directorConfig.getCredentialFile();
+            String boshCredentialFile = HYBRID_CREDENTIAL_DIR+directorConfig.getCredentialFile();
             InputStream input = new FileInputStream(new File( boshCredentialFile));
             Yaml yaml = new Yaml();
             // 파일을 로드하여 Map<String, Object>에 parse한다.
@@ -181,8 +227,29 @@ public class HbDirectorConfigService  {
             Map<String, String> certMap = (Map<String,String>)object.get("director_ssl");
             // bosh alias-env를 실행한다.
             ProcessBuilder builder = new ProcessBuilder("bosh", "alias-env", directorConfig.getDirectorName(),
-                                                         "-e", directorConfig.getDirectorUrl(), "--ca-cert="+certMap.get("ca"));
-            builder.start();
+                                                         "-e", directorConfig.getDirectorUrl(), "--ca-cert="+certMap.get("ca"), "--tty");
+            
+            Process process = builder.start();
+            BufferedReader bufferedReader = null;
+            InputStream inputStream = process.getInputStream();
+            bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
+            String info = null;
+            
+            String accumulatedLog= null;
+            
+            StringBuffer accumulatedBuffer = new StringBuffer();
+            
+            while ((info = bufferedReader.readLine()) != null){
+                accumulatedBuffer.append(info).append("\n");
+            }
+            if( accumulatedBuffer != null ) {
+                accumulatedLog = accumulatedBuffer.toString();
+            }
+            if(!accumulatedLog.contains("Succeeded")){
+                throw new CommonException("notfound.directorFile.exception",
+                        "디렉터로 설정 중 에러가 발생 했습니다. 정보를 확인 해주세요.", HttpStatus.NOT_FOUND);
+            }
+            
             Thread.sleep(10000);
             
             String boshConfigFile = BASE_DIR+SEPARATOR+".bosh"+SEPARATOR+"config";
@@ -244,12 +311,12 @@ public class HbDirectorConfigService  {
      * @title : isExistBoshEnvLogin
      * @return : boolean
     *****************************************************************/
-    public void isExistBoshEnvLogin(String directorUrl, int port, String userId, String password){
+    public String isExistBoshEnvLogin(String directorUrl, int port, String userId, String password){
         int statusResult = 0;
         try {
-            HttpClient client = DirectorRestHelper.getHttpClient(port);
-            GetMethod get = new GetMethod(DirectorRestHelper.getStemcellsURI(directorUrl, port)); 
-            get = (GetMethod)DirectorRestHelper.setAuthorization(userId, password, (HttpMethodBase)get); 
+            HttpClient client = HbDirectorRestHelper.getHttpClient(port);
+            GetMethod get = new GetMethod(HbDirectorRestHelper.getStemcellsURI(directorUrl, port)); 
+            get = (GetMethod)HbDirectorRestHelper.setAuthorization(userId, password, (HttpMethodBase)get); 
             statusResult = client.executeMethod(get);
         } catch (Exception e) {
             if( LOGGER.isErrorEnabled() ){ LOGGER.error( e.getMessage() );}
@@ -258,8 +325,10 @@ public class HbDirectorConfigService  {
         // stemcell 조회 > httpStatus > 조건 200 이 아닐경우 Exception >> database update
         if(!httpStatus.equals("200")){
             throw new CommonException("unAuthorized.director.exception",
-                    "실행 권한이 없습니다.", HttpStatus.UNAUTHORIZED);
+                    "실행 권한이 없습니다. 디렉터 정보를 확인하세요.", HttpStatus.UNAUTHORIZED);
         }
+        
+        return httpStatus;
     }
     
     /****************************************************************
@@ -270,7 +339,7 @@ public class HbDirectorConfigService  {
     *****************************************************************/
     public void uploadCredentialKeyFile(MultipartHttpServletRequest request) {
         Iterator<String> itr =  request.getFileNames();
-        File keyPathFile = new File(CREDENTIAL_DIR);
+        File keyPathFile = new File(HYBRID_CREDENTIAL_DIR);
         if (!keyPathFile.isDirectory()){
             boolean result = keyPathFile.mkdir();
             LOGGER.debug("Credential key path file directory create :: " + result);
@@ -279,7 +348,7 @@ public class HbDirectorConfigService  {
             BufferedOutputStream stream = null;
             MultipartFile mpf = request.getFile(itr.next());
             try { 
-                String keyFilePath = CREDENTIAL_DIR + mpf.getOriginalFilename();
+                String keyFilePath = HYBRID_CREDENTIAL_DIR + mpf.getOriginalFilename();
                 byte[] bytes = mpf.getBytes();
                 File isKeyFile = new File(keyFilePath);
                 stream = new BufferedOutputStream(new FileOutputStream(isKeyFile));
@@ -300,5 +369,21 @@ public class HbDirectorConfigService  {
                 }
             }
         }
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : bosh-env 로그인 판별
+     * @title : isExistBoshEnvLogin
+     * @return : boolean
+    *****************************************************************/
+    public List<HbDirectorConfigVO> getDirectorListByIaas(String iaasType) {
+        List<HbDirectorConfigVO> resultList = dao.selectHbDirectorConfigByIaas(iaasType);
+        int recid = 0;
+        for (HbDirectorConfigVO directionConfig : resultList) {
+            directionConfig.setRecid(recid++);
+            directionConfig.setIaasType(directionConfig.getDirectorCpi().split("_")[0]);
+        }
+        return resultList;
     }
  }

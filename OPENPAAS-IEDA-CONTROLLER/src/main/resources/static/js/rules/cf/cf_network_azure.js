@@ -3,8 +3,7 @@ $(function() {
         ignore : "",
         rules:{
         	publicStaticIp : {
-                required : function(){ return checkEmpty( $(".w2ui-msg-body input[name='publicStaticIp']").val() ); } 
-               ,ipv4     : function(){ return $(".w2ui-msg-body input[name='publicStaticIp']").val(); }
+                ipv4     : function(){ return $(".w2ui-msg-body input[name='publicStaticIp']").val(); }
             },networkName_1 : {
 	            required : function(){ return checkEmpty( $(".w2ui-msg-body input[name='networkName_1']").val() ); }
 	        },subnetId_1 : {

@@ -403,6 +403,7 @@ function showVpcDetails(vpcId){
              w2popup.unlock();
              w2popup.close();
              accountId = subnetInfo.accountId;
+             w2ui['aws_subnetGrid'].clear();
              doSearch();
          }, error : function(request, status, error) {
              w2popup.unlock();

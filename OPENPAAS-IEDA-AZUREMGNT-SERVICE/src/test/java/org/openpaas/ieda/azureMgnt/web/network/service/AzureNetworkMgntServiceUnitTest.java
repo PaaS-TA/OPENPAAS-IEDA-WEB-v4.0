@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.google.cloud.datastore.StringValue;
 import com.microsoft.azure.management.network.Network;
 import com.microsoft.azure.management.network.NetworkPeerings;
 import com.microsoft.azure.management.network.NetworkSecurityGroup;
@@ -365,6 +367,7 @@ public class AzureNetworkMgntServiceUnitTest extends BaseAzureMgntControllerUnit
                         // TODO Auto-generated method stub
                         return "10.10.1.0/24";
                     }
+
                 };
                 a.put("test-subnetName", subnet);
                 return a;
@@ -402,6 +405,7 @@ public class AzureNetworkMgntServiceUnitTest extends BaseAzureMgntControllerUnit
                 space.add("10.10.0.0/16");
                 return space;
             }
+
         };
         networkList.add(network);
         return networkList;
@@ -621,6 +625,8 @@ public class AzureNetworkMgntServiceUnitTest extends BaseAzureMgntControllerUnit
                 // TODO Auto-generated method stub
                 return "10.10.1.0/24";
             }
+
+
         };
         subnetList.add(subnet);
         return subnetList;

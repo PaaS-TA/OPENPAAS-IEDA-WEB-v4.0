@@ -23,7 +23,6 @@ import org.openpaas.ieda.deploy.web.common.service.CommonDeployUtils;
 import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dao.HbBootstrapDAO;
 import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dao.HbBootstrapVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dto.HbBootStrapDeployDTO;
-import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dto.HbBootstrapListDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,57 +47,19 @@ public class HbBootstrapService {
     final private static String TEMP_DIR=LocalDirectoryConfiguration.getTempDir();
     final private static String RELEASE_DIR=LocalDirectoryConfiguration.getReleaseDir();
     final private static String PRIVATE_KEY_PATH = LocalDirectoryConfiguration.getSshDir()+SEPARATOR;
-    final private static String JSON_KEY_PATH = LocalDirectoryConfiguration.getKeyDir() + SEPARATOR;
     final private static String MANIFEST_TEMPLATE_PATH = LocalDirectoryConfiguration.getManifastTemplateDir() + SEPARATOR +"bootstrap";
     final static Logger LOGGER = LoggerFactory.getLogger(HbBootstrapService.class);
     
     /***************************************************
+     * @param installStatus 
      * @project : Paas 플랫폼 설치 자동화
      * @description : Bootstrap 목록 조회
      * @title : bootstrapList
      * @return : List<BootstrapListDTO>
     ***************************************************/
-    public List<HbBootstrapListDTO> getHbBootstrapList() {
-        List<HbBootstrapVO> bootstrapConfigsList = bootStrapDao.selectBootstrapList();
-        List<HbBootstrapListDTO> listDtos = new ArrayList<>();
-        int recid =0;
-        if(!bootstrapConfigsList.isEmpty()){
-            for(HbBootstrapVO vo :bootstrapConfigsList){
-                HbBootstrapListDTO dto = new HbBootstrapListDTO();
-                dto.setRecid(recid++);
-                dto.setHybridBootStrapId(String.valueOf(vo.getHybridBootStrapId()));
-                dto.setId(vo.getId());
-                dto.setHyPriId(vo.getHyPriId());
-                dto.setHyPriIaas(vo.getHyPriIaasType());
-                dto.setHyPubIaas(vo.getIaasType());
-                dto.setDeployStatus(vo.getDeployStatus());
-                dto.setHyPriDeployStatus(vo.getHyPriDeployStatus());
-                dto.setHyPriDeploymentName(vo.getHyPriDeploymentName());
-                dto.setHyPubDeploymentName(vo.getDeploymentName());
-                dto.setDeploymentName(vo.getDeploymentName() +"<br>"+ vo.getHyPriDeploymentName());
-                dto.setDirectorName(vo.getDirectorName() +"<br>"+ vo.getHyPriDirectorName() );
-                dto.setIaas(vo.getIaasType() +"<br>"+ vo.getHyPriIaasType());
-                dto.setBoshRelease(vo.getBoshRelease() + "<br>" + vo.getHyPriBoshRelease());
-                dto.setBoshCpiRelease(vo.getBoshCpiRelease()+ "<br>" + vo.getHyPriBoshCpiRelease());
-                dto.setSubnetId(vo.getSubnetId() +"<br>"+ vo.getHyPriSubnetId());
-                dto.setSubnetRange(vo.getSubnetRange() +"<br>"+ vo.getHyPriSubnetRange());
-                dto.setPublicStaticIp(vo.getPublicStaticIp() +"<br>"+ vo.getHyPriPublicStaticIp());
-                dto.setPrivateStaticIp(vo.getPrivateStaticIp() +"<br>"+ vo.getHyPriPrivateStaticIp());
-                dto.setSubnetGateway(vo.getSubnetGateway() +"<br>"+ vo.getHyPriSubnetGateway());
-                dto.setSubnetDns(vo.getSubnetDns() +"<br>"+ vo.getHyPriSubnetDns());
-                dto.setNtp(vo.getNtp() +"<br>"+ vo.getHyPriNtp());
-                dto.setStemcell(vo.getStemcell() +"<br>"+ vo.getHyPriStemcell());
-                dto.setInstanceType(vo.getCloudInstanceType() +"<br>"+ vo.getHyPriCloudInstanceType());
-                dto.setBoshPassword(vo.getBoshPassword() +"<br>"+ vo.getHyPriBoshPassword());
-                dto.setDeploymentFile(vo.getDeploymentFile());
-                dto.setHyPriDeploymentFile(vo.getHyPriDeploymentFile());
-                dto.setDeployLog(vo.getDeployLog());
-                dto.setHyPriDeployLog(vo.getHyPriDeployLog());
-                dto.setBootstrapType(vo.getBootstrapType()+ "<br>" +vo.getHyPriBootstrapType());
-                listDtos.add(dto);
-            }
-        }
-        return listDtos;
+    public List<HbBootstrapVO> getHbBootstrapList(String installStatus) {
+        List<HbBootstrapVO> bootstrapConfigsList = bootStrapDao.selectBootstrapList(installStatus);
+        return bootstrapConfigsList;
     }
 
     /***************************************************
@@ -110,7 +71,7 @@ public class HbBootstrapService {
      * @return : BootstrapVO
     ***************************************************/
     public HbBootstrapVO getHbBootstrapInfo(int id, String iaas) {
-        HbBootstrapVO vo = bootStrapDao.selectBootstrapInfo(id, iaas.toLowerCase());
+        HbBootstrapVO vo = bootStrapDao.selectBootstrapConfigInfo(id, iaas.toLowerCase());
         if( vo == null ){
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
                     message.getMessage("common.notFound.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
@@ -129,15 +90,15 @@ public class HbBootstrapService {
         String content = "";
         try {
             //data 조회
-            HbBootstrapVO vo = bootStrapDao.selectBootstrapInfo(id, iaas.toLowerCase());
+            HbBootstrapVO vo = bootStrapDao.selectBootstrapConfigInfo(id, iaas.toLowerCase());
             if( vo == null){
                 throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
                         message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
             }
             //릴리즈명/버전 추출
-            String boshRelease = vo.getBoshRelease();
-            if(  vo.getBoshRelease().contains(".tgz") ){
-                boshRelease= vo.getBoshRelease().replace(".tgz", ""); 
+            String boshRelease = vo.getDefaultConfigVo().getBoshRelease();
+            if(  vo.getDefaultConfigVo().getBoshRelease().contains(".tgz") ){
+                boshRelease= vo.getDefaultConfigVo().getBoshRelease().replace(".tgz", ""); 
             }
             String releaseVersion = boshRelease.replaceAll("[^0-9]", "");
             String releaseName = boshRelease.replaceAll("[^A-Za-z]", "");
@@ -145,7 +106,7 @@ public class HbBootstrapService {
             //해당 Bosh 릴리즈 버전의 Manifest Template 파일 조회
             ManifestTemplateVO result = commonDeployDao.selectManifetTemplate(vo.getIaasType(), releaseVersion, "BOOTSTRAP", releaseName );
             if(result != null){
-                if(vo.getPaastaMonitoringUse().equals("true")) {
+                if(vo.getDefaultConfigVo().getPaastaMonitoringUse().equals("true")) {
                     String paastaMoniteringDeploymentFile = result.getCommonJobTemplate().split("\\.")[0] + "-paasta-monitering.yml";
                     result.setCommonJobTemplate(paastaMoniteringDeploymentFile);
                 }
@@ -167,7 +128,7 @@ public class HbBootstrapService {
             //플랫폼 설치 자동화(.bosh_plugin)의 temp 디렉토리에 치환한 Input Template 파일 출력
             IOUtils.write(content, new FileOutputStream(TEMP_DIR + SEPARATOR + vo.getDeploymentFile()), "UTF-8");
             //spiff 프로그램을 통해 배포파일 생성
-            CommonDeployUtils.setSpiffMerge("", vo.getDeploymentFile(),  manifestTemplate, vo.getPaastaMonitoringUse());
+            CommonDeployUtils.setSpiffMerge("", vo.getDeploymentFile(),  manifestTemplate, vo.getDefaultConfigVo().getPaastaMonitoringUse());
         } catch (IOException e) {
             throw new CommonException(message.getMessage("common.internalServerError.exception.code", null, Locale.KOREA),
                     message.getMessage("common.internalServerError.message", null, Locale.KOREA), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -245,10 +206,6 @@ public class HbBootstrapService {
                 items.add(new ReplaceItemDTO("[tenant]", vo.getIaasAccount().get("commonTenant").toString()));
             }
         }
-        if("AZURE".equalsIgnoreCase(vo.getIaasType())){
-            items.add(new ReplaceItemDTO("[commonTenant]", vo.getIaasAccount().get("commonTenant").toString()));
-            items.add(new ReplaceItemDTO("[azureSubscriptionId]", vo.getIaasAccount().get("azureSubscriptionId").toString()));
-        }
         
         items.add(new ReplaceItemDTO("[accessEndpoint]", vo.getIaasAccount().get("commonAccessEndpoint").toString()));
         items.add(new ReplaceItemDTO("[accessUser]", vo.getIaasAccount().get("commonAccessUser").toString()));
@@ -260,75 +217,40 @@ public class HbBootstrapService {
         items.add(new ReplaceItemDTO("[privateKeyName]", vo.getIaasConfig().getCommonKeypairName()));
         items.add(new ReplaceItemDTO("[privateKeyPath]", PRIVATE_KEY_PATH + vo.getIaasConfig().getCommonKeypairPath()));
         
-        if( vo.getIaasType().equalsIgnoreCase("Google") ){
-            String googleJsonKey=setGoogleJosnKeyReplaceEnter(JSON_KEY_PATH + vo.getIaasAccount().get("googleJsonKey").toString());
-            items.add(new ReplaceItemDTO("[jsonKey]", googleJsonKey));
-            items.add(new ReplaceItemDTO("[projectId]", vo.getIaasAccount().get("commonProject").toString()));
-            items.add(new ReplaceItemDTO("[sshKeyFile]", vo.getIaasConfig().getGooglePublicKey()));
-            items.add(new ReplaceItemDTO("[boshOsConfRelease]", RELEASE_DIR + SEPARATOR + vo.getOsConfRelease()));
-        }
-        
-        items.add(new ReplaceItemDTO("[vCenterName]", vo.getIaasConfig().getVsphereVcentDataCenterName()));
-        items.add(new ReplaceItemDTO("[vCenterVMFolder]", vo.getIaasConfig().getVsphereVcenterVmFolder()));
-        items.add(new ReplaceItemDTO("[vCenterTemplateFolder]", vo.getIaasConfig().getVsphereVcenterTemplateFolder()));
-        items.add(new ReplaceItemDTO("[vCenterDatastore]", vo.getIaasConfig().getVsphereVcenterDatastore()));
-        items.add(new ReplaceItemDTO("[vCenterPersistentDatastore]", vo.getIaasConfig().getVsphereVcenterPersistentDatastore()));
-        items.add(new ReplaceItemDTO("[vCenterDiskPath]", vo.getIaasConfig().getVsphereVcenterDiskPath()));
-        items.add(new ReplaceItemDTO("[vCenterCluster]", vo.getIaasConfig().getVsphereVcenterCluster()));
-        
-        items.add(new ReplaceItemDTO("[azureResourceGroup]", vo.getIaasConfig().getAzureResourceGroup()));
-        items.add(new ReplaceItemDTO("[azureStorageAccountName]", vo.getIaasConfig().getAzureStorageAccountName()));
-        items.add(new ReplaceItemDTO("[azureSshPublicKey]", vo.getIaasConfig().getAzureSshPublicKey()));
-        
         //기본 정보
-        items.add(new ReplaceItemDTO("[deploymentName]", vo.getDeploymentName()));
-        items.add(new ReplaceItemDTO("[directorName]", vo.getDirectorName()));
-        items.add(new ReplaceItemDTO("[boshRelease]", RELEASE_DIR + SEPARATOR + vo.getBoshRelease()));
-        items.add(new ReplaceItemDTO("[boshCpiRelease]", RELEASE_DIR + SEPARATOR + vo.getBoshCpiRelease()));
-        items.add(new ReplaceItemDTO("[enableSnapshot]", vo.getEnableSnapshots()));
-        items.add(new ReplaceItemDTO("[snapshotSchedule]", vo.getSnapshotSchedule()));
-        items.add(new ReplaceItemDTO("[ntp]", vo.getNtp()));
+        items.add(new ReplaceItemDTO("[deploymentName]", vo.getDefaultConfigVo().getDeploymentName()));
+        items.add(new ReplaceItemDTO("[directorName]", vo.getDefaultConfigVo().getDirectorName()));
+        items.add(new ReplaceItemDTO("[boshRelease]", RELEASE_DIR + SEPARATOR + vo.getDefaultConfigVo().getBoshRelease()));
+        items.add(new ReplaceItemDTO("[boshCpiRelease]", RELEASE_DIR + SEPARATOR + vo.getDefaultConfigVo().getBoshCpiRelease()));
+        items.add(new ReplaceItemDTO("[enableSnapshot]", vo.getDefaultConfigVo().getEnableSnapshots()));
+        items.add(new ReplaceItemDTO("[snapshotSchedule]", vo.getDefaultConfigVo().getSnapshotSchedule()));
+        items.add(new ReplaceItemDTO("[ntp]", vo.getDefaultConfigVo().getNtp()));
         items.add(new ReplaceItemDTO("[cpiName]", vo.getIaasType().toLowerCase()+"_cpi"));
         items.add(new ReplaceItemDTO("[cpiReleaseName]", "bosh-"+vo.getIaasType().toLowerCase()+"-cpi"));
         
-        if( vo.getPaastaMonitoringUse().equalsIgnoreCase("true") ) {
-            items.add(new ReplaceItemDTO("[paastaMonitoringIp]", vo.getPaastaMonitoringIp()));
+        if( vo.getDefaultConfigVo().getPaastaMonitoringUse().equalsIgnoreCase("true") ) {
+            items.add(new ReplaceItemDTO("[paastaMonitoringIp]", vo.getDefaultConfigVo().getPaastaMonitoringIp()));
             items.add(new ReplaceItemDTO("[paastaMonitoringReleaseName]", "bosh-monitoring-agent"));
-            items.add(new ReplaceItemDTO("[paastaMonitoringRelease]", RELEASE_DIR + SEPARATOR + vo.getPaastaMonitoringRelease()));
-            items.add(new ReplaceItemDTO("[influxdbIp]", vo.getInfluxdbIp()+":8059"));
+            items.add(new ReplaceItemDTO("[paastaMonitoringRelease]", RELEASE_DIR + SEPARATOR + vo.getDefaultConfigVo().getPaastaMonitoringRelease()));
+            items.add(new ReplaceItemDTO("[influxdbIp]", vo.getDefaultConfigVo().getInfluxdbIp()+":8059"));
         }else {
             items.add(new ReplaceItemDTO("[paastaMonitoringIp]", ""));
             items.add(new ReplaceItemDTO("[paastaMonitoringReleaseName]", ""));
             items.add(new ReplaceItemDTO("[paastaMonitoringRelease]", ""));
             items.add(new ReplaceItemDTO("[influxdbIp]", ""));
         }
-        
-        //Internal 네트워크 정보
-        items.add(new ReplaceItemDTO("[privateStaticIp]", vo.getPrivateStaticIp()));
-        items.add(new ReplaceItemDTO("[subnetId]", vo.getSubnetId()));
-        
-        if( vo.getIaasType().equalsIgnoreCase("vSphere") ){
-            items.add(new ReplaceItemDTO("[networkName]", vo.getSubnetId()));
-        }else{
-            items.add(new ReplaceItemDTO("[networkName]", vo.getNetworkName()));
-        }
-        items.add(new ReplaceItemDTO("[subnetRange]", vo.getSubnetRange() ));
-        items.add(new ReplaceItemDTO("[subnetGateway]", vo.getSubnetGateway()));
-        items.add(new ReplaceItemDTO("[subnetDns]", vo.getSubnetDns()));
-        //External 네트워크 정보
-        items.add(new ReplaceItemDTO("[publicStaticIp]", vo.getPublicStaticIp()));
-        items.add(new ReplaceItemDTO("[publicNetworkName]", vo.getPublicSubnetId()));
-        items.add(new ReplaceItemDTO("[publicSubnetRange]", vo.getPublicSubnetRange() ));
-        items.add(new ReplaceItemDTO("[publicSubnetGateway]", vo.getPublicSubnetGateway()));
-        items.add(new ReplaceItemDTO("[publicSubnetDns]", vo.getPublicSubnetDns()));
+        items.add(new ReplaceItemDTO("[publicStaticIp]", vo.getNetworkConfigVo().getPublicStaticIp()));
+        items.add(new ReplaceItemDTO("[privateStaticIp]", vo.getNetworkConfigVo().getPrivateStaticIp()));
+        items.add(new ReplaceItemDTO("[subnetId]", vo.getNetworkConfigVo().getSubnetId()));
+
+        items.add(new ReplaceItemDTO("[subnetRange]", vo.getNetworkConfigVo().getSubnetRange() ));
+        items.add(new ReplaceItemDTO("[subnetGateway]", vo.getNetworkConfigVo().getSubnetGateway()));
+        items.add(new ReplaceItemDTO("[subnetDns]", vo.getNetworkConfigVo().getSubnetDns()));
         
         //리소스 정보
-        items.add(new ReplaceItemDTO("[cloudInstanceType]", vo.getCloudInstanceType()));
-        items.add(new ReplaceItemDTO("[resourcePoolCPU]", vo.getResourcePoolCpu()));
-        items.add(new ReplaceItemDTO("[resourcePoolRAM]", vo.getResourcePoolRam()));
-        items.add(new ReplaceItemDTO("[resourcePoolDisk]", vo.getResourcePoolDisk()));
-        items.add(new ReplaceItemDTO("[stemcell]", STEMCELL_DIR + SEPARATOR + vo.getStemcell()));
-        items.add(new ReplaceItemDTO("[boshPassword]", Sha512Crypt.Sha512_crypt(vo.getBoshPassword(), RandomStringUtils.randomAlphabetic(10), 0)));
+        items.add(new ReplaceItemDTO("[cloudInstanceType]", vo.getResourceConfigVo().getInstanceType()));
+        items.add(new ReplaceItemDTO("[stemcell]", STEMCELL_DIR + SEPARATOR + vo.getResourceConfigVo().getStemcellName()));
+        items.add(new ReplaceItemDTO("[boshPassword]", Sha512Crypt.Sha512_crypt(vo.getResourceConfigVo().getVmPassword(), RandomStringUtils.randomAlphabetic(10), 0)));
         
         return items;
     }
@@ -384,28 +306,12 @@ public class HbBootstrapService {
      * @return : Boolean
     ***************************************************/
     @Transactional
-    public void deleteBootstrapInfo(HbBootStrapDeployDTO.Delete dto ) {
+    public void deleteBootstrapInfo(HbBootStrapDeployDTO dto ) {
         if( StringUtils.isEmpty(dto.getId()) ){
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
                     message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
         }
-        dto.setSetHybridDbTableName("ieda_"+dto.getBootstrapType()+"_bootstrap");
         bootStrapDao.deleteBootstrapInfo(dto);
         CommonDeployUtils.deleteFile(LOCK_DIR, "bootstrap.lock");
     }
-    
-    /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : hybridboostrap 설치 정보 조회
-     * @title : getBootstrapInstallInfo
-     * @return : Boolean
-    ***************************************************/
-	public HbBootstrapVO getHbBootstrapInstallInfo(String privateBootstrapId, String publicBootStrapId) {
-        HbBootstrapVO vo = bootStrapDao.selectInstallBootstrapInfo(Integer.parseInt(privateBootstrapId), Integer.parseInt(publicBootStrapId));
-        if( vo == null ){
-            throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
-                    message.getMessage("common.notFound.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
-        }
-        return vo;
-	}
 }

@@ -41,11 +41,11 @@ public class AwsSecurityGroupMgntService {
         IaasAccountMgntVO vo =  getAwsAccountInfo(principal, accountId);
         Region region = getAwsRegionInfo(regionName);
         List<SecurityGroup> awsSecurityGroupList = awsSecurityGroupMgntApiService.getAwsSecurityGroupInfoListApiFromAws(vo, region);
-         
+        AwsSecurityGroupMgntVO awsGroupVo = null;
         List<AwsSecurityGroupMgntVO> list = new ArrayList<AwsSecurityGroupMgntVO>();
         for (int i=0; i<awsSecurityGroupList.size(); i++ ){
             SecurityGroup securityGroup = awsSecurityGroupList.get(i);
-            AwsSecurityGroupMgntVO awsGroupVo = new AwsSecurityGroupMgntVO();
+            awsGroupVo = new AwsSecurityGroupMgntVO();
             awsGroupVo.setGroupId(securityGroup.getGroupId());
             awsGroupVo.setGroupName(securityGroup.getGroupName());
             awsGroupVo.setVpcId(securityGroup.getVpcId());
