@@ -294,7 +294,6 @@ public class AzureStorageAccountMgntServiceUnitTest extends BaseAzureMgntControl
                 // TODO Auto-generated method stub
                 return null;
             }
-            
         };
         storageAccountList.add(storageAccount);
         return storageAccountList;
@@ -320,7 +319,7 @@ public class AzureStorageAccountMgntServiceUnitTest extends BaseAzureMgntControl
     * @return : AzureStorageAccountMgntDTO
     ***************************************************/
     public AzureStorageAccountMgntDTO setAzureStorageAccountInfo() {
-    	AzureStorageAccountMgntDTO dto = new AzureStorageAccountMgntDTO();
+        AzureStorageAccountMgntDTO dto = new AzureStorageAccountMgntDTO();
         dto.setAccountId(1);
         dto.setStorageAccountName("test-storageAccountName");
         dto.setLocation("test-koreaSouth");
@@ -370,26 +369,26 @@ public class AzureStorageAccountMgntServiceUnitTest extends BaseAzureMgntControl
         List<StorageAccount> storageAccountList = getResultStorageAccountListInfo();
         List<CloudBlobContainer> blobList = getResultBlobListInfo();
         List<AzureStorageAccountMgntVO> resultList;
-		try {
-			resultList = mockAzureStorageAccountMgntService.getAzureBlobInfoList(principal, 1, storageAccountName);
-			assertEquals(resultList.size(), 1);
-			assertEquals(resultList.get(0).getStorageAccountName(), storageAccountList.get(0).name());
-			assertEquals(resultList.get(0).getBlobName(), blobList.get(0).getName());
-			assertEquals(resultList.get(0).getPublicAccessLevel().toString(), blobList.get(0).getProperties().getPublicAccess().toString());
-			assertEquals(resultList.get(0).getLeaseState().toString(), blobList.get(0).getProperties().getLeaseState().toString());
-		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        try {
+            resultList = mockAzureStorageAccountMgntService.getAzureBlobInfoList(principal, 1, storageAccountName);
+            assertEquals(resultList.size(), 1);
+            assertEquals(resultList.get(0).getStorageAccountName(), storageAccountList.get(0).name());
+            assertEquals(resultList.get(0).getBlobName(), blobList.get(0).getName());
+            assertEquals(resultList.get(0).getPublicAccessLevel().toString(), blobList.get(0).getProperties().getPublicAccess().toString());
+            assertEquals(resultList.get(0).getLeaseState().toString(), blobList.get(0).getProperties().getLeaseState().toString());
+        } catch (NoSuchFieldException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
     */
     /***************************************************
@@ -399,7 +398,7 @@ public class AzureStorageAccountMgntServiceUnitTest extends BaseAzureMgntControl
      * @return : List<CloudBlobContainer>
      ***************************************************/
 /*    public List<CloudBlobContainer> getResultBlobListInfo(){
-		List<CloudBlobContainer> blobList = new ArrayList<CloudBlobContainer>();
+        List<CloudBlobContainer> blobList = new ArrayList<CloudBlobContainer>();
         return blobList;    
     }*/
     
@@ -423,7 +422,7 @@ public class AzureStorageAccountMgntServiceUnitTest extends BaseAzureMgntControl
     * @return : AzureStorageAccountMgntDTO
     ***************************************************/
 /*    public AzureStorageAccountMgntDTO setAzureBlobInfo() {
-    	AzureStorageAccountMgntDTO dto = new AzureStorageAccountMgntDTO();
+        AzureStorageAccountMgntDTO dto = new AzureStorageAccountMgntDTO();
         dto.setAccountId(1);
         dto.setStorageAccountName("testaaabbb");
         dto.setBlobName("test-blobName");
@@ -464,7 +463,7 @@ public class AzureStorageAccountMgntServiceUnitTest extends BaseAzureMgntControl
     * @return : AzureStorageAccountMgntDTO
     ***************************************************/
 /*    public AzureStorageAccountMgntDTO setAzureTableInfo() {
-    	AzureStorageAccountMgntDTO dto = new AzureStorageAccountMgntDTO();
+        AzureStorageAccountMgntDTO dto = new AzureStorageAccountMgntDTO();
         dto.setAccountId(1);
         dto.setStorageAccountName("storageaccnametest");
         dto.setTableName("test-blobName");
@@ -482,7 +481,7 @@ public class AzureStorageAccountMgntServiceUnitTest extends BaseAzureMgntControl
 /*    public void testDeleteAzureTable() throws StorageException{
         getAzureAccountInfo();
         AzureStorageAccountMgntDTO dto = setAzureStorageAccountInfo();
-			mockAzureStorageAccountMgntService.deleteAzureTable(dto, principal);
+            mockAzureStorageAccountMgntService.deleteAzureTable(dto, principal);
     }
     */
     /***************************************************

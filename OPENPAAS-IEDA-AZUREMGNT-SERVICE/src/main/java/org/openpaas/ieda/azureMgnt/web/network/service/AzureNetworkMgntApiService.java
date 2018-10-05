@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.microsoft.azure.credentials.AzureTokenCredentials;
 import com.microsoft.azure.management.Azure;
-import com.microsoft.azure.management.compute.ResourceSkuCosts;
 import com.microsoft.azure.management.network.Network;
 import com.microsoft.azure.management.resources.ResourceGroup;
 import com.microsoft.azure.management.resources.ResourceGroups;

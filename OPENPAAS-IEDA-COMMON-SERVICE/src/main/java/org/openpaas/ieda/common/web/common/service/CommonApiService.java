@@ -170,7 +170,7 @@ public class CommonApiService {
             }
         } catch (Exception ex) {
                     if( LOGGER.isErrorEnabled() ){ LOGGER.error(ex.getMessage()); }
-    }
+        }
         return credentials;
     }
     
