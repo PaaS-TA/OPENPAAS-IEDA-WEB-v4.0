@@ -775,7 +775,7 @@ INSERT INTO ieda_common_code VALUES ( '1221', 'HTTPS (8443)', '8443', 'tcp' , 'T
 
 #ROLE
 Insert into ieda_role ( role_id, role_name, role_description, create_user_id, create_date, update_user_id, update_date ) values ( '1000', 'ADMIN', 'ADMIN', 'SYSTEM', now(), 'SYSTEM', now());
-Insert into ieda_role ( role_id, role_name, role_description, create_user_id, create_date, update_user_id, update_date ) values ( '1000', 'DEPLOY_USER', 'DEPLOY_USER', 'SYSTEM', now(), 'SYSTEM', now());
+Insert into ieda_role ( role_id, role_name, role_description, create_user_id, create_date, update_user_id, update_date ) values ( '1001', 'DEPLOY_USER', 'DEPLOY_USER', 'SYSTEM', now(), 'SYSTEM', now());
 
 INSERT INTO ieda_role_detail VALUES ( '1', '1000', '101000', 'SYSTEM', now(), 'SYSTEM', now());
 INSERT INTO ieda_role_detail VALUES ( '2', '1000', '110000', 'SYSTEM', now(), 'SYSTEM', now());
