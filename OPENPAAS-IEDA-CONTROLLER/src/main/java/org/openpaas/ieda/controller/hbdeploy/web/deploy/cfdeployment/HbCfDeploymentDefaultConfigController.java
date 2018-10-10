@@ -38,7 +38,7 @@ public class HbCfDeploymentDefaultConfigController extends BaseController{
     
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : 리소스 목록 정보 조회
+     * @description : 기본 정보 목록 조회
      * @title : selectDefaultConfigInfoList
      * @return : ResponseEntity<CfDeploymentVO>
     *****************************************************************/
@@ -58,7 +58,7 @@ public class HbCfDeploymentDefaultConfigController extends BaseController{
     
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : 리소스 정보 등록/수정
+     * @description : 기본 정보 등록/수정
      * @title : saveDefaultConfigInfo
      * @return : ResponseEntity<>
     *****************************************************************/
@@ -71,7 +71,7 @@ public class HbCfDeploymentDefaultConfigController extends BaseController{
     
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : 리소스 정보 삭제
+     * @description : 기본 정보 삭제
      * @title : deleteDefaultConfigInfo
      * @return : ResponseEntity<>
     *****************************************************************/

@@ -35,7 +35,8 @@ public class CfParamDTO {
         private String userAddSsh;//os-conf ssh public-key
         private String osConfReleaseName;//os-conf Release Name
         private String osConfReleaseVersion;//os-conf Release Version
-
+        private String inceptionOsUserName; // Inception User Name
+        private String cfAdminPassword; // cf admin password
         
         public String getId() {
             return id;
@@ -133,7 +134,18 @@ public class CfParamDTO {
         public void setOsConfReleaseVersion(String osConfReleaseVersion) {
             this.osConfReleaseVersion = osConfReleaseVersion;
         }
-        
+        public String getInceptionOsUserName() {
+            return inceptionOsUserName;
+        }
+        public void setInceptionOsUserName(String inceptionOsUserName) {
+            this.inceptionOsUserName = inceptionOsUserName;
+        }
+        public String getCfAdminPassword() {
+            return cfAdminPassword;
+        }
+        public void setCfAdminPassword(String cfAdminPassword) {
+            this.cfAdminPassword = cfAdminPassword;
+        }
     }
     
     public static class Delete{

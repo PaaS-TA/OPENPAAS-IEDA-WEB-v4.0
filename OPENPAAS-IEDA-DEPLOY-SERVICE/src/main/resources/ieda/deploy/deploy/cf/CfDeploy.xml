@@ -30,6 +30,8 @@
         <result property="userAddSsh" column="USER_ADD_SSH" />
         <result property="osConfReleaseName" column="OSCONF_RELEASE_NAME" />
         <result property="osConfReleaseVersion" column="OSCONF_RELEASE_VERSION"/>
+        <result property="inceptionOsUserName" column="INCEPTION_OS_USER_NAME"/>
+        <result property="cfAdminPassword" column="CF_ADMIN_PASSWORD"/>
         <collection property="resource" ofType="org.openpaas.ieda.deploy.web.deploy.common.dao.resource.ResourceVO"  javaType="org.openpaas.ieda.deploy.web.deploy.common.dao.resource.ResourceVO">
             <result property="id" column="RESOURCE_ID" />
             <result property="deployType" column="RESOURCE_DEPLOY_TYPE"/>
@@ -56,6 +58,9 @@
             <result property="createDate" column="CREATE_DATE" />
             <result property="updateUserId" column="UPDATE_USER_ID"/>
             <result property="updateDate" column="UPDATE_DATE" />
+            <result property="windowsStemcellName" column="WINDOWS_STEMCELL_NAME" />
+            <result property="windowsStemcellVersion" column="WINDOWS_STEMCELL_VERSION" />
+            <result property="enableWindowsStemcell" column="ENABLE_WINDOWS_STEMCELL" />
         </collection>
     </resultMap>
 
@@ -80,6 +85,8 @@
             ,c.user_add_ssh
             ,c.osconf_release_name
             ,c.osconf_release_version
+            ,c.inception_os_user_name
+            ,c.cf_admin_password
         From ieda_cf c 
          Where LOWER(c.iaas_type) = #{iaas}
     </select>
@@ -111,6 +118,8 @@
             ,user_add_ssh
             ,osconf_release_name
             ,osconf_release_version
+            ,inception_os_user_name
+            ,cf_admin_password
         From ieda_cf
         where id = #{id}
     </select>
@@ -173,6 +182,12 @@
             ,user_add_ssh
             ,osconf_release_name
             ,osconf_release_version
+            ,inception_os_user_name
+            ,enable_windows_stemcell
+            ,cf_admin_password
+            ,windows_stemcell_name
+            ,windows_stemcell_version
+            ,enable_windows_stemcell
         From (select * from ieda_cf where id = #{id} ) as cf
          Left Join ieda_resource as resource
               On cf.id = resource.id
@@ -209,6 +224,8 @@
             ,user_add_ssh
             ,osconf_release_name
             ,osconf_release_version
+            ,inception_os_user_name
+            ,cf_admin_password
         ) 
         Values(
              #{cf.id}
@@ -237,6 +254,8 @@
             ,#{cf.userAddSsh}
             ,#{cf.osConfReleaseName}
             ,#{cf.osConfReleaseVersion}
+            ,#{cf.inceptionOsUserName}
+            ,#{cf.cfAdminPassword}
         )
         <selectKey keyProperty="cf.id" resultType="int" order="AFTER">
             <if test="cf.id != 1"> SELECT LAST_INSERT_ID(); </if>
@@ -271,6 +290,8 @@
             ,user_add_ssh = #{cf.userAddSsh}
             ,osconf_release_name = #{cf.osConfReleaseName}
             ,osconf_release_version = #{cf.osConfReleaseVersion}
+            ,inception_os_user_name = #{cf.inceptionOsUserName}
+            ,cf_admin_password = #{cf.cfAdminPassword}
         Where id=#{cf.id}
     </update>
     
@@ -401,6 +422,8 @@
             ,user_add_ssh
             ,osconf_release_name
             ,osconf_release_version
+            ,inception_os_user_name
+            ,cf_admin_password
         From ieda_cf
        Where iaas_type = #{iaasType}
          And deployment_file = #{deploymentFile}

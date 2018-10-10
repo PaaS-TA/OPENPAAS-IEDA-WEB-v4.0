@@ -187,6 +187,14 @@ public class HbCfDeploymentDeployAsyncService {
         cmd.add("system_domain_org="+vo.getHbCfDeploymentDefaultConfigVO().getDomainOrganization()+"");
         cmd.add("-v");
         cmd.add("stemcell_version="+vo.getHbCfDeploymentResourceConfigVO().getStemcellVersion()+"");
+        cmd.add("-v");
+        cmd.add("cf_admin_password="+vo.getHbCfDeploymentDefaultConfigVO().getCfAdminPassword()+"");
+        if(result.getReleaseType().equals("paasta")){
+            cmd.add("-v");
+            cmd.add("inception_os_user_name="+vo.getHbCfDeploymentDefaultConfigVO().getInceptionOsUserName()+"");
+            cmd.add("-o");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getInputTemplate());
+        }
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonJobTemplate());
         cmd.add("-o");

@@ -99,6 +99,11 @@ public class CfDeployAsyncService {
                 postgresDbUse(cmd, result);
             }
             setJobSetting(cmd, vo, result);
+            if("azure".equals(vo.getIaasType().toLowerCase())){
+                if(!(vo.getResource().getWindowsStemcellVersion().isEmpty())) {
+                    setWindowsCellUse(cmd, vo, result);
+                }
+            }
             cmd.add("--tty");
             cmd.add("-n");
             //cmd.add("--no-redact");
@@ -142,7 +147,7 @@ public class CfDeployAsyncService {
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
-     * @description : CF Job 인스턴스 수 설정
+     * @description : CF 기본 정보 설정
      * @title : setDefualtInfo
      * @return : void
     *****************************************************************/
@@ -156,6 +161,14 @@ public class CfDeployAsyncService {
         cmd.add("system_domain_org="+vo.getDomainOrganization()+"");
         cmd.add("-v");
         cmd.add("stemcell_version="+vo.getResource().getStemcellVersion()+"");
+        cmd.add("-v");
+        cmd.add("cf_admin_password="+vo.getCfAdminPassword()+"");
+        if(result.getReleaseType().equals("paasta")){
+            cmd.add("-v");
+            cmd.add("inception_os_user_name="+vo.getInceptionOsUserName()+"");
+            cmd.add("-o");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getInputTemplate());
+        }
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonJobTemplate());
         cmd.add("-o");
@@ -166,7 +179,7 @@ public class CfDeployAsyncService {
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description : CF Job 인스턴스 수 설정
-     * @title : setPublicNetworkIpUse
+     * @title : setJobSetting
      * @return : void
     *****************************************************************/
     public void setJobSetting(List<String> cmd, CfVO vo, ManifestTemplateVO result) {
@@ -201,6 +214,19 @@ public class CfDeployAsyncService {
                 cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getOptionNetworkTemplate());
             }
         }
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description :  Windows Cell 사용시 설정 값
+     * @title : setWindowsCellUse
+     * @return : void
+    *****************************************************************/
+    public void setWindowsCellUse(List<String> cmd, CfVO vo, ManifestTemplateVO result) {
+        cmd.add("-v");
+        cmd.add("windows_stemcell_version="+vo.getResource().getWindowsStemcellVersion()+"");
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getInputTemplateSecond());
     }
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화

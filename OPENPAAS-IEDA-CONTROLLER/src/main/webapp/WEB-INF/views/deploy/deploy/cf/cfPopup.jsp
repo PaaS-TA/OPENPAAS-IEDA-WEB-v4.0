@@ -144,6 +144,8 @@ function setCfData(contents) {
         paastaMonitoringUse    : contents.paastaMonitoringUse,
         ingestorIp             : contents.ingestorIp,
         userAddSsh             : contents.userAddSsh,
+        inceptionOsUserName    : contents.inceptionOsUserName,
+        cfAdminPassword        : contents.cfAdminPassword
     }
     //네트워크 정보 
     for(var i=0; i<contents.networks.length; i++){
@@ -213,7 +215,10 @@ function setCfData(contents) {
                 largeCpu         : contents.resource.largeCpu,
                 runnerRam        : contents.resource.runnerRam,
                 runnerDisk       : contents.resource.runnerDisk,
-                runnerCpu        : contents.resource.runnerCpu
+                runnerCpu        : contents.resource.runnerCpu,
+                enableWindowsStemcell : contents.resource.enableWindowsStemcell,
+                windowsStemcellName : contents.resource.windowsStemcellName,
+                windowsStemcellVersion : contents.resource.windowsStemcellVersion
         }
     }
 }
@@ -245,6 +250,11 @@ function defaultInfoPopup() {
                     $(".w2ui-msg-body textarea[name='userAddSsh']").val(defaultInfo.userAddSsh);
                     $(".w2ui-msg-body select[name='osConfReleases']").val(defaultInfo.osConfRelease);
                     $(".w2ui-msg-body select[name='cfDbType']").val(defaultInfo.cfDbType);
+                    $(".w2ui-msg-body input[name='cfAdminPassword']").val(defaultInfo.cfAdminPassword);
+                    if( defaultInfo.releaseName == 'paasta'){
+                        $(".w2ui-msg-body #inceptionOsUserNameConfDiv").show();
+                        $(".w2ui-msg-body input[name='inceptionOsUserName']").val(defaultInfo.inceptionOsUserName);
+                    }
                     //CF 정보
                     $(".w2ui-msg-body input[name='domain']").val(defaultInfo.domain);
                     
@@ -300,6 +310,25 @@ function getCfDeployment() {
             w2alert("Cf Deployment List 를 가져오는데 실패하였습니다.", "CF Deployment");
         }
     });
+}
+
+/********************************************************
+ * 설명 : paasta 릴리즈 선택시 추가 입력 적용
+ * 기능 : checkUsePaasta(selected)
+ *********************************************************/
+function checkUsePaasta(selected){
+    if(selected == ''){
+        return ;
+     }else{
+         var versionInfo = selected.split("/");
+         versionInfo = versionInfo[0];
+         if(versionInfo == 'paasta'){
+             $(".w2ui-msg-body #inceptionOsUserNameConfDiv").show();
+         }else{
+             $(".w2ui-msg-body #inceptionOsUserNameConfDiv").hide();
+             $(".w2ui-msg-body input[name='inceptionOsUserName']").val('');
+         }
+     }
 }
 
 /********************************************************
@@ -441,6 +470,8 @@ function saveDefaultInfo() {
                 paastaMonitoringUse  : $(".w2ui-msg-body input:checkbox[name='paastaMonitoring']").is(":checked") == true ? "true" : "false",
                 ingestorIp           : $(".w2ui-msg-body input[name='ingestorIp']").val(),
                 userAddSsh           : $(".w2ui-msg-body textarea[name='userAddSsh']").val(),
+                inceptionOsUserName  : $(".w2ui-msg-body input[name='inceptionOsUserName']").val(),
+                cfAdminPassword      : $(".w2ui-msg-body input[name='cfAdminPassword']").val()
     }
     $.ajax({
         type : "PUT",
@@ -1060,11 +1091,24 @@ function resourceInfoPopup(div, height) {
                         $(".w2ui-msg-body input[name='largeFlavorRam']").val(resourceInfo.largeRam);
                         $(".w2ui-msg-body input[name='largeFlavorDisk']").val(resourceInfo.largeDisk);
                         $(".w2ui-msg-body input[name='largeFlavorCpu']").val(resourceInfo.largeCpu);
-                    }
-                }
-                w2popup.lock("조회 중입니다.", true);
-                getStamcellList();
-            }
+                   }
+                   if( iaas.toLowerCase() == "azure" ){
+                       if( !checkEmpty(resourceInfo.enableWindowsStemcell) ) {
+                           if(resourceInfo.enableWindowsStemcell == 'true'){
+                               $(".w2ui-msg-body input[name='windowStemcellUseCheck']").attr("checked", true);
+                               $(".w2ui-msg-body input[name='windowsStemcellVersion']").val(resourceInfo.windowsStemcellVersion);
+                               checkWindowsStemcellUseYn();
+                           }else{
+                               $(".w2ui-msg-body input[name='windowStemcellUseCheck']").attr("checked", false);
+                               checkWindowsStemcellUseYn();
+                           }
+                       }
+                   }
+               }
+               getStamcellList();
+               getWindowsStemcellList();
+               w2popup.lock("조회 중입니다.", true);
+           }
         },
         onClose : function(event) {
             event.onComplete = function() {
@@ -1084,7 +1128,6 @@ function getStamcellList() {
         url : "/common/deploy/stemcell/list/cf/" + iaas,
         contentType : "application/json",
         success : function(data, status) {
-        	console.log(data);
             stemcells = new Array();
             if(data.records != null ){
                 var options= "<option value=''>스템셀을 업로드하세요.</option>";
@@ -1096,7 +1139,7 @@ function getStamcellList() {
                         options += "<option value='"+obj.stemcellFileName+"/"+obj.stemcellVersion+"'>"+obj.stemcellFileName+"/"+obj.stemcellVersion+"</option>";
                     }
                 });
-                $("#stemcellsInfo select[name='stemcells']").html(options);
+                $(".w2ui-msg-body select[name='stemcells']").html(options);
             }
             w2popup.unlock();
         },
@@ -1106,6 +1149,39 @@ function getStamcellList() {
         }
     });
 }
+
+/********************************************************
+ * 설명 : 업로드된 Windows 스템셀 조회
+ * 기능 : getWindowsStemcellList
+ *********************************************************/
+function getWindowsStemcellList(){
+    $.ajax({
+        type : "GET",
+        url : "/common/deploy/stemcell/list/cf/" + iaas,
+        contentType : "application/json",
+        success : function(data, status) {
+            stemcells = new Array();
+            if(data.records != null ){
+                var options= "<option value=''>스템셀을 업로드하세요.</option>";
+                data.records.map(function(obj) {
+                    var resource_data = resourceInfo.windowsStemcellName + "/"+ resourceInfo.windowsStemcellVersion;
+                    if( resource_data == obj.stemcellFileName+"/"+obj.stemcellVersion ){
+                        options += "<option value='"+obj.stemcellFileName+"/"+obj.stemcellVersion+"' selected>"+obj.stemcellFileName+"/"+obj.stemcellVersion+"</option>";
+                    }else if (obj.os == 'windows2016'){
+                        options += "<option value='"+obj.stemcellFileName+"/"+obj.stemcellVersion+"'>"+obj.stemcellFileName+"/"+obj.stemcellVersion+"</option>";
+                    }
+                });
+                $(".w2ui-msg-body select[name='windowsStemcells']").html(options);
+            }
+            w2popup.unlock();
+        },
+        error : function(e, status) {
+            w2popup.unlock();
+            w2alert("Stemcell List 를 가져오는데 실패하였습니다.", "CF Deployment");
+        }
+    });
+}
+
 /********************************************************
  * 설명 : 인스턴스 정보 팝업
  * 기능 : instanceInfoPopup
@@ -1177,7 +1253,7 @@ function saveCfJobsInfo(type){
          }else{
              flag = false;
          }
-     }); 
+     });
      
      jobsInfo = [];
      $(".w2ui-msg-body #cfJobListDiv li > ul").each(function(){
@@ -1233,9 +1309,11 @@ function jobPopupComplete(){
     $().w2destroy('layout2');
     if( iaas.toUpperCase() == "VSPHERE" ){
         resourceInfoPopup("#vSphereResourceInfo", 695);
+    }else if( iaas.toUpperCase() == "AZURE"){
+        resourceInfoPopup("#azureResourceInfo", 690);
     }else{
         resourceInfoPopup("#resourceInfo",750);
-   }
+    }
 }
 
 /********************************************************
@@ -1351,7 +1429,25 @@ function instanceControl(e){
  * 기능 : saveResourceInfo
  *********************************************************/
 function saveResourceInfo(type) {
+    if($(".w2ui-msg-body select[name='stemcells']").val() == ""){
+    }
     var stemcellInfos = $(".w2ui-msg-body select[name='stemcells'] :selected").val().split("/");
+    
+    
+    var windowsStemcellInfoName = '';
+    var windowsStemcellInfoVersion = '';
+    
+    if( $("#windowStemcellUseCheck:checked").val() == "on"){
+        var windowsStemcellUse = 'true';
+        if( !checkEmpty( $(".w2ui-msg-body select[name='windowsStemcells'] :selected").val()) ){
+            var windowsStemcellInfos = $(".w2ui-msg-body select[name='windowsStemcells'] :selected").val().split("/");
+            windowsStemcellInfoName = windowsStemcellInfos[0];
+            windowsStemcellInfoVersion = windowsStemcellInfos[1];
+        }
+    }else{
+        var windowsStemcellUse = 'false';
+        $(".w2ui-msg-body select[name='windowsStemcells']").val('');
+    }
     
     resourceInfo = {
             id               : cfId,
@@ -1372,8 +1468,10 @@ function saveResourceInfo(type) {
             largeCpu         : $(".w2ui-msg-body input[name='largeFlavorCpu']").val(),
             largeRam         : $(".w2ui-msg-body input[name='largeFlavorRam']").val(),
             largeDisk        : $(".w2ui-msg-body input[name='largeFlavorDisk']").val(),
+            enableWindowsStemcell : windowsStemcellUse,
+            windowsStemcellName : windowsStemcellInfoName,
+            windowsStemcellVersion : windowsStemcellInfoVersion
     }
-    
     if (type == 'after') {
         //Server send Cf Info
         $.ajax({
@@ -1386,7 +1484,7 @@ function saveResourceInfo(type) {
                 resourceJobSettingsPop();
             },
             error : function(e, status) {
-                w2alert("Cf Resource 등록에 실패 하였습니다.", "Cf 설치");
+                w2alert(JSON.parse(e.responseText).message, "CF Deployment");
             }
         }); 
         w2popup.clear();
@@ -1403,7 +1501,7 @@ function saveResourceInfo(type) {
  *********************************************************/
 function cfDeploy(type) {
      if( type == "before"  ){
-        instanceInfoPopup()();
+        instanceInfoPopup();
      }else{
         if ( menu =="cf" ){
             w2confirm({
@@ -1588,10 +1686,25 @@ function settingIaasPopup(type){
      }else if( type == "resource" ){
          if( iaas.toUpperCase() == "VSPHERE" ){
              resourceInfoPopup("#vSphereResourceInfo", 695);
+         }else if( iaas.toUpperCase() == "AZURE"){
+             resourceInfoPopup("#azureResourceInfo", 690);
          }else{
              resourceInfoPopup("#resourceInfo",690 );
         }
      }
+}
+/********************************************************
+ * 설명 : windows Stemcell 사용 유무 확인
+ * 기능 : checkWindowsStemcellUseYn
+ *********************************************************/
+function checkWindowsStemcellUseYn(){
+    var checkValue = $("#windowStemcellUseCheck:checked").val();
+    if(checkValue == "on"){
+        $(".w2ui-msg-body #windowsStemcellConfDiv").show();
+    }else{
+        $(".w2ui-msg-body select[name='windowsStemcells']").val('');
+        $(".w2ui-msg-body #windowsStemcellConfDiv").hide();
+    }
 }
 
 /********************************************************
@@ -1716,7 +1829,7 @@ function gridReload() {
                         <span class="glyphicon glyphicon glyphicon-question-sign cf-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="click" data-html="true" title="<b>설치 지원 버전 목록</b>"></span>
                         </label>
                         <div style=" width: 60%;">
-                            <select name="cfdeployment" onchange='setDisabledMonitoring(this.value); setInputDisplay(this.value);' style="display:inline-block; width: 80%;">
+                            <select name="cfdeployment" onchange='setDisabledMonitoring(this.value); setInputDisplay(this.value); checkUsePaasta(this.value);' style="display:inline-block; width: 80%;">
                                 <option value="">CF-DEPLOYMENT 버전을 선택하세요.</option>
                             </select>
                         </div>
@@ -1730,6 +1843,18 @@ function gridReload() {
                                 <option value="Mysql">Mysql</option>
                                 <option value="Postgres">Postgres</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="w2ui-field" id="inceptionOsUserNameConfDiv"  hidden="true">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">inception User Name</label>
+                        <div style=" width: 60%;">
+                            <input name="inceptionOsUserName" type="text" style="display:inline-block;width:80%;" placeholder="inception 계정 명을 입력하세요." />
+                        </div>
+                    </div>
+                    <div class="w2ui-field" id="cfAdminPasswordConfDiv">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">CF Admin Password</label>
+                        <div style=" width: 60%;">
+                            <input name="cfAdminPassword" type="text" style="display:inline-block;width:80%;" placeholder="cf admin password를 입력하세요" />
                         </div>
                     </div>
                     <div class="w2ui-field">
@@ -2310,7 +2435,7 @@ function gridReload() {
                         <label style="text-align: left; width: 30%; font-size: 11px;">Stemcell</label>
                         <div style=" width: 60%;">
                             <div>
-                                <select name="stemcells" style="display:inline-block; width: 80%;"></select>
+                                <select id="stemcells" name="stemcells" style="display:inline-block; width: 80%;"></select>
                             </div>
                         </div>
                     </div>
@@ -2445,11 +2570,115 @@ function gridReload() {
                     </div>
                 </div>
             </div>
+            <div class="panel panel-info">    
+                <div class="panel-heading" style="position:relative"><b>Windows Stemcell</b>
+                </div>
+                <div class="panel-body" style="padding:5px 5% 10px 5%;">
+                    <div class="w2ui-field" id="stemcellsInfo">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">Stemcell Version</label>
+                        <div style=" width: 60%;">
+                            <div>
+                                <select name="stemcells" style="display:inline-block; width: 80%;"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
     <div class="w2ui-buttons" id="vSphereResourceInfoButtons" hidden="true">
         <button class="btn" style="float: left;" onclick="saveResourceInfo('before');">이전</button>
         <button class="btn" style="float: right; padding-right: 15%" onclick="$('#vSphereResourceInfoForm').submit();">다음>></button>
+    </div>
+</div>
+
+<!-- Azure Resource  설정 DIV -->
+<div id="azureResourceInfoDiv" style="width: 100%; height: 100%;" hidden="true">
+    <form id="azureResourceInfoForm">
+        <div style="margin-left:2%;display:inline-block;width:97%;padding-top:15px;">
+            <ul class="progressStep_6">
+                <li class="pass">기본 정보</li>
+                <li class="pass">네트워크 정보</li>
+                <li class="pass">Key 생성</li>
+                <li class="active">리소스 정보</li>
+                <li class="before">인스턴스 정보</li>
+                <li class="before install">설치</li>
+            </ul>
+        </div>
+        <div class="w2ui-page page-0" style="margin-top:15px;padding:0 3%;">
+            <div class="panel panel-info">    
+                <div class="panel-heading" style="position:relative"><b>리소스 정보</b>
+                    <!-- <div style="position: absolute;right: 10px ;top: 2px; ">
+                        <a class="btn btn-info btn-sm" onclick="resourceJobSettingsPop();">고급 기능</a>
+                    </div> -->
+                </div>
+                
+                <div class="panel-body" style="padding:5px 5% 10px 5%;">
+                    <div class="w2ui-field" id="stemcellsInfo">
+                        <label style="text-align: left; width: 30%; font-size: 11px;">Stemcell</label>
+                        <div style=" width: 60%;">
+                            <div>
+                                <select id="stemcells" name="stemcells" style="display:inline-block; width: 80%;"></select>
+                            </div>
+                        </div>
+                        <label style="text-align: left; width: 30%; font-size: 11px;">Windows Stemcell 사용</label>
+                        <div style="width: 60%">
+                            <input name="windowStemcellUseCheck" type="checkbox" id="windowStemcellUseCheck" onclick="checkWindowsStemcellUseYn()"/>사용
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info" style="margin-top:10px;">
+                <div class="panel-heading"><b>Small Resource Type</b></div>
+                <div class="panel-body"  style="padding:5px 5% 10px 5%;">
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 30%; font-size: 11px;">Flavor</label>
+                        <div style=" width: 60%;">
+                            <input name="smallFlavor" type="text" style="display:inline-block; width: 80%;" placeholder="Small Flavor Type을 입력하세요."  />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info" style="margin-top:10px;">
+                <div class="panel-heading"><b>Medium Resource Type</b></div>
+                <div class="panel-body"  style="padding:5px 5% 10px 5%;" >
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 30%; font-size: 11px;">Flavor</label>
+                        <div style=" width: 60%;">
+                            <input name="mediumFlavor" type="text" style="display:inline-block; width: 80%;" placeholder="Medium Flavor Type을 입력하세요."  />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info" style="margin-top:10px;">
+                <div class="panel-heading"><b>Large Resource Type</b></div>
+                <div class="panel-body"  style="padding:5px 5% 10px 5%;">
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 30%; font-size: 11px;">Flavor</label>
+                        <div style=" width: 60%;">
+                            <input name="largeFlavor" type="text" style="display:inline-block; width: 80%;" placeholder="Large Flavor Type을 입력하세요."  />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info" id="windowsStemcellConfDiv" style="margin-top:10px;" hidden="true">
+                <div class="panel-heading"><b>Windows Stemcell</b></div>
+                <div class="panel-body" style="padding:5px 5% 10px 5%;">
+                    <div class="w2ui-field" id="windowsStemcellsInfo">
+                        <label style="text-align: left; width: 30%; font-size: 11px;">Enable Windows Stemcell</label>
+                        <div style=" width: 60%;">
+                            <div>
+                                <select name="windowsStemcells" style="display:inline-block; width: 80%;"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="w2ui-buttons" id="azureResourceInfoButtons" hidden="true">
+        <button class="btn" style="float: left;" onclick="saveResourceInfo('before');">이전</button>
+        <button class="btn" style="float: right; padding-right: 15%" onclick="$('#azureResourceInfoForm').submit();">다음>></button>
     </div>
 </div>
 
@@ -2509,6 +2738,7 @@ function gridReload() {
 <script type="text/javascript" src="<c:url value='/js/rules/cf/cf_keyinfo.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rules/cf/cf_resource.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rules/cf/cf_vSphereResource.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/js/rules/cf/cf_azureResource.js'/>"></script>
 <script>
 $(function() {
     $.validator.addMethod( "ipv4", function( value, element, params ) {

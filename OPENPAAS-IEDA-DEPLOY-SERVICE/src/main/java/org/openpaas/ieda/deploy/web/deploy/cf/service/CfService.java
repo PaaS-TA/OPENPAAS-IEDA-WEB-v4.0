@@ -76,7 +76,7 @@ public class CfService {
                 cfInfo = setNetworkInfoList(cfInfo, vo, codeName);
                 
                 //Resource
-                cfInfo =setResourceListInfo(cfInfo, vo, codeName);
+                cfInfo = setResourceListInfo(cfInfo, vo, codeName);
                 
                 cfInfo.setDeployStatus(vo.getDeployStatus());
                 cfInfo.setDeploymentFile(vo.getDeploymentFile());
@@ -150,6 +150,10 @@ public class CfService {
             cfListInfo.setStemcellName(resource.getStemcellName());
             cfListInfo.setStemcellVersion(resource.getStemcellVersion());
             cfListInfo.setBoshPassword(resource.getBoshPassword());
+            if("azure".equals(vo.getIaasType().toLowerCase())){
+                cfListInfo.setWindowsStemcellName(resource.getWindowsStemcellName());
+                cfListInfo.setWindwosStemcellVersion(resource.getWindowsStemcellVersion());
+            }
         }
         return cfListInfo;
     }
