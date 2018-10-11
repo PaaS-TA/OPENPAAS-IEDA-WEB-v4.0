@@ -50,7 +50,7 @@ public class HbDirectorConfigService  {
     private final static Logger LOGGER = LoggerFactory.getLogger(HbDirectorConfigService.class);
     
     /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : 이종 Paas 플랫폼 설치 자동화
      * @description : Url을 통한 디렉터 정보 조회
      * @title : getSelectedDirectorByUrl
      * @return : HbDirectorConfigVO
@@ -75,7 +75,7 @@ public class HbDirectorConfigService  {
     }
     
     /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : 이종 Paas 플랫폼 설치 자동화
      * @description : HttpClient에 요청하여 설치관리자 존재 유무 확인
      * @title : checkDirectorConnect
      * @return : boolean
@@ -96,8 +96,7 @@ public class HbDirectorConfigService  {
     }
     
     /***************************************************
-     * @param directorType 
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : 이종 Paas 플랫폼 설치 자동화
      * @description : 디렉터 정보 목록을 DefaultYn를 기준으로 역 정렬하여 전체 조회한 값을 응답
      * @title : listDirector
      * @return : List<DirectorConfigVO>
@@ -114,7 +113,7 @@ public class HbDirectorConfigService  {
     }
     
     /***************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : 이종 Paas 플랫폼 설치 자동화
      * @description : HttpClient에 요청하여 디렉터 정보를 읽어옴
      * @title : getDirectorInfo
      * @return : DirectorInfoDTO
@@ -170,7 +169,7 @@ public class HbDirectorConfigService  {
     
     /***************************************************
     * @param boshConfigFileName 
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : 이종 Paas 플랫폼 설치 자동화
     * @description : 디렉터 정보 삽입
     * @title : insertDirectorInfo
     * @return : int
@@ -210,7 +209,7 @@ public class HbDirectorConfigService  {
         dao.insertHbDirector(director);
     }
     /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : 이종 Paas 플랫폼 설치 자동화
      * @description :  기본 디렉터 로그인
      * @title : boshEnvAliasLoginSequence
      * @return : void
@@ -306,7 +305,7 @@ public class HbDirectorConfigService  {
     }
     
     /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : 이종 Paas 플랫폼 설치 자동화
      * @description : bosh-env 로그인 판별
      * @title : isExistBoshEnvLogin
      * @return : boolean
@@ -332,7 +331,7 @@ public class HbDirectorConfigService  {
     }
     
     /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
+     * @project : 이종 Paas 플랫폼 설치 자동화
      * @description : 디렉터 인증서 파일 업로드
      * @title : uploadCredentialKeyFile
      * @return : void
@@ -372,10 +371,10 @@ public class HbDirectorConfigService  {
     }
     
     /****************************************************************
-     * @project : Paas 플랫폼 설치 자동화
-     * @description : bosh-env 로그인 판별
-     * @title : isExistBoshEnvLogin
-     * @return : boolean
+     * @project : 이종 Paas 플랫폼 설치 자동화
+     * @description : IaaS 별 디렉터 목록 정보 조회
+     * @title : getDirectorListByIaas
+     * @return : List<HbDirectorConfigVO> 
     *****************************************************************/
     public List<HbDirectorConfigVO> getDirectorListByIaas(String iaasType) {
         List<HbDirectorConfigVO> resultList = dao.selectHbDirectorConfigByIaas(iaasType);

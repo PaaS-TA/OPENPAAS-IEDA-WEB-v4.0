@@ -26,6 +26,9 @@ import org.openpaas.ieda.deploy.web.information.release.service.ReleaseService;
 import org.openpaas.ieda.deploy.web.information.stemcell.service.StemcellService;
 import org.openpaas.ieda.deploy.web.management.code.dao.CommonCodeVO;
 import org.openpaas.ieda.deploy.web.management.code.service.CommonCodeService;
+import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigVO;
+import org.openpaas.ieda.hbdeploy.web.config.setting.service.HbDirectorConfigService;
+import org.openpaas.ieda.hbdeploy.web.information.release.service.HbReleaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +53,8 @@ public class CommonDeployController {
     @Autowired private DirectorConfigService directorService;
     @Autowired private DeploymentService deploymentService;
     @Autowired private IaasConfigMgntService iaasConfigMgntService;
+    @Autowired private HbReleaseService hbReleaseService;
+    @Autowired private HbDirectorConfigService hbDirectorService;
     
     private final static Logger LOGGER = LoggerFactory.getLogger(CommonCodeController.class);
     
@@ -211,6 +216,23 @@ public class CommonDeployController {
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
+     * @description : 공통 릴리즈 콤보(cf/diego/garden/etcd)
+     * @title : listLocalFilterReleaseList
+     * @return : ResponseEntity<Map<String,Object>>
+    *****************************************************************/
+    @RequestMapping( value="/common/deploy/release/list/{type}/{directorId}", method =RequestMethod.GET)
+    public ResponseEntity<Map<String, Object>> getHbLocalFilterReleaseList(@PathVariable  String type, @PathVariable int directorId){
+        if(LOGGER.isInfoEnabled()){ LOGGER.debug("====================================> 공통 릴리즈 콤보 요청"); }
+        List<ReleaseInfoDTO> contents = hbReleaseService.getHbFilteredReleseList(type, directorId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("records", contents);
+        result.put("total", (contents == null) ? 0:contents.size());
+        return new ResponseEntity<Map<String, Object>>( result, HttpStatus.OK);
+    }
+    
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
      * @description : 공통 스템셀 콤보
      * @title : listStemcell
      * @return : ResponseEntity<HashMap<String,Object>>
@@ -341,5 +363,26 @@ public class CommonDeployController {
         HashMap<String, Object>  configInfo = commonService.getIaasConfigInfo(iaasType, id, principal);
         return new ResponseEntity<HashMap<String, Object> >(configInfo, HttpStatus.OK);
     }
+    
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : 인프라 별 이종 디렉터 목록 정보 조회
+     * @title : getHbDirectorInfoList
+     * @return : ResponseEntity
+    *****************************************************************/
+    @RequestMapping(value = "/common/hbDeploy/director/list/{iaas}", method = RequestMethod.GET)
+    public ResponseEntity<HashMap<String, Object>> getHbDirectorInfoList(@PathVariable String iaas) {
+        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /common/hbDeploy/director/list/{iaas}"); }
+        List<HbDirectorConfigVO> directorConfigList = hbDirectorService.getDirectorListByIaas(iaas);
+        HashMap<String, Object> list = new HashMap<String, Object>();
+        int size =0;
+        if( directorConfigList != null && directorConfigList.size() > 0  ) {
+            size = directorConfigList.size();
+        }
+        list.put("total", size);
+        list.put("records", directorConfigList);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+    
     
 }

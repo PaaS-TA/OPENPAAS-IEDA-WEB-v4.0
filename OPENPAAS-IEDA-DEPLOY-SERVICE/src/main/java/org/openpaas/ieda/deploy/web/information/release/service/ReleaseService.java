@@ -130,7 +130,6 @@ public class ReleaseService {
             throw new CommonException(message.getMessage("common.internalServerError.exception.code", null, Locale.KOREA),
                     message.getMessage("common.internalServerError.message", null, Locale.KOREA), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-                
         return releaseInfoList; 
     }
     
@@ -199,6 +198,5 @@ public class ReleaseService {
         
         return releaseInfoList;
     }
-       
 
 }

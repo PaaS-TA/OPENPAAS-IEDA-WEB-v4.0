@@ -447,10 +447,10 @@ function openBrowse(){
         <div class="title fl">AWS Cloud 디렉터 목록</div>
         <div class="fr"> 
         <!-- Btn -->
-            <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_ADD')">
+            <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
             <span id="addSetting" class="btn btn-primary" style="width:130px" >설정 추가</span>
             </sec:authorize>
-            <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_DELETE')">
+            <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
             <span id="deleteSetting" class="btn btn-danger" style="width:130px" >설정 삭제</span>
             </sec:authorize>
         <!-- //Btn -->
@@ -462,10 +462,10 @@ function openBrowse(){
     <div class="pdt20">
         <div class="title fl">OPENSTACK Cloud 디렉터 정보</div>
         <div class="fr"> 
-            <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_ADD')">
+            <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
             <span id="addSetting2" class="btn btn-primary" style="width:130px" >설정 추가</span>
             </sec:authorize>
-            <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_DELETE')">
+            <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
             <span id="deleteSetting2" class="btn btn-danger" style="width:130px" >설정 삭제</span>
         </sec:authorize>
         </div>

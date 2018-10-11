@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfDefaultConfigDAO">
+
+    <resultMap id="cfDefaultInfo" type="org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfDefaultConfigVO">
+        <id property="id" column="id" />
+        <result property="recid" column="id"/>
+        <result property="iaasType" column="IAAS_TYPE"/>
+        <result property="defaultConfigName" column="default_config_name"/>
+        <result property="deploymentName" column="deployment_name"/>
+        <result property="directorId" column="director_id" />
+        <result property="releaseName" column="release_name" />
+        <result property="releaseVersion" column="release_version" />
+        <result property="loggregatorReleaseName" column="loggregator_release_name" />
+        <result property="loggregatorReleaseVersion" column="loggregator_release_version" />
+        <result property="domain" column="domain" />
+        <result property="domainOrganization" column="domain_organization" />
+        <result property="loginSecret" column ="login_secret"/>
+        <result property="ingestorIp" column ="ingestor_ip"/>
+        <result property="paastaMonitoringUse" column ="paasta_monitoring_use"/>
+        <result property="createUserId" column ="CREATE_USER_ID"/>
+        <result property="createDate" column ="CREATE_DATE"/>
+        <result property="updateUserId" column ="UPDATE_USER_ID"/>
+        <result property="updateDate" column ="UDATE_DATE"/>
+    </resultMap>
+
+    <select id = "selectCfDefaultConfigInfoList" resultMap="cfDefaultInfo">
+        select 
+            id
+            ,iaas_type
+            ,default_config_name
+            ,deployment_name
+            ,director_id
+            ,release_name
+            ,release_version
+            ,loggregator_release_name
+            ,loggregator_release_version
+            ,login_secret
+            ,paasta_monitoring_use
+            ,domain_organization
+            ,domain
+            ,ingestor_ip
+            ,create_user_id
+            ,create_date
+            ,update_user_id
+            ,update_date
+        from ieda_cf_default_config
+        ORDER BY id;
+    </select>
+    
+    <select id = "selectCfDefaultInfoById" resultMap="cfDefaultInfo">
+        select 
+            id
+            ,iaas_type
+            ,default_config_name
+            ,deployment_name
+            ,director_id
+            ,release_name
+            ,release_version
+            ,loggregator_release_name
+            ,loggregator_release_version
+            ,login_secret
+            ,paasta_monitoring_use
+            ,domain_organization
+            ,domain
+            ,ingestor_ip
+            ,create_user_id
+            ,create_date
+            ,update_user_id
+            ,update_date
+        from ieda_cf_default_config
+        where id = #{id};
+    </select>
+    
+    <select id="selectCfDefaultConfigInfoByName" resultType="int">
+        select 
+            count(*)
+        from ieda_cf_default_config
+        where default_config_name = #{defaultConfigName};
+    </select>
+    
+    <insert id="insertCfDefaultInfo">
+        insert into ieda_cf_default_config (
+            iaas_type,
+            default_config_name,
+            deployment_name,
+            director_id,
+            release_name,
+            release_version,
+            loggregator_release_name,
+            loggregator_release_version,
+            domain,
+            domain_organization,
+            login_secret,
+            ingestor_ip,
+            paasta_monitoring_use,
+            create_user_id,
+            create_date,
+            update_user_id,
+            update_date
+        )
+        values(
+            #{vo.iaasType},
+            #{vo.defaultConfigName},
+            #{vo.deploymentName},
+            #{vo.directorId},
+            #{vo.releaseName},
+            #{vo.releaseVersion},
+            #{vo.loggregatorReleaseName},
+            #{vo.loggregatorReleaseVersion},
+            #{vo.domain},
+            #{vo.domainOrganization},
+            #{vo.loginSecret},
+            #{vo.ingestorIp},
+            #{vo.paastaMonitoringUse},
+            #{vo.createUserId},
+            now(),
+            #{vo.updateUserId},
+            now()
+        )
+    
+    </insert>
+    
+    <update id="updateCfDefaultInfo">
+        update ieda_cf_default_config set
+            iaas_type = #{vo.iaasType},
+            default_config_name = #{vo.defaultConfigName},
+            deployment_name = #{vo.deploymentName},
+            director_id = #{vo.directorId},
+            release_name = #{vo.releaseName},
+            release_version = #{vo.releaseVersion},
+            loggregator_release_name = #{vo.loggregatorReleaseName},
+            loggregator_release_version = #{vo.loggregatorReleaseVersion},
+            domain = #{vo.domain},
+            domain_organization = #{vo.domainOrganization},
+            login_secret = #{vo.loginSecret},
+            ingestor_ip = #{vo.loginSecret},
+            paasta_monitoring_use = #{vo.paastaMonitoringUse},
+            update_user_id = #{vo.updateUserId},
+            update_date = now()
+         where id = #{vo.id}
+    </update>
+    
+    
+    <delete id="deleteCfDefaultConfigInfo">
+        delete from
+            ieda_cf_default_config
+        where
+            id = #{dto.id}
+    </delete>
+
+</mapper>

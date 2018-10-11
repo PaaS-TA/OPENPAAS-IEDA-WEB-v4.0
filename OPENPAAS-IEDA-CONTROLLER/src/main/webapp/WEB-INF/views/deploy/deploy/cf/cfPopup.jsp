@@ -441,7 +441,6 @@ function setDisabledMonitoring(val){
             $('.w2ui-msg-body #paastaMonitoring').attr('disabled',true);
         }
     }
-    
 }
 
 /********************************************************

@@ -14,9 +14,11 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.openpaas.ieda.common.exception.CommonException;
+import org.openpaas.ieda.deploy.api.director.utility.DirectorRestHelper;
 import org.openpaas.ieda.deploy.api.release.ReleaseDTO;
 import org.openpaas.ieda.deploy.api.release.ReleaseInfoDTO;
 import org.openpaas.ieda.deploy.api.release.ReleaseVersionDTO;
+import org.openpaas.ieda.deploy.web.config.setting.dao.DirectorConfigVO;
 import org.openpaas.ieda.hbdeploy.api.director.utility.HbDirectorRestHelper;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigDAO;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigVO;
@@ -106,6 +108,100 @@ public class HbReleaseService {
             throw new CommonException(message.getMessage("common.internalServerError.exception.code", null, Locale.KOREA),
                     message.getMessage("common.internalServerError.message", null, Locale.KOREA), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return releaseInfoList;
+    }
+    
+    
+    /***************************************************
+     * @project : 이종 Paas 플랫폼 설치 자동화
+     * @description : CF, DIEGO, Garden-Linux, ETCD 등의 공통 릴리즈 정보 조회
+     * @title : getFilteredReleseList
+     * @return : List<ReleaseInfoDTO>
+    ***************************************************/
+    public List<ReleaseInfoDTO> getHbFilteredReleseList(String type, int directorId) {
+        HbDirectorConfigVO defaultDirector = hbDirectorConfigDao.selectHbDirectorConfigBySeq(directorId);
+        List<ReleaseInfoDTO> releaseInfoList = null;
+        try {
+            HttpClient client = DirectorRestHelper.getHttpClient(defaultDirector.getDirectorPort());
+            GetMethod get = new GetMethod(DirectorRestHelper.getReleaseListURI(defaultDirector.getDirectorUrl(), defaultDirector.getDirectorPort()));
+            get = (GetMethod)DirectorRestHelper.setAuthorization(defaultDirector.getUserId(), defaultDirector.getUserPassword(), (HttpMethodBase)get);
+            client.executeMethod(get);
+            if ( !StringUtils.isEmpty(get.getResponseBodyAsString()) ) {
+                releaseInfoList=setFilteredReleseInfo(get.getResponseBodyAsString(), type); 
+            }
+        } catch (HttpException e) {
+            throw new CommonException(message.getMessage("common.internalServerError.exception.code", null, Locale.KOREA),
+                    message.getMessage("common.internalServerError.message", null, Locale.KOREA), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IOException e) {
+            throw new CommonException(message.getMessage("common.internalServerError.exception.code", null, Locale.KOREA),
+                    message.getMessage("common.internalServerError.message", null, Locale.KOREA), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return releaseInfoList; 
+    }
+    
+    /****************************************************************
+     * @project : 이종 Paas 플랫폼 설치 자동화
+     * @description : 공통 릴리즈 목록 정보 설정
+     * @title : setFilteredReleseInfo
+     * @return : List<ReleaseInfoDTO>
+    *****************************************************************/
+    public List<ReleaseInfoDTO> setFilteredReleseInfo(String responseBody, String type){
+        List<ReleaseInfoDTO> releaseInfoList = new ArrayList<ReleaseInfoDTO>();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            ReleaseDTO[] releases = mapper.readValue(responseBody, ReleaseDTO[].class);
+            int idx = 0;
+            List<ReleaseDTO> releaseList = Arrays.asList(releases);
+            for ( ReleaseDTO release : releaseList ) {
+                String releaseName = release.getName();
+                if( release.getName().indexOf("paasta-") > -1){
+                    releaseName = release.getName().split("paasta-")[1];
+                    if("controller".equalsIgnoreCase(releaseName)){
+                        releaseName = "cf";
+                    }else if("container".equalsIgnoreCase(releaseName)){
+                        releaseName="diego";
+                    }else if("garden-runc".equalsIgnoreCase(releaseName)){
+                        releaseName="garden-linux";
+                    }else if( "loggregator".equalsIgnoreCase(releaseName) ){
+                        releaseName="loggregator";
+                    }
+                }
+                if("garden-runc".equalsIgnoreCase(releaseName)){
+                    releaseName="garden-linux";
+                }
+                if("cflinuxfs2".equalsIgnoreCase(releaseName)){
+                    releaseName= "cflinuxfs2-rootfs";
+                }
+                if("os-conf".equalsIgnoreCase(releaseName)){
+                    releaseName="os-conf";
+                }
+                if( type.equalsIgnoreCase(releaseName)){
+                    List<ReleaseVersionDTO> versionList = release.getReleaseVersions();
+                    for (ReleaseVersionDTO releaseVersion : versionList) {
+                        ReleaseInfoDTO releaseInfo = new ReleaseInfoDTO();
+                        releaseInfo.setRecid(idx++);
+                        releaseInfo.setName(release.getName());
+                        releaseInfo.setVersion(releaseVersion.getVersion());
+                        releaseInfoList.add(releaseInfo);
+                    }
+                }
+            }
+            // 릴리즈 버전 역순으로 정렬
+            Comparator<ReleaseInfoDTO> byReleaseVersion = Collections.reverseOrder(Comparator.comparing(ReleaseInfoDTO::getVersion));
+            releaseInfoList = releaseInfoList.stream()
+                    .sorted(byReleaseVersion)
+                    .collect(Collectors.toList());
+        } catch (JsonParseException e) {
+            throw new CommonException(message.getMessage("common.internalServerError.exception.code", null, Locale.KOREA),
+                    message.getMessage("common.internalServerError.message", null, Locale.KOREA), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (JsonMappingException e) {
+            throw new CommonException(message.getMessage("common.internalServerError.exception.code", null, Locale.KOREA),
+                    message.getMessage("common.internalServerError.message", null, Locale.KOREA), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IOException e) {
+            throw new CommonException(message.getMessage("common.internalServerError.exception.code", null, Locale.KOREA),
+                    message.getMessage("common.internalServerError.message", null, Locale.KOREA), HttpStatus.INTERNAL_SERVER_ERROR);
+        } 
+        
         return releaseInfoList;
     }
 }
