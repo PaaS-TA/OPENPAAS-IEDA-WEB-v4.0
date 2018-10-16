@@ -687,14 +687,15 @@ CREATE TABLE ieda_cf_network_config (
   id                                INT(11) NOT NULL AUTO_INCREMENT,
   iaas_type                         VARCHAR(100) NOT NULL,
   network_config_name               VARCHAR(100) NOT NULL,
-  public_static_ip                  VARCHAR(100) NOT NULL,
-  net                               VARCHAR(100) NOT NULL,
-  seq                               VARCHAR(100) NOT NULL,
+  net                               VARCHAR(100),
+  seq                               VARCHAR(100),
+  public_static_ip                  VARCHAR(100),
+  subnet_id                         VARCHAR(100),
   subnet_static_from                VARCHAR(100),
   subnet_static_to                  VARCHAR(100),
-  subnet_reserved_from              VARCHAR(100) NOT NULL,
-  subnet_reserved_to                VARCHAR(100) NOT NULL,
-  subnet_range                      VARCHAR(100) NOT NULL,
+  subnet_reserved_from              VARCHAR(100),
+  subnet_reserved_to                VARCHAR(100),
+  subnet_range                      VARCHAR(100),
   subnet_gateway                    VARCHAR(100),
   subnet_dns                        VARCHAR(100),
   availability_zone                 VARCHAR(100),
@@ -702,9 +703,104 @@ CREATE TABLE ieda_cf_network_config (
   create_user_id                    VARCHAR(255),
   create_date                       date,
   update_user_id                    VARCHAR(255),
-  update_date                       date NOT NULL,
+  update_date                       date,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
+CREATE TABLE ieda_cf_key_config (
+  id                                INT(11) NOT NULL AUTO_INCREMENT,
+  iaas_type                         VARCHAR(100) NOT NULL,
+  key_config_name                   VARCHAR(100) NOT NULL,
+  default_config_id               VARCHAR(100),
+  key_file_name                     VARCHAR(100),
+  domain                            VARCHAR(100),
+  country_code                      VARCHAR(100),
+  city                              VARCHAR(100),
+  company                           VARCHAR(100),
+  job_title                         VARCHAR(100),
+  email_address                     VARCHAR(100),
+  create_user_id                    VARCHAR(255),
+  create_date                       date,
+  update_user_id                    VARCHAR(255),
+  update_date                       date,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
+CREATE TABLE ieda_cf_resource_config (
+  id                                INT(11) NOT NULL AUTO_INCREMENT,
+  iaas_type                         VARCHAR(100) NOT NULL,
+  resource_config_name              VARCHAR(100) NOT NULL,
+  bosh_password                     VARCHAR(100),
+  stemcell_name                     VARCHAR(100),
+  stemcell_version                  VARCHAR(100),
+  small_flavor                      VARCHAR(100),
+  medium_flavor                     VARCHAR(100),
+  large_flavor                      VARCHAR(100),
+  director_id                       VARCHAR(100),
+  create_user_id                    VARCHAR(255),
+  create_date                       date,
+  update_user_id                    VARCHAR(255),
+  update_date                       date,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
+CREATE TABLE ieda_cf_instance_config (
+  id                                INT(11) NOT NULL AUTO_INCREMENT,
+  iaas_type                         VARCHAR(100) NOT NULL,
+  instance_config_name              VARCHAR(100) NOT NULL,
+  default_config_info               VARCHAR(100),
+  network_config_info               VARCHAR(100),
+  nat_z1                            VARCHAR(100),
+  blobstore_z1                      VARCHAR(100),
+  router_z1                         VARCHAR(100),
+  loggregator_z1                    VARCHAR(100),
+  droppler_z1                       VARCHAR(100),
+  etcd_z1                           VARCHAR(100),
+  consul_z1                         VARCHAR(100),
+  clock_z1                          VARCHAR(100),
+  uaa_z1                            VARCHAR(100),
+  api_z1                            VARCHAR(100),
+  api_worker_z1                     VARCHAR(100),
+  postgres_z1                       VARCHAR(100),
+  nat_z2                            VARCHAR(100),
+  blobstore_z2                      VARCHAR(100),
+  router_z2                         VARCHAR(100),
+  loggregator_z2                    VARCHAR(100),
+  droppler_z2                       VARCHAR(100),
+  etcd_z2                           VARCHAR(100),
+  consul_z2                         VARCHAR(100),
+  clock_z2                          VARCHAR(100),
+  uaa_z2                            VARCHAR(100),
+  api_z2                            VARCHAR(100),
+  api_worker_z2                     VARCHAR(100),
+  postgres_z2                       VARCHAR(100),
+  create_user_id                    VARCHAR(255),
+  create_date                       date,
+  update_user_id                    VARCHAR(255),
+  update_date                       date,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
+CREATE TABLE ieda_cf_config (
+  id                                INT(11) NOT NULL AUTO_INCREMENT,
+  iaas_type                         VARCHAR(100) NOT NULL,
+  cf_config_name                    VARCHAR(100) NOT NULL,
+  default_config_info               VARCHAR(100),
+  network_config_info               VARCHAR(100),
+  key_config_info                   VARCHAR(100),
+  resource_config_info              VARCHAR(100),
+  instance_config_info              VARCHAR(100),
+  deployment_file                   VARCHAR(100),
+  deploy_status                     VARCHAR(100),
+  task_id                           VARCHAR(100),
+  create_user_id                    VARCHAR(255),
+  create_date                       date,
+  update_user_id                    VARCHAR(255),
+  update_date                       date,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
+
 
 
 
@@ -735,4 +831,10 @@ ALTER TABLE ieda_bootstrap_network_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_bootstrap_resource_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_cf_default_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_cf_network_config AUTO_INCREMENT=1000;
+ALTER TABLE ieda_cf_resource_config AUTO_INCREMENT=1000;
+ALTER TABLE ieda_cf_instance_config AUTO_INCREMENT=1000;
+ALTER TABLE ieda_cf_key_config AUTO_INCREMENT=1000;
+ALTER TABLE ieda_cf_config AUTO_INCREMENT=1000;
+
+
 

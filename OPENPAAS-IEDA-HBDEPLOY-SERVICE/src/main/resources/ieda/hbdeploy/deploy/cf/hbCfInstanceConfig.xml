@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfInstanceConfigDAO">
+
+    <resultMap id="cfInstanceInfo" type="org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfInstanceConfigVO">
+        <id property="id" column="id" />
+        <result property="recid" column="id"/>
+        <result property="iaasType" column="iaas_type"/>
+        <result property="instanceConfigName" column="instance_config_name"/>
+        <result property="defaultConfigInfo" column="default_config_info" />
+        <result property="networkConfigInfo" column="network_config_info" />
+        
+        <result property="nats_z1" column="nat_z1" />
+        <result property="blobstore_z1" column="blobstore_z1" />
+        <result property="router_z1" column="router_z1" />
+        <result property="loggregator_z1" column="loggregator_z1" />
+        <result property="doppler_z1" column="droppler_z1" />
+        <result property="etcd_z1" column ="etcd_z1"/>
+        <result property="consul_z1" column="consul_z1" />
+        <result property="clock_z1" column="clock_z1" />
+        <result property="api_z1" column="api_z1" />
+        <result property="uaa_z1" column="uaa_z1" />
+        <result property="api_worker_z1" column="api_worker_z1" />
+        <result property="postgres_z1" column ="postgres_z1"/>
+        
+        <result property="nats_z2" column="nat_z2" />
+        <result property="blobstore_z2" column="blobstore_z2" />
+        <result property="router_z2" column="router_z2" />
+        <result property="loggregator_z2" column="loggregator_z2" />
+        <result property="doppler_z2" column="droppler_z2" />
+        <result property="etcd_z2" column ="etcd_z2"/>
+        <result property="consul_z2" column="consul_z2" />
+        <result property="clock_z2" column="clock_z2" />
+        <result property="api_z2" column="api_z2" />
+        <result property="uaa_z2" column="uaa_z2" />
+        <result property="api_worker_z2" column="api_worker_z2" />
+        <result property="postgres_z2" column ="postgres_z2"/>
+        
+        <result property="createUserId" column ="create_user_id"/>
+        <result property="createDate" column ="create_date"/>
+        <result property="updateUserId" column ="update_user_id"/>
+        <result property="updateDate" column ="update_date"/>
+    </resultMap>
+
+    <select id = "selectInstanceConfigList" resultMap="cfInstanceInfo">
+        select 
+            id
+            ,iaas_type
+            ,instance_config_name
+            ,default_config_info
+            ,network_config_info
+            ,nat_z1
+            ,blobstore_z1
+            ,router_z1
+            ,loggregator_z1
+            ,droppler_z1
+            ,etcd_z1
+            ,consul_z1
+            ,clock_z1
+            ,uaa_z1
+            ,api_z1
+            ,api_worker_z1
+            ,postgres_z1
+            ,nat_z2
+            ,blobstore_z2
+            ,router_z2
+            ,loggregator_z2
+            ,droppler_z2
+            ,etcd_z2
+            ,consul_z2
+            ,clock_z2
+            ,uaa_z2
+            ,api_z2
+            ,api_worker_z2
+            ,postgres_z2
+            ,create_user_id
+            ,create_date
+            ,update_user_id
+            ,update_date
+        from ieda_cf_instance_config
+        ORDER BY id;
+    </select>
+    
+    <select id="selectCfJobTemplatesByReleaseVersion" resultType="hashMap">
+    <![CDATA[
+         Select
+               id
+              ,seq
+              ,deploy_type
+              ,job_name
+              ,zone_z1
+              ,zone_z2
+              ,zone_z3
+         From ieda_job_template
+        Where deploy_type = #{map.deployType}
+          And 
+            min_release_version <= #{map.releaseVersion}
+          And 
+            max_release_version >= #{map.releaseVersion} 
+        ORDER BY seq;
+    ]]>
+    </select>
+    
+    <select id="selectInstanceConfigById" resultMap="cfInstanceInfo">
+        select 
+            id
+            ,iaas_type
+            ,instance_config_name
+            ,default_config_info
+            ,network_config_info
+            ,nat_z1
+            ,blobstore_z1
+            ,router_z1
+            ,loggregator_z1
+            ,droppler_z1
+            ,etcd_z1
+            ,consul_z1
+            ,clock_z1
+            ,uaa_z1
+            ,api_z1
+            ,api_worker_z1
+            ,postgres_z1
+            ,nat_z2
+            ,blobstore_z2
+            ,router_z2
+            ,loggregator_z2
+            ,droppler_z2
+            ,etcd_z2
+            ,consul_z2
+            ,clock_z2
+            ,uaa_z2
+            ,api_z2
+            ,api_worker_z2
+            ,postgres_z2
+            ,create_user_id
+            ,create_date
+            ,update_user_id
+            ,update_date
+        from ieda_cf_instance_config
+        where id = #{id};
+    </select>
+    
+    <select id="selectInstanceConfigByName" resultType="int">
+        select 
+            count(*)
+        from ieda_cf_instance_config
+        where instance_config_name = #{instanceConfigName};
+    </select>
+    
+    <insert id="insertInstanceConfg">
+            insert into ieda_cf_instance_config(
+                id, 
+                iaas_type,
+                instance_config_name,
+                default_config_info,
+                network_config_info,
+                
+                nat_z1,
+                blobstore_z1, 
+                router_z1, 
+                loggregator_z1, 
+                droppler_z1, 
+                etcd_z1, 
+                consul_z1,
+                clock_z1, 
+                uaa_z1, 
+                api_z1, 
+                api_worker_z1, 
+                postgres_z1, 
+                nat_z2,
+                blobstore_z2, 
+                router_z2, 
+                loggregator_z2, 
+                droppler_z2, 
+                etcd_z2, 
+                consul_z2,
+                clock_z2, 
+                uaa_z2, 
+                api_z2, 
+                api_worker_z2, 
+                postgres_z2, 
+                create_user_id, 
+                create_date, 
+                update_user_id, 
+                update_date
+            )
+            Values
+                (
+                #{vo.id}, 
+                #{vo.iaasType},
+                #{vo.instanceConfigName},
+                #{vo.defaultConfigInfo}, 
+                #{vo.networkConfigInfo},
+                #{vo.nats_z1},
+                #{vo.blobstore_z1},
+                #{vo.router_z1}, 
+                #{vo.loggregator_z1}, 
+                #{vo.doppler_z1},
+                #{vo.etcd_z1}, 
+                #{vo.consul_z1},
+                #{vo.clock_z1},
+                #{vo.uaa_z1}, 
+                #{vo.api_z1}, 
+                #{vo.api_worker_z1},
+                #{vo.postgres_z1},
+                #{vo.nats_z2},
+                #{vo.blobstore_z2},
+                #{vo.router_z2}, 
+                #{vo.loggregator_z2}, 
+                #{vo.doppler_z2},
+                #{vo.etcd_z2}, 
+                #{vo.consul_z2},
+                #{vo.clock_z2},
+                #{vo.uaa_z2}, 
+                #{vo.api_z2}, 
+                #{vo.api_worker_z2},
+                #{vo.postgres_z2},
+                #{vo.createUserId},
+                 now(), 
+                 #{vo.updateUserId}, 
+                 now()
+                 )
+    </insert>
+    
+    <update id="updateInstanceConfig">
+        update ieda_cf_instance_config set
+            iaas_type = #{vo.iaasType},
+            instance_config_name = #{vo.instanceConfigName},
+            default_config_info = #{vo.defaultConfigInfo},
+            network_config_info = #{vo.networkConfigInfo},
+            nat_z1 = #{vo.nats_z1},
+            blobstore_z1 = #{vo.blobstore_z1},
+            router_z1 = #{vo.router_z1},
+            loggregator_z1 = #{vo.loggregator_z1},
+            droppler_z1 = #{vo.doppler_z1},
+            etcd_z1 = #{vo.etcd_z1},
+            consul_z1 = #{vo.consul_z1},
+            clock_z1 = #{vo.clock_z1},
+            uaa_z1 = #{vo.uaa_z1},
+            api_z1 = #{vo.api_z1},
+            api_worker_z1 = #{vo.api_worker_z1},
+            postgres_z1 = #{vo.postgres_z1},
+            nat_z2 = #{vo.nats_z2},
+            blobstore_z2 = #{vo.blobstore_z2},
+            router_z2 = #{vo.router_z2},
+            loggregator_z2 = #{vo.loggregator_z2},
+            droppler_z2 = #{vo.doppler_z2},
+            etcd_z2 = #{vo.etcd_z2},
+            consul_z2 = #{vo.consul_z2},
+            clock_z2 = #{vo.clock_z2},
+            uaa_z2 = #{vo.uaa_z2},
+            api_z2 = #{vo.api_z2},
+            api_worker_z2 = #{vo.api_worker_z2},
+            postgres_z2 = #{vo.postgres_z2},
+            update_user_id = #{vo.updateUserId},
+            update_date = now()
+        where id = #{vo.id}
+    </update>
+    
+    <delete id="deleteInstanceConfig">
+        delete from
+            ieda_cf_instance_config
+        where
+            id = #{id}
+    </delete>
+
+</mapper>

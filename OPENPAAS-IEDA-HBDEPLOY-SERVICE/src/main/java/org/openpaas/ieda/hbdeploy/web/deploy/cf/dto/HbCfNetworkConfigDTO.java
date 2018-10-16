@@ -1,31 +1,19 @@
 package org.openpaas.ieda.hbdeploy.web.deploy.cf.dto;
 
-import javax.validation.constraints.NotNull;
-
 public class HbCfNetworkConfigDTO {
     private String id;
     private String networkConfigName;
-    @NotNull
     private String iaasType;//iaas
-    @NotNull
     private String net;//Internal/External
     private String seq; //시퀀스
     private String publicStaticIP;
-    @NotNull
     private String subnetRange; //서브넷 범위
-    @NotNull
     private String subnetGateway; //게이트웨이
-    @NotNull
     private String subnetDns; //DNS
-    @NotNull
     private String subnetReservedFrom; //할당된 IP대역 From
-    @NotNull
     private String subnetReservedTo; //할당된 IP대역 To
-    @NotNull
     private String subnetStaticFrom; //VM 할당 IP대역 From
-    @NotNull
     private String subnetStaticTo; //VM 할당 IP대역 To
-    @NotNull
     private String subnetId; //네트워크 ID
     private String cloudSecurityGroups; //시큐리티 그룹
     private String availabilityZone;//availabilityZone

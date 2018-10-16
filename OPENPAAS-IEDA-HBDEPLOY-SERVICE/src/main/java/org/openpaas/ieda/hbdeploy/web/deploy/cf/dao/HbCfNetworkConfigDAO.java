@@ -12,7 +12,7 @@ public interface HbCfNetworkConfigDAO {
      * @title : selectNetworkConfigList
      * @return : List<HbCfNetworkConfigVO>
     *****************************************************************/
-	List<HbCfNetworkConfigVO> selectNetworkConfigList();
+	List<HbCfNetworkConfigVO> selectCfNetworkConfigList();
 	
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
@@ -37,6 +37,22 @@ public interface HbCfNetworkConfigDAO {
      * @title : insertNetworkInfo
      * @return : void
     *****************************************************************/
-	void insertNetworkInfo(@Param("networks") List<HbCfNetworkConfigVO> list);
+	void insertCfNetworkConfigInfo(@Param("networks") List<HbCfNetworkConfigVO> list);
+
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : CF 네트워크 별칭 기준으로 상세 정보 조회 
+     * @title : selectCfDefaultConfigInfoByNameResultVo
+     * @return : List<HbCfNetworkConfigVO>
+    *****************************************************************/
+	List<HbCfNetworkConfigVO> selectCfDefaultConfigInfoByNameResultVo(String networkConfigName);
+	
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : CF 네트워크 별칭 기준으로 상세 정보 조회 
+     * @title : selectCfDefaultConfigInfoById
+     * @return : HbCfNetworkConfigVO
+    *****************************************************************/
+	HbCfNetworkConfigVO selectCfDefaultConfigInfoById(@Param("id") int id);
 
 }

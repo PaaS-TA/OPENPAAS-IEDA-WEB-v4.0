@@ -1313,7 +1313,6 @@ function jobPopupComplete(){
  * 기능 : settingCfJobs
  *********************************************************/
 function settingCfJobs(){
-    console.log("1");
     var release_version = defaultInfo.releaseVersion;
     release_version = settingReleaseVersion(release_version);
     $.ajax({

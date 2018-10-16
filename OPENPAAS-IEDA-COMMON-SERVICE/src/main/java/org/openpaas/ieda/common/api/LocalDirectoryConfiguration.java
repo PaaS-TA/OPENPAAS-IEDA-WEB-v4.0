@@ -18,6 +18,7 @@ public class LocalDirectoryConfiguration {
     final private static String TEMP_DIR                = BASE_DIR + SEPARATOR + "temp";
     final private static String LOCK_DIR                = BASE_DIR + SEPARATOR + "lock";
     final private static String KEY_DIR                 = BASE_DIR + SEPARATOR + "key";
+    final private static String HYBIRD_KEY_DIR                 = BASE_DIR + SEPARATOR + "hybrid_key";
     final private static String CREDENTIAL_DIR         = BASE_DIR + SEPARATOR + "credential";
     final private static String DEPLOYMENT_MANIFEST_DIR = DEPLOYMENT_DIR + SEPARATOR + "manifest";
     final private static String HYBRID_CREDENTIAL_DIR = BASE_DIR + SEPARATOR + "hybird_credential";
@@ -202,6 +203,22 @@ public class LocalDirectoryConfiguration {
         }
         return KEY_DIR;
     }
+    
+    
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : Key 파일 위치를 검사하고 없으면 생성하여 응답
+     * @title : getKeyDir
+     * @return : String
+    *****************************************************************/
+    public static String getHbKeyDir(){
+        if(!checkAndMakeDirectory(HYBIRD_KEY_DIR)) {
+            throw new CommonException("notfound.key.local.exception", "key 파일 저장 위치가 존재 하지 않습니다.", HttpStatus.NOT_FOUND);
+        }
+        return HYBIRD_KEY_DIR;
+    }
+
 
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화

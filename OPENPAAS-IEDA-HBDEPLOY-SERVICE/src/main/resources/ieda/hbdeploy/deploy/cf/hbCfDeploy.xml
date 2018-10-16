@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfDAO">
+
+<resultMap id="cfInfo" type="org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfVO">
+    <id property="id" column="id"/>
+    
+    <result property="recid" column="id"/>
+    <result property="bootstrapConfigName" column="bootstrap_config_name"/>
+    <result property="iaasType" column="iaas_type"/>
+    <result property="cfConfigName" column="cf_config_name"/>
+    <result property="defaultConfigInfo" column="default_config_info"/>
+    <result property="networkConfigInfo" column="network_config_info"/>
+    <result property="resourceConfigInfo" column="resource_config_info"/>
+    <result property="keyConfigInfo" column="key_config_info"/>
+    <result property="instanceConfigInfo" column="instance_config_info"/>
+    <result property="deploymentFile" column="deployment_file"/>
+    <result property="deployStatus" column="deploy_status"/>
+    <result property="taskId" column="task_id"/>
+    
+    <collection property="defaultConfigVO" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfDefaultConfigVO"  javaType="org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfDefaultConfigVO">
+        <result property="id" column="id" />
+        <result property="recid" column="id"/>
+        <result property="iaasType" column="IAAS_TYPE"/>
+        <result property="defaultConfigName" column="default_config_name"/>
+        <result property="deploymentName" column="deployment_name"/>
+        <result property="directorId" column="director_id" />
+        <result property="releaseName" column="release_name" />
+        <result property="releaseVersion" column="release_version" />
+        <result property="loggregatorReleaseName" column="loggregator_release_name" />
+        <result property="loggregatorReleaseVersion" column="loggregator_release_version" />
+        <result property="domain" column="domain" />
+        <result property="domainOrganization" column="domain_organization" />
+        <result property="loginSecret" column ="login_secret"/>
+        <result property="ingestorIp" column ="ingestor_ip"/>
+        <result property="paastaMonitoringUse" column ="paasta_monitoring_use"/>
+        
+    </collection>
+    <collection property="keyConfigVO" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfKeyConfigVO"  javaType="org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfKeyConfigVO">
+        <result property="id" column="id" />
+        <result property="keyConfigName" column="key_config_name"/>
+        <result property="keyFileName" column="Key_file_name" />
+    </collection>
+    <collection property="resourceConfigVO" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfResourceConfigVO"  javaType="org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfResourceConfigVO">
+        <result property="id" column="id" />
+        <result property="resourceConfigName" column="resource_config_name"/>
+        <result property="boshPassword" column="bosh_password" />
+        <result property="stemcellName" column="stemcell_name" />
+        <result property="stemcellVersion" column="stemcell_version" />
+        <result property="smallFlavor" column="small_flavor" />
+        <result property="mediumFlavor" column="medium_flavor" />
+        <result property="largeFlavor" column="large_flavor" />
+    </collection>
+    <collection property="instanceConfigVO"  ofType="org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfInstanceConfigVO" javaType="org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfInstanceConfigVO" >
+        <result property="id" column="id" />
+        <result property="instanceConfigName" column="instance_config_name"/>
+        <result property="nats_z1" column="nat_z1" />
+        <result property="blobstore_z1" column="blobstore_z1" />
+        <result property="router_z1" column="router_z1" />
+        <result property="loggregator_z1" column="loggregator_z1" />
+        <result property="doppler_z1" column="droppler_z1" />
+        <result property="etcd_z1" column ="etcd_z1"/>
+        <result property="consul_z1" column="consul_z1" />
+        <result property="clock_z1" column="clock_z1" />
+        <result property="api_z1" column="api_z1" />
+        <result property="uaa_z1" column="uaa_z1" />
+        <result property="api_worker_z1" column="api_worker_z1" />
+        <result property="postgres_z1" column ="postgres_z1"/>
+        <result property="nats_z2" column="nat_z2" />
+        <result property="blobstore_z2" column="blobstore_z2" />
+        <result property="router_z2" column="router_z2" />
+        <result property="loggregator_z2" column="loggregator_z2" />
+        <result property="doppler_z2" column="droppler_z2" />
+        <result property="etcd_z2" column ="etcd_z2"/>
+        <result property="consul_z2" column="consul_z2" />
+        <result property="clock_z2" column="clock_z2" />
+        <result property="api_z2" column="api_z2" />
+        <result property="uaa_z2" column="uaa_z2" />
+        <result property="api_worker_z2" column="api_worker_z2" />
+        <result property="postgres_z2" column ="postgres_z2"/>
+    </collection>
+</resultMap>
+
+<select id="selectHbCfInfoList" resultMap="cfInfo">
+    select
+        cf.id 
+        ,cf.iaas_type
+        ,cf.cf_config_name
+        ,cf.default_config_info
+        ,cf.network_config_info
+        ,cf.key_config_info
+        ,cf.resource_config_info
+        ,cf.instance_config_info
+        ,cf.deployment_file
+        ,cf.deploy_status
+        ,cf.task_id
+        ,defaultInfo.id
+        ,defaultInfo.default_config_name
+        ,defaultInfo.director_id
+        ,defaultInfo.release_name
+        ,defaultInfo.release_version
+        ,defaultInfo.deployment_name
+        ,defaultInfo.loggregator_release_name
+        ,defaultInfo.loggregator_release_version
+        ,defaultInfo.login_secret
+        ,defaultInfo.paasta_monitoring_use
+        ,defaultInfo.domain_organization
+        ,defaultInfo.domain
+        ,defaultInfo.ingestor_ip
+        
+        ,keyInfo.key_config_name
+        ,keyInfo.key_file_name
+        
+        ,resourceInfo.resource_config_name
+        ,resourceInfo.bosh_password
+        ,resourceInfo.stemcell_name
+        ,resourceInfo.stemcell_version
+        ,resourceInfo.small_flavor 
+        ,resourceInfo.medium_flavor
+        ,resourceInfo.large_flavor
+        
+        ,instanceInfo.nat_z1
+        ,instanceInfo.blobstore_z1
+        ,instanceInfo.router_z1
+        ,instanceInfo.loggregator_z1
+        ,instanceInfo.droppler_z1
+        ,instanceInfo.etcd_z1
+        ,instanceInfo.consul_z1
+        ,instanceInfo.clock_z1
+        ,instanceInfo.uaa_z1
+        ,instanceInfo.api_z1
+        ,instanceInfo.api_worker_z1
+        ,instanceInfo.postgres_z1
+        ,instanceInfo.nat_z2
+        ,instanceInfo.blobstore_z2
+        ,instanceInfo.router_z2
+        ,instanceInfo.loggregator_z2
+        ,instanceInfo.droppler_z2
+        ,instanceInfo.etcd_z2
+        ,instanceInfo.consul_z2
+        ,instanceInfo.clock_z2
+        ,instanceInfo.uaa_z2
+        ,instanceInfo.api_z2
+        ,instanceInfo.api_worker_z2
+        ,instanceInfo.postgres_z2
+        ,cf.update_user_id
+        ,cf.update_date
+        ,cf.update_user_id
+        ,cf.update_date
+    from ieda_cf_config as cf
+    Left join ieda_cf_default_config as defaultInfo
+    on cf.default_config_info = defaultInfo.default_config_name
+    Left join ieda_cf_network_config as networkInfo
+    on cf.network_config_info = networkInfo.network_config_name
+    Left join ieda_cf_resource_config as resourceInfo
+    on cf.resource_config_info = resourceInfo.resource_config_name
+    Left join ieda_cf_key_config as keyInfo
+    on cf.key_config_info = keyInfo.key_config_name
+    Left join ieda_cf_instance_config as instanceInfo
+    on cf.instance_config_info = instanceInfo.instance_config_name
+    <if test="installStatus == 'installAble'">
+    where deploy_status is null
+    or deploy_status = '';
+    </if>
+    <if test="installStatus != 'installAble'">
+    where deploy_status is not null
+    or deploy_status != '';
+    </if>
+</select>
+    
+<select id="selectCfConfigInfo" resultMap="cfInfo">
+    select
+        bootstrap.id 
+        ,bootstrap.iaas_type
+        ,bootstrap.bootstrap_config_name
+        ,bootstrap.network_config_name
+        ,bootstrap.cpi_config_name
+        ,bootstrap.default_config_name
+        ,bootstrap.resource_config_name
+        ,bootstrap.deployment_file
+        ,bootstrap.deploy_status
+        ,bootstrap.deploy_log
+        ,cpi.iaas_config_id
+        ,resource.stemcell_name
+        ,resource.instance_type
+        ,resource.vm_password
+        ,bootstrap.create_user_id
+        ,bootstrap.create_date
+        ,bootstrap.update_user_id
+        ,bootstrap.update_date
+        ,network.subnet_id
+        ,network.private_static_ip
+        ,network.subnet_range
+        ,network.subnet_gateway
+        ,network.subnet_dns
+        ,network.public_static_ip
+        ,defaultInfo.deployment_name
+        ,defaultInfo.director_name
+        ,defaultInfo.ntp
+        ,defaultInfo.credential_key_name
+        ,defaultInfo.boshRelease
+        ,defaultInfo.bosh_cpi_release
+        ,defaultInfo.enable_snapshots
+        ,defaultInfo.snapshot_schedule
+        ,defaultInfo.paasta_monitoring_use
+        ,defaultInfo.paasta_monitoring_ip
+        ,defaultInfo.influxdb_ip
+        ,defaultInfo.paasta_monitoring_release
+        ,config.iaas_config_alias as iaas_config_alias
+        ,config.id as iaas_config_id
+        ,config.account_id as account_id
+        ,config.common_security_group as common_security_group
+        ,config.common_region as common_region
+        ,config.common_keypair_name as common_keypair_name
+        ,config.common_keypair_path as common_keypair_path
+        ,config.common_availability_zone as common_availability_zone
+        ,account.id as iaas_account_id
+        ,ifnull(account.common_access_endpoint, "") as common_access_endpoint
+        ,ifnull(account.common_access_user, "") as common_access_user
+        ,ifnull(account.common_access_secret, "") as common_access_secret
+        ,ifnull(account.common_tenant, "") as common_tenant
+        ,ifnull(account.common_project, "") as common_project
+        ,ifnull(account.openstack_keystone_version, "") as openstack_keystone_version
+        ,ifnull(account.openstack_domain, "") as openstack_domain
+    from ieda_bootstrap_config as bootstrap
+    Left join ieda_bootstrap_cpi_config as cpi
+    on bootstrap.cpi_config_name = cpi.cpi_name
+    Left join ieda_bootstrap_network_config as network
+    on bootstrap.network_config_name = network.network_config_name
+    Left join ieda_bootstrap_resource_config as resource
+    on bootstrap.resource_config_name = resource.resource_config_name
+    Left join ieda_bootstrap_default_config as defaultInfo
+    on bootstrap.default_config_name = defaultInfo.default_config_name
+    Left join ieda_iaas_config as config
+    on cpi.iaas_config_id = config.id
+    Left join ieda_iaas_account as account
+    on config.account_id = account.id
+    where bootstrap.id = #{id}
+</select>
+    
+<insert id="insertBootStrapConfigInfo">
+    INSERT INTO ieda_bootstrap_config (
+        iaas_type
+        ,bootstrap_config_name
+        ,network_config_name
+        ,cpi_config_name
+        ,deployment_file
+        ,default_config_name
+        ,resource_config_name
+        ,create_user_id
+        ,create_date
+        ,update_user_id
+        ,update_date
+     )VALUE (
+        #{vo.iaasType}
+        ,#{vo.bootstrapConfigName}
+        ,#{vo.networkConfigInfo}
+        ,#{vo.cpiConfigInfo}
+        ,#{vo.deploymentFile}
+        ,#{vo.defaultConfigInfo}
+        ,#{vo.resourceConfigInfo}
+        ,#{vo.createUserId}
+        ,now()
+        ,#{vo.updateUserId}
+        ,now()
+      )
+</insert>
+    
+<update id="updateBootStrapConfigInfo">
+    Update ieda_bootstrap_config set
+        iaas_type = #{vo.iaasType}
+        ,bootstrap_config_name = #{vo.bootstrapConfigName}
+        ,network_config_name = #{vo.networkConfigInfo}
+        ,cpi_config_name = #{vo.cpiConfigInfo}
+        ,default_config_name = #{vo.defaultConfigInfo}
+        ,resource_config_name = #{vo.resourceConfigInfo}
+        ,deploy_log = #{vo.deployLog}
+        ,deploy_status = #{vo.deployStatus}
+        ,deployment_file = #{vo.deploymentFile}
+        ,update_user_id = #{vo.updateUserId}
+        ,update_date = now()
+    WHERE
+    id=#{vo.id}
+</update>
+
+<select id = "selectBootstrapConfigByName" resultType="int">
+    select 
+         count(*)
+    from ieda_bootstrap_config
+    where bootstrap_config_name = #{bootstrapConfigName}
+</select>
+    
+<delete id="deleteBootstrapInfo">
+    Delete 
+    From ieda_bootstrap_config
+    Where id=#{dto.id}
+</delete>
+
+
+<select id="selectInstallCfInfo" resultMap="cfInfo">
+    select
+        private.iaas_type as  hypri_iaas_type
+        ,private.id as hypri_id
+        ,private.bootstrap_type as hypri_bootstrap_type
+        ,private.deployment_file as hypri_deployment_File
+        ,public.iaas_type as hypub_iaas_type
+        ,public.id as id
+        ,public.bootstrap_type as bootstrap_type
+        ,public.deployment_file as deployment_File
+    from ieda_public_bootstrap public, ieda_private_bootstrap private
+    where public.id = #{publicBootStrapId}
+    and private.id = #{privateBootstrapId}
+</select>
+</mapper>

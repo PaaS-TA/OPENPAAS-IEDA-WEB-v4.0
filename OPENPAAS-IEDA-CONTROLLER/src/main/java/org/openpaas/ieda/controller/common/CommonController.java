@@ -4,7 +4,6 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 
-import org.openpaas.ieda.azureMgnt.web.network.dao.AzureNetworkMgntVO;
 import org.openpaas.ieda.common.web.common.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

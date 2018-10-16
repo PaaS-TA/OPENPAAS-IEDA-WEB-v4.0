@@ -74,7 +74,6 @@ var defaultLayout = {
                     return;
                 }
             },onLoad:function(event){
-                console.log(event.xhr.responseText);
                 if(event.xhr.status == 403){
                     location.href = "/abuse";
                     event.preventDefault();
@@ -100,9 +99,7 @@ $(function(){
     w2ui.layout2.content('left', $().w2grid(defaultLayout.grid));
     w2ui['layout2'].content('main', $('#regPopupDiv').html());
     doSearch();
-    
     initView();
-    
     $("#deleteBtn").click(function(){
         if($("#deleteBtn").attr('disabled') == "disabled") return;
         var selected = w2ui['default_GroupGrid'].getSelection();
@@ -138,7 +135,7 @@ function initView(){
      checkPaasTAMonitoringUseYn();
 }
 
-/********************************************************
+/********************************************************f
  * 설명 : 인프라 환경 별 디렉터 정보 조회
  * 기능 : getHbDirectorList
  *********************************************************/
@@ -174,7 +171,7 @@ function getHbDirectorList(iaas){
             },
             error : function( request, status, error ) {
                 var errorResult = JSON.parse(request.responseText);
-                w2alert(errorResult.message, "리소스 정보 저장");
+                w2alert(errorResult.message, "CF 기본 정보저장");
                 w2utils.unlock($("#layout_layout_panel_main"));
                 resetForm();
             }
@@ -184,7 +181,7 @@ function getHbDirectorList(iaas){
 
 function getReleaseList(directorId){
     if(directorId == ""){
-        w2alert("디렉터 정보가 존재 하지 않습니다.", "리소스 정보 저장");
+        w2alert("디렉터 정보가 존재 하지 않습니다.", "CF 기본 정보 저장");
         return;
     }else {
         if($("select[name=releases]").attr("disabled") == "disabled"){

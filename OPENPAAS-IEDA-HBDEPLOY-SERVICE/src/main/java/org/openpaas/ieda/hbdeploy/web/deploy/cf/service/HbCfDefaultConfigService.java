@@ -8,8 +8,8 @@ import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigDAO;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigVO;
 import org.openpaas.ieda.hbdeploy.web.config.setting.service.HbDirectorConfigService;
-import org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfDefaultConfigVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfDefaultConfigDAO;
+import org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfDefaultConfigVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cf.dto.HbCfDefaultConfigDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -80,16 +80,16 @@ public class HbCfDefaultConfigService {
                 vo.setLoggregatorReleaseName(dto.getLoggregatorReleases().split("/")[0]);
                 vo.setLoggregatorReleaseVersion(dto.getLoggregatorReleases().split("/")[1]);
             } else {
-            	vo.setLoggregatorReleaseName("");
-            	vo.setLoggregatorReleaseVersion("");
+                vo.setLoggregatorReleaseName("");
+                vo.setLoggregatorReleaseVersion("");
             }
             vo.setPaastaMonitoringUse(dto.getPaastaMonitoring());
         }
         
         if(StringUtils.isEmpty(dto.getId())){
-        	dao.insertCfDefaultInfo(vo);
+            dao.insertCfDefaultInfo(vo);
         }else {
-        	dao.updateCfDefaultInfo(vo);
+            dao.updateCfDefaultInfo(vo);
         }
     }
     
@@ -99,12 +99,26 @@ public class HbCfDefaultConfigService {
      * @title : deleteDefaultConfigInfo
      * @return : void
     *****************************************************************/
-	public void deleteDefaultConfigInfo(HbCfDefaultConfigDTO dto, Principal principal) {
-		if(StringUtils.isEmpty(dto.getId())){
+    public void deleteDefaultConfigInfo(HbCfDefaultConfigDTO dto, Principal principal) {
+        if(StringUtils.isEmpty(dto.getId())){
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
                     message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
-		}
-		dao.deleteCfDefaultConfigInfo(dto);
-	}
+        }
+        dao.deleteCfDefaultConfigInfo(dto);
+    }
     
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : CF 기본 정보 상세 조회
+     * @title : getDefaultConfigInfo
+     * @return : HbCfDefaultConfigVO
+    *****************************************************************/
+    public HbCfDefaultConfigVO getDefaultConfigInfo(int id) {
+        HbCfDefaultConfigVO vo = dao.selectCfDefaultInfoById(id);
+        if(vo == null){
+            throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
+                    message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+        }
+        return vo;
+    }
 }

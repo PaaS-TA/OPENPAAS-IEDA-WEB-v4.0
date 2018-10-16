@@ -33,7 +33,7 @@ var networkLayout = {
         *********************************************************/
         grid: {
             name: 'network_GroupGrid',
-            header: '<b>Network 정보</b>',
+            header: '<b>기본 정보</b>',
             method: 'GET',
                 multiSelect: false,
             show: {
@@ -41,20 +41,23 @@ var networkLayout = {
                     footer: true},
             style: 'text-align: center',
             columns:[
+                   { field: 'id', hidden: true },
                    { field: 'recid', hidden: true },
-                   { field: 'networkConfigName', caption: '네트워크 정보 별칭', size:'50%', style:'text-align:center;' },
-                   { field: 'iaasType', caption: '인프라 환경 타입', size:'50%', style:'text-align:center;' ,render: function(record){ 
+                   { field: 'networkConfigName', caption: '네트워크 정보 별칭', size:'150px', style:'text-align:center;' },
+                   { field: 'iaasType', caption: '인프라 환경 타입', size:'120px', style:'text-align:center;' ,render: function(record){ 
                        if(record.iaasType.toLowerCase() == "aws"){
                            return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
                        }else if (record.iaasType.toLowerCase() == "openstack"){
                            return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
                        }
                    }},
-                   { field: 'publicStaticIp', caption: '디렉터 Public IP', size:'50%', style:'text-align:center;'},
-                   { field: 'privateStaticIp', caption: '디렉터 Private IP', size:'60%', style:'text-align:center;'},
-                   { field: 'subnetId', caption: '서브넷 아이디', size:'50%', style:'text-align:center;'},
-                   { field: 'subnetRange', caption: '서브넷 범위', size:'50%', style:'text-align:center;'},
-                   { field: 'subnetDns', caption: 'DNS 주소', size:'50%', style:'text-align:center;'}
+                   { field: 'publicStaticIP', caption: 'CF API TRAGET IP', size:'140px', style:'text-align:center;'},
+                   { field: 'subnetId', caption: '서브넷 아이디', size:'180px', style:'text-align:center;'},
+                   { field: 'cloudSecurityGroups', caption: '보안 그룹', size:'140px', style:'text-align:center;'},
+                   { field: 'subnetRange', caption: '서브넷 범위', size:'140px', style:'text-align:center;'},
+                   { field: 'subnetReservedFrom', caption: '할당 제외 대역', size:'160px', style:'text-align:center;'},
+                   { field: 'subnetStaticFrom', caption: '할당 대역', size:'160px', style:'text-align:center;'},
+                   { field: 'subnetDns', caption: 'DNS 주소', size:'140px', style:'text-align:center;'}
                   ],
             onSelect : function(event) {
                 event.onComplete = function() {
@@ -86,24 +89,6 @@ var networkLayout = {
                 { name: 'email', type: 'email', html: { caption: 'Email', attr: 'size="30"' } },
                 { name: 'sdate', type: 'date', html: { caption: 'Date', attr: 'size="10"' } }
             ],
-            actions: {
-                Reset: function () {
-                    this.clear();
-                },
-                Save: function () {
-                    var errors = this.validate();
-                    if (errors.length > 0) return;
-                    if (this.recid == 0) {
-                        w2ui.grid.add($.extend(true, { recid: w2ui.grid.records.length + 1 }, this.record));
-                        w2ui.grid.selectNone();
-                        this.clear();
-                    } else {
-                        w2ui.grid.set(this.recid, this.record);
-                        w2ui.grid.selectNone();
-                        this.clear();
-                    }
-                }
-            }
         }
     }
 }
@@ -229,7 +214,7 @@ function createInternalNetworkValidate(index){
         required: function(){
             return checkEmpty($("input[name='subnetRange_"+index+"']").val());
         },ipv4Range : function(){
-            return $(".w2ui-msg-body input[name='subnetRange_"+index+"']").val();  
+            return $("input[name='subnetRange_"+index+"']").val();  
         }, messages: {required: "서브넷 범위"+text_required_msg}
     });
     
@@ -287,7 +272,7 @@ function createInternalNetworkValidate(index){
         required: function(){
             return checkEmpty($("input[name='subnetStaticFrom_"+index+"']").val());
         },ipv4: function(){
-            return $(".w2ui-msg-body input[name='subnetStaticFrom_"+index+"']").val();  
+            return $("input[name='subnetStaticFrom_"+index+"']").val();  
         }, messages: {required: "IP 할당 대역"+text_required_msg}
     });
     
@@ -324,7 +309,6 @@ function createInternalNetworkValidate(index){
   *********************************************************/
  function iaasTypeChangeInput(value, record){
     iaas = value;
-    console.log($("#defaultNetworkInfoDiv_2").html());
     if( value.toUpperCase() == "AWS" ){
         $("#availabilityZoneDiv").show();
         $("#availabilityZoneDiv").css("display", "block");
@@ -355,16 +339,61 @@ function settingNetworkInfo(){
         return;
     }
     iaas = record.iaasType;
-    $("input[name=networkInfoId]").val(record.recid);
-    $("input[name=networkConfigName]").val(record.networkConfigName);
-    $("input[name=subnetId]").val(record.subnetId);
-    $("input[name=privateStaticIp]").val(record.privateStaticIp);
-    $("input[name=subnetRange]").val(record.subnetRange);
-    $("input[name=subnetGateway]").val(record.subnetGateway);
-    $("input[name=subnetDns]").val(record.subnetDns);
-    $("input[name=publicStaticIp]").val(record.publicStaticIp);
     $("select[name=iaasType]").val(record.iaasType);
-    $("select[name=iaasConfigId]").val(record.iaasConfigAlias);
+    $.ajax({
+        type : "GET",
+        url : "/deploy/hbCf/network/list/detail/"+record.networkConfigName,
+        contentType : "application/json",
+        dataType : "json",
+        success : function(data, status) {
+            if(data != null && data.records.length > 0){
+                $("input[name=networkInfoId]").val(data.records[0].id);
+                $("input[name=publicStaticIp]").val(data.records[0].publicStaticIP);
+                $("input[name=networkName]").val(data.records[0].networkConfigName);
+                iaasTypeChangeInput(data.records[0].iaasType);
+                var length =  data.records.length;
+                for(var i=0; i<length; i++){
+                    if(data.records.length == 2){
+                        delInternalNetwork('#defaultNetworkInfoDiv_1', 2);
+                        $("input[name=subnetId_"+(i+1)+"]").val(data.records[i+1].subnetId);
+                        $("input[name=cloudSecurityGroups_"+(i+1)+"]").val(data.records[i+1].cloudSecurityGroups);
+                        $("input[name=availabilityZone_"+(i+1)+"]").val(data.records[i+1].availabilityZone);
+                        $("input[name=subnetRange_"+(i+1)+"]").val(data.records[i+1].subnetRange);
+                        $("input[name=subnetGateway_"+(i+1)+"]").val(data.records[i+1].subnetGateway);
+                        $("input[name=subnetDns_"+(i+1)+"]").val(data.records[i+1].subnetDns);
+                        $("input[name=subnetReservedFrom_"+(i+1)+"]").val(data.records[i+1].subnetReservedFrom);
+                        $("input[name=subnetReservedTo_"+(i+1)+"]").val(data.records[i+1].subnetReservedTo);
+                        $("input[name=subnetStaticFrom_"+(i+1)+"]").val(data.records[i+1].subnetStaticFrom);
+                        $("input[name=subnetStaticTo_"+(i+1)+"]").val(data.records[i+1].subnetStaticTo);
+                        return;
+                    } else if(data.records.length == 3){
+                        addInternalNetworkInputs('#defaultNetworkInfoDiv_1', '#defaultNetworkInfoForm');
+                        $("input[name=subnetId_"+(i+1)+"]").val(data.records[i+1].subnetId);
+                        $("input[name=cloudSecurityGroups_"+(i+1)+"]").val(data.records[i+1].cloudSecurityGroups);
+                        $("input[name=availabilityZone_"+(i+1)+"]").val(data.records[i+1].availabilityZone);
+                        $("input[name=subnetRange_"+(i+1)+"]").val(data.records[i+1].subnetRange);
+                        $("input[name=subnetGateway_"+(i+1)+"]").val(data.records[i+1].subnetGateway);
+                        $("input[name=subnetDns_"+(i+1)+"]").val(data.records[i+1].subnetDns);
+                        $("input[name=subnetReservedFrom_"+(i+1)+"]").val(data.records[i+1].subnetReservedFrom);
+                        $("input[name=subnetReservedTo_"+(i+1)+"]").val(data.records[i+1].subnetReservedTo);
+                        $("input[name=subnetStaticFrom_"+(i+1)+"]").val(data.records[i+1].subnetStaticFrom);
+                        $("input[name=subnetStaticTo_"+(i+1)+"]").val(data.records[i+1].subnetStaticTo);
+                        if(i == 1) return;
+                    }
+                }
+            } else {
+                w2alert("Network 상세 정보 조회 실패, <br> 네트워크 정보를 확인해 주세요.");
+                doSearch();
+            }
+
+        },
+        error : function(request, status, error) {
+            var errorResult = JSON.parse(request.responseText);
+            w2alert(errorResult.message);
+            doSearch();
+        }
+    });
+    
 }
 
 /********************************************************
@@ -375,7 +404,6 @@ function doSearch() {
     networkConfigInfo=[];//네트워크 정보
     iaas = "";
     resetForm();
-    
     w2ui['network_GroupGrid'].clear();
     w2ui['network_GroupGrid'].load('/deploy/hbCf/network/list');
     doButtonStyle(); 
@@ -397,11 +425,12 @@ function registCfNetworkConfigInfo(form){
     w2popup.lock("등록 중입니다.", true);
     
     var external = {
-        iaas               : $("select[name='iaasType']").val(),
+        id                 : $("input[name=networkInfoId]").val(),    
+        iaasType           : $("select[name='iaasType']").val(),
         networkConfigName  : $("input[name='networkName']").val(),
         seq                : 0,
         net                : "External",
-        publicStaticIP     : $(".w2ui-msg-body input[name='publicStaticTo']").val(),
+        publicStaticIP     : $("input[name='publicStaticIp']").val()
     }
     networkConfigInfo.push(external);
     
@@ -409,11 +438,11 @@ function registCfNetworkConfigInfo(form){
     if( $("#"+form).find(".panel-body").length > 1 ){
         cnt = $("#"+form).find(".panel-body").length;
     }
-    for(var i=1; i < cnt; i++){
+    for(var i=1; i < (cnt -1 ); i++){
         var internal = {
-            iaas                : $("select[name='iaasType']").val(),
+            iaasType            : $("select[name='iaasType']").val(),
             net                 : "Internal",
-            networkConfigName  :  $("input[name='networkName']").val(),
+            networkConfigName   :  $("input[name='networkName']").val(),
             seq                 : i,
             subnetRange         : $("input[name='subnetRange_"+i+"']").val(),
             subnetGateway       : $("input[name='subnetGateway_"+i+"']").val(),
@@ -429,9 +458,6 @@ function registCfNetworkConfigInfo(form){
         }
         networkConfigInfo.push(internal);
     }
-    
-    console.log(networkConfigInfo);
-    return;
     $.ajax({
         type : "PUT",
         url : "/deploy/hbCf/network/save",
@@ -442,7 +468,7 @@ function registCfNetworkConfigInfo(form){
             doSearch();
         },
         error : function( e, status ) {
-            w2popup.unlock();
+            doSearch();
             var errorResult = JSON.parse(e.responseText);
             w2alert(errorResult.message, "네트워크 정보 저장");
         }
@@ -507,15 +533,23 @@ function clearMainPage() {
 function resetForm(status){
     $(".panel-body").find("p").remove();
     $(".panel-body").children().children().children().css("borderColor", "#bbb");
-    $("input[name=networkConfigName]").val("");
-    $("input[name=subnetId]").val("");
-    $("input[name=privateStaticIp]").val("");
-    $("input[name=subnetRange]").val("");
-    $("input[name=subnetGateway]").val("");
-    $("input[name=subnetDns]").val("");
+    $("input[name=networkName]").val("");
+    $("input[name=publicStaticIp]").val("");
     $("select[name=iaasType]").val("");
     $("input[name=networkInfoId]").val("");
-    $("input[name=publicStaticIp]").val("");
+    delInternalNetwork('#defaultNetworkInfoDiv_1', 2);
+    for(var i=1; i<3; i++){
+        $("input[name=subnetId_"+i+"]").val("");
+        $("input[name=cloudSecurityGroups_"+i+"]").val("");
+        $("input[name=availabilityZone_"+i+"]").val("");
+        $("input[name=subnetRange_"+i+"]").val("");
+        $("input[name=subnetDns_"+i+"]").val("");
+        $("input[name=subnetReservedFrom_"+i+"]").val("");
+        $("input[name=subnetReservedTo_"+i+"]").val("");
+        $("input[name=subnetStaticFrom_"+i+"]").val("");
+        $("input[name=subnetStaticTo_"+i+"]").val("");
+    }
+    
     if(status=="reset"){
         w2ui['network_GroupGrid'].clear();
         doSearch();
@@ -703,14 +737,20 @@ $(function() {
                 required: function(){ return checkEmpty( $("input[name='subnetReservedFrom_1']").val() ); }
                ,ipv4    : function(){ return $("input[name='subnetReservedFrom_1']").val(); }
            }, subnetReservedTo_1: { 
-                required: function(){ return checkEmpty( $(".w2ui-msg-body input[name='subnetReservedTo_1']").val() ); }
+                required: function(){ return checkEmpty( $("input[name='subnetReservedTo_1']").val() ); }
                ,ipv4    : function(){ return $("input[name='subnetReservedTo_1']").val(); }
            }, subnetStaticFrom_1: { 
-                required: function(){ return checkEmpty( $(".w2ui-msg-body input[name='subnetStaticFrom_1']").val() ); }
+                required: function(){ return checkEmpty( $("input[name='subnetStaticFrom_1']").val() ); }
                ,ipv4: function(){ return $("input[name='subnetStaticFrom_1']").val(); }
            }, subnetStaticTo_1: { 
                 required: function(){ return checkEmpty( $("input[name='subnetStaticTo_1']").val() ); }
                ,ipv4: function(){ return $("input[name='subnetStaticTo_1']").val(); }
+           }, networkName: { 
+               required: function(){ return checkEmpty( $("input[name='networkName']").val() ); }
+           }, publicStaticIp: { 
+               required: function(){ return checkEmpty( $("input[name='publicStaticIp']").val() ); }
+           }, iaasType: { 
+               required: function(){ return checkEmpty( $("select[name='iaasType']").val() ); }
            }
         }, messages: {
             subnetId_1            : { required: "서브넷 아이디"+text_required_msg }
@@ -723,6 +763,10 @@ $(function() {
             , subnetReservedTo_1   : { required: "IP할당 제외 대역"+text_required_msg }
             , subnetStaticFrom_1   : { required: "IP할당 대역"+text_required_msg }
             , subnetStaticTo_1     : { required: "IP할당 대역"+text_required_msg }
+            
+            , publicStaticIp   : { required: "CF API Target IP"+text_required_msg }
+            , networkName   : { required: "Network Cofig 별칭"+text_required_msg }
+            , iaasType     : { required: "인프라 환경"+select_required_msg }
         }, unhighlight: function(element) {
             setHybridSuccessStyle(element);
         },errorPlacement: function(error, element) {

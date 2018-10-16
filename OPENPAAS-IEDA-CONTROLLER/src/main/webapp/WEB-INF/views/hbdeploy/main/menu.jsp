@@ -87,7 +87,7 @@
                        <li><a href="javascript:goPage('<c:url value="/deploy/hbCf/networkConfig"/>', 'NETWROK 정보 관리');">NETWROK 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/hbCf/credentialConfig"/>', '인증서 정보 관리');">인증서 정보 관리</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/hbCf/keyConfig"/>', 'KEY 정보 관리');">KEY 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
                        <li><a href="javascript:goPage('<c:url value="/deploy/hbCf/resourceConfig"/>', '리소스 정보 관리');">리소스 정보 관리</a></li>
@@ -96,7 +96,7 @@
                        <li><a href="javascript:goPage('<c:url value="/deploy/hbCf/instanceConfig"/>', '인스턴스 정보 관리');">인스턴스 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/hbCf/install"/>', '이종 CF 설치');">이종 CF 설치</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/hbCf"/>', '이종 CF 설치');">이종 CF 설치</a></li>
                    </sec:authorize>
                 </ul>
             </li>

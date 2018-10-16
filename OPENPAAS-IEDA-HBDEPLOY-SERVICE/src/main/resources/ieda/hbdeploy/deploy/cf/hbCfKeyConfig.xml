@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfKeyConfigDAO">
+
+    <resultMap id="cfKeyInfo"
+        type="org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfKeyConfigVO">
+        <id property="id" column="id" />
+        <result property="recid" column="id" />
+        <result property="iaasType" column="iaas_type" />
+        <result property="keyConfigName" column="key_config_name" />
+        <result property="defaultConfigInfo" column="default_config_id" />
+        <result property="keyFileName" column="Key_file_name" />
+        <result property="domain" column="domain" />
+        <result property="countryCode" column="country_code" />
+        <result property="city" column="city" />
+        <result property="company" column="company" />
+        <result property="jobTitle" column="job_title" />
+        <result property="emailAddress" column="email_address" />
+        <result property="createUserId" column="create_user_id" />
+        <result property="createDate" column="create_date" />
+        <result property="updateUserId" column="update_user_id" />
+        <result property="updateDate" column="update_date" />
+    </resultMap>
+
+    <select id="selectKeyConfigInfoList" resultMap="cfKeyInfo">
+        select
+        id
+        ,iaas_type
+        ,key_config_name
+        ,default_config_id
+        ,key_file_name
+        ,domain
+        ,country_code
+        ,city
+        ,company
+        ,job_title
+        ,email_address
+        ,create_user_id
+        ,create_date
+        ,update_user_id
+        ,update_date
+        from ieda_cf_key_config
+        ORDER BY id;
+    </select>
+
+    <select id="selectCfKeyConfigInfoById" resultMap="cfKeyInfo">
+        select
+        id
+        ,iaas_type
+        ,key_config_name
+        ,default_config_id
+        ,key_file_name
+        ,domain
+        ,country_code
+        ,city
+        ,company
+        ,job_title
+        ,email_address
+        ,create_user_id
+        ,create_date
+        ,update_user_id
+        ,update_date
+        from ieda_cf_key_config
+        where id = #{id};
+    </select>
+
+    <select id="selectCfKeyConfigInfoByName" resultType="int">
+        select
+        count(*)
+        from ieda_cf_key_config
+        where key_config_name = #{keyConfigName};
+    </select>
+
+    <insert id="insertCfKeyConfigInfo">
+        insert into ieda_cf_key_config(
+        id,
+        iaas_type,
+        key_config_name,
+        default_config_id,
+        key_file_name,
+        domain,
+        country_code,
+        city,
+        company,
+        job_title,
+        email_address,
+        create_user_id,
+        create_date,
+        update_user_id,
+        update_date
+        )
+        Values
+        (
+        #{vo.id},
+        #{vo.iaasType},
+        #{vo.keyConfigName},
+        #{vo.defaultConfigInfo},
+        #{vo.keyFileName},
+        #{vo.domain},
+        #{vo.countryCode},
+        #{vo.city},
+        #{vo.company},
+        #{vo.jobTitle},
+        #{vo.emailAddress},
+        #{vo.createUserId},
+        now(),
+        #{vo.updateUserId},
+        now()
+        )
+    </insert>
+
+    <update id="updateCfKeyConfigInfo">
+        update ieda_cf_key_config set
+        iaas_type = #{vo.iaasType},
+        key_config_name = #{vo.keyConfigName},
+        default_config_id = #{vo.defaultConfigInfo},
+        key_file_name = #{vo.keyFileName},
+        domain = #{vo.domain},
+        country_code = #{vo.countryCode},
+        city = #{vo.city},
+        job_title = #{vo.company},
+        email_address = #{vo.emailAddress},
+        update_user_id = #{vo.updateUserId},
+        update_date = now()
+        where id = #{vo.id}
+    </update>
+
+    <delete id="deleteCfKeyConfigInfo">
+        delete from
+        ieda_cf_key_config
+        where
+        id = #{id}
+    </delete>
+
+</mapper>

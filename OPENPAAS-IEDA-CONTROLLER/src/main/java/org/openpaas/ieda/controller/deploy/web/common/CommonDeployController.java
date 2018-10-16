@@ -28,7 +28,9 @@ import org.openpaas.ieda.deploy.web.management.code.dao.CommonCodeVO;
 import org.openpaas.ieda.deploy.web.management.code.service.CommonCodeService;
 import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigVO;
 import org.openpaas.ieda.hbdeploy.web.config.setting.service.HbDirectorConfigService;
+import org.openpaas.ieda.hbdeploy.web.config.stemcell.dao.HbStemcellManagementVO;
 import org.openpaas.ieda.hbdeploy.web.information.release.service.HbReleaseService;
+import org.openpaas.ieda.hbdeploy.web.information.stemcell.service.HbStemcellService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,8 @@ public class CommonDeployController {
     @Autowired private IaasConfigMgntService iaasConfigMgntService;
     @Autowired private HbReleaseService hbReleaseService;
     @Autowired private HbDirectorConfigService hbDirectorService;
+    @Autowired private HbStemcellService hbStemcellService;
+    
     
     private final static Logger LOGGER = LoggerFactory.getLogger(CommonCodeController.class);
     
@@ -384,5 +388,25 @@ public class CommonDeployController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
     
+    
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : 인프라 별 이종 디렉터 목록 정보 조회
+     * @title : getHbDirectorInfoList
+     * @return : ResponseEntity
+    *****************************************************************/
+    @RequestMapping(value = "/common/hbDeploy/stemcell/list/{directorInfo}", method = RequestMethod.GET)
+    public ResponseEntity<HashMap<String, Object>> getHbStmcellInfoList(@PathVariable int directorInfo) {
+        if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /common/hbDeploy/stemcell/list/{directorInfo}"); }
+        List<HbStemcellManagementVO> stemcellList = hbStemcellService.getStemcellList(directorInfo);
+        HashMap<String, Object> list = new HashMap<String, Object>();
+        int size =0;
+        if( stemcellList != null && stemcellList.size() > 0  ) {
+            size = stemcellList.size();
+        }
+        list.put("total", size);
+        list.put("records", stemcellList);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
     
 }

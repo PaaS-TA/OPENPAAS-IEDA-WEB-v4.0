@@ -11,6 +11,7 @@
         <result property="publicStaticIP" column="public_static_ip" />
         <result property="net" column="net" />
         <result property="seq" column="seq" />
+        <result property="subnetId" column="subnet_id" />
         <result property="subnetStaticFrom" column="subnet_static_from" />
         <result property="subnetStaticTo" column="subnet_static_to" />
         <result property="subnetReservedFrom" column="subnet_reserved_from" />
@@ -26,7 +27,7 @@
         <result property="updateDate" column ="UDATE_DATE"/>
     </resultMap>
 
-    <select id = "selectNetworkConfigList" resultMap="cfNetworkInfo">
+    <select id = "selectCfNetworkConfigList" resultMap="cfNetworkInfo">
         select 
             id
             ,iaas_type
@@ -34,6 +35,7 @@
             ,public_static_ip
             ,net
             ,seq
+            ,subnet_id
             ,subnet_static_from
             ,subnet_static_to
             ,subnet_reserved_from
@@ -51,27 +53,55 @@
         ORDER BY id;
     </select>
     
-    <select id = "selectCfDefaultInfoById" resultMap="cfNetworkInfo">
+    <select id = "selectCfDefaultConfigInfoByNameResultVo" resultMap="cfNetworkInfo">
         select 
             id
             ,iaas_type
-            ,default_config_name
-            ,deployment_name
-            ,director_id
-            ,release_name
-            ,release_version
-            ,loggregator_release_name
-            ,loggregator_release_version
-            ,login_secret
-            ,paasta_monitoring_use
-            ,domain_organization
-            ,domain
-            ,ingestor_ip
+            ,network_config_name
+            ,public_static_ip
+            ,net
+            ,seq
+            ,subnet_id
+            ,subnet_static_from
+            ,subnet_static_to
+            ,subnet_reserved_from
+            ,subnet_reserved_to
+            ,subnet_range
+            ,subnet_gateway
+            ,availability_zone
+            ,subnet_dns
+            ,cloud_security_groups
             ,create_user_id
             ,create_date
             ,update_user_id
             ,update_date
-        from ieda_cf_default_config
+        from ieda_cf_network_config
+        where network_config_name = #{networkConfigName};
+    </select>
+    
+    <select id="selectCfDefaultConfigInfoById" resultMap="cfNetworkInfo">
+            select 
+            id
+            ,iaas_type
+            ,network_config_name
+            ,public_static_ip
+            ,net
+            ,seq
+            ,subnet_id
+            ,subnet_static_from
+            ,subnet_static_to
+            ,subnet_reserved_from
+            ,subnet_reserved_to
+            ,subnet_range
+            ,subnet_gateway
+            ,availability_zone
+            ,subnet_dns
+            ,cloud_security_groups
+            ,create_user_id
+            ,create_date
+            ,update_user_id
+            ,update_date
+        from ieda_cf_network_config
         where id = #{id};
     </select>
     
@@ -79,12 +109,11 @@
         select 
             count(*)
         from ieda_cf_network_config
-        where default_config_name = #{networkConfigName};
+        where network_config_name = #{networkConfigName};
     </select>
     
-    <insert id="insertCfDefaultInfo">
-            /**ieda_network.insertNetworkList**/
-            insert into ieda_network(
+    <insert id="insertCfNetworkConfigInfo">
+            insert into ieda_cf_network_config(
                 id, 
                 iaas_type,
                 network_config_name,
@@ -99,7 +128,6 @@
                 subnet_static_from, 
                 subnet_static_to, 
                 subnet_id, 
-                network_name,
                 cloud_security_groups,
                 availability_zone,
                 create_user_id, 
@@ -109,7 +137,8 @@
             )
             Values
             <foreach collection="networks" item="item" index="index"   separator="," >
-                ( #{item.id}, 
+                (
+                #{item.id}, 
                 #{item.iaasType},
                 #{item.networkConfigName},
                 #{index}, 
@@ -123,7 +152,6 @@
                 #{item.subnetStaticFrom},
                 #{item.subnetStaticTo},
                 #{item.subnetId}, 
-                #{item.networkName}, 
                 #{item.cloudSecurityGroups},
                 #{item.availabilityZone},
                 #{item.createUserId},
