@@ -36,7 +36,7 @@ public class HbDiegoNetworkConfigController {
     @RequestMapping(value = "/deploy/hbDiego/HbDiegoNetworkConfig", method = RequestMethod.GET)
     public String goHbNetworkConfig(){
         if (LOGGER.isInfoEnabled()) LOGGER.info("====================================> /deploy/hbDiego/HbDiegoNetworkConfig");
-        return "/hbdeploy/deploy/diego/HbDiegoNetworkConfig";
+        return "/hbdeploy/deploy/diego/hbDiegoNetworkConfig";
     }
     
     /****************************************************************
@@ -89,5 +89,17 @@ public class HbDiegoNetworkConfigController {
     	if (LOGGER.isInfoEnabled()) LOGGER.info("====================================> /deploy/hbDiego/network/save");
     	service.saveNetworkConfigInfo(dto, principal);
     	return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : DIEGO 네트워크 정보 삭제
+     * @title : deleteDiegoNetworkConfigInfo
+     * @return : ResponseEntity<?>
+    *****************************************************************/
+    @RequestMapping(value = "/deploy/hbDiego/network/delete", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteDiegoNetworkConfigInfo(@RequestBody @Valid HbDiegoNetworkConfigDTO dto, Principal principal){
+    	if (LOGGER.isInfoEnabled()) LOGGER.info("====================================> /deploy/hbDiego/network/delete");
+    	service.deleteNetworkConfigInfo(dto, principal);
+    	return new ResponseEntity<>(HttpStatus.OK);
     }
 }

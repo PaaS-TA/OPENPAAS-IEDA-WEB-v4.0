@@ -50,9 +50,13 @@ var networkLayout = {
                            return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
                        }
                    }},
+                   { field: 'cloudSecurityGroups', caption: '보안 그룹', size:'50%', style:'text-align:center;'},
                    { field: 'subnetId', caption: '서브넷 아이디', size:'50%', style:'text-align:center;'},
+                   { field: 'subnetDns', caption: 'DNS 주소', size:'50%', style:'text-align:center;'},
                    { field: 'subnetRange', caption: '서브넷 범위', size:'50%', style:'text-align:center;'},
-                   { field: 'subnetDns', caption: 'DNS 주소', size:'50%', style:'text-align:center;'}
+                   { field: 'subnetGateway', caption: '서브넷 게이트웨이', size:'50%', style:'text-align:center;'},
+                   { field: 'subnetReservedFrom', caption: 'IP 제외 대역', size:'50%', style:'text-align:center;'},
+                   { field: 'subnetStaticFrom', caption: 'IP 할당 대역', size:'50%', style:'text-align:center;'},
                   ],
             onSelect : function(event) {
                 event.onComplete = function() {
@@ -64,6 +68,7 @@ var networkLayout = {
             onUnselect : function(event) {
                 event.onComplete = function() {
                     resetForm();
+                    
                     $('#deleteBtn').attr('disabled', true);
                     return;
                 }
@@ -219,7 +224,6 @@ $(function(){
   * 기능 : createInternalNetworkValidate
   *********************************************************/
 function createInternalNetworkValidate(index){
-    console.log('checkInternal:::::  '+index);
     var subnet_message="서브넷 아이디";
     var zone_message = "가용 영역";
 
@@ -388,10 +392,24 @@ function settingNetworkInfo(){
                     $("input[name=subnetReservedTo_"+(i+1)+"]").val(data.records[i].subnetReservedTo);
                     $("input[name=subnetStaticFrom_"+(i+1)+"]").val(data.records[i].subnetStaticFrom);
                     $("input[name=subnetStaticTo_"+(i+1)+"]").val(data.records[i].subnetStaticTo);
+                    if(data.records.length >= 2){
+                        addInternalNetworkInputs('#defaultNetworkInfoDiv_'+i+'', '#defaultNetworkInfoForm');
+                        $("input[name=subnetId_"+(i+1)+"]").val(data.records[i].subnetId);
+                        $("input[name=cloudSecurityGroups_"+(i+1)+"]").val(data.records[i].cloudSecurityGroups);
+                        $("input[name=availabilityZone_"+(i+1)+"]").val(data.records[i].availabilityZone);
+                        $("input[name=subnetRange_"+(i+1)+"]").val(data.records[i].subnetRange);
+                        $("input[name=subnetGateway_"+(i+1)+"]").val(data.records[i].subnetGateway);
+                        $("input[name=subnetDns_"+(i+1)+"]").val(data.records[i].subnetDns);
+                        $("input[name=subnetReservedFrom_"+(i+1)+"]").val(data.records[i].subnetReservedFrom);
+                        $("input[name=subnetReservedTo_"+(i+1)+"]").val(data.records[i].subnetReservedTo);
+                        $("input[name=subnetStaticFrom_"+(i+1)+"]").val(data.records[i].subnetStaticFrom);
+                        $("input[name=subnetStaticTo_"+(i+1)+"]").val(data.records[i].subnetStaticTo);
+                    }
                 }
             }else{
                 w2alert("Network 상세 정보 조회 실패, <br> 네트워크 정보를 확인해 주세요.");
                 doSearch();
+                resetForm();
             }
         },
         error: function(request, status, error) {
@@ -437,9 +455,10 @@ function registDiegoNetworkConfigInfo(form){
     }
     for(var i=1; i < cnt-1; i++){
         var internal = {
-            iaasType                : $("select[name='iaasType']").val(),
+            id                  : $("input[name=networkInfoId]").val(),
+            iaasType            : $("select[name='iaasType']").val(),
             net                 : "Internal",
-            networkConfigName  :  $("input[name='networkName']").val(),
+            networkConfigName   :  $("input[name='networkName']").val(),
             seq                 : i,
             subnetRange         : $("input[name='subnetRange_"+i+"']").val(),
             subnetGateway       : $("input[name='subnetGateway_"+i+"']").val(),
@@ -470,6 +489,7 @@ function registDiegoNetworkConfigInfo(form){
             w2popup.unlock();
             var errorResult = JSON.parse(e.responseText);
             w2alert(errorResult.message, "네트워크 정보 저장");
+            doSearch();
         }
     });
 }
@@ -479,6 +499,7 @@ function registDiegoNetworkConfigInfo(form){
  * 기능 : deleteDiegoNetworkConfigInfo
  *********************************************************/
 function deleteDiegoNetworkConfigInfo(id, networkConfigName){
+	console.log(id+'/'+networkConfigName);
     w2popup.lock("삭제 중입니다.", true);
     networkInfo = {
         id : id,
@@ -546,6 +567,8 @@ function resetForm(status){
         doSearch();
     }
     document.getElementById("defaultNetworkInfoForm").reset();
+    $("#defaultNetworkInfoDiv_2").empty();
+    $("#defaultNetworkInfoDiv_3").empty();
 }
 
 </script>
