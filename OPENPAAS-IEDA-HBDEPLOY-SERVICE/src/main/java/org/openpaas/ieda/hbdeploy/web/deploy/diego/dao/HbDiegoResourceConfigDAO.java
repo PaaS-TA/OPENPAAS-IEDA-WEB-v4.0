@@ -1,57 +1,57 @@
-package org.openpaas.ieda.hbdeploy.web.deploy.cf.dao;
+package org.openpaas.ieda.hbdeploy.web.deploy.diego.dao;
 
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-public interface HbCfDAO {
+public interface HbDiegoResourceConfigDAO {
 	
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : CF 정보 목록 전체 조회
-     * @title : selectHbCfInfoList
-     * @return : List<HbCfVO>
+     * @description : DIEGO 리소스 정보 목록 조회
+     * @title : selectResourceConfigInfoList
+     * @return : List<HbDiegoResourceConfigVO>
     *****************************************************************/
-	List<HbCfVO> selectHbCfInfoList(@Param("installStatus") String installStatus);
+	List<HbDiegoResourceConfigVO> selectResourceConfigInfoList();
 	
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : CF 중복 데이터 확인
-     * @title : selectHbCfInfoByName
+     * @description : DIEGO 리소스 정보 중복 검사
+     * @title : selectResourceConfigInfoByName
      * @return : int
     *****************************************************************/
-	int selectHbCfInfoByName(@Param("cfConfigName") String cfConfigName);
+	int selectResourceConfigInfoByName(@Param("resourceConfigName") String resourceConfigName);
 	
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : CF 상세 조회
-     * @title : selectHbCfInfoById
-     * @return : HbCfVO
+     * @description : DIEGO 리소스 정보 상세 조회
+     * @title : selectResourceConfigInfoById
+     * @return : HbDiegoResourceConfigVO
     *****************************************************************/
-	HbCfVO selectHbCfInfoById(@Param("id") int id);
+	HbDiegoResourceConfigVO selectResourceConfigInfoById(@Param("id") int id);
 
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : CF 정보 삽입
-     * @title : insertHbCfInfo
+     * @description : DIEGO 리소스 정보 삽입
+     * @title : insertResourceConfigInfo
      * @return : void
     *****************************************************************/
-	void insertHbCfInfo(@Param("vo") HbCfVO vo);
-	
-    /****************************************************************
-     * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : CF 정보 수정
-     * @title : updateHbCfInfo
-     * @return : void
-    *****************************************************************/
-	void updateHbCfInfo(@Param("vo") HbCfVO vo);
-	
-    /****************************************************************
-     * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : CF 정보 수정
-     * @title : deleteHbCfInfo
-     * @return : void
-    *****************************************************************/
-	void deleteHbCfInfo(@Param("id") int id);
+	void insertResourceConfigInfo(@Param("vo") HbDiegoResourceConfigVO vo);
 
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : DIEGO 리소스 정보 수정
+     * @title : updateResourceConfigInfo
+     * @return : void
+    *****************************************************************/
+	void updateResourceConfigInfo(@Param("vo") HbDiegoResourceConfigVO vo);
+	
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : DIEGO 리소스 정보 삭제
+     * @title : deleteResourceConfigInfo
+     * @return : void
+    *****************************************************************/
+	void deleteResourceConfigInfo(@Param("id") int id);
+	
 }

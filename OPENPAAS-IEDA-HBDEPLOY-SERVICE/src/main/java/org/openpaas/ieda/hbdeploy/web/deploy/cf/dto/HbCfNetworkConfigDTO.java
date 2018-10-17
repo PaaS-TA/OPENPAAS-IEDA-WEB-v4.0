@@ -17,6 +17,7 @@ public class HbCfNetworkConfigDTO {
     private String subnetId; //네트워크 ID
     private String cloudSecurityGroups; //시큐리티 그룹
     private String availabilityZone;//availabilityZone
+    
     public String getId() {
         return id;
     }

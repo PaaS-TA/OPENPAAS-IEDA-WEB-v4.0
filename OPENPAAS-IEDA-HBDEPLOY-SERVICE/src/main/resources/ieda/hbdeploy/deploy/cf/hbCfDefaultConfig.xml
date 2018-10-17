@@ -135,7 +135,7 @@
             domain = #{vo.domain},
             domain_organization = #{vo.domainOrganization},
             login_secret = #{vo.loginSecret},
-            ingestor_ip = #{vo.loginSecret},
+            ingestor_ip = #{vo.ingestorIp},
             paasta_monitoring_use = #{vo.paastaMonitoringUse},
             update_user_id = #{vo.updateUserId},
             update_date = now()

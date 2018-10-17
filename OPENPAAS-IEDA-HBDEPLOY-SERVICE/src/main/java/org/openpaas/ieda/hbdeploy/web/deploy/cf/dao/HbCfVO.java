@@ -1,5 +1,6 @@
 package org.openpaas.ieda.hbdeploy.web.deploy.cf.dao;
 
+import java.sql.Date;
 import java.util.List;
 
 public class HbCfVO {
@@ -13,16 +14,20 @@ public class HbCfVO {
     private String defaultConfigInfo;
     private String resourceConfigInfo;
     private String instanceConfigInfo;
-    private String taskId;
+    private int taskId;
     private String deployStatus;
     private String deploymentFile;
     
     private HbCfDefaultConfigVO defaultConfigVO;
-    private List<HbCfNetworkConfigVO> networkConfigVO;
+    private List<HbCfNetworkConfigVO> networks;
     private HbCfKeyConfigVO keyConfigVO;
     private HbCfResourceConfigVO resourceConfigVO;
     private HbCfInstanceConfigVO instanceConfigVO;
     
+    private String createUserId;
+    private Date createDate;
+    private String updateUserId;
+    private Date updateDate;
     
     public int getId() {
         return id;
@@ -78,10 +83,10 @@ public class HbCfVO {
     public void setInstanceConfigInfo(String instanceConfigInfo) {
         this.instanceConfigInfo = instanceConfigInfo;
     }
-    public String getTaskId() {
+    public int getTaskId() {
         return taskId;
     }
-    public void setTaskId(String taskId) {
+    public void setTaskId(int taskId) {
         this.taskId = taskId;
     }
     public String getDeployStatus() {
@@ -102,11 +107,11 @@ public class HbCfVO {
     public void setDefaultConfigVO(HbCfDefaultConfigVO defaultConfigVO) {
         this.defaultConfigVO = defaultConfigVO;
     }
-    public List<HbCfNetworkConfigVO> getNetworkConfigVO() {
-        return networkConfigVO;
+    public List<HbCfNetworkConfigVO> getNetworks() {
+        return networks;
     }
-    public void setNetworkConfigVO(List<HbCfNetworkConfigVO> networkConfigVO) {
-        this.networkConfigVO = networkConfigVO;
+    public void setNetworks(List<HbCfNetworkConfigVO> networks) {
+        this.networks = networks;
     }
     public HbCfKeyConfigVO getKeyConfigVO() {
         return keyConfigVO;
@@ -125,5 +130,29 @@ public class HbCfVO {
     }
     public void setInstanceConfigVO(HbCfInstanceConfigVO instanceConfigVO) {
         this.instanceConfigVO = instanceConfigVO;
+    }
+    public String getCreateUserId() {
+        return createUserId;
+    }
+    public void setCreateUserId(String createUserId) {
+        this.createUserId = createUserId;
+    }
+    public Date getCreateDate() {
+        return createDate;
+    }
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+    public String getUpdateUserId() {
+        return updateUserId;
+    }
+    public void setUpdateUserId(String updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 }

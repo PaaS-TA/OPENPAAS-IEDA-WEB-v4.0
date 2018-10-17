@@ -13,8 +13,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="spring" uri = "http://www.springframework.org/tags" %>
+
 <script type="text/javascript">
 
+var text_required_msg = '<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
+var select_required_msg='<spring:message code="common.select.vaildate.required.message"/>';//을(를) 선택하세요.
 /******************************************************************
  * 설명 :    변수 설정
  ***************************************************************** */
@@ -23,10 +27,9 @@ var cfInfo = "";
 var installStatus ="";//설치 상태
 var installClient = "";//설치 client
 var deleteClient = "";//삭제 client
-var bootStrapDeploymentName = new Array();
 $(function() {    
     /********************************************************
-     * 설명 :  bootstrap 목록 설정
+     * 설명 :  CF 목록 설정
      *********************************************************/
      $('#config_cfGrid').w2grid({
         name: 'config_cfGrid',
@@ -39,7 +42,7 @@ $(function() {
         style: 'text-align: center',
         columns:[
               {field: 'recid',     caption: 'recid', hidden: true}
-            , {field: 'bootstrapConfigName', caption: 'BOOTSTRAP 정보 별칭', size: '20%'}
+            , {field: 'cfConfigName', caption: 'CF 정보 별칭', size: '20%'}
             , {field: 'iaasType', caption: '인프라 환경 타입', size:'120px', style:'text-align:center;' ,render: function(record){ 
                 if(record.iaasType.toLowerCase() == "aws"){
                     return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
@@ -47,15 +50,32 @@ $(function() {
                     return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
                 }
             }}
-            , {field: 'cpiConfigInfo', caption: 'CPI 정보 별칭', size: '20%'}
             , {field: 'defaultConfigInfo', caption: '기본 정보 별칭', size: '20%'}
             , {field: 'networkConfigInfo', caption: '네트워크 정보 별칭', size: '20%'}
+            , {field: 'keyConfigInfo', caption: 'Key 정보 별칭', size: '20%'}
             , {field: 'resourceConfigInfo', caption: '리소스 정보 별칭 ', size: '20%'}
+            , {field: 'instanceConfigInfo', caption: '인스턴스 정보 별칭 ', size: '20%'}
+            , {field: 'deploymentFile', caption: '배포파일명', size: '250px',
+                render: function(record) {
+                    if ( record.deploymentFile != null ){
+                        var deplymentParam = {
+                                service : "bootstrap"
+                               ,iaas    : record.iaas
+                               ,id      : record.id
+                            } 
+                        var fileName = record.deploymentFile;
+                        return '<a style="color:#333;" href="/common/deploy/download/manifest/' + fileName +'" onclick="window.open(this.href); return false;">' + record.deploymentFile + '</a>';
+                  }else {
+                       return '&ndash;';
+                     }
+                 }
+             }
             ],
         onSelect : function(event) {
             event.onComplete = function() {
                 $('#modifyBtn').attr('disabled', false);
                 $('#deleteBtn').attr('disabled', false);
+                $('#manifestBtn').attr('disabled', false);
                 return;
             }
         },
@@ -72,6 +92,7 @@ $(function() {
             event.onComplete = function() {
                 $('#modifyBtn').attr('disabled', true);
                 $('#deleteBtn').attr('disabled', true);
+                $('#manifestBtn').attr('disabled', true);
                 return;
             }
         },onLoad:function(event){
@@ -85,10 +106,10 @@ $(function() {
     
      $('#config_cfGrid2').w2grid({ 
          name: 'config_cfGrid2', 
-         header: '<b>BOOTSTRAP 목록</b>',
+         header: '<b>CF 목록</b>',
          columns:[
              {field: 'recid',     caption: 'recid', hidden: true}
-           , {field: 'bootstrapConfigName', caption: 'BOOTSTRAP 정보 별칭', size: '20%'}
+           , {field: 'cfConfigName', caption: 'CF 정보 별칭', size: '20%'}
            , {field: 'iaasType', caption: '인프라 환경 타입', size:'120px', style:'text-align:center;' ,render: function(record){ 
                if(record.iaasType.toLowerCase() == "aws"){
                    return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
@@ -96,10 +117,11 @@ $(function() {
                    return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
                }
            }}
-           , {field: 'cpiConfigInfo', caption: 'CPI 정보 별칭', size: '20%'}
            , {field: 'defaultConfigInfo', caption: '기본 정보 별칭', size: '20%'}
            , {field: 'networkConfigInfo', caption: '네트워크 정보 별칭', size: '20%'}
+           , {field: 'keyConfigInfo', caption: 'Key 정보 별칭', size: '20%'}
            , {field: 'resourceConfigInfo', caption: '리소스 정보 별칭 ', size: '20%'}
+           , {field: 'instanceConfigInfo', caption: '인스턴스 정보 별칭 ', size: '20%'}
            ],
            onSelect : function(event) {
                event.onComplete = function() {
@@ -135,7 +157,7 @@ $(function() {
      
      $('#config_cfGrid3').w2grid({
          name: 'config_cfGrid3',
-         header: '<b>BOOTSTRAP 목록</b>',
+         header: '<b>CF 목록</b>',
          method: 'GET',
           multiSelect: false,
          show: {    
@@ -143,8 +165,9 @@ $(function() {
                  footer: true},
          style: 'text-align: center',
          columns:[
-               {field: 'recid',     caption: 'recid', hidden: true}
-             , {field: 'bootstrapConfigName', caption: 'BOOTSTRAP 정보 별칭', size: '140px'}
+               {field: 'id',     caption: 'id', hidden: true}
+             , {field: 'recid',     caption: 'recid', hidden: true}
+             , {field: 'cfConfigName', caption: 'CF 정보 별칭', size: '140px'}
              , {field: 'iaasType', caption: '인프라 환경 타입', size:'120px', style:'text-align:center;' ,render: function(record){ 
                  if(record.iaasType.toLowerCase() == "aws"){
                      return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
@@ -168,25 +191,16 @@ $(function() {
                          return '&ndash;';
                         }
                }
-             , {field: 'deployLog', caption: '배포로그', size: '100px',
-                 render: function(record) {
-                     if ( (record.deployStatus == 'DEPLOY_STATUS_DONE' || record.deployStatus == 'DEPLOY_STATUS_FAILED') && record.deployLog != null ) {
-                            return '<span id="" class="btn btn-primary" style="width:60px" onClick="getHbDeployLogMsg( \''+record.id+'\',\''+record.iaasType+'\');">로그보기</span>';
-                     } else {
-                         return '&ndash;';
-                     }
-                 }
-               }
-             , {field: 'networkConfigVo.subnetId', caption: '네트워크 ID', size: '200px'}
-             , {field: 'networkConfigVo.subnetRange', caption: '서브넷 범위', size: '100px'}
-             , {field: 'networkConfigVo.publicStaticIp', caption: '디렉터 공인 IP', size: '100px'}
-             , {field: 'networkConfigVo.privateStaticIp', caption: '디렉터 내부 IP', size: '100px'}
-             , {field: 'networkConfigVo.subnetGateway', caption: '게이트웨이', size: '100px'}
-             , {field: 'networkConfigVo.subnetDns', caption: 'DNS', size: '100px'}
-             , {field: 'defaultConfigVo.ntp', caption: 'NTP', size: '100px'}
-             , {field: 'resourceConfigVo.stemcellName', caption: '스템셀', size: '340px'}
-             , {field: 'resourceConfigVo.instanceType', caption: '인스턴스 유형', size: '100px'}
-             , {field: 'resourceConfigVo.vmPassword', caption: 'VM 비밀번호', size: '100px'}
+             , {field: 'defaultConfigVO.releaseName', caption: 'CF 릴리즈 명', size: '180px'}
+             , {field: 'defaultConfigVO.releaseVersion', caption: 'CF 릴리즈 버전', size: '100px'}
+             , {field: 'defaultConfigVO.domain', caption: 'CF 도메인', size: '160px'}
+             , {field: 'defaultConfigVO.domainOrganization', caption: 'CF 기본 조직 명', size: '130px'}
+             , {field: 'resourceConfigVO.smallFlavor', caption: 'S Instance Type', size: '120px'}
+             , {field: 'resourceConfigVO.mediumFlavor', caption: 'M Instance Type', size: '120px'}
+             , {field: 'resourceConfigVO.largeFlavor', caption: 'L Instance Type', size: '120px'}
+             , {field: 'resourceConfigVO.stemcellName', caption: '스템셀 명', size: '300px'}
+             , {field: 'resourceConfigVO.stemcellVersion', caption: '스템셀 버전', size: '100px'}
+             , {field: 'resourceConfigVO.boshPassword', caption: '스템셀 패스워드', size: '140px'}
              , {field: 'deploymentFile', caption: '배포파일명', size: '250px',
                  render: function(record) {
                      if ( record.deploymentFile != null ){
@@ -207,11 +221,11 @@ $(function() {
              event.onComplete = function() {
                  $('#modifyVmBtn').attr('disabled', false);
                  $('#deleteVmBtn').attr('disabled', false);
+                 $('#manifestVmBtn').attr('disabled', false);
                  return;
              }
          },onDblClick: function (event) {
              var grid = this;
-             // need timer for nicer visual effect that record was selected
              setTimeout(function () {
                  w2ui['config_cfGrid2'].add( $.extend({}, grid.get(event.recid), { selected : false }) );
                  grid.selectNone();
@@ -221,6 +235,7 @@ $(function() {
              event.onComplete = function() {
                  $('#modifyVmBtn').attr('disabled', true);
                  $('#deleteVmBtn').attr('disabled', true);
+                 $('#manifestVmBtn').attr('disabled', true);
                  return;
              }
          },onLoad:function(event){
@@ -233,7 +248,7 @@ $(function() {
      });
     
     /******************************************************************
-     * 설명 : BootStrap 설치 버튼
+     * 설명 : CF 설치 버튼
      ***************************************************************** */
      $("#installBtn").click(function(){
          w2popup.open({
@@ -259,7 +274,7 @@ $(function() {
      });
      
      /******************************************************************
-     * 설명 : BootStrap 수정 버튼
+     * 설명 : CF 수정 버튼
      ***************************************************************** */
     $("#modifyBtn").click(function(){
         if($("#modifyBtn").attr('disabled') == "disabled") return;
@@ -281,7 +296,7 @@ $(function() {
             onOpen:function(event){
                 event.onComplete = function(){
                     $(".w2ui-msg-body input[name='cfInfoId']").val(record.id)
-                    $(".w2ui-msg-body input[name='cfConfigName']").val(record.bootstrapConfigName)
+                    $(".w2ui-msg-body input[name='cfConfigName']").val(record.cfConfigName)
                     $(".w2ui-msg-body select[name='iaasType']").val(record.iaasType)
                     getCfInstanceInfo();
                     getCfResourceInfo();
@@ -297,7 +312,7 @@ $(function() {
      });
      
      /******************************************************************
-     * 설명 : BootStrap 삭제 버튼
+     * 설명 : CF 삭제 버튼
      ***************************************************************** */
     $("#deleteBtn").click(function(){
         if($("#deleteBtn").attr('disabled') == "disabled") return;
@@ -306,8 +321,8 @@ $(function() {
         var record = w2ui['config_cfGrid'].get(selected);
         var message = "";
         
-        if ( record.bootstrapConfigName ){
-            message = "CF 정보 " + record.bootstrapConfigName + ")를 삭제하시겠습니까?";
+        if ( record.cfConfigName ){
+            message = "CF 정보 (" + record.cfConfigName + ")를 삭제하시겠습니까?";
         }else message = "선택된 CF을 삭제하시겠습니까?";
         
         w2confirm({
@@ -315,7 +330,7 @@ $(function() {
             msg          : message,
             yes_text     : "확인",
             yes_callBack : function(event){
-                deleteBootstrapInfo(record);
+                deleteCfInfo(record);
             },
             no_text : "취소",
             no_callBack : function(event){
@@ -325,13 +340,12 @@ $(function() {
         });
      });
     /******************************************************************
-     * 설명 : BootStrap 설치 버튼
+     * 설명 : CF 설치 버튼
      ***************************************************************** */
     $("#installVmBtn").click(function(){
         if($("#installVmBtn").attr('disabled') == "disabled") return;
         
         var selectAll = w2ui['config_cfGrid2'].selectAll();
-
         var selected = w2ui['config_cfGrid2'].getSelection();
         
         if(selected.length == 3) {
@@ -343,20 +357,19 @@ $(function() {
         }
         
         var record = new Array();
-        
         for(var i=0; i<selected.length; i++){
             record.push(w2ui['config_cfGrid2'].get(selected[i]));
-            createSettingFile(record[i]);
+            //createSettingFile(record[i]);
         }
         if(record == ""){
-            w2alert("배포할 CF 이 존재하지 않음");
+            w2alert("배포할 CF 이 존재하지 않습니다.");
         }else{
             firstInstallPopup(record);
         }
     });
     
     /******************************************************************
-     * 설명 : BootStrap 삭제 버튼
+     * 설명 : CF 삭제 버튼
      ***************************************************************** */
     $("#deleteVmBtn").click(function(){
         if($("#deleteVmBtn").attr('disabled') == "disabled") return;
@@ -365,8 +378,8 @@ $(function() {
         var record = w2ui['config_cfGrid3'].get(selected);
         var message = "";
         
-        if ( record.bootstrapConfigName ){
-            message = "CF 정보 " + record.bootstrapConfigName + ")를 삭제하시겠습니까?";
+        if ( record.cfConfigName ){
+            message = "CF 정보 (" + record.cfConfigName + ")를 삭제하시겠습니까?";
         }else message = "선택된 CF을 삭제하시겠습니까?";
         
         w2confirm({
@@ -374,7 +387,7 @@ $(function() {
             msg          : message,
             yes_text     : "확인",
             yes_callBack : function(event){
-                deleteBootstrapVmInfo(record);
+                deleteCfVmInfo(record);
             },
             no_text : "취소",
             no_callBack : function(event){
@@ -404,19 +417,19 @@ $(function() {
          width   : 730,
          height  : 460,
          title : '<b>이종 CF 정보 수정</b>',
-         body : $("#cfModifyRegistInfoDiv").html(),
-         buttons: $("#cfModifyRegistInfoBtnDiv").html(),
+         body : $("#cfRegistInfoDiv").html(),
+         buttons: $("#cfRegistInfoBtnDiv").html(),
          modal : true,
          onOpen:function(event){
              event.onComplete = function(){
-                $(".w2ui-msg-body input[name='bootstrapInfoId']").val(record.id)
-                $(".w2ui-msg-body input[name='bootstrapConfigName']").val(record.bootstrapConfigName)
-                $(".w2ui-msg-body select[name='iaasType']").val(record.iaasType)
-                getCfInstanceInfo();
-                getCfResourceInfo();
-                getCfKeyInfo();
-                getCfNetworkInfo();
-                getCfDefaultInfo();
+                 $(".w2ui-msg-body input[name='cfInfoId']").val(record.id)
+                 $(".w2ui-msg-body input[name='cfConfigName']").val(record.cfConfigName)
+                 $(".w2ui-msg-body select[name='iaasType']").val(record.iaasType)
+                 getCfInstanceInfo();
+                 getCfResourceInfo();
+                 getCfKeyInfo();
+                 getCfNetworkInfo();
+                 getCfDefaultInfo();
              }
          },onClose:function(event){
              w2ui['config_cfGrid3'].clear();
@@ -424,18 +437,85 @@ $(function() {
          }
      });
   });
-
+  
+  
+  
+ /******************************************************************
+  * 설명 : CF 배포 파일 확인 버튼
+  ***************************************************************** */
+  $("#manifestBtn").click(function(){
+      if($("#manifestBtn").attr('disabled') == "disabled") return;
+      
+      var selected = w2ui['config_cfGrid'].getSelection();
+      if( selected.length == 0 ){
+          w2alert("선택된 정보가 없습니다.", "배포 파일 확인");
+          return;
+      }
+      var record = w2ui['config_cfGrid'].get(selected);
+      if(record.deploymentFile == ""){
+          w2alert("배포 파일이 존재 하지 않습니다.", "배포 파일 확인");
+      }
+      w2popup.open({
+          width   : 730,
+          height  : 600,
+          title : '<b>배포 파일 확인</b>',
+          body : $("#DeployDiv").html(),
+          modal : true,
+          onOpen:function(event){
+              event.onComplete = function(){
+                  getDeployInfo(record.deploymentFile);
+              }
+          },onClose:function(event){
+              w2ui['config_cfGrid'].clear();
+              doSearch();
+          }
+      });
+   });
+   
+  /******************************************************************
+   * 설명 : CF VM 배포 파일 확인 버튼
+   ***************************************************************** */
+   $("#manifestVmBtn").click(function(){
+       if($("#manifestBtn3").attr('disabled') == "disabled") return;
+       
+       var selected = w2ui['config_cfGrid3'].getSelection();
+       if( selected.length == 0 ){
+           w2alert("선택된 정보가 없습니다.", "배포 파일 확인");
+           return;
+       }
+       var record = w2ui['config_cfGrid3'].get(selected);
+       if(record.deploymentFile == ""){
+           w2alert("배포 파일이 존재 하지 않습니다.", "배포 파일 확인");
+       }
+       
+       w2popup.open({
+           width   : 730,
+           height  : 600,
+           title : '<b>배포 파일 확인</b>',
+           body : $("#DeployDiv").html(),
+           modal : true,
+           onOpen:function(event){
+               event.onComplete = function(){
+                   getDeployInfo(record.deploymentFile);
+               }
+           },onClose:function(event){
+               w2ui['config_cfGrid3'].clear();
+               doSearch();
+           }
+       });
+    });
+   
+   
 /******************************************************************
  * 기능 : privateInstallPopup
  * 설명 : Private Type Boostrap 설치
  ***************************************************************** */
-var bootstrapInstallSocket = null;
-function firstInstallPopup(bootstrapInfo){
-    console.log(bootstrapInfo);
+var cfInstallSocket = null;
+function firstInstallPopup(cfInfo){
     
-    var firstDeploy = bootstrapInfo[0];
+    var firstDeploy = cfInfo[0];
     
-    if(!lockFileSet(firstDeploy.bootstrapConfigName)) return;
+    if(!lockFileSet(firstDeploy.cfConfigName)) return;
     var message = firstDeploy.iaasType + " CF ";
     var requestParameter = {
            id : firstDeploy.id,
@@ -451,12 +531,12 @@ function firstInstallPopup(bootstrapInfo){
         buttons : $("#InstallDivButtons").html(),
         onOpen : function(event){
             event.onComplete = function(){
-                if(bootstrapInstallSocket != null) bootstrapInstallSocket = null;
+                if(cfInstallSocket != null) cfInstallSocket = null;
                 if(installClient != null) installClient = null;
-                bootstrapInstallSocket = new SockJS('/deploy/hbBootstrap/install/bootstrapInstall');
-                installClient = Stomp.over(bootstrapInstallSocket);
+                cfInstallSocket = new SockJS('/deploy/hbCf/install/cfInstall');
+                installClient = Stomp.over(cfInstallSocket);
                 installClient.connect({}, function(frame) {
-                    installClient.subscribe('/user/deploy/hbBootstrap/install/logs', function(data){
+                    installClient.subscribe('/user/deploy/hbCf/install/logs', function(data){
                         var installLogs = $(".w2ui-msg-body #installLogs");
                         var response = JSON.parse(data.body);
                         if ( response.messages != null ){
@@ -471,21 +551,23 @@ function firstInstallPopup(bootstrapInfo){
                                 installStatus = response.state.toLowerCase();
                                 $('.w2ui-msg-buttons #deployPopupBtn').prop("disabled", false);
                                 
-                                if(bootstrapInfo.length == 2){
-                                    installClient.disconnect(secondInstallPopup(bootstrapInfo[1]));
+                                if(cfInfo.length == 2){
+                                    installClient.disconnect(secondInstallPopup(cfInfo[1]));
                                 }else{
                                     installClient.disconnect();
                                 }
-                                w2alert(message, "BOOTSTRAP 설치");
+                                w2alert(message, "CF 설치");
                             }
                         }
                     });
-                    installClient.send('/send/deploy/hbBootstrap/install/bootstrapInstall', {}, JSON.stringify(requestParameter));
+                    installClient.send('/send/deploy/hbCf/install/cfInstall', {}, JSON.stringify(requestParameter));
                 });
             }
         }, onClose : function(event){
                event.onComplete = function(){
                    w2ui['config_cfGrid2'].clear();
+                   w2ui['config_cfGrid3'].clear();
+                   doSearch();
                    if( installClient != ""  ){
                        installClient.disconnect();
                    }
@@ -498,17 +580,17 @@ function firstInstallPopup(bootstrapInfo){
  * 기능 : InstallPopup1
  * 설명 : Boostrap 설치1
  ***************************************************************** */
-function secondInstallPopup(bootstrapInfo){
+function secondInstallPopup(cfInfo){
     if(installStatus != "done") return;
-    if(!lockFileSet(bootstrapInfo.deploymentFile)) return;
+    if(!lockFileSet(cfInfo.deploymentFile)) return;
     
-    var message = bootstrapInfo.iaasType+" BOOTSTRAP ";
+    var message = cfInfo.iaasType+" CF ";
     var requestParameter = {
-           id : bootstrapInfo.id,
-           iaasType: bootstrapInfo.iaasType
+           id : cfInfo.id,
+           iaasType: cfInfo.iaasType
     };
     w2popup.open({
-        title   : "<b>"+ bootstrapInfo.iaasType.toUpperCase()+" 클라우드 환경 CF 설치</b>",
+        title   : "<b>"+ cfInfo.iaasType.toUpperCase()+" 클라우드 환경 CF 설치</b>",
         width   : 800,
         height  : 620,
         modal   : true,
@@ -517,12 +599,12 @@ function secondInstallPopup(bootstrapInfo){
         buttons : $("#InstallDivButtons").html(),
         onOpen : function(event){
             event.onComplete = function(){
-                if(bootstrapInstallSocket != null) bootstrapInstallSocket = null;
+                if(cfInstallSocket != null) cfInstallSocket = null;
                 if(installClient != null) installClient = null;
-                bootstrapInstallSocket = new SockJS('/deploy/hbBootstrap/install/bootstrapInstall');
-                installClient = Stomp.over(bootstrapInstallSocket);
+                cfInstallSocket = new SockJS('/deploy/hbCf/install/cfInstall');
+                installClient = Stomp.over(cfInstallSocket);
                 installClient.connect({}, function(frame) {
-                    installClient.subscribe('/user/deploy/hbBootstrap/install/logs', function(data){
+                    installClient.subscribe('/user/deploy/hbCf/install/logs', function(data){
                         var installLogs = $(".w2ui-msg-body #installLogs");
                         var response = JSON.parse(data.body);
                         if ( response.messages != null ){
@@ -542,12 +624,14 @@ function secondInstallPopup(bootstrapInfo){
                             }
                         }
                     });
-                    installClient.send('/send/deploy/hbBootstrap/install/bootstrapInstall', {}, JSON.stringify(requestParameter));
+                    installClient.send('/send/deploy/hbCf/install/cfInstall', {}, JSON.stringify(requestParameter));
                 });
             }
         }, onClose : function(event){
                event.onComplete = function(){
                    w2ui['config_cfGrid2'].clear();
+                   w2ui['config_cfGrid3'].clear();
+                   doSearch();
                    if( installClient != ""  ){
                        installClient.disconnect();
                    }
@@ -592,7 +676,7 @@ function getCfDefaultInfo(){
                     options += "<option value='"+data.records[i].defaultConfigName+"' selected>"+data.records[i].defaultConfigName+"</option>";
                 }else options += "<option value='"+data.records[i].defaultConfigName+"'>"+data.records[i].defaultConfigName+"</option>";
             }
-            $("select[name='defaultConfigInfo']").html(options);
+            $(".w2ui-msg-body select[name='defaultConfigInfo']").html(options);
         },
         error : function( e, status ) {
             w2alert("CF Default 정보 "+search_data_fail_msg, "CF 설치");
@@ -620,7 +704,7 @@ function getCfNetworkInfo(){
                     options += "<option value='"+data.records[i].networkConfigName+"' selected>"+data.records[i].networkConfigName+"</option>";
                 }else options += "<option value='"+data.records[i].networkConfigName+"'>"+data.records[i].networkConfigName+"</option>";
             }
-            $("select[name='networkConfigInfo']").html(options);
+            $(".w2ui-msg-body select[name='networkConfigInfo']").html(options);
         },
         error : function( e, status ) {
             w2alert("네트워크 기본 정보 "+search_data_fail_msg, "CF 설치");
@@ -648,7 +732,7 @@ function getCfKeyInfo(){
                     options += "<option value='"+data.records[i].keyConfigName+"' selected>"+data.records[i].keyConfigName+"</option>";
                 }else options += "<option value='"+data.records[i].keyConfigName+"'>"+data.records[i].keyConfigName+"</option>";
             }
-            $("select[name='keyConfigInfo']").html(options);
+            $(".w2ui-msg-body select[name='keyConfigInfo']").html(options);
         },
         error : function( e, status ) {
             w2alert("CF Key 정보 "+search_data_fail_msg, "CF 설치");
@@ -676,7 +760,7 @@ function getCfResourceInfo(){
                     options += "<option value='"+data.records[i].resourceConfigName+"' selected>"+data.records[i].resourceConfigName+"</option>";
                 }else options += "<option value='"+data.records[i].resourceConfigName+"'>"+data.records[i].resourceConfigName+"</option>";
             }
-            $("select[name='resourceConfigInfo']").html(options);
+            $(".w2ui-msg-body select[name='resourceConfigInfo']").html(options);
         },
         error : function( e, status ) {
             w2alert("CF 리소스 정보 "+search_data_fail_msg, "CF 설치");
@@ -704,7 +788,7 @@ function getCfInstanceInfo(){
                     options += "<option value='"+data.records[i].instanceConfigName+"' selected>"+data.records[i].instanceConfigName+"</option>";
                 }else options += "<option value='"+data.records[i].instanceConfigName+"'>"+data.records[i].instanceConfigName+"</option>";
             }
-            $("select[name='instanceConfigInfo']").html(options);
+            $(".w2ui-msg-body select[name='instanceConfigInfo']").html(options);
         },
         error : function( e, status ) {
             w2alert("CF 인스턴스 정보 "+search_data_fail_msg, "CF 설치");
@@ -713,10 +797,10 @@ function getCfInstanceInfo(){
 }
 
 /******************************************************************
- * 기능 : saveBootstrapInfo
- * 설명 : Bootstrap 정보 저장
+ * 기능 : saveCfInfo
+ * 설명 : CF 정보 저장
  ***************************************************************** */
-function saveBootstrapInfo(){
+function saveCfInfo(){
     w2popup.lock( save_lock_msg, true); 
     cfInfo = {
         id                     : $(".w2ui-msg-body input[name='cfInfoId']").val(),
@@ -757,17 +841,17 @@ function saveBootstrapInfo(){
 }
 
 /******************************************************************
- * 기능 : deleteBootstrapInfo
- * 설명 : Bootstrap 정보 삭제
+ * 기능 : deleteCfInfo
+ * 설명 : CF 정보 삭제
  ***************************************************************** */
-function deleteBootstrapInfo(record){
+function deleteCfInfo(record){
     cfInfo = {
-            id                     : record.id,
-            bootstrapConfigName    : record.bootstrapConfigName
+            id               : record.id,
+            cfConfigName     : record.cfConfigName
     }
     $.ajax({
         type : "DELETE",
-        url : "/deploy/hbBootstrap/delete/data",
+        url : "/deploy/hbCf/delete/data",
         contentType : "application/json",
         async : true,
         data : JSON.stringify(cfInfo),
@@ -792,50 +876,49 @@ function deleteBootstrapInfo(record){
 }
 
 /******************************************************************
- * 기능 : deleteBootstrapVmInfo
- * 설명 : Bootstrap VM 삭제
+ * 기능 : deleteCfVmInfo
+ * 설명 : CF VM 삭제
  ***************************************************************** */
-function deleteBootstrapVmInfo(record){
+function deleteCfVmInfo(record){
     var requestParameter = {
             id:record.id,
             iaasType:record.iaasType
     };
     if ( record.deployStatus == null || record.deployStatus == '' ) {
         // 단순 레코드 삭제
-        var url = "/deploy/bootstrap/delete/data";
+        var url = "/deploy/hbCf/delete/data";
         $.ajax({
             type : "DELETE",
             url : url,
             data : JSON.stringify(requestParameter),
             contentType : "application/json",
             success : function(data, status) {
-                bootStrapDeploymentName = [];
                 gridReload();
             },
             error : function(request, status, error) {
                 var errorResult = JSON.parse(request.responseText);
-                w2alert(errorResult.message, "BOOTSTRAP 삭제");
+                w2alert(errorResult.message, "CF 삭제");
             }
         });
     } else {
         if(!lockFileSet(record.deploymentFile)) return;
-        var message = "BOOTSTRAP";
+        var message = "CF";
         var body = '<textarea id="deleteLogs" style="width:95%;height:90%;overflow-y:visible;resize:none;background-color: #FFF; margin:2%" readonly="readonly"></textarea>';
         
         w2popup.open({
             width   : 700,
             height  : 500,
-            title   : "<b>BOOTSTRAP 삭제</b>",
+            title   : "<b>CF 삭제</b>",
             body    : body,
             buttons : '<button class="btn" style="float: right; padding-right: 15%;" onclick="popupComplete();">닫기</button>',
             modal   : true,
             showMax : true,
             onOpen  : function(event){
                 event.onComplete = function(){
-                    var socket = new SockJS('/deploy/hbBootstrap/delete/instance');
+                    var socket = new SockJS('/deploy/hbCf/delete/instance');
                     deleteClient = Stomp.over(socket);
                      deleteClient.connect({}, function(frame) {
-                        deleteClient.subscribe('/user/deploy/hbBootstrap/delete/logs', function(data){
+                        deleteClient.subscribe('/user/deploy/hbCf/delete/logs', function(data){
                             
                             var deleteLogs = $(".w2ui-msg-body #deleteLogs");
                             var response = JSON.parse(data.body);
@@ -851,16 +934,15 @@ function deleteBootstrapVmInfo(record){
                                     
                                     installStatus = response.state.toLowerCase();
                                     deleteClient.disconnect();
-                                    w2alert(message, "BOOTSTRAP 삭제");
+                                    w2alert(message, "CF 삭제");
                                    }
                             }
                         });
-                        deleteClient.send('/send/deploy/hbBootstrap/delete/instance', {}, JSON.stringify(requestParameter));
+                        deleteClient.send('/send/deploy/hbCf/delete/instance', {}, JSON.stringify(requestParameter));
                     });
                 }
             }, onClose : function (event){
                 event.onComplete= function(){
-                    bootStrapDeploymentName = [];
                     w2ui['config_cfGrid3'].clear();
                     if( deleteClient != ""  ){
                         deleteClient.disconnect();
@@ -888,14 +970,13 @@ function popupClose() {
  * 설명 : 배포 파일 생성
  ***************************************************************** */
 function createSettingFile(data){
-    console.log('create'+data);
     deploymentInfo = {
             iaasType       : data.iaasType,
             id : data.id
     }
     $.ajax({
         type : "POST",
-        url : "/deploy/hbBootstrap/install/createSettingFile",
+        url : "/deploy/hbCf/install/createSettingFile",
         contentType : "application/json",
         async : true,
         data : JSON.stringify(deploymentInfo),
@@ -904,7 +985,7 @@ function createSettingFile(data){
         },
         error :function(request, status, error) {
             var errorResult = JSON.parse(request.responseText);
-            w2alert(errorResult.message, "BOOTSTRAP 배포 파일 생성");
+            w2alert(errorResult.message, "CF 배포 파일 생성");
         }
     });
 }
@@ -914,19 +995,22 @@ function createSettingFile(data){
  * 설명 : Manifest 파일 내용 출력
  ***************************************************************** */
 function getDeployInfo(deployFileName){
-    console.log(deployFileName);
     $.ajax({
         type : "GET",
         url :"/common/use/deployment/"+deployFileName,
         contentType : "application/json",
         async : true,
         success : function(data, status) {
-            if(status == "success"){
-                $(".w2ui-msg-body #deployInfo").text(data);
+            if(data == ""){
+                $(".w2ui-msg-body #deployInfo").text("배포 파일이 작성되지 않았습니다.")
+            } else {
+                if(status == "success"){
+                    $(".w2ui-msg-body #deployInfo").text(data);
+                }
             }
         },
         error : function( e, status ) {
-            w2alert("Temp 파일을 가져오는 중 오류가 발생하였습니다. ", "BOOTSTRAP 설치");
+            w2alert("Temp 파일을 가져오는 중 오류가 발생하였습니다. ", "CF 설치");
         }
     });
 }
@@ -947,58 +1031,13 @@ function doSearch() {
   * 설명 : Button 제어
   ***************************************************************** */
 function doButtonStyle(){
-    //Button Style init
     $('#modifyBtn').attr('disabled', true);
     $('#deleteBtn').attr('disabled', true);
     $('#deleteVmBtn').attr('disabled', true);
     $('#modifyVmBtn').attr('disabled', true);
+    $('#manifestBtn').attr('disabled', true);
+    $('#manifestVmBtn').attr('disabled', true);
 }
- 
-/******************************************************************
- * 기능 : getDeployLogMsg
- * 설명 : 설치 로그 조회
- ***************************************************************** */
-function getHbDeployLogMsg(id,iaas){
-    $.ajax({
-        type        : "GET",
-        url         : "/deploy/hbBootstrap/list/"+id+"/"+iaas,
-        contentType : "application/json",
-        success     : function(data, status){
-            if(!checkEmpty(data)) {
-                deployLogMsgPopup(data);
-            } else {
-                w2alert("배포 로그가 존재 하지 않습니다.",  "BOOTSTRAP 배포로그");
-            }
-        },
-        error : function(request, status, error) {
-            var errorResult = JSON.parse(request.responseText);
-            w2alert(errorResult.message, "BOOTSTRAP 배포로그");
-        }
-    });
-}
-
-/******************************************************************
- * 기능 : deployLogMsgPopup
- * 설명 : 배포 로그 팝업창
- ***************************************************************** */
-function deployLogMsgPopup(msg){
-    var body = '<textarea id="deployLogMsg" style="margin-left:2%;width:95%;height:93%;overflow-y:visible;resize:none;background-color: #FFF; margin:2%" readonly="readonly"></textarea>';
-    
-    w2popup.open({
-        width   : 800,
-        height  : 700,
-        title   : "<b>BOOTSTRAP 배포로그"+"</b>",
-        body    : body,
-        buttons : '<button class="btn" style="float: right; padding-right: 15%;" onclick="w2popup.close();">닫기</button>',
-        showMax : true,
-        onOpen  : function(event){
-            event.onComplete = function(){
-                $("#deployLogMsg").text(msg);
-            }
-        }
-    });    
-}
-
 
  /******************************************************************
   * 기능 : clearMainPage
@@ -1050,11 +1089,14 @@ function popupComplete(){
             <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
             <span id="installBtn" class="btn btn-primary"  style="width:120px">정보 등록</span>
             </sec:authorize>
-            &nbsp;
             <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
             <span id="modifyBtn" class="btn btn-info" style="width:120px">정보 수정</span>
             </sec:authorize>
-            &nbsp;
+            
+           <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
+            <span id="manifestBtn" class="btn btn-warning" style="width:120px">배포 파일 확인</span>
+            </sec:authorize>
+            
             <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
             <span id="deleteBtn" class="btn btn-danger" style="width:120px">정보 삭제</span>
             </sec:authorize>
@@ -1079,6 +1121,10 @@ function popupComplete(){
             <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
             <span id="modifyVmBtn" class="btn btn-info"  style="width:120px">VM 수정</span>
             </sec:authorize>
+             <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
+            <span id="manifestVmBtn" class="btn btn-warning" style="width:120px">배포 파일 확인</span>
+            </sec:authorize>
+            
             <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
             <span id="deleteVmBtn" class="btn btn-danger"  style="width:120px">VM 삭제</span>
             </sec:authorize>
@@ -1162,84 +1208,11 @@ function popupComplete(){
     </form>
 </div>
 
-<div id="cfModifyRegistInfoDiv" style="width:100%;height:100%;" hidden="true">
-    <form id="settingModifyForm" action="POST">
-    <input class="form-control" name = "bootstrapInfoId" type="hidden"/>
-        <div class="w2ui-page page-0" style="margin-top:10px;padding:0 3%;">
-            <div class="panel panel-info"> 
-                <div class="panel-heading" style = "text-align: left; font-size:15px;"><b>이종 BOOTSTRAP 설치 정보</b></div>
-                <div class="panel-body" style="padding:5px 5% 7px 5%;">
-                   <div class="w2ui-field">
-                       <label style="width:40%; text-align: left;padding-left: 20px;">BOOTSTRAP 정보 별칭</label>
-                       <div>
-                           <input class="form-control" name = "bootstrapConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="BOOTSTRAP 정보 별칭을 입력 하세요."/>
-                       </div>
-                   </div>
-                  <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">클라우드 인프라 환경</label>
-                       <div>
-                           <select class="form-control" onchange="" name="iaasType" style="width: 320px; margin-left: 20px;">
-                               <option value="">수정할 인프라 환경을 선택하세요.</option>
-                               <option value="aws">AWS</option>
-                               <option value="openstack">Openstack</option>
-                           </select>
-                       </div>
-                   </div>
-                   <div class="w2ui-field">
-                      <label style="width:40%;text-align: left;padding-left: 20px;">BOOTSTRAP CPI 정보 별칭</label>
-                      <div style="width: 60%">
-                          <select class="form-control" name="cpiConfigInfo" onchange="" style="width: 320px; margin-left: 20px;">
-                              <option value="">수정할 BOOTSTRAP CPI 정보를 선택하세요.</option>
-                          </select>
-                      </div>
-                   </div>
-                   <div class="w2ui-field">
-                      <label style="width:40%;text-align: left;padding-left: 20px;">BOOTSTRAP 기본 정보 별칭</label>
-                      <div style="width: 60%">
-                          <select class="form-control" name="defaultConfigInfo" onchange="" style="width: 320px; margin-left: 20px;">
-                              <option value="">수정할 BOOTSTRAP 기본 정보를 선택하세요.</option>
-                          </select>
-                      </div>
-                    </div>
-                    <div class="w2ui-field">
-                      <label style="width:40%;text-align: left;padding-left: 20px;">BOOTSTRAP 네트워크 정보 별칭</label>
-                      <div style="width: 60%">
-                          <select class="form-control" name="networkConfigInfo" onchange="" style="width: 320px; margin-left: 20px;">
-                              <option value="">수정할 BOOTSTRAP 네트워크 정보를 선택하세요.</option>
-                          </select>
-                      </div>
-                    </div>
-                    <div class="w2ui-field">
-                      <label style="width:40%;text-align: left;padding-left: 20px;">BOOTSTRAP 리소스 정보 별칭</label>
-                      <div style="width: 60%">
-                          <select class="form-control" name="resourceConfigInfo" onchange="" style="width: 320px; margin-left: 20px;">
-                              <option value="">수정할 BOOTSTRAP 리소스 정보를 선택하세요.</option>
-                          </select>
-                      </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="w2ui-buttons" id="cfModifyRegistInfoBtnDiv" hidden="true">
-            <button class="btn" id="modifyRegistBootstrapInfoBtn" onclick="$('#settingForm').submit();">확인</button>
-            <button class="btn" id="popModifyRegistClose" onclick="w2popup.close();">취소</button>
-        </div>
-    </form>
-</div>
 
 <!-- Deploy DIV -->
 <div id="DeployDiv" style="width:100%;height:100%;" hidden="true">
-    <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
-        <ul class="progressStep_6" >
-            <li class="active">배포 파일 정보</li>
-            <li class="before">설치</li>
-        </ul>
-    </div>
-    <div style="width:93%;height:84%;float: left;display: inline-block;margin:10px 0 0 1%;">
+    <div style="width:93%;height:98%;float: left;display: inline-block;margin:10px 0 0 1%;">
         <textarea id="deployInfo" style="width:100%;height:99%;overflow-y:visible;resize:none;background-color: #FFF;margin-left:3%;" readonly="readonly"></textarea>
-    </div>
-    <div class="w2ui-buttons" id="DeployBtnDiv" hidden="true">
-        <button class="btn" style="float: right; padding-right: 15%" onclick="confirmDeploy('after');">다음>></button>
     </div>
 </div>
 
@@ -1277,34 +1250,67 @@ function popupComplete(){
 
 <script>
 $(function() {
-      $.validator.addMethod("sqlInjection", function(value, element, params) {
-            return checkInjectionBlacklist(params);
-          },text_injection_msg);
     $("#settingForm").validate({
         ignore : "",
         onfocusout: true,
         rules: {
-            roleName : {
+            cfConfigName : {
                 required : function(){
-                  return checkEmpty( $(".w2ui-msg-body input[name='roleName']").val() );
-                    }, sqlInjection : function(){
-                      return $(".w2ui-msg-body input[name='roleName']").val();
-                    }
+                  return checkEmpty( $(".w2ui-msg-body input[name='cfConfigName']").val() );
+                }
             },
-            roleDescription : {
+            iaasType : {
                 required : function(){
-                  return checkEmpty( $(".w2ui-msg-body input[name='roleDescription']").val() );
-                    }, sqlInjection : function(){
-                      return $(".w2ui-msg-body input[name='roleDescription']").val();
-                    }
-             }
-        }, messages: {
-            roleName: { 
-                 required:  "권한 그룹명" + text_required_msg
+                  return checkEmpty( $(".w2ui-msg-body select[name='iaasType']").val() );
+                }
             },
-            roleDescription: { 
-                required:  "설명" + text_required_msg
+            defaultConfigInfo : {
+                required : function(){
+                  return checkEmpty( $(".w2ui-msg-body select[name='defaultConfigInfo']").val() );
+                }
+            },
+            networkConfigInfo : {
+                required : function(){
+                  return checkEmpty( $(".w2ui-msg-body select[name='networkConfigInfo']").val() );
+                }
+            },
+            keyConfigInfo : {
+                required : function(){
+                  return checkEmpty( $(".w2ui-msg-body select[name='keyConfigInfo']").val() );
+                }
+            },
+            resourceConfigInfo : {
+                required : function(){
+                  return checkEmpty( $(".w2ui-msg-body select[name='resourceConfigInfo']").val() );
+                }
+            },
+            instanceConfigInfo : {
+                required : function(){
+                  return checkEmpty( $(".w2ui-msg-body select[name='instanceConfigInfo']").val() );
+                }
             }
+        }, messages: {
+            cfConfigName: { 
+                 required:  "CF 정보 별칭" + text_required_msg
+            },
+            iaasType: { 
+                required:  "인프라 환경" + select_required_msg
+            },
+            defaultConfigInfo: { 
+                required:  "기본 정보 별칭" + select_required_msg
+            },
+            networkConfigInfo: { 
+                required:  "네트워크 정보 별칭" + select_required_msg
+            },
+            keyConfigInfo: { 
+                required:  "네트워크 정보 별칭" + select_required_msg
+            },
+            resourceConfigInfo: { 
+                required:  "리소스 정보 별칭" + select_required_msg
+            },
+            instanceConfigInfo: { 
+                required:  "인스턴스 정보 별칭" + select_required_msg
+            },
         }, unhighlight: function(element) {
             setSuccessStyle(element);
         },errorPlacement: function(error, element) {
@@ -1315,8 +1321,9 @@ $(function() {
                 setInvalidHandlerStyle(errors, validator);
             }
         }, submitHandler: function (form) {
-            saveBootstrapInfo();
+            saveCfInfo();
         }
     });
 });
+
 </script>

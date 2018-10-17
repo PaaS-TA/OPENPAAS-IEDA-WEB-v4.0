@@ -20,8 +20,7 @@ public class HbDiegoDefaultConfigVO {
     private String diegoReleaseName; //DIEGO 릴리즈명
     private String diegoReleaseVersion; //DIEGO 릴리즈 버전
     private int cfId;
-    private String cfName; 
-    private String cfDeployment;
+    private String cfConfigName;
     private String cfReleaseName; //CF 릴리즈명
     private String cfReleaseVersion; //CF 릴리즈 버전
     private String gardenReleaseName; //Garden-Linux 릴리즈명
@@ -110,17 +109,11 @@ public class HbDiegoDefaultConfigVO {
     public void setCfId(int cfId) {
         this.cfId = cfId;
     }
-    public String getCfName() {
-        return cfName;
+    public String getCfConfigName() {
+        return cfConfigName;
     }
-    public void setCfName(String cfName) {
-        this.cfName = cfName;
-    }
-    public String getCfDeployment() {
-        return cfDeployment;
-    }
-    public void setCfDeployment(String cfDeployment) {
-        this.cfDeployment = cfDeployment;
+    public void setCfConfigName(String cfConfigName) {
+        this.cfConfigName = cfConfigName;
     }
     public String getCfReleaseName() {
         return cfReleaseName;

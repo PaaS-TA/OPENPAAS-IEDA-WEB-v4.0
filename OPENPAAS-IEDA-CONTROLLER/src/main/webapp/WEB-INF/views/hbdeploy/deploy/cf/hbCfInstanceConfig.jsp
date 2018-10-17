@@ -92,27 +92,7 @@ var instanceLayout = {
                        if(record.clock_z2 != "" && record.clock_z2 != null ){
                            return record.clock_z1+"<br>"+record.clock_z2;
                        }else return record.clock_z1
-                   }},
-                   { field: 'uaa_z1', caption: 'uaa 수', size:'120px', style:'text-align:center;',render: function(record){ 
-                       if(record.uaa_z2 != ""  && record.uaa_z2 != null){
-                           return record.uaa_z1+"<br>"+record.uaa_z2;
-                       }else return record.uaa_z1
-                   }},
-                   { field: 'api_z1', caption: 'api 수', size:'120px', style:'text-align:center;',render: function(record){ 
-                       if(record.api_z2 != ""  && record.api_z2 != null){
-                           return record.api_z1+"<br>"+record.api_z2;
-                       }else return record.api_z1
-                   }},
-                   { field: 'api_worker_z1', caption: 'api_worker 수', size:'120px', style:'text-align:center;',render: function(record){ 
-                       if(record.api_worker_z2 != ""  && record.api_worker_z2 != null){
-                           return record.api_worker_z1+"<br>"+record.api_worker_z2;
-                       }else return record.api_worker_z1
-                   }},
-                   { field: 'postgres_z1', caption: 'postgres 수', size:'120px', style:'text-align:center;',render: function(record){ 
-                       if(record.postgres_z2 != ""  && record.postgres_z2 != null){
-                           return record.postgres_z1+"<br>"+record.postgres_z2;
-                       }else return record.postgres_z1
-                   }},
+                   }}
                   ],
             onSelect : function(event) {
                 event.onComplete = function() {
@@ -211,7 +191,6 @@ function getCfDefaultConfigListInfo(){
             w2alert(errorResult.message, "CF 기본 정보 목록 조회");
             w2utils.unlock($("#layout_layout_panel_main"));
             doSearch();
-            resetForm();
         }
     });
 }
@@ -258,7 +237,6 @@ function getCfNetworkConfigListInfo(value){
                 w2alert(errorResult.message, "CF 네트워크 정보 목록 조회");
                 w2utils.unlock($("#layout_layout_panel_main"));
                 doSearch();
-                resetForm();
             }
         });
     }
@@ -297,7 +275,6 @@ function networkDetailInfo(networkConfigName){
                 networkInfo = data.records;
             } else {
                 w2alert("Network 상세 정보 조회 실패, <br> 네트워크 정보를 확인해 주세요.");
-                doSearch();
             }
         },
         error : function(request, status, error) {
@@ -436,8 +413,6 @@ function settingInstanceConfigInfo(){
         contentType : "application/json",
         success : function(data, status) {
             for(var i=0; i<Object.keys(data).length; i++){
-                console.log(Object.keys(data)[i]);
-                console.log(Object.values(data)[i]);
                 if(Object.keys(data)[i].indexOf("_z") != -1){
                 	$("input[name='"+Object.keys(data)[i]+"']").val(Object.values(data)[i]);
                 }

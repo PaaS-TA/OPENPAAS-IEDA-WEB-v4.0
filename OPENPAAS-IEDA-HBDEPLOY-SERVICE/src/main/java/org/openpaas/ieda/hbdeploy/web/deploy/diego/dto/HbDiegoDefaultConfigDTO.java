@@ -15,7 +15,7 @@ public class HbDiegoDefaultConfigDTO {
     private String diegoReleaseName; // 릴리즈명
     private String diegoReleaseVersion; //Diego 릴리즈 버전
     private int cfId; //CF 릴리즈명
-    private String cfDeployment; //CF 배포 파일명
+    private String cfConfigName; //CF Config 명
     private String gardenReleaseName; //Garden Linux 릴리즈명
     private String gardenReleaseVersion; //Garden Linux 릴리즈 버전
     private String cflinuxfs2rootfsreleaseName; //cflinuxfs2rootf 릴리즈 명
@@ -85,11 +85,11 @@ public class HbDiegoDefaultConfigDTO {
     public void setCfId(int cfId) {
         this.cfId = cfId;
     }
-    public String getCfDeployment() {
-        return cfDeployment;
+    public String getCfConfigName() {
+        return cfConfigName;
     }
-    public void setCfDeployment(String cfDeployment) {
-        this.cfDeployment = cfDeployment;
+    public void setCfConfigName(String cfConfigName) {
+        this.cfConfigName = cfConfigName;
     }
     public String getGardenReleaseName() {
         return gardenReleaseName;

@@ -810,14 +810,11 @@ CREATE TABLE ieda_diego_default_config (
   diego_release_version             VARCHAR(100),
   cflinuxfs2_rootfs_release_name    VARCHAR(100),
   cflinuxfs2_rootfs_release_version VARCHAR(100),
-  cf_deployment                     VARCHAR(255),
-  cf_name                           VARCHAR(255),
+  cf_config_name                    VARCHAR(100),
+  cf_id                             VARCHAR(100),
   garden_release_name               VARCHAR(100),
   garden_release_version            VARCHAR(100),
   key_file                          VARCHAR(100),
-  user_add_ssh                      LONGTEXT NULL,
-  osconf_release_name               VARCHAR(255) NULL,
-  osconf_release_version            VARCHAR(255) NULL,
   paasta_monitoring_use             VARCHAR(100),
   ingestor_ip                       VARCHAR(100),
   create_user_id                    VARCHAR(255),
@@ -847,6 +844,24 @@ CREATE TABLE ieda_diego_network_config (
   create_date                       date,
   update_user_id                    VARCHAR(255),
   update_date                       date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
+CREATE TABLE ieda_diego_resource_config (
+  id                                INT(11) NOT NULL AUTO_INCREMENT,
+  iaas_type                         VARCHAR(100) NOT NULL,
+  resource_config_name              VARCHAR(100) NOT NULL,
+  bosh_password                     VARCHAR(100),
+  stemcell_name                     VARCHAR(100),
+  stemcell_version                  VARCHAR(100),
+  small_flavor                      VARCHAR(100),
+  medium_flavor                     VARCHAR(100),
+  large_flavor                      VARCHAR(100),
+  director_id                       VARCHAR(100),
+  create_user_id                    VARCHAR(255),
+  create_date                       date,
+  update_user_id                    VARCHAR(255),
+  update_date                       date,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
@@ -885,4 +900,6 @@ ALTER TABLE ieda_cf_key_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_cf_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_diego_default_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_diego_network_config AUTO_INCREMENT=1000;
+ALTER TABLE ieda_diego_resource_config AUTO_INCREMENT=1000;
+
 

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoResourceConfigDAO">
+
+    <resultMap id="resourceInfo" type="org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoResourceConfigVO">
+        <id property="id" column="id" />
+        <result property="recid" column="id"/>
+        <result property="iaasType" column="iaas_type"/>
+        <result property="resourceConfigName" column="resource_config_name"/>
+        <result property="boshPassword" column="bosh_password" />
+        <result property="stemcellName" column="stemcell_name" />
+        <result property="stemcellVersion" column="stemcell_version" />
+        <result property="smallFlavor" column="small_flavor" />
+        <result property="mediumFlavor" column="medium_flavor" />
+        <result property="largeFlavor" column="large_flavor" />
+        <result property="directorId" column="director_id" />
+        <result property="createUserId" column ="create_user_id"/>
+        <result property="createDate" column ="create_date"/>
+        <result property="updateUserId" column ="update_user_id"/>
+        <result property="updateDate" column ="update_date"/>
+    </resultMap>
+
+    <select id = "selectResourceConfigInfoList" resultMap="resourceInfo">
+        select 
+            id
+            ,iaas_type
+            ,resource_config_name
+            ,bosh_password
+            ,stemcell_name
+            ,stemcell_version
+            ,small_flavor 
+            ,medium_flavor
+            ,large_flavor
+            ,director_id
+            ,create_user_id
+            ,create_date
+            ,update_user_id
+            ,update_date
+        from ieda_diego_resource_config
+        ORDER BY id;
+    </select>
+    
+    <select id="selectResourceConfigInfoById" resultMap="resourceInfo">
+        select 
+            id
+            ,iaas_type
+            ,resource_config_name
+            ,bosh_password
+            ,stemcell_name
+            ,stemcell_version
+            ,small_flavor 
+            ,medium_flavor
+            ,large_flavor
+            ,director_id
+            ,create_user_id
+            ,create_date
+            ,update_user_id
+            ,update_date
+        from ieda_diego_resource_config
+        where id = #{id};
+    </select>
+    
+    <select id="selectResourceConfigInfoByName" resultType="int">
+        select 
+            count(*)
+        from ieda_diego_resource_config
+        where resource_config_name = #{resourceConfigName};
+    </select>
+    
+    <insert id="insertResourceConfigInfo">
+            insert into ieda_diego_resource_config(
+                id, 
+                iaas_type,
+                resource_config_name,
+                bosh_password,
+                stemcell_name,
+                stemcell_version,
+                small_flavor, 
+                medium_flavor, 
+                large_flavor, 
+                director_id,
+                create_user_id, 
+                create_date, 
+                update_user_id, 
+                update_date
+            )
+            Values
+                (
+                #{vo.id}, 
+                #{vo.iaasType},
+                #{vo.resourceConfigName},
+                #{vo.boshPassword}, 
+                #{vo.stemcellName},
+                #{vo.stemcellVersion},
+                #{vo.smallFlavor},
+                #{vo.mediumFlavor}, 
+                #{vo.largeFlavor}, 
+                #{vo.directorId},
+                #{vo.createUserId},
+                 now(), 
+                 #{vo.updateUserId}, 
+                 now()
+                 )
+    </insert>
+    
+    <update id="updateResourceConfigInfo">
+        update ieda_diego_resource_config set
+            iaas_type = #{vo.iaasType},
+            resource_config_name = #{vo.resourceConfigName},
+            bosh_password = #{vo.boshPassword},
+            stemcell_name = #{vo.stemcellName},
+            stemcell_version = #{vo.stemcellVersion},
+            small_flavor = #{vo.smallFlavor},
+            medium_flavor = #{vo.mediumFlavor},
+            large_flavor = #{vo.largeFlavor},
+            director_id = #{vo.directorId},
+            update_user_id = #{vo.updateUserId},
+            update_date = now()
+        where id = #{vo.id}
+    </update>
+    
+    <delete id="deleteResourceConfigInfo">
+        delete from
+            ieda_diego_resource_config
+        where
+            id = #{id}
+    </delete>
+
+</mapper>

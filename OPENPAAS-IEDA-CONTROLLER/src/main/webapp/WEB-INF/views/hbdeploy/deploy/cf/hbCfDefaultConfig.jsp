@@ -392,7 +392,6 @@ function doButtonStyle() {
 function registCfDefaultConfigInfo(){
     w2utils.lock($("#layout_layout_panel_main"), "정보 저장 중", true);
     
-    
     defaultInfo = {
             iaasType             : $("select[name=iaasType]").val(),
             defaultConfigName    : $("input[name=defaultConfigName]").val(),
@@ -405,9 +404,10 @@ function registCfDefaultConfigInfo(){
             releases             : $("select[name=releases]").val(),
             osConfReleases       : $("select[name=osConfReleases]").val(),
             loggregatorReleases  : $("select[name=loggregatorReleases]").val(),
-            paastaMonitoring     : $("input:checkbox[name=paastaMonitoring]:checked").val(),
+            paastaMonitoring     : $("input:checkbox[name='paastaMonitoring']").is(":checked") == true ? "true" : "false",
             ingestorIp           : $("input[name=ingestorIp]").val()
     }
+    console.log(defaultInfo);
     $.ajax({
         type : "PUT",
         url : "/deploy/hbCf/default/save",
@@ -440,6 +440,8 @@ function settingDefaultInfo(){
     iaas = record.iaasType;
     defaultInfo = record;
     
+    console.log(record);
+    
     $("input[name=defaultId]").val(record.id);
     $("input[name=defaultConfigName]").val(record.defaultConfigName);
     $("select[name=iaasType]").val(record.iaasType);
@@ -450,7 +452,7 @@ function settingDefaultInfo(){
     $("input[name='loginSecret']").val(record.loginSecret);
     $("input[name='ingestorIp']").val(record.ingestorIp);
     
-    if( !checkEmpty(record.paastaMonitoringUse) ){
+    if( record.paastaMonitoringUse == "true" ){
         $('input:checkbox[name=paastaMonitoring]').attr("checked", true);
         $("input[name='ingestorIp']").removeAttr("disabled");
     }

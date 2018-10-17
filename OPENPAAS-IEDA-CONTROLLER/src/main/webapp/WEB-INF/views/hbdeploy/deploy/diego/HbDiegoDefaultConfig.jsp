@@ -94,8 +94,7 @@ var defaultLayout = {
                            }
                        }
                    },
-                   { field: 'ingestorIp', caption: 'Ingestor Ip', size: '100px', style:'text-align:center;'},
-                   { field: 'cfdeploymentName', caption: 'CF 배포명', size:'140px', style:'text-align:center;'}
+                   { field: 'cfConfigName', caption: '연동 CF 별칭 정보', size:'140px', style:'text-align:center;'}
             ],
             onSelect : function(event) {
                 event.onComplete = function() {
@@ -191,40 +190,37 @@ var arrayCFInfoJSON = [];
 function getCfRelease() {
     $.ajax({
         type :"GET",
-        url :"/deploy/diego/list/cf/"+iaas+"",
+        url :"/deploy/hbDiego/list/cf",
         contentType :"application/json",
         async :true,
         success :function(data, status) {
             if(data.records.length==0){
-                var option = "<option value=''>Diego와 연동할 CF가 존재 하지 않습니다..</option>";
-                $(".w2ui-msg-body select[name='cfInfo']").html(option);
+                var option = "<option value=''>Diego 연동 CF가 존재하지않습니다.</option>";
+                $("select[name='cfInfo']").html(option);
                 cfInfoYn = true;
             }
             cfInfo = new Array();
             if(data.records != null){
                 var option = "";
-                option += '<option value="">Diego와 연동하여 배포 할 CF정보를 선택 하세요.</option>';
+                option += '<option value="">Diego 연동 CF 정보 별칭을 선택 하세요.</option>';
                 data.records.map(function(obj) {
-                    var getCfInfo =  $(".w2ui-msg-body #getCfInfo");
-                    if(obj.diegoYn=="true") {
-                        cfInfo.push(obj.deploymentName);
-                        if(obj.deploymentName == defaultInfo.cfDeploymentName){
-                            option += '<option selected value="'+obj.deploymentName+'">'+obj.deploymentName+'</option>';
+                	console.log(obj);
+                    var getCfInfo =  $("#getCfInfo");
+                        cfInfo.push(obj.cfConfigName);
+                        if(obj.cfConfigName == defaultInfo.cfConfigName){
+                            option += '<option selected value="'+obj.cfConfigName+'">'+obj.cfConfigName+'</option>';
                         }else{
-                            option += '<option value="'+obj.deploymentName+'">'+obj.deploymentName+'</option>';
+                            option += '<option value="'+obj.cfConfigName+'">'+obj.cfConfigName+'</option>';
                         }
-                        $(".w2ui-msg-body input[name='cfReleaseVersion']").val(obj.releaseVersion);
-                        $(".w2ui-msg-body select[name='cfInfo']").html(option);
-                        if(obj.releaseVersion > 271){
-                            $(".w2ui-msg-body input[name='cfKeyFile']").val(obj.keyFile);
-                        }
+                        $("input[name='cfReleaseVersion']").val(obj.defaultConfigVO.releaseVersion);
+                        $("select[name='cfInfo']").html(option);
+                        $("input[name='cfKeyFile']").val(obj.keyConfigVO.keyFileName);
                         arrayCFInfoJSON=data;
-                    }
                 });
             }
             //getDiegoRelease();
             if( defaultInfo != "" ){
-                setCfDeployFile(defaultInfo.cfDeploymentName);
+                setCfDeployFile(defaultInfo.cfConfigName);
             }
         },
         error :function(e, status) {
@@ -396,6 +392,7 @@ function popupClose() {
  *********************************************************/
 function resetForm(status){
     defaultInfo = [];
+    cfInfo = "";
     directorInfo = "";
     $(".panel-body").find("p").remove();
     $(".panel-body").children().children().children().css("borderColor", "#bbb");
@@ -617,21 +614,18 @@ function setCfDeployFile(value){
     var cfReleaseVersion;
     var cfKey;
     for(var i=0;i<arrayCFInfoJSON.records.length;i++){
-        if(value==arrayCFInfoJSON.records[i].deploymentName){
+        if(value==arrayCFInfoJSON.records[i].cfConfigName){
             cf_id = arrayCFInfoJSON.records[i].id;
             cfDeploymentFile = arrayCFInfoJSON.records[i].deploymentFile;
-            cfReleaseVersion = arrayCFInfoJSON.records[i].releaseVersion;
-            if(cfReleaseVersion > 271){
-                cfKey = arrayCFInfoJSON.records[i].keyFile;
-            }
+            cfReleaseVersion = arrayCFInfoJSON.records[i].defaultConfigVO.releaseVersion;
+            cfKey = arrayCFInfoJSON.records[i].keyConfigVO.keyFileName;
             break;
         }
     }
-    $(".w2ui-msg-body input[name='cfReleaseVersion']").val(cfReleaseVersion);
-    $(".w2ui-msg-body input[name='deploymentName']").val(value+"-diego");
-    $(".w2ui-msg-body input[name='cfId']").val(cf_id);
-    $(".w2ui-msg-body input[name='cfDeploymentFile']").val(cfDeploymentFile);
-    $(".w2ui-msg-body input[name='cfKeyFile']").val(cfKey);
+    $("input[name='cfReleaseVersion']").val(cfReleaseVersion);
+    $("input[name='cfId']").val(cf_id);
+    $("input[name='cfDeploymentFile']").val(cfDeploymentFile);
+    $("input[name='cfKeyFile']").val(cfKey);
 }
 
 /********************************************************
@@ -660,11 +654,11 @@ function registDiegoDefaultConfigInfo() {
                 directorId                      : $("select[name='directorInfo']").val(),
                 diegoReleaseName                : diegoRelease.split("/")[0],
                 diegoReleaseVersion             : diegoRelease.split("/")[1],
-                cfDeploymentName                : cfName,
+                cfConfigName                    : cfName,
                 cfId                            : $("input[name='cfId']").val(),
                 cfDeploymentFile                : $("input[name='cfDeploymentFile']").val(),
                 cfReleaseVersion                : $("input[name='cfReleaseVersion']").val(),
-                cfKeyFile                       : $("input[name='cfKeyFile']").val(),
+                keyFile                         : $("input[name='cfKeyFile']").val(),
                 gardenReleaseName               : gardenRelease.split("/")[0],
                 gardenReleaseVersion            : gardenRelease.split("/")[1],
                 cflinuxfs2rootfsreleaseName     : cflinuxRelease.split("/")[0],
@@ -793,10 +787,10 @@ function deleteDiegoDefaultConfigInfo(id, defaultConfigName){
                    </div>
                    
                     <div class="w2ui-field" >
-                        <label style="text-align:left; width:40%; padding-left: 20px; font-size:11px;">DIEGO와 연동할 CF 배포명</label>
+                        <label style="text-align:left; width:40%; padding-left: 20px; ">DIEGO 연동 CF 정보</label>
                         <div id="getCfInfo">
-                            <select name="cfInfo" onchange="setCfDeployFile(this.value);" style="width: 320px; margin-left: 20px;">
-                                <option value="">Diego와 연동 할 CF를 선택 하세요.</option>
+                            <select class="form-control" name="cfInfo" onchange="setCfDeployFile(this.value);" style="width: 320px; margin-left: 20px;">
+                                <option value="">Diego 연동 CF 정보 별칭을 선택 하세요.</option>
                             </select>
                         </div>
                         <input name="cfId" type="hidden"/>
@@ -806,7 +800,7 @@ function deleteDiegoDefaultConfigInfo(id, defaultConfigName){
                     </div>
                     
                     <div class="w2ui-field">
-                        <label style="text-align:left; width:40%; font-size:11px;">PaaS-TA 모니터링
+                        <label style="text-align:left; width:40%; padding-left: 20px; ">PaaS-TA 모니터링
                         <span class="glyphicon glyphicon glyphicon-question-sign paastaMonitoring-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="click" data-html="true" title="PaaS-TA 모니터링"></span>
                         </label>
                         <div style=" width: 60%;">

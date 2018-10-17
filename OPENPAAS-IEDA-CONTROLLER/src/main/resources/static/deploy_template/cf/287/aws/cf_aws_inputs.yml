@@ -66,6 +66,7 @@ meta:
   nats-z2-instances: [natsZ2]
   blobstore-z2-instances: [blobstoreZ2]
   router-z2-instances: [routerZ2]
+  doppler-z2-instances: [dopplerZ2]
   loggregator-trafficcontroller-z2-instances: [loggregator_trafficcontrollerZ2]
   etcd-z2-instances: [etcdZ2]
   consul-z2-instances: [consulZ2]

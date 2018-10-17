@@ -13,8 +13,8 @@
         <result property="diegoReleaseVersion" column="DIEGO_RELEASE_VERSION" />
         <result property="cflinuxfs2rootfsreleaseName" column="CFLINUXFS2_ROOTFS_RELEASE_NAME" />
         <result property="cflinuxfs2rootfsreleaseVersion" column="CFLINUXFS2_ROOTFS_RELEASE_VERSION" />
-        <result property="cfDeployment" column="CF_DEPLOYMENT" />
-        <result property="cfName" column="CF_NAME"/>
+        <result property="cfConfigName" column="CF_CONFIG_NAME" />
+        <result property="cfId" column="cf_id" />
         <result property="gardenReleaseName" column="GARDEN_RELEASE_NAME" />
         <result property="gardenReleaseVersion" column="GARDEN_RELEASE_VERSION" />
         <result property="keyFile" column="KEY_FILE"/>
@@ -37,7 +37,8 @@
             diego_release_version,
             cflinuxfs2_rootfs_release_name,
             cflinuxfs2_rootfs_release_version,
-            cf_deployment,
+            cf_config_name,
+            cf_id,
             garden_release_name,
             garden_release_version,
             key_file,
@@ -62,7 +63,8 @@
             diego_release_version,
             cflinuxfs2_rootfs_release_name,
             cflinuxfs2_rootfs_release_version,
-            cf_deployment,
+            cf_config_name,
+            cf_id,
             garden_release_name,
             garden_release_version,
             key_file,
@@ -105,7 +107,8 @@
             diego_release_version,
             cflinuxfs2_rootfs_release_name,
             cflinuxfs2_rootfs_release_version,
-            cf_deployment,
+            cf_config_name,
+            cf_id,
             garden_release_name,
             garden_release_version,
             key_file,
@@ -125,7 +128,8 @@
             #{diego.diegoReleaseVersion},
             #{diego.cflinuxfs2rootfsreleaseName},
             #{diego.cflinuxfs2rootfsreleaseVersion},
-            #{diego.cfDeployment},
+            #{diego.cfConfigName},
+            #{diego.cfId},
             #{diego.gardenReleaseName},
             #{diego.gardenReleaseVersion},
             #{diego.keyFile},
@@ -148,7 +152,8 @@
             diego_release_version=#{diego.diegoReleaseVersion},
             cflinuxfs2_rootfs_release_name=#{diego.cflinuxfs2rootfsreleaseName},
             cflinuxfs2_rootfs_release_version=#{diego.cflinuxfs2rootfsreleaseVersion},
-            cf_deployment=#{diego.cfDeployment},
+            cf_config_name=#{diego.cf_config_name},
+            cf_id=#{diego.cfId},
             garden_release_name=#{diego.gardenReleaseName},
             garden_release_version=#{diego.gardenReleaseVersion},
             key_file=#{diego.keyFile},

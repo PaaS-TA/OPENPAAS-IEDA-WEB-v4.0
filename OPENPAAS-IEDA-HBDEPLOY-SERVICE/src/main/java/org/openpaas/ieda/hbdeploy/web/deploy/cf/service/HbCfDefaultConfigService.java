@@ -117,7 +117,7 @@ public class HbCfDefaultConfigService {
         HbCfDefaultConfigVO vo = dao.selectCfDefaultInfoById(id);
         if(vo == null){
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
-                    message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
+                    "기본 정보가 존재 하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
         return vo;
     }

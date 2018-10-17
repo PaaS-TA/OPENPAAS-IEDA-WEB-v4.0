@@ -17,8 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.google.cloud.datastore.StringValue;
-
 @Service
 public class HbDiegoDefaultConfigService {
 
@@ -77,7 +75,6 @@ public class HbDiegoDefaultConfigService {
             vo.setDirectorId(String.valueOf(dto.getDirectorId()));
             vo.setDiegoReleaseName(dto.getDiegoReleaseName());
             vo.setDiegoReleaseVersion(dto.getDiegoReleaseVersion());
-            vo.setCfDeployment(dto.getCfDeployment());
             vo.setGardenReleaseName(dto.getGardenReleaseName());
             vo.setGardenReleaseVersion(dto.getGardenReleaseName());
             vo.setGardenReleaseVersion(dto.getGardenReleaseVersion());
@@ -85,6 +82,11 @@ public class HbDiegoDefaultConfigService {
             vo.setCflinuxfs2rootfsreleaseVersion(dto.getCflinuxfs2rootfsreleaseVersion());
             vo.setPaastaMonitoringUse(dto.getPaastaMonitoringUse());
             vo.setIngestorIp(dto.getIngestorIp());
+            
+            vo.setCfConfigName(dto.getCfConfigName());
+            vo.setCfId(dto.getCfId());
+            vo.setCfReleaseVersion(dto.getDiegoReleaseVersion());
+            vo.setKeyFile(dto.getKeyFile());
         }
         if(StringUtils.isEmpty(dto.getId())){
             dao.insertDiegoDefaultConfigInfo(vo);

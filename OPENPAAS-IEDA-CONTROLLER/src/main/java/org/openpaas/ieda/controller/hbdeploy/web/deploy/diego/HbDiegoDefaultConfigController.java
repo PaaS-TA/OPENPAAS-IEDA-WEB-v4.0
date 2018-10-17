@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 
+import org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfVO;
+import org.openpaas.ieda.hbdeploy.web.deploy.cf.service.HbCfService;
 import org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoDefaultConfigVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.diego.dto.HbDiegoDefaultConfigDTO;
 import org.openpaas.ieda.hbdeploy.web.deploy.diego.service.HbDiegoDefaultConfigService;
@@ -22,7 +24,8 @@ public class HbDiegoDefaultConfigController {
 
     @Autowired
     private HbDiegoDefaultConfigService service;
-    
+    @Autowired
+    private HbCfService cfService;
     private final static Logger LOGGER = LoggerFactory.getLogger(HbDiegoDefaultConfigController.class);
     
     /****************************************************************
@@ -68,6 +71,27 @@ public class HbDiegoDefaultConfigController {
         service.saveDefaultConfigInfo(dto, principal);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+    
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : CF 목록 조회
+     * @title : getCfConfigInfoList
+     * @return : RequestEntity<HashMap<String,Object>>
+    *****************************************************************/
+    @RequestMapping(value = "/deploy/hbDiego/list/cf", method = RequestMethod.GET)
+    public ResponseEntity<HashMap<String, Object>> getCfConfigInfoList(){
+        if (LOGGER.isInfoEnabled()) LOGGER.info("====================================> /deploy/hbDiego/list/cf");
+        List<HbCfVO> cfList = cfService.getCfInfoList("installed");
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        int size = 0;
+        if( cfList!=null && cfList.size() > 0){
+            size = cfList.size();
+        }
+        map.put("total", size);
+        map.put("records", cfList);
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+    
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
