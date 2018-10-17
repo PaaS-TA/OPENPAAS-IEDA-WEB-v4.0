@@ -17,10 +17,10 @@ public interface HbDiegoNetworkConfigDAO {
 	/****************************************************************
 	 * @project : Paas 이종 플랫폼 설치 자동화
 	 * @description : DIEGO 네트워크 정보(별칭)로 중복 조회
-	 * @title : selectDiegoDefaultConfigInfoByName
+	 * @title : selectDiegoNetworkConfigInfoByName
 	 * @return : int
 	*****************************************************************/
-	int selectDiegoDefaultConfigInfoByName(@Param("networkConfigName") String networkConfigName);
+	int selectDiegoNetworkConfigInfoByName(@Param("networkConfigName") String networkConfigName);
 	
 	/****************************************************************
 	 * @project : Paas 이종 플랫폼 설치 자동화
@@ -33,10 +33,10 @@ public interface HbDiegoNetworkConfigDAO {
 	/****************************************************************
 	 * @project : Paas 플랫폼 설치 자동화
 	 * @description : DIEGO 네트워크 정보(id) 상세 조회
-	 * @title : selectDiegoDefaultInfoById
+	 * @title : selectDiegoNetworkInfoById
 	 * @return : HbDiegoNetworkConfigVO
 	*****************************************************************/
-	HbDiegoNetworkConfigVO selectDiegoDefaultInfoById(@Param("id")String id);
+	HbDiegoNetworkConfigVO selectDiegoNetworkInfoById(@Param("id")String id);
 	
 	/****************************************************************
 	 * @project : Paas 이종 플랫폼 설치 자동화

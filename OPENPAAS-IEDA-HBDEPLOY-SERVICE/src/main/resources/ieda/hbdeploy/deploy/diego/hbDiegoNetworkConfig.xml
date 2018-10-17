@@ -7,9 +7,9 @@
         <result property="recid" column="id"/>
         <result property="iaasType" column="IAAS_TYPE"/>
         <result property="networkConfigName" column="network_config_name"/>
-        <result property="publicStaticIP" column="public_static_ip" />
         <result property="net" column="net" />
         <result property="seq" column="seq" />
+        <result property="subnetId" column="subnet_id" />
         <result property="subnetStaticFrom" column="subnet_static_from" />
         <result property="subnetStaticTo" column="subnet_static_to" />
         <result property="subnetReservedFrom" column="subnet_reserved_from" />
@@ -30,9 +30,9 @@
             id
             ,iaas_type
             ,network_config_name
-            ,public_static_ip
             ,net
             ,seq
+            ,subnet_id
             ,subnet_static_from
             ,subnet_static_to
             ,subnet_reserved_from
@@ -55,7 +55,6 @@
             id
             ,iaas_type
             ,network_config_name
-            ,public_static_ip
             ,net
             ,seq
             ,subnet_id
@@ -76,81 +75,77 @@
         where network_config_name = #{networkConfigName};
     </select>
     
-    <select id = "selectDiegoDefaultInfoById" resultMap="diegoNetworkInfo">
+    <select id = "selectDiegoNetworkInfoById" resultMap="diegoNetworkInfo">
         select 
             id
             ,iaas_type
-            ,default_config_name
-            ,deployment_name
-            ,director_id
-            ,release_name
-            ,release_version
-            ,loggregator_release_name
-            ,loggregator_release_version
-            ,login_secret
-            ,paasta_monitoring_use
-            ,domain_organization
-            ,domain
-            ,ingestor_ip
+            ,network_config_name
+            ,net
+            ,seq
+            ,subnet_id
+            ,subnet_static_from
+            ,subnet_static_to
+            ,subnet_reserved_from
+            ,subnet_reserved_to
+            ,subnet_range
+            ,subnet_gateway
+            ,availability_zone
+            ,subnet_dns
+            ,cloud_security_groups
             ,create_user_id
             ,create_date
             ,update_user_id
             ,update_date
-        from ieda_diego_default_config
+        from ieda_diego_network_config
         where id = #{id};
     </select>
     
-    <select id="selectDiegoDefaultConfigInfoByName" resultType="int">
+    <select id="selectDiegoNetworkConfigInfoByName" resultType="int">
         select 
             count(*)
         from ieda_diego_network_config
-        where default_config_name = #{networkConfigName};
+        where network_config_name = #{networkConfigName};
     </select>
     
     <insert id="insertDiegoNetworkConfigInfo">
-            /**ieda_network.insertNetworkList**/
-            insert into ieda_network(
+            insert into ieda_diego_network_config(
                 id, 
                 iaas_type,
                 network_config_name,
-                seq,
                 net,
-                public_Static_ip,
-                subnet_range, 
-                subnet_gateway, 
-                subnet_reserved_from, 
-                subnet_reserved_to, 
-                subnet_dns, 
+                seq,
+                subnet_id,
                 subnet_static_from, 
                 subnet_static_to, 
-                subnet_id, 
-                network_name,
-                cloud_security_groups,
+                subnet_reserved_from, 
+                subnet_reserved_to, 
+                subnet_range, 
+                subnet_gateway, 
+                subnet_dns, 
                 availability_zone,
+                cloud_security_groups,
                 create_user_id, 
                 create_date, 
                 update_user_id, 
                 update_date
             )
             Values
-            <foreach collection="networks" item="item" index="index"   separator="," >
+            <foreach collection="networks" item="item" index="index"  separator="," >
                 ( #{item.id}, 
                 #{item.iaasType},
                 #{item.networkConfigName},
-                #{index}, 
                 #{item.net},
-                #{item.publicStaticIP},
-                #{item.subnetRange},
-                #{item.subnetGateway}, 
-                #{item.subnetReservedFrom}, 
-                #{item.subnetReservedTo},
-                #{item.subnetDns}, 
+                #{index}, 
+                #{item.subnetId},
                 #{item.subnetStaticFrom},
                 #{item.subnetStaticTo},
-                #{item.subnetId}, 
-                #{item.networkName}, 
-                #{item.cloudSecurityGroups},
+                #{item.subnetReservedFrom}, 
+                #{item.subnetReservedTo},
+                #{item.subnetRange},
+                #{item.subnetGateway}, 
+                #{item.subnetDns}, 
                 #{item.availabilityZone},
+                #{item.cloudSecurityGroups},
                 #{item.createUserId},
                  now(), 
                  #{item.updateUserId}, 

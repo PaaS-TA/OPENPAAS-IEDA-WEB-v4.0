@@ -50,7 +50,6 @@ var networkLayout = {
                            return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
                        }
                    }},
-                   { field: 'privateStaticIp', caption: '디렉터 Private IP', size:'60%', style:'text-align:center;'},
                    { field: 'subnetId', caption: '서브넷 아이디', size:'50%', style:'text-align:center;'},
                    { field: 'subnetRange', caption: '서브넷 범위', size:'50%', style:'text-align:center;'},
                    { field: 'subnetDns', caption: 'DNS 주소', size:'50%', style:'text-align:center;'}
@@ -379,16 +378,16 @@ function settingNetworkInfo(){
                 iaasTypeChangeInput(data.records[0].iaasType);
                 var length = data.records.length;
                 for(var i=0; i<length; i++){
-                    $("input[name=subnetId_"+(i+1)+"]").val(data.records[i+1].subnetId);
-                    $("input[name=cloudSecurityGroups_"+(i+1)+"]").val(data.records[i+1].cloudSecurityGroups);
-                    $("input[name=availabilityZone_"+(i+1)+"]").val(data.records[i+1].availabilityZone);
-                    $("input[name=subnetRange_"+(i+1)+"]").val(data.records[i+1].subnetRange);
-                    $("input[name=subnetGateway_"+(i+1)+"]").val(data.records[i+1].subnetGateway);
-                    $("input[name=subnetDns_"+(i+1)+"]").val(data.records[i+1].subnetDns);
-                    $("input[name=subnetReservedFrom_"+(i+1)+"]").val(data.records[i+1].subnetReservedFrom);
-                    $("input[name=subnetReservedTo_"+(i+1)+"]").val(data.records[i+1].subnetReservedTo);
-                    $("input[name=subnetStaticFrom_"+(i+1)+"]").val(data.records[i+1].subnetStaticFrom);
-                    $("input[name=subnetStaticTo_"+(i+1)+"]").val(data.records[i+1].subnetStaticTo);
+                    $("input[name=subnetId_"+(i+1)+"]").val(data.records[i].subnetId);
+                    $("input[name=cloudSecurityGroups_"+(i+1)+"]").val(data.records[i].cloudSecurityGroups);
+                    $("input[name=availabilityZone_"+(i+1)+"]").val(data.records[i].availabilityZone);
+                    $("input[name=subnetRange_"+(i+1)+"]").val(data.records[i].subnetRange);
+                    $("input[name=subnetGateway_"+(i+1)+"]").val(data.records[i].subnetGateway);
+                    $("input[name=subnetDns_"+(i+1)+"]").val(data.records[i].subnetDns);
+                    $("input[name=subnetReservedFrom_"+(i+1)+"]").val(data.records[i].subnetReservedFrom);
+                    $("input[name=subnetReservedTo_"+(i+1)+"]").val(data.records[i].subnetReservedTo);
+                    $("input[name=subnetStaticFrom_"+(i+1)+"]").val(data.records[i].subnetStaticFrom);
+                    $("input[name=subnetStaticTo_"+(i+1)+"]").val(data.records[i].subnetStaticTo);
                 }
             }else{
                 w2alert("Network 상세 정보 조회 실패, <br> 네트워크 정보를 확인해 주세요.");
@@ -438,7 +437,7 @@ function registDiegoNetworkConfigInfo(form){
     }
     for(var i=1; i < cnt-1; i++){
         var internal = {
-            iaas                : $("select[name='iaasType']").val(),
+            iaasType                : $("select[name='iaasType']").val(),
             net                 : "Internal",
             networkConfigName  :  $("input[name='networkName']").val(),
             seq                 : i,
@@ -458,7 +457,6 @@ function registDiegoNetworkConfigInfo(form){
     }
     
     console.log(networkConfigInfo);
-    return;
     $.ajax({
         type : "PUT",
         url : "/deploy/hbDiego/network/save",

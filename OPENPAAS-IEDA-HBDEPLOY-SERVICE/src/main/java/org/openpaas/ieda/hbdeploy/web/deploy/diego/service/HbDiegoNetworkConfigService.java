@@ -40,12 +40,12 @@ public class HbDiegoNetworkConfigService {
 	*****************************************************************/
 	public HbDiegoNetworkConfigVO getNetworkConfigDetailInfo(HbDiegoNetworkConfigDTO dto){
 		HbDiegoNetworkConfigVO vo = new HbDiegoNetworkConfigVO();
-		int check = dao.selectDiegoDefaultConfigInfoByName(dto.getNetworkConfigName());
+		int check = dao.selectDiegoNetworkConfigInfoByName(dto.getNetworkConfigName());
 		if(check!=1){
 			throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
 					message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
 		}
-		vo = dao.selectDiegoDefaultInfoById(dto.getId());
+		vo = dao.selectDiegoNetworkInfoById(dto.getId());
 		return vo;
 	}
 	
@@ -71,15 +71,17 @@ public class HbDiegoNetworkConfigService {
         int count = 0;
         if(dto != null && dto.size() != 0){
             for(int i=0; i<dto.size(); i++){
-                count = dao.selectDiegoDefaultConfigInfoByName(dto.get(i).getNetworkConfigName());
+                count = dao.selectDiegoNetworkConfigInfoByName(dto.get(i).getNetworkConfigName());
                 if(StringUtils.isEmpty(dto.get(i).getNetworkConfigName())){
-                    if(count > 0) {
+                    if(count > 0) { 
                         throw new CommonException(message.getMessage("common.conflict.exception.code", null, Locale.KOREA),
                                 message.getMessage("hybrid.configMgnt.alias.conflict.message.exception", null, Locale.KOREA), HttpStatus.CONFLICT);
                     }
                 }else{
-                    HbDiegoNetworkConfigVO vo = dao.selectDiegoDefaultInfoById(dto.get(i).getId());
-                    dao.deleteDiegoNetworkConfigInfoByName(vo.getNetworkConfigName());
+                    HbDiegoNetworkConfigVO vo = dao.selectDiegoNetworkInfoById(dto.get(i).getId());
+                    if(vo != null){
+                        dao.deleteDiegoNetworkConfigInfoByName(vo.getNetworkConfigName());
+                    }
                 }
                 if(count > 0){
                     dao.deleteDiegoNetworkConfigInfoByName(dto.get(i).getNetworkConfigName());
