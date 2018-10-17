@@ -800,7 +800,55 @@ CREATE TABLE ieda_cf_config (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
+CREATE TABLE ieda_diego_default_config (
+  id                                INT(11) NOT NULL AUTO_INCREMENT,
+  iaas_type                         VARCHAR(100) NOT NULL,
+  default_config_name               VARCHAR(100) NOT NULL,
+  deployment_name                   VARCHAR(100) NOT NULL,
+  director_id                       VARCHAR(100) NOT NULL,
+  diego_release_name                VARCHAR(100),
+  diego_release_version             VARCHAR(100),
+  cflinuxfs2_rootfs_release_name    VARCHAR(100),
+  cflinuxfs2_rootfs_release_version VARCHAR(100),
+  cf_deployment                     VARCHAR(255),
+  cf_name                           VARCHAR(255),
+  garden_release_name               VARCHAR(100),
+  garden_release_version            VARCHAR(100),
+  key_file                          VARCHAR(100),
+  user_add_ssh                      LONGTEXT NULL,
+  osconf_release_name               VARCHAR(255) NULL,
+  osconf_release_version            VARCHAR(255) NULL,
+  paasta_monitoring_use             VARCHAR(100),
+  ingestor_ip                       VARCHAR(100),
+  create_user_id                    VARCHAR(255),
+  create_date                       date,
+  update_user_id                    VARCHAR(255),
+  update_date                       date NOT NULL,
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
+CREATE TABLE ieda_diego_network_config (
+  id                                INT(11) NOT NULL AUTO_INCREMENT,
+  iaas_type                         VARCHAR(100) NOT NULL,
+  network_config_name               VARCHAR(100) NOT NULL,
+  public_static_ip                  VARCHAR(100) NOT NULL,
+  net                               VARCHAR(100) NOT NULL,
+  seq                               VARCHAR(100) NOT NULL,
+  subnet_static_from                VARCHAR(100),
+  subnet_static_to                  VARCHAR(100),
+  subnet_reserved_from              VARCHAR(100) NOT NULL,
+  subnet_reserved_to                VARCHAR(100) NOT NULL,
+  subnet_range                      VARCHAR(100) NOT NULL,
+  subnet_gateway                    VARCHAR(100),
+  subnet_dns                        VARCHAR(100),
+  availability_zone                 VARCHAR(100),
+  cloud_security_groups             VARCHAR(100),
+  create_user_id                    VARCHAR(255),
+  create_date                       date,
+  update_user_id                    VARCHAR(255),
+  update_date                       date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
 
 
@@ -835,6 +883,6 @@ ALTER TABLE ieda_cf_resource_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_cf_instance_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_cf_key_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_cf_config AUTO_INCREMENT=1000;
-
-
+ALTER TABLE ieda_diego_default_config AUTO_INCREMENT=1000;
+ALTER TABLE ieda_diego_network_config AUTO_INCREMENT=1000;
 
