@@ -105,19 +105,19 @@
                <a href="javascript:;" data-toggle="collapse" data-target="#diegoMenu" ><i class="fa fa-fw fa-spinner"></i>이종 DIEGO<i class="fa fa-fw fa-caret-down"></i></a>
                <ul id="diegoMenu" class="collapse">
                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/hbCfDeployment/defaultConfig"/>', '기본 정보 관리');">기본 정보 관리</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/hbDiego/HbDiegoDefaultConfig"/>', '기본 정보 관리');">기본 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/hbCfDeployment/networkConfig"/>', 'NETWROK 정보 관리');">NETWROK 정보 관리</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/hbDiego/HbDiegoNetworkConfig"/>', 'NETWROK 정보 관리');">NETWROK 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/hbCfDeployment/resourceConfig"/>', '리소스 정보 관리');">리소스 정보 관리</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/hbDiego/HbDiegoResourceConfig"/>', '리소스 정보 관리');">리소스 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/hbCfDeployment/instanceConfig"/>', '인스턴스 정보 관리');">인스턴스 정보 관리</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/hbDiego/HbDiegoInstanceConfig"/>', '인스턴스 정보 관리');">인스턴스 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/hbCfDeployment/hbCfDeployment"/>', '이종 CF 설치');">이종 DIEGO 설치</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/hbDiego/HbDiegoDeployment"/>', '이종 DIEGO 설치');">이종 DIEGO 설치</a></li>
                    </sec:authorize>
                 </ul>
             </li>

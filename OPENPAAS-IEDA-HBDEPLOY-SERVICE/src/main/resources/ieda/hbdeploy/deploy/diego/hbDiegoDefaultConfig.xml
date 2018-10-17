@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoDefaultConfigDAO">
+    <resultMap id="diegoDefaultInfo" type="org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoDefaultConfigVO">
+        <id property="id" column="ID" />
+        <result property="recid" column="ID" />
+        <result property="iaasType" column="IAAS_TYPE"/>
+        <result property="defaultConfigName" column="DEFAUlT_CONFIG_NAME"/>
+        <result property="deploymentName" column="DEPLOYMENT_NAME" />
+        <result property="directorId" column="DIRECTOR_ID" />
+        <result property="diegoReleaseName" column="DIEGO_RELEASE_NAME" />
+        <result property="diegoReleaseVersion" column="DIEGO_RELEASE_VERSION" />
+        <result property="cflinuxfs2rootfsreleaseName" column="CFLINUXFS2_ROOTFS_RELEASE_NAME" />
+        <result property="cflinuxfs2rootfsreleaseVersion" column="CFLINUXFS2_ROOTFS_RELEASE_VERSION" />
+        <result property="cfDeployment" column="CF_DEPLOYMENT" />
+        <result property="cfName" column="CF_NAME"/>
+        <result property="gardenReleaseName" column="GARDEN_RELEASE_NAME" />
+        <result property="gardenReleaseVersion" column="GARDEN_RELEASE_VERSION" />
+        <result property="keyFile" column="KEY_FILE"/>
+        <result property="paastaMonitoringUse" column="PAASTA_MONITORING_USE" />
+        <result property="ingestorIp" column="INGESTOR_IP" />
+        <result property="createUserId" column="CREATE_USER_ID"/>
+        <result property="createDate" column="CREATE_DATE" />
+        <result property="updateUserId" column="UPDATE_USER_ID"/>
+        <result property="updateDate" column="UPDATE_DATE" />
+    </resultMap>
+    
+    <select id="selectDiegoDefaultInfoList" resultMap="diegoDefaultInfo">
+        Select
+            id,
+            iaas_type,
+            default_config_name,
+            deployment_name,
+            director_id,
+            diego_release_name,
+            diego_release_version,
+            cflinuxfs2_rootfs_release_name,
+            cflinuxfs2_rootfs_release_version,
+            cf_deployment,
+            garden_release_name,
+            garden_release_version,
+            key_file,
+            paasta_monitoring_use,
+            ingestor_ip,
+            create_user_id,
+            create_date,
+            update_user_id,
+            update_date
+        From ieda_diego_default_config
+        Order by id;
+    </select>
+    
+    <select id="selectDiegoDefaultConfigInfoById" resultMap="diegoDefaultInfo">
+        Select
+            id,
+            iaas_type,
+            default_config_name,
+            deployment_name,
+            director_id,
+            diego_release_name,
+            diego_release_version,
+            cflinuxfs2_rootfs_release_name,
+            cflinuxfs2_rootfs_release_version,
+            cf_deployment,
+            garden_release_name,
+            garden_release_version,
+            key_file,
+            paasta_monitoring_use,
+            ingestor_ip,
+            create_user_id,
+            create_date,
+            update_user_id,
+            update_date
+        From ieda_diego_default_config
+        Where id = #{id}
+    </select>
+    
+    <select id="selectDiegoDefaultConfigInfoByName" resultType="int">
+        Select
+            count(*)
+        From ieda_diego_default_config
+        Where default_config_name = #{defaultConfigName};
+    </select>
+    
+    <select id="selectDiegoDeploymentNameDuplication" resultType="int">
+        Select
+            count(*)
+        From ieda_diego_default_config
+        Where deployment_name=#{deploymentName}
+        And LOWER(iaas_type) = LOWER(#{diego.iaasType})
+        <if test="id != null">
+            And id != #{diego.id}
+        </if>
+    </select>
+    
+    <insert id="insertDiegoDefaultConfigInfo">
+        Insert Into ieda_diego_default_config (
+            id,
+            iaas_type,
+            default_config_name,
+            deployment_name,
+            director_id,
+            diego_release_name,
+            diego_release_version,
+            cflinuxfs2_rootfs_release_name,
+            cflinuxfs2_rootfs_release_version,
+            cf_deployment,
+            garden_release_name,
+            garden_release_version,
+            key_file,
+            paasta_monitoring_use,
+            ingestor_ip,
+            create_user_id,
+            create_date,
+            update_user_id,
+            update_date
+        ) values (
+            #{diego.id},
+            #{diego.iaasType},
+            #{diego.defaultConfigName},
+            #{diego.deploymentName},
+            #{diego.directorId},
+            #{diego.diegoReleaseName},
+            #{diego.diegoReleaseVersion},
+            #{diego.cflinuxfs2rootfsreleaseName},
+            #{diego.cflinuxfs2rootfsreleaseVersion},
+            #{diego.cfDeployment},
+            #{diego.gardenReleaseName},
+            #{diego.gardenReleaseVersion},
+            #{diego.keyFile},
+            #{diego.paastaMonitoringUse},
+            #{diego.ingestorIp},
+            #{diego.createUserId},
+            now(),
+            #{diego.updateUserId},
+            now()
+        )
+    </insert>
+    
+    <update id="updateDiegoDefaultConfigInfo">
+        Update ieda_diego_default_config Set
+            iaas_type=#{diego.iaasType},
+            default_config_name=#{diego.defaultConfigName},
+            deployment_name=#{diego.deploymentName},
+            director_id=#{diego.directorId},
+            diego_release_name=#{diego.diegoReleaseName},
+            diego_release_version=#{diego.diegoReleaseVersion},
+            cflinuxfs2_rootfs_release_name=#{diego.cflinuxfs2rootfsreleaseName},
+            cflinuxfs2_rootfs_release_version=#{diego.cflinuxfs2rootfsreleaseVersion},
+            cf_deployment=#{diego.cfDeployment},
+            garden_release_name=#{diego.gardenReleaseName},
+            garden_release_version=#{diego.gardenReleaseVersion},
+            key_file=#{diego.keyFile},
+            paasta_monitoring_use=#{diego.paastaMonitoringUse},
+            ingestor_ip=#{diego.ingestorIp},
+            update_user_id=#{diego.updateUserId},
+            update_date=now()
+        Where id=#{diego.id}
+    </update>
+    
+    <delete id="deleteDiegoDefaultConfigInfo">
+        Delete From ieda_diego_default_config
+        Where id=#{id}
+    </delete>
+    
+</mapper>

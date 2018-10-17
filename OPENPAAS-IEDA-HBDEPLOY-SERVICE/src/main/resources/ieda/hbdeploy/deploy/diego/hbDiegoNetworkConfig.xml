@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoNetworkConfigDAO">
+    <resultMap id="diegoNetworkInfo" type="org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoNetworkConfigVO">
+        <id property="id" column="id"/>
+        <result property="recid" column="id"/>
+        <result property="iaasType" column="IAAS_TYPE"/>
+        <result property="networkConfigName" column="network_config_name"/>
+        <result property="publicStaticIP" column="public_static_ip" />
+        <result property="net" column="net" />
+        <result property="seq" column="seq" />
+        <result property="subnetStaticFrom" column="subnet_static_from" />
+        <result property="subnetStaticTo" column="subnet_static_to" />
+        <result property="subnetReservedFrom" column="subnet_reserved_from" />
+        <result property="subnetReservedTo" column ="subnet_reserved_to"/>
+        <result property="subnetRange" column ="subnet_range"/>
+        <result property="subnetGateway" column ="subnet_gateway"/>
+        <result property="subnetDns" column ="subnet_dns"/>
+        <result property="availabilityZone" column ="availability_zone"/>
+        <result property="cloudSecurityGroups" column ="cloud_security_groups"/>
+        <result property="createUserId" column ="CREATE_USER_ID"/>
+        <result property="createDate" column ="CREATE_DATE"/>
+        <result property="updateUserId" column ="UPDATE_USER_ID"/>
+        <result property="updateDate" column ="UPDATE_DATE"/>
+    </resultMap>
+    
+    <select id = "selectNetworkConfigList" resultMap="diegoNetworkInfo">
+        select 
+            id
+            ,iaas_type
+            ,network_config_name
+            ,public_static_ip
+            ,net
+            ,seq
+            ,subnet_static_from
+            ,subnet_static_to
+            ,subnet_reserved_from
+            ,subnet_reserved_to
+            ,subnet_range
+            ,subnet_gateway
+            ,availability_zone
+            ,subnet_dns
+            ,cloud_security_groups
+            ,create_user_id
+            ,create_date
+            ,update_user_id
+            ,update_date
+        from ieda_diego_network_config
+        ORDER BY id;
+    </select>
+    
+    <select id = "selectDiegoNetworkConfigInfoByNameResultVo" resultMap="diegoNetworkInfo">
+        select 
+            id
+            ,iaas_type
+            ,network_config_name
+            ,public_static_ip
+            ,net
+            ,seq
+            ,subnet_id
+            ,subnet_static_from
+            ,subnet_static_to
+            ,subnet_reserved_from
+            ,subnet_reserved_to
+            ,subnet_range
+            ,subnet_gateway
+            ,availability_zone
+            ,subnet_dns
+            ,cloud_security_groups
+            ,create_user_id
+            ,create_date
+            ,update_user_id
+            ,update_date
+        from ieda_diego_network_config
+        where network_config_name = #{networkConfigName};
+    </select>
+    
+    <select id = "selectDiegoDefaultInfoById" resultMap="diegoNetworkInfo">
+        select 
+            id
+            ,iaas_type
+            ,default_config_name
+            ,deployment_name
+            ,director_id
+            ,release_name
+            ,release_version
+            ,loggregator_release_name
+            ,loggregator_release_version
+            ,login_secret
+            ,paasta_monitoring_use
+            ,domain_organization
+            ,domain
+            ,ingestor_ip
+            ,create_user_id
+            ,create_date
+            ,update_user_id
+            ,update_date
+        from ieda_diego_default_config
+        where id = #{id};
+    </select>
+    
+    <select id="selectDiegoDefaultConfigInfoByName" resultType="int">
+        select 
+            count(*)
+        from ieda_diego_network_config
+        where default_config_name = #{networkConfigName};
+    </select>
+    
+    <insert id="insertDiegoNetworkConfigInfo">
+            /**ieda_network.insertNetworkList**/
+            insert into ieda_network(
+                id, 
+                iaas_type,
+                network_config_name,
+                seq,
+                net,
+                public_Static_ip,
+                subnet_range, 
+                subnet_gateway, 
+                subnet_reserved_from, 
+                subnet_reserved_to, 
+                subnet_dns, 
+                subnet_static_from, 
+                subnet_static_to, 
+                subnet_id, 
+                network_name,
+                cloud_security_groups,
+                availability_zone,
+                create_user_id, 
+                create_date, 
+                update_user_id, 
+                update_date
+            )
+            Values
+            <foreach collection="networks" item="item" index="index"   separator="," >
+                ( #{item.id}, 
+                #{item.iaasType},
+                #{item.networkConfigName},
+                #{index}, 
+                #{item.net},
+                #{item.publicStaticIP},
+                #{item.subnetRange},
+                #{item.subnetGateway}, 
+                #{item.subnetReservedFrom}, 
+                #{item.subnetReservedTo},
+                #{item.subnetDns}, 
+                #{item.subnetStaticFrom},
+                #{item.subnetStaticTo},
+                #{item.subnetId}, 
+                #{item.networkName}, 
+                #{item.cloudSecurityGroups},
+                #{item.availabilityZone},
+                #{item.createUserId},
+                 now(), 
+                 #{item.updateUserId}, 
+                 now())
+            </foreach>
+    </insert>
+    
+    <delete id="deleteDiegoNetworkConfigInfoByName">
+        delete from
+            ieda_diego_network_config
+        where
+            network_config_name = #{networkConfigName}
+    </delete>
+</mapper>
