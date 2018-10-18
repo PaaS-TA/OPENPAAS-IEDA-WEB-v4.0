@@ -126,6 +126,10 @@ public class HbCfInstanceConfigService {
     *****************************************************************/
     public HbCfInstanceConfigVO getInstanceConfigInfo(int id) {
         HbCfInstanceConfigVO vo = dao.selectInstanceConfigById(id);
+        if(vo == null){
+            throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
+                    "인스턴스 상세 조회 실패", HttpStatus.BAD_REQUEST);
+        }
         return vo;
     }
 }

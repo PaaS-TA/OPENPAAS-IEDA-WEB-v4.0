@@ -591,7 +591,7 @@ function getBootstrapCpiInfo(){
                     options += "<option value='"+data.records[i].cpiName+"' selected>"+data.records[i].cpiName+"</option>";
                 }else options += "<option value='"+data.records[i].cpiName+"'>"+data.records[i].cpiName+"</option>";
             }
-            $("select[name='cpiConfigInfo']").html(options);
+            $(".w2ui-msg-body select[name='cpiConfigInfo']").html(options);
         },
         error : function( e, status ) {
             w2alert("BOOTSTRAP CPI 정보 "+search_data_fail_msg, "BOOTSTRAP 설치");
@@ -619,7 +619,7 @@ function getBootstrapDefaultInfo(){
                     options += "<option value='"+data.records[i].defaultConfigName+"' selected>"+data.records[i].defaultConfigName+"</option>";
                 }else options += "<option value='"+data.records[i].defaultConfigName+"'>"+data.records[i].defaultConfigName+"</option>";
             }
-            $("select[name='defaultConfigInfo']").html(options);
+            $(".w2ui-msg-body select[name='defaultConfigInfo']").html(options);
         },
         error : function( e, status ) {
             w2alert("BOOTSTRAP 기본 정보 "+search_data_fail_msg, "BOOTSTRAP 설치");
@@ -647,7 +647,7 @@ function getBootstrapNetworkInfo(){
                     options += "<option value='"+data.records[i].networkConfigName+"' selected>"+data.records[i].networkConfigName+"</option>";
                 }else options += "<option value='"+data.records[i].networkConfigName+"'>"+data.records[i].networkConfigName+"</option>";
             }
-            $("select[name='networkConfigInfo']").html(options);
+            $(".w2ui-msg-body select[name='networkConfigInfo']").html(options);
         },
         error : function( e, status ) {
             w2alert("BOOTSTRAP 네트워크 정보 "+search_data_fail_msg, "BOOTSTRAP 설치");
@@ -675,7 +675,7 @@ function getBootstrapResourceInfo(){
                     options += "<option value='"+data.records[i].resourceConfigName+"' selected>"+data.records[i].resourceConfigName+"</option>";
                 }else options += "<option value='"+data.records[i].resourceConfigName+"'>"+data.records[i].resourceConfigName+"</option>";
             }
-            $("select[name='resourceConfigInfo']").html(options);
+            $(".w2ui-msg-body select[name='resourceConfigInfo']").html(options);
         },
         error : function( e, status ) {
             w2alert("BOOTSTRAP 리소스 정보 "+search_data_fail_msg, "BOOTSTRAP 설치");

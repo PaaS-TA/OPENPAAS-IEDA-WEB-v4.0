@@ -188,6 +188,9 @@ function getReleases(){
  *********************************************************/
 var arrayCFInfoJSON = [];
 function getCfRelease() {
+    if($("select[name=cfInfo]").attr("disabled") == "disabled"){
+        $("select[name=cfInfo]").removeAttr("disabled");
+    }
     $.ajax({
         type :"GET",
         url :"/deploy/hbDiego/list/cf",
@@ -310,6 +313,7 @@ function settingDefaultInfo(){
     directorInfo = record.directorId;
     getHbDirectorList(iaas);
     getReleaseList(directorInfo);
+    getCfRelease();
     //setInputDisplay(record.releaseName+"/"+record.releaseVersion);
     //setDisabledMonitoring(record.diegoRelease+"/"+record.releaseVersion);
 
@@ -413,6 +417,9 @@ function resetForm(status){
     
     $("select[name=cfLinuxReleases]").html("<option value='' >cflinuxfs2 릴리즈를 선택하세요.</option>");
     $("select[name=cfLinuxReleases]").attr("disabled", "disabled");
+    
+    $("select[name=cfInfo]").html("<option value='' >Diego 연동 CF 정보 별칭을 선택하세요.</option>");
+    $("select[name=cfInfo]").attr("disabled", "disabled");
     
     $("input[name='paastaMonitoring']").attr("checked", false);
     $("input[name=ingestorIp]").attr("disabled", "disabled");
@@ -857,6 +864,11 @@ $(function(){
                     return checkEmpty( $("select[name='directorInfo']").val() );
                 }
             },
+            cfInfo: {
+                required: function(){
+                    return checkEmpty( $("select[name='cfInfo']").val() );
+                }
+            },
             diegoReleases: {
                 required: function(){
                     return checkEmpty( $("select[name='diegoReleases']").val() );
@@ -891,13 +903,13 @@ $(function(){
         },
         messages:{
             defaultConfigName: {
-                required: "기본 정보 별칭"+select_required_msg
+                required: "기본 정보 별칭"+text_required_msg
             },
             iaasType: {
                 required: "IaaS 정보"+select_required_msg
             },
             deploymentName: {
-                required: "배포 명"+select_required_msg
+                required: "배포 명"+text_required_msg
             },
             directorInfo: {
                 required: "디렉터 명"+select_required_msg
@@ -912,8 +924,11 @@ $(function(){
                 required: "cflinux 릴리즈"+select_required_msg
             },
             ingestorIp: {
-                required: "ingestor 서버 Ip"+select_required_msg
+                required: "ingestor 서버 Ip"+text_required_msg
             },
+            cfInfo: {
+                required: "CF 정보"+select_required_msg
+            }
         },
         unhighlight: function(element) {
             setHybridSuccessStyle(element);

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoInstanceConfigDAO">
+
+    <resultMap id="instanceInfo" type="org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoInstanceConfigVO">
+        <id property="id" column="id" />
+        <result property="recid" column="id"/>
+        <result property="iaasType" column="iaas_type"/>
+        <result property="instanceConfigName" column="instance_config_name"/>
+        <result property="defaultConfigInfo" column="default_config_info" />
+        <result property="networkConfigInfo" column="network_config_info" />
+        
+        <result property="database_z1" column="database_z1" />
+        <result property="access_z1" column="access_z1" />
+        <result property="cell_z1" column="cell_z1" />
+        <result property="brain_z1" column="brain_z1" />
+        <result property="cc_bridge_z1" column="cc_bridge_z1"/>
+        
+        <result property="database_z2" column="database_z2" />
+        <result property="access_z2" column="access_z2" />
+        <result property="cell_z2" column="cell_z2" />
+        <result property="brain_z2" column="brain_z2" />
+        <result property="cc_bridge_z2" column="cc_bridge_z2" />
+        
+        <result property="database_z3" column="database_z3" />
+        <result property="access_z3" column="access_z3"/>
+        <result property="cell_z3" column="cell_z3" />
+        <result property="brain_z3" column="brain_z3" />
+        <result property="cc_bridge_z3" column="cc_bridge_z3" />
+        
+        <result property="createUserId" column ="create_user_id"/>
+        <result property="createDate" column ="create_date"/>
+        <result property="updateUserId" column ="update_user_id"/>
+        <result property="updateDate" column ="update_date"/>
+    </resultMap>
+
+    <select id = "selectDiegoInstanceInfoList" resultMap="instanceInfo">
+        select 
+            id
+            ,iaas_type
+            ,instance_config_name
+            ,default_config_info
+            ,network_config_info
+            ,database_z1
+            ,access_z1
+            ,cc_bridge_z1
+            ,cell_z1
+            ,brain_z1
+            ,database_z2
+            ,access_z2
+            ,cc_bridge_z2
+            ,cell_z2
+            ,brain_z2
+            ,database_z3
+            ,access_z3
+            ,cc_bridge_z3
+            ,cell_z3
+            ,brain_z3
+            ,create_user_id
+            ,create_date
+            ,update_user_id
+            ,update_date
+        from ieda_diego_instance_config
+        ORDER BY id;
+    </select>
+    
+    <select id="selectDiegoJobTemplatesByReleaseVersion" resultType="hashMap">
+    <![CDATA[
+         Select
+               id
+              ,seq
+              ,deploy_type
+              ,job_name
+              ,zone_z1
+              ,zone_z2
+              ,zone_z3
+         From ieda_job_template
+        Where deploy_type = #{map.deployType}
+          And 
+            min_release_version <= #{map.releaseVersion}
+          And 
+            max_release_version >= #{map.releaseVersion} 
+        ORDER BY seq;
+    ]]>
+    </select>
+    
+    <select id="selectInstanceConfigById" resultMap="instanceInfo">
+        select 
+            id
+            ,iaas_type
+            ,instance_config_name
+            ,default_config_info
+            ,network_config_info
+            ,database_z1
+            ,access_z1
+            ,cc_bridge_z1
+            ,cell_z1
+            ,brain_z1
+            ,database_z2
+            ,access_z2
+            ,cc_bridge_z2
+            ,cell_z2
+            ,brain_z2
+            ,database_z3
+            ,access_z3
+            ,cc_bridge_z3
+            ,cell_z3
+            ,brain_z3
+            ,create_user_id
+            ,create_date
+            ,update_user_id
+            ,update_date
+        from ieda_diego_instance_config
+        where id = #{id};
+    </select>
+    
+    <select id="selectInstanceConfigByName" resultType="int">
+        select 
+            count(*)
+        from ieda_diego_instance_config
+        where instance_config_name = #{instanceConfigName};
+    </select>
+    
+    <insert id="insertInstanceConfg">
+        insert into ieda_diego_instance_config(
+            id
+            ,iaas_type
+            ,instance_config_name
+            ,default_config_info
+            ,network_config_info
+            ,database_z1
+            ,access_z1
+            ,cc_bridge_z1
+            ,cell_z1
+            ,brain_z1
+            ,database_z2
+            ,access_z2
+            ,cc_bridge_z2
+            ,cell_z2
+            ,brain_z2
+            ,database_z3
+            ,access_z3
+            ,cc_bridge_z3
+            ,cell_z3
+            ,brain_z3
+            ,create_user_id 
+            ,create_date
+            ,update_user_id 
+            ,update_date
+        )
+        Values
+            (
+            #{vo.id}, 
+            #{vo.iaasType},
+            #{vo.instanceConfigName},
+            #{vo.defaultConfigInfo}, 
+            #{vo.networkConfigInfo},
+            #{vo.database_z1},
+            #{vo.access_z1},
+            #{vo.cc_bridge_z1}, 
+            #{vo.cell_z1}, 
+            #{vo.brain_z1},
+            
+            #{vo.database_z2},
+            #{vo.access_z2},
+            #{vo.cc_bridge_z2}, 
+            #{vo.cell_z2}, 
+            #{vo.brain_z2},
+            
+            #{vo.database_z3},
+            #{vo.access_z3},
+            #{vo.cc_bridge_z3}, 
+            #{vo.cell_z3}, 
+            #{vo.brain_z3},
+            #{vo.createUserId},
+             now(), 
+             #{vo.updateUserId}, 
+             now()
+             )
+    </insert>
+    
+    <update id="updateInstanceConfig">
+        update ieda_diego_instance_config set
+            iaas_type = #{vo.iaasType},
+            instance_config_name = #{vo.instanceConfigName},
+            default_config_info = #{vo.defaultConfigInfo},
+            network_config_info = #{vo.networkConfigInfo},
+            database_z1 = #{vo.database_z1},
+            access_z1 = #{vo.access_z1},
+            cc_bridge_z1 = #{vo.cc_bridge_z1},
+            cell_z1 = #{vo.cell_z1},
+            brain_z1 = #{vo.brain_z1},
+
+            database_z2 = #{vo.database_z2},
+            access_z2 = #{vo.access_z2},
+            cc_bridge_z2 = #{vo.cc_bridge_z2},
+            cell_z2 = #{vo.cell_z2},
+            brain_z2 = #{vo.brain_z2},
+            
+            database_z3 = #{vo.database_z3},
+            access_z3 = #{vo.access_z3},
+            cc_bridge_z3 = #{vo.cc_bridge_z3},
+            cell_z3 = #{vo.cell_z3},
+            brain_z3 = #{vo.brain_z3},
+                                    
+            update_user_id = #{vo.updateUserId},
+            update_date = now()
+        where id = #{vo.id}
+    </update>
+    
+    <delete id="deleteInstanceConfig">
+        delete from
+            ieda_diego_instance_config
+        where
+            id = #{id}
+    </delete>
+
+</mapper>

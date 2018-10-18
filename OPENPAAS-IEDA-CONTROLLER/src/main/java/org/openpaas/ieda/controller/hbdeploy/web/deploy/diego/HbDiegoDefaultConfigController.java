@@ -37,7 +37,7 @@ public class HbDiegoDefaultConfigController {
     @RequestMapping(value = "/deploy/hbDiego/HbDiegoDefaultConfig", method = RequestMethod.GET)
     public String goHbDiegoDefaultConfig (){
         if (LOGGER.isInfoEnabled()) LOGGER.info("====================================> /deploy/hbDiego/HbDiegoDefaultConfig");
-        return "/hbdeploy/deploy/diego/HbDiegoDefaultConfig";
+        return "/hbdeploy/deploy/diego/hbDiegoDefaultConfig";
         
     }
     /****************************************************************

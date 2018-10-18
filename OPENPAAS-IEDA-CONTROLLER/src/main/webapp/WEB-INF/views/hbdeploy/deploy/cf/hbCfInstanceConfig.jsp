@@ -14,8 +14,7 @@ var save_lock_msg = '<spring:message code="common.save.data.lock"/>';//등록 �
 var text_required_msg = '<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
 var select_required_msg='<spring:message code="common.select.vaildate.required.message"/>';//을(를) 선택하세요.
 var search_data_fail_msg ='클라우드 인프라 환경을 선택하세요.';
-var country_parent_code = '<spring:message code="common.code.country.code.parent"/>';//ieda_common_code country 조회
-var instanceConfigInfo = [];//인증서
+var instanceConfigInfo = [];//
 var defaultConfigInfo = "";
 var networkConfigInfo = "";
 var jobsInfo=[];
@@ -58,37 +57,37 @@ var instanceLayout = {
                            return record.nats_z1+"<br>"+record.nats_z2;
                        }else return record.nats_z1
                    }},
-                   { field: 'blobstore_z1', caption: 'blobstore 수', size:'120px', style:'text-align:center;',render: function(record){ 
+                   { field: 'blobstore_z1', caption: 'blobstore 인스턴스 수', size:'120px', style:'text-align:center;',render: function(record){ 
                        if(record.blobstore_z2 != ""  && record.blobstore_z2 != null){
                            return record.blobstore_z1+"<br>"+record.blobstore_z2;
                        }else return record.blobstore_z1
                    }},
-                   { field: 'router_z1', caption: 'router 수', size:'120px', style:'text-align:center;',render: function(record){ 
+                   { field: 'router_z1', caption: 'router 인스턴스 수', size:'120px', style:'text-align:center;',render: function(record){ 
                        if(record.router_z2 != ""  && record.router_z2 != null){
                            return record.router_z1+"<br>"+record.router_z2;
                        }else return record.router_z1
                    }},
-                   { field: 'loggregator_z1', caption: 'loggregator 수', size:'120px', style:'text-align:center;',render: function(record){ 
+                   { field: 'loggregator_z1', caption: 'loggregator 인스턴스 수', size:'150px', style:'text-align:center;',render: function(record){ 
                        if(record.loggregator_z2 != ""  && record.loggregator_z2 != null){
                            return record.loggregator_z1+"<br>"+record.loggregator_z2;
                        }else return record.loggregator_z1
                    }},
-                   { field: 'doppler_z1', caption: 'doppler 수', size:'120px', style:'text-align:center;',render: function(record){ 
+                   { field: 'doppler_z1', caption: 'doppler 인스턴스 수', size:'120px', style:'text-align:center;',render: function(record){ 
                        if(record.doppler_z2 != ""  && record.doppler_z2 != null){
                            return record.doppler_z1+"<br>"+record.doppler_z2;
                        }else return record.doppler_z1
                    }},
-                   { field: 'etcd_z1', caption: 'etcd 수', size:'120px', style:'text-align:center;',render: function(record){ 
+                   { field: 'etcd_z1', caption: 'etcd 인스턴스 수', size:'120px', style:'text-align:center;',render: function(record){ 
                        if(record.etcd_z2 != ""  && record.etcd_z2 != null){
                            return record.etcd_z1+"<br>"+record.etcd_z2;
                        }else return record.etcd_z1
                    }},
-                   { field: 'consul_z1', caption: 'consul 수', size:'120px', style:'text-align:center;',render: function(record){ 
+                   { field: 'consul_z1', caption: 'consul 인스턴스 수', size:'120px', style:'text-align:center;',render: function(record){ 
                        if(record.consul_z2 != ""  && record.consul_z2 != null){
                            return record.consul_z1+"<br>"+record.consul_z2;
                        }else return record.consul_z1
                    }},
-                   { field: 'clock_z1', caption: 'clock 수', size:'120px', style:'text-align:center;',render: function(record){ 
+                   { field: 'clock_z1', caption: 'clock 인스턴스 수', size:'120px', style:'text-align:center;',render: function(record){ 
                        if(record.clock_z2 != "" && record.clock_z2 != null ){
                            return record.clock_z1+"<br>"+record.clock_z2;
                        }else return record.clock_z1
@@ -248,7 +247,6 @@ function getCfNetworkConfigListInfo(value){
  *********************************************************/
 function showInstanceResource(value){
     if(value==""){
-        w2alert("네트워크 정보를 선택하세요.", "CF 인스턴스 정보 관리");
         $("#cfDetailForm").html("");
         return;
     }
@@ -395,7 +393,7 @@ function settingInstanceConfigInfo(){
     var selected = w2ui['cf_instance_config_grid'].getSelection();
     var record = w2ui['cf_instance_config_grid'].get(selected);
     if(record == null) {
-        w2alert("리소스 정보 설정 중 에러가 발생 했습니다.");
+        w2alert("인스턴스 정보 설정 중 에러가 발생 했습니다.");
         return;
     }
     iaas = record.iaasType;
@@ -406,6 +404,7 @@ function settingInstanceConfigInfo(){
     networkConfigInfo = record.networkConfigInfo;
     getCfNetworkConfigListInfo(record.networkConfigInfo);
     showInstanceResource(record.networkConfigInfo);
+    
     $.ajax({
         type : "GET",
         url : "/deploy/hbCf/instance/list/detail/"+record.id,
@@ -450,7 +449,6 @@ function doButtonStyle() {
  * 기능 : registHbCfInstanceConfigInfo
  *********************************************************/
 function registHbCfInstanceConfigInfo(){
-    w2popup.lock("등록 중입니다.", true);
     instanceConfigInfo = {
             id                                 : $("input[name='instanceInfoId']").val(),
             iaasType                           : $("select[name='iaasType']").val(),
@@ -681,56 +679,32 @@ $(function() {
         ignore : [],
         //onfocusout: function(element) {$(element).valid()},
         rules: {
-            resourceConfigName: { 
+            instanceConfigName: { 
                 required: function(){
-                    return checkEmpty( $("input[name='resourceConfigName']").val() );
+                    return checkEmpty( $("input[name='instanceConfigName']").val() );
                 }
             }, iaasType: { 
                 required: function(){
                     return checkEmpty( $("select[name='iaasType']").val() );
                 }
-            }, directorInfo: { 
+            }, cfDefaultConfig: { 
                 required: function(){
-                    return checkEmpty( $("select[name='directorInfo']").val() );
+                    return checkEmpty( $("select[name='cfDefaultConfig']").val() );
                 }
-            }, stemcells: { 
+            }, cfNetworkConfig: { 
                 required: function(){
-                    return checkEmpty( $("select[name='stemcells']").val() );
-                }
-            }, boshPassword: { 
-                required: function(){
-                    return checkEmpty( $("input[name='boshPassword']").val() );
-                }
-            }, smallFlavor: { 
-                required: function(){
-                    return checkEmpty( $("input[name='smallFlavor']").val() );
-                }
-            }, mediumFlavor: { 
-                required: function(){
-                    return checkEmpty( $("input[name='mediumFlavor']").val() );
-                }
-            }, largeFlavor: { 
-                required: function(){
-                    return checkEmpty( $("input[name='largeFlavor']").val() );
+                    return checkEmpty( $("select[name='cfNetworkConfig']").val() );
                 }
             }
         }, messages: {
-            resourceConfigName: { 
-                required:  "리소스 정보 별칭"+text_required_msg
+        	instanceConfigName: { 
+                required:  "인스턴스 정보 별칭"+text_required_msg
             }, iaasType: { 
                 required:  "클라우드 인프라 환경 타입"+select_required_msg,
-            }, directorInfo: { 
-                required:  "디렉터 정보"+select_required_msg,
-            }, stemcells: { 
-                required:  "스템셀 명"+select_required_msg,
-            }, boshPassword: { 
-                required:  "스템셀 패스워드"+text_required_msg,
-            }, smallFlavor: { 
-                required:  "Small Instance Type"+text_required_msg,
-            }, mediumFlavor: { 
-                required:  "Medium Instance Type"+text_required_msg,
-            }, largeFlavor: { 
-                required:  "Large Instacne Type"+text_required_msg,
+            }, cfDefaultConfig: { 
+                required:  "기본 정보"+select_required_msg,
+            }, cfNetworkConfig: { 
+                required:  "네트워크 정보"+select_required_msg,
             }
         }, unhighlight: function(element) {
             setHybridSuccessStyle(element);

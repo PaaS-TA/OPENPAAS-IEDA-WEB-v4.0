@@ -865,6 +865,34 @@ CREATE TABLE ieda_diego_resource_config (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
+CREATE TABLE ieda_diego_instance_config (
+  id                                INT(11) NOT NULL AUTO_INCREMENT,
+  iaas_type                         VARCHAR(100) NOT NULL,
+  instance_config_name              VARCHAR(100) NOT NULL,
+  default_config_info               VARCHAR(100),
+  network_config_info               VARCHAR(100),
+  database_z1                       VARCHAR(100),
+  access_z1                         VARCHAR(100),
+  cc_bridge_z1                      VARCHAR(100),
+  cell_z1                           VARCHAR(100),
+  brain_z1                          VARCHAR(100),
+  database_z2                       VARCHAR(100),
+  access_z2                         VARCHAR(100),
+  cc_bridge_z2                      VARCHAR(100),
+  cell_z2                           VARCHAR(100),
+  brain_z2                          VARCHAR(100),
+  database_z3                       VARCHAR(100),
+  access_z3                         VARCHAR(100),
+  cc_bridge_z3                      VARCHAR(100),
+  cell_z3                           VARCHAR(100),
+  brain_z3                          VARCHAR(100),
+  create_user_id                    VARCHAR(255),
+  create_date                       date,
+  update_user_id                    VARCHAR(255),
+  update_date                       date,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
 
 
 

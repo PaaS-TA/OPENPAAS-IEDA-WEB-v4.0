@@ -33,7 +33,7 @@ public class HbDiegoResourceConfigController {
     @RequestMapping(value = "/deploy/hbDiego/HbDiegoResourceConfig", method = RequestMethod.GET)
     public String goHbDiegoInstanceConfig (){
         if (LOGGER.isInfoEnabled()) LOGGER.info("====================================> /deploy/hbDiego/HbDiegoResourceConfig");
-        return "/hbdeploy/deploy/diego/HbDiegoResourceConfig";
+        return "/hbdeploy/deploy/diego/hbDiegoResourceConfig";
         
     }
     

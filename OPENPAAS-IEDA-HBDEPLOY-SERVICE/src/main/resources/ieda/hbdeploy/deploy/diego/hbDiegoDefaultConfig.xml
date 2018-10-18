@@ -152,7 +152,7 @@
             diego_release_version=#{diego.diegoReleaseVersion},
             cflinuxfs2_rootfs_release_name=#{diego.cflinuxfs2rootfsreleaseName},
             cflinuxfs2_rootfs_release_version=#{diego.cflinuxfs2rootfsreleaseVersion},
-            cf_config_name=#{diego.cf_config_name},
+            cf_config_name=#{diego.cfConfigName},
             cf_id=#{diego.cfId},
             garden_release_name=#{diego.gardenReleaseName},
             garden_release_version=#{diego.gardenReleaseVersion},

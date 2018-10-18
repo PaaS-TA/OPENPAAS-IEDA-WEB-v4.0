@@ -76,7 +76,6 @@ public class HbCfInstanceConfigController {
         return new ResponseEntity<>(instanceConfigInfo, HttpStatus.OK);
     }
     
-    
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
      * @description : CF Default 정보 목록 전체 조회
@@ -128,7 +127,6 @@ public class HbCfInstanceConfigController {
         List<HashMap<String, String>> list = service.getJobTemplateList(deployType, releaseVersion);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
-    
     
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
