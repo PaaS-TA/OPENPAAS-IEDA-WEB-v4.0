@@ -19,6 +19,7 @@ var text_cidr_msg='<spring:message code="common.text.validate.cidr.message"/>';/
 var text_ip_msg = '<spring:message code="common.text.validate.ip.message"/>';//IP을(를) 확인 하세요.
 var networkConfigInfo = [];//네트워크 정보
 var iaas = "";
+var first_html = $("#defaultNetworkInfoDiv_1").html();
 var networkLayout = {
         layout2: {
             name: 'layout2',
@@ -68,7 +69,6 @@ var networkLayout = {
             onUnselect : function(event) {
                 event.onComplete = function() {
                     resetForm();
-                    
                     $('#deleteBtn').attr('disabled', true);
                     return;
                 }
@@ -554,19 +554,25 @@ function resetForm(status){
     $(".panel-body").find("p").remove();
     $(".panel-body").children().children().children().css("borderColor", "#bbb");
     $("input[name=networkConfigName]").val("");
-    $("input[name=subnetId]").val("");
-    $("input[name=privateStaticIp]").val("");
-    $("input[name=subnetRange]").val("");
-    $("input[name=subnetGateway]").val("");
-    $("input[name=subnetDns]").val("");
     $("select[name=iaasType]").val("");
     $("input[name=networkInfoId]").val("");
-    $("input[name=publicStaticIp]").val("");
+    for(var i=1; i<4; i++){
+        $("input[name=subnetId_"+i+"]").val("");
+        $("input[name=cloudSecurityGroups_"+i+"]").val("");
+        $("input[name=availabilityZone_"+i+"]").val("");
+        $("input[name=subnetRange_"+i+"]").val("");
+        $("input[name=subnetDns_"+i+"]").val("");
+        $("input[name=subnetReservedFrom_"+i+"]").val("");
+        $("input[name=subnetReservedTo_"+i+"]").val("");
+        $("input[name=subnetStaticFrom_"+i+"]").val("");
+        $("input[name=subnetStaticTo_"+i+"]").val("");
+    }
     if(status=="reset"){
         w2ui['network_GroupGrid'].clear();
         doSearch();
     }
     document.getElementById("defaultNetworkInfoForm").reset();
+    $("#defaultNetworkInfoDiv_1").html(first_html);
     $("#defaultNetworkInfoDiv_2").empty();
     $("#defaultNetworkInfoDiv_3").empty();
 }
