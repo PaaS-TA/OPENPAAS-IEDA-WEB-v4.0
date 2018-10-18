@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoDAO">
+
+<resultMap id="diegoInfo" type="org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoVO">
+    <id property="id" column="id"/>
+    <result property="recid" column="id"/>
+    <result property="iaasType" column="iaas_type"/>
+    <result property="diegoConfigName" column="diego_config_name"/>
+    <result property="defaultConfigInfo" column="default_config_info"/>
+    <result property="networkConfigInfo" column="network_config_info"/>
+    <result property="resourceConfigInfo" column="resource_config_info"/>
+    <result property="instanceConfigInfo" column="instance_config_info"/>
+    <result property="deploymentFile" column="deployment_file"/>
+    <result property="deployStatus" column="deploy_status"/>
+    <result property="taskId" column="task_id"/>
+    
+    <collection property="defaultConfigVO" ofType="org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoDefaultConfigVO"  javaType="org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoDefaultConfigVO">
+        <result property="id" column="id" />
+        <result property="recid" column="id"/>
+        <result property="iaasType" column="IAAS_TYPE"/>
+        <result property="defaultConfigName" column="default_config_name"/>
+        <result property="deploymentName" column="deployment_name"/>
+        <result property="directorId" column="director_id" />
+        <result property="diegoReleaseName" column="diego_release_name" />
+        <result property="diegoReleaseVersion" column="diego_release_version" />
+        <result property="cfId" column="cf_id" />
+        <result property="cfConfigName" column="cf_config_name" />
+        <result property="gardenReleaseName" column="garden_release_name" />
+        <result property="gardenReleaseVersion" column="garden_release_version" />
+        <result property="cflinuxfs2rootfsreleaseName" column="cflinuxfs2_rootfs_release_name" />
+        <result property="cflinuxfs2rootfsreleaseVersion" column="cflinuxfs2_rootfs_release_version" />
+        <result property="paastaMonitoringUse" column="paasta_monitoring_use" />
+        <result property="ingestorIp" column="ingestor_ip" />
+        <result property="keyFile" column="key_file" />
+    </collection>
+    <collection property="resourceConfigVO" ofType="org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoResourceConfigVO"  javaType="org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoResourceConfigVO">
+        <result property="id" column="id" />
+        <result property="resourceConfigName" column="resource_config_name"/>
+        <result property="boshPassword" column="bosh_password" />
+        <result property="stemcellName" column="stemcell_name"/>
+        <result property="stemcellVersion" column="stemcell_version"/>
+        <result property="smallFlavor" column="small_flavor"/>
+        <result property="mediumFlavor" column="medium_flavor"/>
+        <result property="largeFlavor" column="large_flavor"/>
+    </collection>
+    <collection property="instanceConfigVO"  ofType="org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoInstanceConfigVO" javaType="org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoInstanceConfigVO" >
+        <result property="id" column="id" />
+        <result property="instanceConfigName" column="instance_config_name"/>
+        <result property="database_z1" column="database_z1" />
+        <result property="access_z1" column="access_z1" />
+        <result property="cc_bridge_z1" column="cc_bridge_z1" />
+        <result property="cell_z1" column="cell_z1" />
+        <result property="brain_z1" column="brain_z1" />
+        <result property="database_z2" column="database_z2" />
+        <result property="access_z2" column="access_z2" />
+        <result property="cc_bridge_z2" column="cc_bridge_z2" />
+        <result property="cell_z2" column="cell_z2" />
+        <result property="brain_z2" column="brain_z2" />
+        <result property="database_z3" column="database_z3" />
+        <result property="access_z3" column="access_z3" />
+        <result property="cc_bridge_z3" column="cc_bridge_z3" />
+        <result property="cell_z3" column="cell_z3" />
+        <result property="brain_z3" column="brain_z3" />
+    </collection>
+</resultMap>
+
+<select id="selectHbDiegoInfoList" resultMap="diegoInfo">
+    select
+        diego.id 
+        ,diego.iaas_type
+        ,diego.diego_config_name
+        ,diego.default_config_info
+        ,diego.network_config_info
+        ,diego.resource_config_info
+        ,diego.instance_config_info
+        ,diego.deployment_file
+        ,diego.deploy_status
+        ,diego.task_id
+        ,defaultInfo.id
+        ,defaultInfo.default_config_name
+        ,defaultInfo.director_id
+        ,defaultInfo.deployment_name
+        ,defaultInfo.director_id
+        ,defaultInfo.diego_release_name
+        ,defaultInfo.diego_release_version
+        ,defaultInfo.cflinuxfs2_rootfs_release_name
+        ,defaultInfo.cflinuxfs2_rootfs_release_version
+        ,defaultInfo.cf_config_name
+        ,defaultInfo.cf_id
+        ,defaultInfo.garden_release_name
+        ,defaultInfo.garden_release_version
+        ,defaultInfo.key_file
+        ,defaultInfo.paasta_monitoring_use
+        ,defaultInfo.ingestor_ip
+        ,resourceInfo.resource_config_name
+        ,resourceInfo.bosh_password
+        ,resourceInfo.stemcell_name
+        ,resourceInfo.stemcell_version
+        ,resourceInfo.small_flavor 
+        ,resourceInfo.medium_flavor
+        ,resourceInfo.large_flavor
+        ,instanceInfo.database_z1
+        ,instanceInfo.access_z1
+        ,instanceInfo.cc_bridge_z1
+        ,instanceInfo.cell_z1
+        ,instanceInfo.brain_z1
+        ,instanceInfo.database_z2
+        ,instanceInfo.access_z2
+        ,instanceInfo.cc_bridge_z2
+        ,instanceInfo.cell_z2
+        ,instanceInfo.brain_z2
+        ,instanceInfo.database_z3
+        ,instanceInfo.access_z3
+        ,instanceInfo.cc_bridge_z3
+        ,instanceInfo.cell_z3
+        ,instanceInfo.brain_z3
+        ,diego.update_user_id
+        ,diego.update_date
+        ,diego.update_user_id
+        ,diego.update_date
+    from ieda_diego_config as diego
+    Left join ieda_diego_default_config as defaultInfo
+    on diego.default_config_info = defaultInfo.default_config_name
+    Left join ieda_diego_network_config as networkInfo
+    on diego.network_config_info = networkInfo.network_config_name
+    Left join ieda_diego_resource_config as resourceInfo
+    on diego.resource_config_info = resourceInfo.resource_config_name
+    Left join ieda_diego_instance_config as instanceInfo
+    on diego.instance_config_info = instanceInfo.instance_config_name
+    <if test="installStatus == 'installAble'">
+    where deploy_status is null
+    or deploy_status = '';
+    </if>
+    <if test="installStatus != 'installAble'">
+    where deploy_status is not null
+    or deploy_status != '';
+    </if>
+</select>
+    
+<select id="selectHbDiegoInfoById" resultMap="diegoInfo">
+    select
+        diego.id 
+        ,diego.iaas_type
+        ,diego.diego_config_name
+        ,diego.default_config_info
+        ,diego.network_config_info
+        ,diego.resource_config_info
+        ,diego.instance_config_info
+        ,diego.deployment_file
+        ,diego.deploy_status
+        ,diego.task_id
+        ,defaultInfo.id
+        ,defaultInfo.default_config_name
+        ,defaultInfo.director_id
+        ,defaultInfo.deployment_name
+        ,defaultInfo.director_id
+        ,defaultInfo.diego_release_name
+        ,defaultInfo.diego_release_version
+        ,defaultInfo.cflinuxfs2_rootfs_release_name
+        ,defaultInfo.cflinuxfs2_rootfs_release_version
+        ,defaultInfo.cf_config_name
+        ,defaultInfo.cf_id
+        ,defaultInfo.garden_release_name
+        ,defaultInfo.garden_release_version
+        ,defaultInfo.key_file
+        ,defaultInfo.paasta_monitoring_use
+        ,defaultInfo.ingestor_ip
+        ,resourceInfo.resource_config_name
+        ,resourceInfo.bosh_password
+        ,resourceInfo.stemcell_name
+        ,resourceInfo.stemcell_version
+        ,resourceInfo.small_flavor 
+        ,resourceInfo.medium_flavor
+        ,resourceInfo.large_flavor
+        ,instanceInfo.database_z1
+        ,instanceInfo.access_z1
+        ,instanceInfo.cc_bridge_z1
+        ,instanceInfo.cell_z1
+        ,instanceInfo.brain_z1
+        ,instanceInfo.database_z2
+        ,instanceInfo.access_z2
+        ,instanceInfo.cc_bridge_z2
+        ,instanceInfo.cell_z2
+        ,instanceInfo.brain_z2
+        ,instanceInfo.database_z3
+        ,instanceInfo.access_z3
+        ,instanceInfo.cc_bridge_z3
+        ,instanceInfo.cell_z3
+        ,instanceInfo.brain_z3
+        ,diego.update_user_id
+        ,diego.update_date
+        ,diego.update_user_id
+        ,diego.update_date
+    from ieda_diego_config as diego
+    Left join ieda_diego_default_config as defaultInfo
+    on diego.default_config_info = defaultInfo.default_config_name
+    Left join ieda_diego_network_config as networkInfo
+    on diego.network_config_info = networkInfo.network_config_name
+    Left join ieda_diego_resource_config as resourceInfo
+    on diego.resource_config_info = resourceInfo.resource_config_name
+    Left join ieda_diego_instance_config as instanceInfo
+    on diego.instance_config_info = instanceInfo.instance_config_name
+    where diego.id = #{id}
+</select>
+    
+<insert id="insertHbDiegoInfo" useGeneratedKeys="true" keyColumn="id" keyProperty="vo.id">
+    INSERT INTO ieda_diego_config (
+        id
+        ,iaas_type
+        ,diego_config_name
+        ,default_config_info
+        ,network_config_info
+        ,resource_config_info
+        ,instance_config_info
+        ,deployment_file
+        ,create_user_id
+        ,create_date
+        ,update_user_id
+        ,update_date
+     )VALUE (
+         #{vo.id}
+        ,#{vo.iaasType}
+        ,#{vo.diegoConfigName}
+        ,#{vo.defaultConfigInfo}
+        ,#{vo.networkConfigInfo}
+        ,#{vo.resourceConfigInfo}
+        ,#{vo.instanceConfigInfo}
+        ,#{vo.deploymentFile}
+        ,#{vo.createUserId}
+        ,now()
+        ,#{vo.updateUserId}
+        ,now()
+      )
+       <selectKey keyProperty="vo.id" resultType="int" order="AFTER">
+        <if test="vo.id != 1"> SELECT LAST_INSERT_ID(); </if>
+        <if test="vo.id == 1"> SELECT 1 AS id from dual; </if>
+        </selectKey>
+</insert>
+    
+<update id="updateHbDiegoInfo">
+    Update ieda_diego_config set
+        iaas_type = #{vo.iaasType}
+        ,diego_config_name = #{vo.diegoConfigName}
+        ,default_config_info = #{vo.defaultConfigInfo}
+        ,network_config_info = #{vo.networkConfigInfo}
+        ,resource_config_info = #{vo.resourceConfigInfo}
+        ,instance_config_info = #{vo.instanceConfigInfo}
+        ,deployment_file = #{vo.deploymentFile}
+        ,deploy_status = #{vo.deployStatus}
+        ,task_id = #{vo.taskId}
+        ,update_user_id = #{vo.updateUserId}
+        ,update_date = now()
+    WHERE
+    id=#{vo.id}
+</update>
+
+<select id = "selectHbDiegoInfoByName" resultType="int">
+    select 
+         count(*)
+    from ieda_diego_config
+    where diego_config_name = #{diegoConfigName}
+</select>
+
+<delete id="deleteHbDiegoInfo">
+    Delete 
+    From ieda_diego_config
+    Where id=#{id}
+</delete>
+
+
+</mapper>

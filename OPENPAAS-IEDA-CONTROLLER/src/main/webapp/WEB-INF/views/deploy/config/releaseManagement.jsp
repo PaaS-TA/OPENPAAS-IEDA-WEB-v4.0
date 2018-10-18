@@ -472,6 +472,7 @@ function socketDwonload(releaseInfo){
     });
 }
 
+
 /********************************************************
  * 설명 : 릴리즈 파일 업로드
  * 기능 : releaseFileUpload

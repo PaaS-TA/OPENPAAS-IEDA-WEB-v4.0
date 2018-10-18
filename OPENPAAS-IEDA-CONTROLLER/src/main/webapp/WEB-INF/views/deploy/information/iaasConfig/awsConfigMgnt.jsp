@@ -171,6 +171,14 @@ function doSearch() {
     w2ui['aws_configGrid'].load("<c:url value='/info/iaasConfig/aws/list'/>","",function(event){});  
 }
 
+/******************************************************************
+ * Function : openBrowse
+ * 설명 : 공통 File upload Browse Button
+ ***************************************************************** */
+function openBrowse(){
+    $(".w2ui-msg-body input[name='keyPathFile']").click();
+}
+
 /****************************************************
  * 기능 : settingAwsConfigInfo
  * 설명 : AWS 환경 설정 정보 설정

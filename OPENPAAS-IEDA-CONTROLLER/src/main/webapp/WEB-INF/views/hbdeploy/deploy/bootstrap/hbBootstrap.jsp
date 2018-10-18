@@ -14,7 +14,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <script type="text/javascript">
-
+var text_required_msg = '<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
+var select_required_msg='<spring:message code="common.select.vaildate.required.message"/>';//을(를) 선택하세요.
 /******************************************************************
  * 설명 :    변수 설정
  ***************************************************************** */
@@ -1244,26 +1245,55 @@ $(function() {
         ignore : "",
         onfocusout: true,
         rules: {
-            roleName : {
+        	bootstrapConfigName : {
                 required : function(){
-                  return checkEmpty( $(".w2ui-msg-body input[name='roleName']").val() );
-                    }, sqlInjection : function(){
-                      return $(".w2ui-msg-body input[name='roleName']").val();
+                  return checkEmpty( $(".w2ui-msg-body input[name='bootstrapConfigName']").val() );
                     }
             },
-            roleDescription : {
+            iaasType : {
                 required : function(){
-                  return checkEmpty( $(".w2ui-msg-body input[name='roleDescription']").val() );
-                    }, sqlInjection : function(){
-                      return $(".w2ui-msg-body input[name='roleDescription']").val();
+                  return checkEmpty( $(".w2ui-msg-body select[name='iaasType']").val() );
                     }
+            },
+            networkConfigInfo : {
+                required : function(){
+                  return checkEmpty( $(".w2ui-msg-body select[name='networkConfigInfo']").val() );
+                    }
+            },
+            cpiConfigInfo : {
+                required : function(){
+                  return checkEmpty( $(".w2ui-msg-body select[name='cpiConfigInfo']").val() );
+                     }
+             },
+             defaultConfigInfo : {
+                 required : function(){
+                   return checkEmpty( $(".w2ui-msg-body select[name='defaultConfigInfo']").val() );
+                 }
+             },
+             resourceConfigInfo : {
+                 required : function(){
+                   return checkEmpty( $(".w2ui-msg-body select[name='resourceConfigInfo']").val() );
+                 }
              }
+             
         }, messages: {
-            roleName: { 
-                 required:  "권한 그룹명" + text_required_msg
+        	bootstrapConfigName: { 
+                 required:  "BOOTSTRAP 정보 별칭" + text_required_msg
             },
-            roleDescription: { 
-                required:  "설명" + text_required_msg
+            iaasType: { 
+                required:  "인프라 환경" + select_required_msg
+            },
+            networkConfigInfo: { 
+                required:  "네트워크 정보 별칭" + select_required_msg
+            },
+            cpiConfigInfo: { 
+                required:  "CPI 정보 별칭" + select_required_msg
+            },
+            defaultConfigInfo: { 
+                required:  "기본 정보 별칭" + select_required_msg
+            },
+            resourceConfigInfo: { 
+                required:  "리소스 정보 별칭" + select_required_msg
             }
         }, unhighlight: function(element) {
             setSuccessStyle(element);

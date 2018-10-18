@@ -101,7 +101,7 @@ public class HbDiegoDefaultConfigService {
      * @title : DeleteDiegoDefaultConfigInfo
      * @return : void
     *****************************************************************/
-    public void DeleteDiegoDefaultConfigInfo(HbDiegoDefaultConfigDTO dto, Principal principal){
+    public void deleteDiegoDefaultConfigInfo(HbDiegoDefaultConfigDTO dto, Principal principal){
         if(StringUtils.isEmpty(dto.getId())){
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
                     message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);

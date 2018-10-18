@@ -893,6 +893,24 @@ CREATE TABLE ieda_diego_instance_config (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
+CREATE TABLE ieda_diego_config (
+  id                                INT(11) NOT NULL AUTO_INCREMENT,
+  iaas_type                         VARCHAR(100) NOT NULL,
+  diego_config_name                 VARCHAR(100) NOT NULL,
+  default_config_info               VARCHAR(100),
+  network_config_info               VARCHAR(100),
+  resource_config_info              VARCHAR(100),
+  instance_config_info              VARCHAR(100),
+  deployment_file                   VARCHAR(100),
+  deploy_status                     VARCHAR(100),
+  task_id                           VARCHAR(100),
+  create_user_id                    VARCHAR(255),
+  create_date                       date,
+  update_user_id                    VARCHAR(255),
+  update_date                       date,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
+
 
 
 
@@ -929,5 +947,7 @@ ALTER TABLE ieda_cf_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_diego_default_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_diego_network_config AUTO_INCREMENT=1000;
 ALTER TABLE ieda_diego_resource_config AUTO_INCREMENT=1000;
+ALTER TABLE ieda_diego_config AUTO_INCREMENT=1000;
+
 
 

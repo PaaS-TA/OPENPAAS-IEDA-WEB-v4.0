@@ -94,6 +94,7 @@ var defaultLayout = {
     }
 }
 
+
 $(function(){
     $('#default_GroupGrid').w2layout(defaultLayout.layout2);
     w2ui.layout2.content('left', $().w2grid(defaultLayout.grid));
@@ -126,11 +127,27 @@ $(function(){
     });
 });
 
+
+/********************************************************
+ * 설명 : CF 릴리즈 설치 지원 버전 목록 설정
+ * 기능 : getReleaseVersionList
+ *********************************************************/
+function getReleaseVersionList(){
+	contents = "<table id='popoverTable'><tr><th>릴리즈 유형</th><th>릴리즈 버전</th></tr>";
+	contents += "<tr><td>paasta-controller</td><td>3.0</td></tr><tr><td>cf</td><td>272</td></tr>";
+	contents += "<tr><td>cf</td><td>273</td></tr><tr><td>paasta-controller</td><td>287</td></tr>";
+	contents += "<tr><td>paasta-controller</td><td>3.1</td></tr>";
+	contents += "</table>";
+	$('.cf-info').attr('data-content', contents);
+}
+
 /********************************************************
  * 설명 : 초기 화면 View
  * 기능 : initView
  *********************************************************/
 function initView(){
+     $('[data-toggle="popover"]').popover();
+     getReleaseVersionList();
      $("input[name='ingestorIp']").attr("disabled", true);
      checkPaasTAMonitoringUseYn();
 }
@@ -189,33 +206,6 @@ function getReleaseList(directorId){
         }
         getCfRelease(directorId);
     }
-}
-
-/********************************************************
- * 설명 : CF 릴리즈 설치 지원 버전 목록 조회
- * 기능 : getReleaseVersionList
- *********************************************************/
-function getReleaseVersionList(){
-     var contents = "";
-     $.ajax({
-        type :"GET",
-        url :"/common/deploy/list/releaseInfo/cf/"+iaas, 
-        contentType :"application/json",
-        success :function(data, status) {
-            if ( !checkEmpty(data) ) {
-                contents = "<table id='popoverTable'><tr><th>릴리즈 유형</th><th>릴리즈 버전</th></tr>";
-                data.map(function(obj) {
-                    contents += "<tr><td>" + obj.releaseType+ "</td><td>" +  obj.minReleaseVersion +"</td></tr>";
-                });
-                contents += "</table>";
-                $('.cf-info').attr('data-content', contents);
-            }
-        },
-        error :function(request, status, error) {
-            var errorResult = JSON.parse(request.responseText);
-            w2alert(errorResult.message, "CF 릴리즈 설치 지원 버전");
-        }
-    });
 }
 
 /********************************************************
@@ -407,7 +397,6 @@ function registCfDefaultConfigInfo(){
             paastaMonitoring     : $("input:checkbox[name='paastaMonitoring']").is(":checked") == true ? "true" : "false",
             ingestorIp           : $("input[name=ingestorIp]").val()
     }
-    console.log(defaultInfo);
     $.ajax({
         type : "PUT",
         url : "/deploy/hbCf/default/save",
@@ -440,7 +429,6 @@ function settingDefaultInfo(){
     iaas = record.iaasType;
     defaultInfo = record;
     
-    console.log(record);
     
     $("input[name=defaultId]").val(record.id);
     $("input[name=defaultConfigName]").val(record.defaultConfigName);
@@ -597,9 +585,11 @@ function resetForm(status){
                    </div>
                    
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">CF 릴리즈</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;">CF 릴리즈
+                       <span class="glyphicon glyphicon glyphicon-question-sign cf-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="click" data-html="true" title="<b>설치 지원 버전 목록</b>"></span>
+                       </label>
                        <div>
-                           <select disabled class="form-control"  onchange = "setInputDisplay(this.value)"; name="releases" style="width: 320px; margin-left: 20px;">
+                           <select disabled class="form-control"  onchange = "setInputDisplay(this.value);" name="releases" style="width: 320px; margin-left: 20px;">
                                <option value="" >CF 릴리즈를 선택하세요.</option>
                            </select>
                        </div>

@@ -111,7 +111,6 @@ var defaultLayout = {
                 }
             },
             onLoad:function(event){
-                console.log(event.xhr.responseText);
                 if(event.xhr.status == 403){
                     location.href = "/abuse";
                     event.preventDefault();
@@ -173,6 +172,8 @@ $(function(){
  * 기능 : getReleases
  *********************************************************/
 function getReleases(){
+     $('[data-toggle="popover"]').popover();
+     getReleaseVersionList();
     cfInfo = new Array(); //CF  릴리즈
     gardenReleaseName = new Array(); //Garden-Linux 릴리즈
     diegoReleases = new Array(); //DIEGO 릴리즈
@@ -180,6 +181,18 @@ function getReleases(){
     //화면 LOCK
     w2popup.lock("릴리즈를 조회 중입니다.", true);
     getCfRelease(); //Diego 릴리즈 조회
+}
+
+/********************************************************
+ * 설명 :  Diego 릴리즈 설치 지원 버전 목록 조회
+ * 기능 : getReleaseVersionList
+ *********************************************************/
+function getReleaseVersionList(){
+    var contents = "";
+    contents = "<table id='popoverTable'><tr><th>릴리즈 유형</th><th>릴리즈 버전</th></tr>";
+    contents += "<tr><td>diego</td><td>1.25.1</td></tr><tr><td>diego</td><td>1.25.3</td></tr><tr><td>paasta-container</td><td>3.0</td></tr><tr><td>diego</td><td>1.34.0</td></tr><tr><td>paasta-container</td><td>3.1</td></tr>";
+    contents += "</table>";
+    $('.diego-info').attr('data-content', contents);
 }
 
 /********************************************************
@@ -207,7 +220,6 @@ function getCfRelease() {
                 var option = "";
                 option += '<option value="">Diego 연동 CF 정보 별칭을 선택 하세요.</option>';
                 data.records.map(function(obj) {
-                	console.log(obj);
                     var getCfInfo =  $("#getCfInfo");
                         cfInfo.push(obj.cfConfigName);
                         if(obj.cfConfigName == defaultInfo.cfConfigName){
@@ -246,6 +258,7 @@ function getHbDirectorList(iaas){
         if($("select[name=directorInfo]").attr("disabled") == "disabled"){
             $("select[name=directorInfo]").removeAttr("disabled");
         }
+        getReleaseVersionList(iaas);
         $.ajax({
             type : "GET",
             url : "/common/hbDeploy/director/list/"+iaas+"",
@@ -559,7 +572,6 @@ function getcflinuxfs2RootfsRelease(directorId){
                 });
             }
             $("select[name='cfLinuxReleases']").html(option);
-            console.log('bothfr'+$("select[name='cfLinuxReleases']").val());
         },
         error :function(e, status) {
             w2popup.unlock();
@@ -574,7 +586,6 @@ function getcflinuxfs2RootfsRelease(directorId){
  * 기능 : setDisabledMonitoring
  *********************************************************/
 function setDisabledMonitoring(val){
-	console.log(val);
     if( !checkEmpty(val)){
         var diegoReleaseName = val.split("/")[0];
         var diegoReleaseVersion = val.split("/")[1];
@@ -598,7 +609,6 @@ function setDisabledMonitoring(val){
  *********************************************************/
 function checkPaasTAMonitoringUseYn(value){
     var cnt = $("input[name='paastaMonitoring']:checkbox:checked").length;
-    console.log(cnt);
     if(cnt > 0 ){
         $(" input[name='ingestorIp']").attr("disabled", false);
     }else{
@@ -766,7 +776,7 @@ function deleteDiegoDefaultConfigInfo(id, defaultConfigName){
                    
                    <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;">DIEGO 릴리즈
-                           <span class="glyphicon glyphicon glyphicon-question-sign cfRelease-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="hover" data-html="true" title="설치 지원 버전 목록"></span>
+                           <span class="glyphicon glyphicon glyphicon-question-sign diego-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="click" data-html="true" title="설치 지원 버전 목록"></span>
                        </label>
                        <div>
                            <select class="form-control" disabled name="diegoReleases" style="width: 320px; margin-left: 20px;" onchange="setDisabledMonitoring(this.value);">

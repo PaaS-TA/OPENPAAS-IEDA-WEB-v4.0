@@ -1,23 +1,23 @@
-package org.openpaas.ieda.deploy.web.deploy.diego.service;
+package org.openpaas.ieda.hbdeploy.web.deploy.diego.service;
 
+import java.io.File;
 import java.security.Principal;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Locale;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.DeleteMethod;
+import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.deploy.api.director.utility.DirectorRestHelper;
-import org.openpaas.ieda.deploy.web.config.setting.dao.DirectorConfigVO;
-import org.openpaas.ieda.deploy.web.config.setting.service.DirectorConfigService;
-import org.openpaas.ieda.deploy.web.deploy.common.dao.network.NetworkDAO;
-import org.openpaas.ieda.deploy.web.deploy.common.dao.resource.ResourceDAO;
-import org.openpaas.ieda.deploy.web.deploy.diego.dao.DiegoDAO;
-import org.openpaas.ieda.deploy.web.deploy.diego.dao.DiegoVO;
-import org.openpaas.ieda.deploy.web.deploy.diego.dto.DiegoParamDTO;
+import org.openpaas.ieda.hbdeploy.api.director.utility.HbDirectorRestHelper;
+import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigDAO;
+import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigVO;
+import org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoDAO;
+import org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoVO;
+import org.openpaas.ieda.hbdeploy.web.deploy.diego.dto.HbDiegoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -28,35 +28,34 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Service
-public class DiegoDeleteDeployAsyncService {
+public class HbDiegoDeleteAsyncService {
     
-    @Autowired private DiegoDAO diegoDao;
+    @Autowired private HbDiegoDAO diegoDao;
     @Autowired private SimpMessagingTemplate messagingTemplate;
-    @Autowired private DirectorConfigService directorConfigService;
-    @Autowired private NetworkDAO networkDao;
-    @Autowired private ResourceDAO resourceDao;
+    @Autowired private HbDirectorConfigDAO directorConfigDao;
     @Autowired private MessageSource message;
-        
+    private static final String MESSAGE_ENDPOINT = "/deploy/hbDiego/delete/logs";
+    private final static String SEPARATOR = System.getProperty("file.separator");
+    private final static String LOCK_DIR = LocalDirectoryConfiguration.getLockDir()+SEPARATOR;
     /***************************************************
      * @project : Paas 플랫폼 설치 자동화
-     * @description : Diego 플랫폼 삭제 요청
+     * @description : 이종 Diego 플랫폼 삭제 요청
      * @title : deleteDeploy
      * @return : void
     ***************************************************/
-    public void deleteDeploy(DiegoParamDTO.Delete dto, String platform, Principal principal) {
-        String messageEndpoint = "/deploy/"+platform+"/delete/logs"; 
+    public void deleteDeploy(HbDiegoDTO dto, String platform, Principal principal) {
         String deploymentName = null;
-        DiegoVO vo = diegoDao.selectDiegoInfo(Integer.parseInt(dto.getId()));
+        HbDiegoVO vo = diegoDao.selectHbDiegoInfoById(Integer.parseInt(dto.getId()));
         
         if ( vo != null ) {
-            deploymentName = vo.getDeploymentName();
+            deploymentName = vo.getDefaultConfigVO().getDeploymentName();
         }
             
         if ( StringUtils.isEmpty(deploymentName) ) {
             throw new CommonException("notfound.diegodelete.exception", "배포정보가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
         
-        DirectorConfigVO defaultDirector = directorConfigService.getDefaultDirector();
+        HbDirectorConfigVO defaultDirector = directorConfigDao.selectHbDirectorConfigBySeq(Integer.parseInt(vo.getDefaultConfigVO().getDirectorId()));
         if ( vo != null ) {
             vo.setDeployStatus(message.getMessage("common.deploy.status.deleting", null, Locale.KOREA));
             vo.setUpdateUserId(principal.getName());
@@ -72,26 +71,29 @@ public class DiegoDeleteDeployAsyncService {
             if ( statusCode == HttpStatus.MOVED_PERMANENTLY.value() || statusCode == HttpStatus.MOVED_TEMPORARILY.value() ) {
                 Header location = deleteMethod.getResponseHeader("Location");
                 String taskId = DirectorRestHelper.getTaskId(location.getValue());
-                
-                DirectorRestHelper.trackToTask(defaultDirector, messagingTemplate, messageEndpoint, httpClient, taskId, "event", principal.getName());
+                HbDirectorRestHelper.trackToTask(defaultDirector, messagingTemplate, MESSAGE_ENDPOINT, httpClient, taskId, "event", principal.getName());
                 deleteDiegoInfo(vo);
                 
             } else {
                 deleteDiegoInfo(vo);
-                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "done", Arrays.asList("Diego 삭제가 완료되었습니다."));
+                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "done", Arrays.asList("Diego 삭제가 완료되었습니다."));
             }
         }catch(RuntimeException e){
             vo.setDeployStatus(message.getMessage("common.deploy.status.error", null, Locale.KOREA));
             vo.setUpdateUserId(principal.getName());
             saveDeployStatus(vo);
-            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("배포삭제 중 Exception이 발생하였습니다."));
+            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "error", Arrays.asList("배포삭제 중 Exception이 발생하였습니다."));
         }catch ( Exception e) {
             vo.setDeployStatus(message.getMessage("common.deploy.status.error", null, Locale.KOREA));
             vo.setUpdateUserId(principal.getName());
             saveDeployStatus(vo);
-            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("배포삭제 중 Exception이 발생하였습니다."));
+            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "error", Arrays.asList("배포삭제 중 Exception이 발생하였습니다."));
+        } finally {
+            File lockFile = new File(LOCK_DIR + "hybird_diego.lock");
+            if(lockFile.exists()){
+                lockFile.delete();
+            }
         }
-
     }
     
     /***************************************************
@@ -101,16 +103,9 @@ public class DiegoDeleteDeployAsyncService {
      * @return : void
     ***************************************************/
     @Transactional
-    public void deleteDiegoInfo( DiegoVO vo ){
+    public void deleteDiegoInfo( HbDiegoVO vo ){
         if ( vo != null ) {
-            String deployType = message.getMessage("common.deploy.type.diego.name", null, Locale.KOREA);
-            HashMap<String, String> map = new HashMap<String, String>();
-            diegoDao.deleteDiegoInfoRecord(vo.getId());
-            networkDao.deleteNetworkInfoRecord( vo.getId(), deployType );
-            resourceDao.deleteResourceInfo( vo.getId(), deployType );
-            map.put("id", vo.getId().toString());
-            map.put("deploy_type", deployType);
-            diegoDao.deleteDiegoJobSettingInfo(map);
+            diegoDao.deleteHbDiegoInfo(vo.getId());
         }
     }
     
@@ -121,11 +116,11 @@ public class DiegoDeleteDeployAsyncService {
      * @title : saveDeployStatus
      * @return : DiegoVO
     ***************************************************/
-    public DiegoVO saveDeployStatus(DiegoVO diegoVo) {
+    public HbDiegoVO saveDeployStatus(HbDiegoVO diegoVo) {
         if ( diegoVo == null ) {
             return null;
         }
-        diegoDao.updateDiegoDefaultInfo(diegoVo);
+        diegoDao.updateHbDiegoInfo(diegoVo);
         return diegoVo;
     }
     
@@ -136,9 +131,8 @@ public class DiegoDeleteDeployAsyncService {
      * @return : void
     ***************************************************/
     @Async
-    public void deleteDeployAsync(DiegoParamDTO.Delete dto, String platform, Principal principal) {
+    public void deleteDeployAsync(HbDiegoDTO dto, String platform, Principal principal) {
         deleteDeploy(dto, platform, principal);
     }
     
-
 }

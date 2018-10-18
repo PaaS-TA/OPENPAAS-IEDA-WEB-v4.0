@@ -117,7 +117,7 @@
                        <li><a href="javascript:goPage('<c:url value="/deploy/hbDiego/HbDiegoInstanceConfig"/>', '인스턴스 정보 관리');">인스턴스 정보 관리</a></li>
                    </sec:authorize>
                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
-                       <li><a href="javascript:goPage('<c:url value="/deploy/hbDiego/HbDiegoDeployment"/>', '이종 DIEGO 설치');">이종 DIEGO 설치</a></li>
+                       <li><a href="javascript:goPage('<c:url value="/deploy/hbDiego/HbDiego"/>', '이종 DIEGO 설치');">이종 DIEGO 설치</a></li>
                    </sec:authorize>
                 </ul>
             </li>
@@ -126,13 +126,13 @@
             <li>
                <a href="javascript:;" data-toggle="collapse" data-target="#deploymentMenu" ><i class="fa fa-fw fa-search-plus"></i> 배포 정보 조회 및 관리 <i class="fa fa-fw fa-caret-down"></i></a>
                <ul id="deploymentMenu" class="collapse">
-                    <sec:authorize access="hasAuthority('INFO_HBSTEMCELL_MENU')">
+                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
                         <li><a href="javascript:goPage('<c:url value="/info/hbStemcell"/>', '스템셀 업로드');">스템셀 업로드</a></li>
                     </sec:authorize>
-                    <sec:authorize access="hasAuthority('INFO_HBRELEASE_MENU')">
+                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
                         <li><a href="javascript:goPage('<c:url value="/info/hbRelease"/>', '릴리즈 업로드');">릴리즈 업로드</a></li>
                     </sec:authorize>
-                    <sec:authorize access="hasAuthority('INFO_HBDEPLOYMENT_MENU')">
+                    <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
                         <li><a href="javascript:goPage('<c:url value="/info/hbDeployment"/>', '배포목록');">배포 정보</a></li>
                     </sec:authorize>
                 </ul>

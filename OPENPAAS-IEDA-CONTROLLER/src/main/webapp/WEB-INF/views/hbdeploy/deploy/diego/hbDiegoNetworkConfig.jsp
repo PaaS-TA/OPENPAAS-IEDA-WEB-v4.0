@@ -475,7 +475,6 @@ function registDiegoNetworkConfigInfo(form){
         networkConfigInfo.push(internal);
     }
     
-    console.log(networkConfigInfo);
     $.ajax({
         type : "PUT",
         url : "/deploy/hbDiego/network/save",
@@ -499,7 +498,6 @@ function registDiegoNetworkConfigInfo(form){
  * 기능 : deleteDiegoNetworkConfigInfo
  *********************************************************/
 function deleteDiegoNetworkConfigInfo(id, networkConfigName){
-	console.log(id+'/'+networkConfigName);
     w2popup.lock("삭제 중입니다.", true);
     networkInfo = {
         id : id,
@@ -685,11 +683,11 @@ function resetForm(status){
 
     </form>
     <div id="regPopupBtnDiv" style="text-align: center; margin-top: 5px;">
-        <sec:authorize access="hasAuthority('DEPLOY_HBCF_DEFAULT_ADD')">
+        <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
             <span id="installBtn" onclick="$('#defaultNetworkInfoForm').submit();" class="btn btn-primary">등록</span>
         </sec:authorize>
         <span id="resetBtn" onclick="resetForm('reset');" class="btn btn-info">취소</span>
-        <sec:authorize access="hasAuthority('DEPLOY_HBCF_DEFAULT_DELETE')">
+        <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
             <span id="deleteBtn" class="btn btn-danger">삭제</span>
         </sec:authorize>
     </div>

@@ -94,20 +94,24 @@ public class HbCfService {
             deploymentFile = makeDeploymentName(vo);
             vo.setDeploymentFile(deploymentFile);
         }
-        
         if(StringUtils.isEmpty(dto.getId())) {
             dao.insertHbCfInfo(vo);
+            try{
+                HbCfVO hbDiegoVo = dao.selectHbCfInfoById(vo.getId());
+                createSettingFile(hbDiegoVo);
+            }catch (Exception e) {
+                dao.deleteHbCfInfo(vo.getId());
+                throw new CommonException(setMessageSourceValue("common.badRequest.exception.code"), 
+                        "배포 파일 생성 실패,<br>CF 정보를 확인해주세요.", HttpStatus.NOT_FOUND);
+            }
         }else {
             dao.updateHbCfInfo(vo);
-        }
-        
-        try{
-            HbCfVO hbCfVo = getCfInfo(vo.getId());
-            createSettingFile(hbCfVo);
-        }catch (Exception e) {
-            dao.deleteHbCfInfo(vo.getId());
-            throw new CommonException(setMessageSourceValue("common.badRequest.exception.code"), 
-                    "배포 파일 생성 실패,<br>CF 정보를 확인해주세요.", HttpStatus.NOT_FOUND);
+            try{
+                createSettingFile(vo);
+            }catch (Exception e) {
+                throw new CommonException(setMessageSourceValue("common.badRequest.exception.code"), 
+                        "배포 파일 생성 실패,<br>CF 정보를 확인해주세요.", HttpStatus.NOT_FOUND);
+            }
         }
 
     }

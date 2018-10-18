@@ -102,7 +102,7 @@ public class HbDiegoDefaultConfigController {
     @RequestMapping(value = "/deploy/hbdiego/default/delete", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteDefaultConfigInfo(@RequestBody HbDiegoDefaultConfigDTO dto, Principal principal){
         if (LOGGER.isInfoEnabled()) LOGGER.info("====================================> /deploy/hbDiego/default/save");
-        service.DeleteDiegoDefaultConfigInfo(dto, principal);
+        service.deleteDiegoDefaultConfigInfo(dto, principal);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

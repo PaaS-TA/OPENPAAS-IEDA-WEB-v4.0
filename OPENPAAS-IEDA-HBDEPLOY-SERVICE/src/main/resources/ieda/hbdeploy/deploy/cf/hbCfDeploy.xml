@@ -5,9 +5,7 @@
 
 <resultMap id="cfInfo" type="org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfVO">
     <id property="id" column="id"/>
-    
     <result property="recid" column="id"/>
-    <result property="bootstrapConfigName" column="bootstrap_config_name"/>
     <result property="iaasType" column="iaas_type"/>
     <result property="cfConfigName" column="cf_config_name"/>
     <result property="defaultConfigInfo" column="default_config_info"/>

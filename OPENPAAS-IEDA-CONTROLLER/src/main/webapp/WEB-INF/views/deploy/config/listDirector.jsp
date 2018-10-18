@@ -66,7 +66,6 @@ $(function() {
             else {
                 $('#setDefaultDirector').attr('disabled', false);
             }
-            
             $('#updateSetting').attr('disabled', false);
             $('#deleteSetting').attr('disabled', false);
         }
@@ -217,6 +216,14 @@ function initView() {
      getDefaultDirector("<c:url value='/common/use/director'/>");
     // 디렉터 목록조회
     doSearch();
+}
+
+/******************************************************************
+ * Function : openBrowse
+ * 설명 : 공통 File upload Browse Button
+ ***************************************************************** */
+function openBrowse(){
+    $(".w2ui-msg-body input[name='keyPathFile']").click();
 }
 /********************************************************
  * 설명 : 목록 조회
@@ -433,7 +440,6 @@ function uploadCredentialKey(){
     var formData = new FormData(form);
             
     var files = document.getElementsByName('keyPathFile')[0].files;
-    console.log("1:"+files[0]);
     formData.append("file", files[0]);
             
     $.ajax({
