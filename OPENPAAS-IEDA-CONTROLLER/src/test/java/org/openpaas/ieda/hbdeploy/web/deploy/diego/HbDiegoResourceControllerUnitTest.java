@@ -21,7 +21,6 @@ import org.mockito.MockitoAnnotations;
 import org.openpaas.ieda.common.BaseControllerUnitTest;
 import org.openpaas.ieda.controller.hbdeploy.web.deploy.diego.HbDiegoResourceConfigController;
 import org.openpaas.ieda.hbdeploy.web.deploy.diego.dao.HbDiegoResourceConfigVO;
-import org.openpaas.ieda.hbdeploy.web.deploy.diego.dto.HbDiegoNetworkConfigDTO;
 import org.openpaas.ieda.hbdeploy.web.deploy.diego.dto.HbDiegoResourceConfigDTO;
 import org.openpaas.ieda.hbdeploy.web.deploy.diego.service.HbDiegoResourceConfigService;
 import org.springframework.boot.test.SpringApplicationConfiguration;

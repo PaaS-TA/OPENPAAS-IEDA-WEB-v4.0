@@ -19,7 +19,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.hbdeploy.web.common.base.BaseHbDeployControllerUnitTest;
-import org.openpaas.ieda.hbdeploy.web.config.setting.dao.HbDirectorConfigDAO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfDefaultConfigDAO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfDefaultConfigVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cf.dto.HbCfDefaultConfigDTO;
@@ -36,7 +35,6 @@ public class HbCfDefaultConfigServiceUnitTest extends BaseHbDeployControllerUnit
     @InjectMocks private HbCfDefaultConfigService mockHbCfDefaultConfigService;
     @Mock private MessageSource mockMessageSource;
     @Mock private HbCfDefaultConfigDAO mockHbCfDefaultConfigDAO;
-    @Mock private HbDirectorConfigDAO mockHbDirectorConfigDAO;
     
     private Principal principal = null;
     

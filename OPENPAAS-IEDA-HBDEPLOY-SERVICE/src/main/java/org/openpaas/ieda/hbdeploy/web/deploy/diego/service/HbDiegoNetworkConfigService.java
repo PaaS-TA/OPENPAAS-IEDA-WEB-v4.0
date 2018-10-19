@@ -193,7 +193,7 @@ public class HbDiegoNetworkConfigService {
      * @title : deleteNetworkConfigInfo
      * @return : void
     *****************************************************************/
-    public void deleteNetworkConfigInfo(HbDiegoNetworkConfigDTO dto, Principal principa){
+    public void deleteNetworkConfigInfo(HbDiegoNetworkConfigDTO dto, Principal principal){
         if(dto.getId() == null || dto.getId().isEmpty()){
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
                     message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
