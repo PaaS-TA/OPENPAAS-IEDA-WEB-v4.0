@@ -101,6 +101,6 @@ public class HbCfNetworkConfigController {
     public ResponseEntity<?> deleteNetworkConfigInfot(@RequestBody @Valid HbCfNetworkConfigDTO dto, Principal principal){
         if(LOGGER.isInfoEnabled()){ LOGGER.info("==================================> /deploy/hbCf/network/delete"); }
         service.deleteNetworkConfigInfo(dto, principal);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

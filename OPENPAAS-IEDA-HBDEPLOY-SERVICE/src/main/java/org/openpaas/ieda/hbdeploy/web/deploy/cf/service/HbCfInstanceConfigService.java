@@ -44,7 +44,13 @@ public class HbCfInstanceConfigService {
         List<HashMap<String, String>> list = dao.selectCfJobTemplatesByReleaseVersion(map);
         return list;
     }
-
+    
+    /****************************************************************
+     * @project : Paas 이종 플랫폼 설치 자동화
+     * @description : CF Instance 정보 저장
+     * @title : saveInstanceConfig
+     * @return : void
+    *****************************************************************/
     public void saveInstanceConfig(HbCfInstanceConfigDTO dto, Principal principal) {
         HbCfInstanceConfigVO vo = null;
         int count = dao.selectInstanceConfigByName(dto.getInstanceConfigName());

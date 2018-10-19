@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfDefaultConfigVO;
+import org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfKeyConfigVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cf.dto.HbCfKeyConfigDTO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cf.service.HbCfDefaultConfigService;
 import org.openpaas.ieda.hbdeploy.web.deploy.cf.service.HbCfKeyConfigService;
@@ -46,7 +47,7 @@ public class HbCfKeyConfigController {
     @RequestMapping(value = "/deploy/hbCf/key/list", method = RequestMethod.GET)
     public ResponseEntity<HashMap<String, Object>> getKeyConfigInfoList() {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbCf/defaultConfig/list"); }
-        List<HbCfDefaultConfigVO> keyConfigList = service.getKeyConfigInfoList();
+        List<HbCfKeyConfigVO> keyConfigList = service.getKeyConfigInfoList();
         HashMap<String, Object> list = new HashMap<String, Object>();
         int size =0;
         if( keyConfigList.size() > 0  ) {

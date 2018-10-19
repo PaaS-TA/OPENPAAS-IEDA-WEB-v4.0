@@ -12,7 +12,7 @@ public interface HbCfKeyConfigDAO {
      * @title : selectKeyConfigInfoList
      * @return : List<HbCfDefaultConfigVO>
     *****************************************************************/
-    List<HbCfDefaultConfigVO> selectKeyConfigInfoList();
+    List<HbCfKeyConfigVO> selectKeyConfigInfoList();
     
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화

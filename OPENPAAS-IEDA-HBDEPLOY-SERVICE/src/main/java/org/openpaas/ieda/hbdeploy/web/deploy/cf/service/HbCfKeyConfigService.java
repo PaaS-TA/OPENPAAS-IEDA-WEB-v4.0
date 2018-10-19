@@ -12,7 +12,6 @@ import java.util.Locale;
 
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.common.exception.CommonException;
-import org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfDefaultConfigVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfKeyConfigDAO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cf.dao.HbCfKeyConfigVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cf.dto.HbCfKeyConfigDTO;
@@ -38,8 +37,8 @@ public class HbCfKeyConfigService {
      * @title : getKeyConfigInfoList
      * @return : List<HbCfDefaultConfigVO>
     *****************************************************************/
-    public List<HbCfDefaultConfigVO> getKeyConfigInfoList() {
-        List<HbCfDefaultConfigVO> list = dao.selectKeyConfigInfoList();
+    public List<HbCfKeyConfigVO> getKeyConfigInfoList() {
+        List<HbCfKeyConfigVO> list = dao.selectKeyConfigInfoList();
         return list;
     }
 
