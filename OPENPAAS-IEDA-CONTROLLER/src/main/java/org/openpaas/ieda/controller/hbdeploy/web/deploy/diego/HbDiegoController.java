@@ -85,7 +85,7 @@ public class HbDiegoController {
      * @return : ResponseEntity
     *****************************************************************/
     @RequestMapping(value = "/deploy/hbDiego/delete/data", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteCfInfo(@RequestBody HbDiegoDTO dto, Principal principal) {
+    public ResponseEntity<?> deleteDiegoDataInfo(@RequestBody HbDiegoDTO dto, Principal principal) {
         if (LOGGER.isInfoEnabled()) { LOGGER.info("====================================> /deploy/hbhbDiego/delete/data"); }
         service.deleteDiegoInfo(dto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

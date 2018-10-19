@@ -75,7 +75,7 @@ public class HbDiegoInstanceConfigControllerUnitTest extends BaseControllerUnitT
      * @project : Paas 이종 플랫폼 설치 자동화
      * @description : 이종 DIEGO 인스턴스 정보 설정 관리 화면 이동 TEST
      * @title : goHbDiegoInstanceConfigListTest
-     * @return : void
+     * @return : void설
     *****************************************************************/
     @Test
     public void goHbDiegoInstanceConfigInfoTest() throws Exception{
