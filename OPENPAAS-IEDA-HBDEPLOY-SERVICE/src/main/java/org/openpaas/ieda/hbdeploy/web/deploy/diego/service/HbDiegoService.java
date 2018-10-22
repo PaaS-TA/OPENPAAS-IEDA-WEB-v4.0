@@ -252,6 +252,7 @@ public class HbDiegoService {
         items.add(new ReplaceItemDTO("[smallInstanceType]", vo.getResourceConfigVO().getSmallFlavor()));
         items.add(new ReplaceItemDTO("[mediumInstanceType]", vo.getResourceConfigVO().getMediumFlavor()));
         items.add(new ReplaceItemDTO("[largeInstanceType]", vo.getResourceConfigVO().getLargeFlavor()));
+        items.add(new ReplaceItemDTO("[cellInstanceType]", vo.getResourceConfigVO().getLargeFlavor()));
         
         items.add(new ReplaceItemDTO("[databaseZ1]", vo.getInstanceConfigVO().getDatabase_z1()));
         items.add(new ReplaceItemDTO("[accessZ1]", vo.getInstanceConfigVO().getAccess_z1()));

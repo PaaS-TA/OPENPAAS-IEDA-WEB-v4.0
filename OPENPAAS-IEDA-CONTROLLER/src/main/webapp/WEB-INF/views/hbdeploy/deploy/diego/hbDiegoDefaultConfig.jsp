@@ -525,7 +525,7 @@ function getDiegoRelease(directorId) {
 function getgardenRelease(directorId) {
     $.ajax({
         type :"GET",
-        url :"/common/deploy/release/list/garden-linux/"+directorId,
+        url :"/common/deploy/release/list/garden-runc/"+directorId,
         contentType :"application/json",
         async :true,
         success :function(data, status) {

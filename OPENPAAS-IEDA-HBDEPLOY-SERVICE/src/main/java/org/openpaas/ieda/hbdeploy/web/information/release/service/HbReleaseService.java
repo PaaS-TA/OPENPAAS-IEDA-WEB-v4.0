@@ -160,15 +160,15 @@ public class HbReleaseService {
                         releaseName = "cf";
                     }else if("container".equalsIgnoreCase(releaseName)){
                         releaseName="diego";
-                    }else if("garden-runc".equalsIgnoreCase(releaseName)){
-                        releaseName="garden-linux";
+/*                    }else if("garden-runc".equalsIgnoreCase(releaseName)){
+                        releaseName="garden-linux";*/
                     }else if( "loggregator".equalsIgnoreCase(releaseName) ){
                         releaseName="loggregator";
                     }
                 }
-                if("garden-runc".equalsIgnoreCase(releaseName)){
+/*                if("garden-runc".equalsIgnoreCase(releaseName)){
                     releaseName="garden-linux";
-                }
+                }*/
                 if("cflinuxfs2".equalsIgnoreCase(releaseName)){
                     releaseName= "cflinuxfs2-rootfs";
                 }

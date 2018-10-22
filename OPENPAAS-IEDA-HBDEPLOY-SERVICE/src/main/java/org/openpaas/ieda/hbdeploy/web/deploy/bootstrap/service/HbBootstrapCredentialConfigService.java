@@ -108,7 +108,7 @@ public class HbBootstrapCredentialConfigService {
      * @return : void
     ***************************************************/
     public void makeCredentialFile(HbBootstrapCredentialConfigDTO dto, String credentialKeyName) {
-        String commonCredentialManifestPath = MANIFEST_TEMPLATE_DIR + "/bootstrap/264.7/common/directorcredential.yml";
+        String commonCredentialManifestPath = MANIFEST_TEMPLATE_DIR + "/bootstrap/264.7/common/DirectorCredential.yml";
         try {
             List<String> cmd = new ArrayList<String>(); //bosh 명령어 실행 줄
             cmd.add("bosh");
