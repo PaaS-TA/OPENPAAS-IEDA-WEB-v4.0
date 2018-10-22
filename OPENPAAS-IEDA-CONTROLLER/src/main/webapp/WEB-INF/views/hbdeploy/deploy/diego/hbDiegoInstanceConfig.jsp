@@ -663,23 +663,23 @@ $(function() {
                  required: function(){
                      return checkEmpty( $("select[name='iaasType']").val() );
                  }
-             }, cfDefaultConfig: { 
+             }, diegoDefaultConfig: { 
                  required: function(){
-                     return checkEmpty( $("select[name='cfDefaultConfig']").val() );
+                     return checkEmpty( $("select[name='diegoDefaultConfig']").val() );
                  }
-             }, cfNetworkConfig: { 
+             }, diegoNetworkConfig: { 
                  required: function(){
-                     return checkEmpty( $("select[name='cfNetworkConfig']").val() );
+                     return checkEmpty( $("select[name='diegoNetworkConfig']").val() );
                  }
              }
          }, messages: {
-         	instanceConfigName: { 
+             instanceConfigName: { 
                  required:  "인스턴스 정보 별칭"+text_required_msg
              }, iaasType: { 
                  required:  "클라우드 인프라 환경 타입"+select_required_msg,
-             }, cfDefaultConfig: { 
+             }, diegoDefaultConfig: { 
                  required:  "기본 정보"+select_required_msg,
-             }, cfNetworkConfig: { 
+             }, diegoNetworkConfig: { 
                  required:  "네트워크 정보"+select_required_msg,
              }
          }, unhighlight: function(element) {

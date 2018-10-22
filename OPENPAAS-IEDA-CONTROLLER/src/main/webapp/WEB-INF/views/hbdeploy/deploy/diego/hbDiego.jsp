@@ -552,7 +552,7 @@ function firstInstallPopup(diegoInfo){
                             }
                             if ( response.state.toLowerCase() != "started" ) {
                                 if ( response.state.toLowerCase() == "done" )    message = message + " 설치가 완료되었습니다."; 
-                                if ( response.state.toLowerCase() == "error" ) message = message + " 설치 중 오류가 발생하였습니다.";
+                                if ( response.state.toLowerCase() == "error" ) message = message + " 설치 중 오류가 발생하였습니다.<br>설정을 확인해주세요.";
                                 if ( response.state.toLowerCase() == "cancelled" ) message = message + " 설치 중 취소되었습니다.";
                                 
                                 installStatus = response.state.toLowerCase();
@@ -620,7 +620,7 @@ function secondInstallPopup(diegoInfo){
                             }
                             if ( response.state.toLowerCase() != "started" ) {
                                 if ( response.state.toLowerCase() == "done" ) message = message + " 설치가 완료되었습니다."; 
-                                if ( response.state.toLowerCase() == "error" ) message = message + " 설치 중 오류가 발생하였습니다.";
+                                if ( response.state.toLowerCase() == "error" ) message = message + " 설치 중 오류가 발생하였습니다.<br>설정을 확인해주세요.";
                                 if ( response.state.toLowerCase() == "cancelled" ) message = message + " 설치 중 취소되었습니다.";
                                 
                                 installStatus = response.state.toLowerCase();
@@ -911,7 +911,7 @@ function deleteDiegoVmInfo(record){
                                    }
                                    if ( response.state.toLowerCase() != "started" ) {
                                     if ( response.state.toLowerCase() == "done" )    message = message + " 삭제가 완료되었습니다."; 
-                                    if ( response.state.toLowerCase() == "error" ) message = message + " 삭제 중 오류가 발생하였습니다.";
+                                    if ( response.state.toLowerCase() == "error" ) message = message + " 삭제 중 오류가 발생하였습니다.<br>설정을 확인해주세요.";
                                     if ( response.state.toLowerCase() == "cancelled" ) message = message + " 삭제 중 취소되었습니다.";
                                     
                                     installStatus = response.state.toLowerCase();
