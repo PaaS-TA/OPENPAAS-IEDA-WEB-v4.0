@@ -234,6 +234,7 @@ function getCfRelease(directorId) {
             }
             $("select[name='releases']").html(option);
             w2utils.unlock($("#layout_layout_panel_main"));
+            directorInfo = directorId;//loggregator 정보를 불러오기 위해 director 정보를 설정 
         },
         error : function(e, status) {
             w2utils.unlock($("#layout_layout_panel_main"));
@@ -288,7 +289,7 @@ function getLoggregatorRelease(){
     option += "<option value=''>Loggregator 릴리즈를 선택하세요.</option>";
     $.ajax({
         type : "GET",
-        url : "/common/deploy/release/list/loggregator",
+        url : "/common/deploy/release/list/loggregator/"+directorInfo,
         contentType : "application/json",
         success : function(data, status) {
             w2popup.unlock();
