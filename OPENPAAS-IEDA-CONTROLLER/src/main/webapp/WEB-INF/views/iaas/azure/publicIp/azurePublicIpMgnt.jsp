@@ -322,7 +322,7 @@ td {
                     <div class="w2ui-field">
                         <label style="width:36%;text-align: left; padding-left: 20px;">Public IP Name</label>
                         <div>
-                            <input name="publicIpName" type="text"   maxlength="100" style="width: 300px; margin-top: 1px;" placeholder="Network 태그 명을 입력하세요."/>
+                            <input name="publicIpName" type="text"   maxlength="100" style="width: 300px; margin-top: 1px;" placeholder="Public 태그 명을 입력하세요."/>
                         </div>
                     </div>
                     <div class="w2ui-field">

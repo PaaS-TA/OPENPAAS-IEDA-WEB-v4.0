@@ -114,17 +114,17 @@ public class DiegoDeployAsyncService {
                 taskId = DirectorRestHelper.getTaskId(location.getValue());
                 status = DirectorRestHelper.trackToTask(defaultDirector, messagingTemplate, messageEndpoint, httpClient, taskId, "event", principal.getName());
             } else {
-                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("배포 중 오류가 발생하였습니다."));
+                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("DIEGO 배포 중 오류가 발생하였습니다.<br> 설정을 확인 해주세요."));
             }
         } catch ( IOException e) {
             status = "error";
-            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("배포 중 Exception이 발생하였습니다."));
+            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("DIEGO 배포 중 Exception이 발생하였습니다.<br> 설정을 확인 해주세요."));
         } catch (RuntimeException e) {
             status = "error";
-            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("배포 중 Exception이 발생하였습니다."));
+            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("DIEGO 배포 중 Exception이 발생하였습니다.<br> 설정을 확인 해주세요."));
         } catch ( Exception e) {
             status = "error";
-            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("배포 중 Exception이 발생하였습니다."));
+            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("DIEGO 배포 중 Exception이 발생하였습니다.<br> 설정을 확인 해주세요."));
         } finally {
             try {
                 if ( br != null ) {

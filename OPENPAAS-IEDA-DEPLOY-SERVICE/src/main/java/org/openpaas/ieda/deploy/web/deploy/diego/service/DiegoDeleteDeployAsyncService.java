@@ -72,14 +72,11 @@ public class DiegoDeleteDeployAsyncService {
             if ( statusCode == HttpStatus.MOVED_PERMANENTLY.value() || statusCode == HttpStatus.MOVED_TEMPORARILY.value() ) {
                 Header location = deleteMethod.getResponseHeader("Location");
                 String taskId = DirectorRestHelper.getTaskId(location.getValue());
-                
                 DirectorRestHelper.trackToTask(defaultDirector, messagingTemplate, messageEndpoint, httpClient, taskId, "event", principal.getName());
-                deleteDiegoInfo(vo);
-                
             } else {
-                deleteDiegoInfo(vo);
                 DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "done", Arrays.asList("Diego 삭제가 완료되었습니다."));
             }
+            deleteDiegoInfo(vo);
         }catch(RuntimeException e){
             vo.setDeployStatus(message.getMessage("common.deploy.status.error", null, Locale.KOREA));
             vo.setUpdateUserId(principal.getName());
@@ -91,7 +88,6 @@ public class DiegoDeleteDeployAsyncService {
             saveDeployStatus(vo);
             DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("배포삭제 중 Exception이 발생하였습니다."));
         }
-
     }
     
     /***************************************************

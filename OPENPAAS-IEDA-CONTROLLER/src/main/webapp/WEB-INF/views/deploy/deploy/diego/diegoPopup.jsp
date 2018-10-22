@@ -1181,9 +1181,8 @@ function resourcePopup(div, height) {
             	console.log(defaultInfo);
                 if( menu == "cfDiego" || defaultInfo.cfReleaseVersion > 271 || defaultInfo.cfReleaseVersion == "3.0" || defaultInfo.cfReleaseVersion == "3.1" ){
                     $('.w2ui-msg-body #keyBtn').css("display","none");
-                    $('.w2ui-msg-body #keyBtn').css("display","block");
-                    //diegoKeyFile = defaultInfo.cfKeyFile;
-                    //console.log(diegoKeyFile);
+                    diegoKeyFile = defaultInfo.cfKeyFile;
+                    console.log(diegoKeyFile);
                     
                 } else {
                     $('.w2ui-msg-body #keyBtn').css("display","block");
@@ -1709,7 +1708,7 @@ function diegoDeploy(type) {
  *********************************************************/
 function installPopup(){
     var deploymentName = defaultInfo.deploymentName;
-    var message = "DIEGO & Container";
+    var message = "DIEGO";
     
     var requestParameter = {
             id          : diegoId,
@@ -1744,7 +1743,7 @@ function installPopup(){
                                
                                if ( response.state.toLowerCase() != "started" ) {
                                 if ( response.state.toLowerCase() == "done" )    message = message + " 설치가 완료되었습니다."; 
-                                if ( response.state.toLowerCase() == "error" ) message = message + " 설치 중 오류가 발생하였습니다.";
+                                if ( response.state.toLowerCase() == "error" ) message = message + " 설치 중 오류가 발생하였습니다.<br>설정을 확인해 주세요.";
                                 if ( response.state.toLowerCase() == "cancelled" ) message = message + " 설치 중 취소되었습니다.";
                                 
                                 installStatus = response.state.toLowerCase();
@@ -1833,7 +1832,7 @@ function diegoDeletePopup(record){
                                    
                                    if ( response.state.toLowerCase() != "started" ) {
                                     if ( response.state.toLowerCase() == "done" )    message = message + " 삭제가 완료되었습니다."; 
-                                    if ( response.state.toLowerCase() == "error" ) message = message + " 삭제 중 오류가 발생하였습니다.";
+                                    if ( response.state.toLowerCase() == "error" ) message = message + " 삭제 중 오류가 발생하였습니다.<br>설정을 확인해주세요.";
                                     if ( response.state.toLowerCase() == "cancelled" ) message = message + " 삭제 중 취소되었습니다.";
                                     
                                     installStatus = response.state.toLowerCase();
@@ -2496,7 +2495,7 @@ function gridReload() {
                 </div>
             </div>
             <div class="w2ui-buttons">
-                 <span class="btn btn-info btn-sm" style="float: right; margin-top:10px;"  onclick="createKeyConfirm();">Key 생성</span>
+                 <span class="btn btn-info btn-sm" style="float: right; margin-top:10px;" id="keyBtn"  onclick="createKeyConfirm();">Key 생성</span>
             </div>
         </div>
         <div class="w2ui-buttons" id="resourceInfoButtons" hidden="true">
@@ -2635,7 +2634,7 @@ function gridReload() {
                 </div>
             </div>
             <div class="w2ui-buttons">
-                <span class="btn btn-info btn-sm" style="float: right; margin-top:10px;"  onclick="createKeyConfirm();">Key 생성</span>
+                <span class="btn btn-info btn-sm" style="float: right; margin-top:10px;" id="keyBtn" onclick="createKeyConfirm();">Key 생성</span>
             </div>
         </div>
         <div class="w2ui-buttons" id="vSphereResourceInfoButtons" hidden="true">

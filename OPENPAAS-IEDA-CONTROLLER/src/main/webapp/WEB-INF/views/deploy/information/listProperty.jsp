@@ -420,7 +420,7 @@
     
     <div class="pdt20"> 
         <div class="search_box" align="left" style="padding-left:10px;">
-            <label  style="font-size:11px">배포명</label> &nbsp;&nbsp;&nbsp;
+            <label  style="font-size:11px; color: #fff">배포명</label> &nbsp;&nbsp;&nbsp;
             <select name="select" id="deployments" class="select" style="width:300px"></select>&nbsp;&nbsp;&nbsp;
             <span id="doSearch" class="btn btn-info" style="width:50px" >조회</span>
         </div>

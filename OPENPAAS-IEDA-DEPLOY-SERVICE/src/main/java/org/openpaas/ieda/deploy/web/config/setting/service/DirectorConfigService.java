@@ -245,7 +245,7 @@ public class DirectorConfigService  {
             Map<String, String> certMap = (Map<String,String>)object.get("director_ssl");
             // bosh alias-env를 실행한다.
             ProcessBuilder builder = new ProcessBuilder("bosh", "alias-env", directorConfig.getDirectorName(),
-                                                         "-e", directorConfig.getDirectorUrl(), "--ca-cert="+certMap.get("ca"));
+                                                         "-e", directorConfig.getDirectorUrl(), "--ca-cert="+certMap.get("ca"), "--tty");
             Process process = builder.start();
             BufferedReader bufferedReader = null;
             InputStream inputStream = process.getInputStream();

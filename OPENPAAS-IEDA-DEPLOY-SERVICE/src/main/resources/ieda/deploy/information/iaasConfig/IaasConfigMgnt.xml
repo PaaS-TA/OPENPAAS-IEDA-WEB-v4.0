@@ -151,7 +151,6 @@
             And common_security_group = #{config.commonSecurityGroup}
             And azure_resource_group = #{config.azureResourceGroup}
             And azure_storage_account_name = #{config.azureStorageAccountName}
-            And azure_ssh_public_key = #{config.azureSshPublicKey}
         </when>
     </choose>
 </select>
