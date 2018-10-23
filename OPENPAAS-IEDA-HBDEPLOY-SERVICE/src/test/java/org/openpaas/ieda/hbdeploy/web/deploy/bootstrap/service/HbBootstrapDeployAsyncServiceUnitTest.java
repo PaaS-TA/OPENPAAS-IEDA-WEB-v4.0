@@ -1,8 +1,5 @@
 package org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.service;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-
 import javax.ws.rs.core.Application;
 
 import org.junit.Before;

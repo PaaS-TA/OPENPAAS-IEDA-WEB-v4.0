@@ -1171,16 +1171,16 @@ INSERT INTO ieda_job_template VALUES ( '2002', '2', 'DEPLOY_TYPE_DIEGO', 'cc_bri
 INSERT INTO ieda_job_template VALUES ( '2003', '3', 'DEPLOY_TYPE_DIEGO', 'cell', '0.1481.0', '1.34.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
 INSERT INTO ieda_job_template VALUES ( '2004', '4', 'DEPLOY_TYPE_DIEGO', 'brain', '0.1481.0', '1.34.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
 
-INSERT INTO ieda_job_template VALUES ( '1000', '0', 'DEPLOY_TYPE_HYBRID_CF', 'nats', '236', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_job_template VALUES ( '1001', '1', 'DEPLOY_TYPE_HYBRID_CF', 'blobstore', '236', '287', 'true', 'false',  'false', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_job_template VALUES ( '1002', '2', 'DEPLOY_TYPE_HYBRID_CF', 'router', '236', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_job_template VALUES ( '1003', '3', 'DEPLOY_TYPE_HYBRID_CF', 'loggregator_trafficcontroller', '236', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_job_template VALUES ( '1004', '4', 'DEPLOY_TYPE_HYBRID_CF', 'doppler', '236', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_job_template VALUES ( '1005', '5', 'DEPLOY_TYPE_HYBRID_CF', 'etcd', '236', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_job_template VALUES ( '1006', '6', 'DEPLOY_TYPE_HYBRID_CF', 'consul', '236', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_job_template VALUES ( '1009', '9', 'DEPLOY_TYPE_HYBRID_CF', 'clock', '272', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_job_template VALUES ( '1013', '13', 'DEPLOY_TYPE_HYBRID_CF', 'api', '236', '247', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_job_template VALUES ( '1014', '14', 'DEPLOY_TYPE_HYBRID_CF', 'uaa', '236', '247', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_job_template VALUES ( '3000', '0', 'DEPLOY_TYPE_HYBRID_CF', 'nats', '236', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_job_template VALUES ( '3001', '1', 'DEPLOY_TYPE_HYBRID_CF', 'blobstore', '236', '287', 'true', 'false',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_job_template VALUES ( '3002', '2', 'DEPLOY_TYPE_HYBRID_CF', 'router', '236', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_job_template VALUES ( '3003', '3', 'DEPLOY_TYPE_HYBRID_CF', 'loggregator_trafficcontroller', '236', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_job_template VALUES ( '3004', '4', 'DEPLOY_TYPE_HYBRID_CF', 'doppler', '236', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_job_template VALUES ( '3005', '5', 'DEPLOY_TYPE_HYBRID_CF', 'etcd', '236', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_job_template VALUES ( '3006', '6', 'DEPLOY_TYPE_HYBRID_CF', 'consul', '236', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_job_template VALUES ( '3007', '7', 'DEPLOY_TYPE_HYBRID_CF', 'clock', '272', '287', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_job_template VALUES ( '3008', '8', 'DEPLOY_TYPE_HYBRID_CF', 'api', '236', '247', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_job_template VALUES ( '3009', '9', 'DEPLOY_TYPE_HYBRID_CF', 'uaa', '236', '247', 'true', 'true',  'false', 'SYSTEM', now(), 'SYSTEM', now());
 
 
 INSERT INTO ieda_job_template VALUES ( '4000', '0', 'DEPLOY_TYPE_HYBRID_DIEGO', 'database', '1.25.1', '1.34.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());

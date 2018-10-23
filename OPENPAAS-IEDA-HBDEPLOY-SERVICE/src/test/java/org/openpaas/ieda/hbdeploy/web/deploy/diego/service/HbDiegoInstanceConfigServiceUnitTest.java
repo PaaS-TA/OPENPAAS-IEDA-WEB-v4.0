@@ -31,7 +31,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @SpringApplicationConfiguration(classes = {Application.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-public class HbInstanceInstanceConfigServiceUnitTest extends BaseHbDeployControllerUnitTest{
+public class HbDiegoInstanceConfigServiceUnitTest extends BaseHbDeployControllerUnitTest{
     
     @InjectMocks private HbDiegoInstanceConfigService mockHbDiegoInstanceConfigService;
     @Mock private MessageSource mockMessageSource;

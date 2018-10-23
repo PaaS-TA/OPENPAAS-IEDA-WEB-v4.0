@@ -1,7 +1,6 @@
 package org.openpaas.ieda.hbdeploy.web.deploy.cf.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -31,7 +30,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @SpringApplicationConfiguration(classes = {Application.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-public class HbCfDKeyConfigServiceUnitTest extends BaseHbDeployControllerUnitTest{
+public class HbCfKeyConfigServiceUnitTest extends BaseHbDeployControllerUnitTest{
     
     @InjectMocks HbCfKeyConfigService mockHbCfKeyConfigService;
     @Mock MessageSource mockMessageSource;
