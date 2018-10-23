@@ -448,7 +448,7 @@ $( window ).resize(function() {
     
         <div class="title fl">업로드된 스템셀 목록</div>
         <div class="fr"> 
-            <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
+            <sec:authorize access="hasAuthority('INFO_HBSTEMCELL_DELETE')">
             <span class="btn btn-danger" style="width:120px" id="doDeleteStemcell">스템셀 삭제</span>
             </sec:authorize>
         </div>
@@ -459,7 +459,7 @@ $( window ).resize(function() {
     <div class="pdt20">
         <div class="title fl">다운로드된 스템셀 목록</div>
         <div class="fr"> 
-            <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
+            <sec:authorize access="hasAuthority('INFO_HBSTEMCELL_UPLOAD')">
             <span class="btn btn-primary" style="width:120px" id="doUploadStemcell">스템셀 업로드</span>
             </sec:authorize>
         </div>

@@ -93,8 +93,8 @@ public class HbCfNetworkConfigController {
     
     /****************************************************************
      * @project : 이종 Paas 플랫폼 설치 자동화
-     * @description : CF 네트워크 정보 저장 
-     * @title : saveNetworkConfigInfot
+     * @description : CF 네트워크 정보 삭제
+     * @title : deleteNetworkConfigInfot
      * @return : ResponseEntity<?>
     *****************************************************************/
     @RequestMapping(value="/deploy/hbCf/network/delete", method=RequestMethod.DELETE)

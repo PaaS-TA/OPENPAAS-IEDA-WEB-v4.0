@@ -1089,18 +1089,18 @@ function popupComplete(){
     <div class="pdt20"> 
         <div class="title fl">배포 가능 한 Private/Public CF 목록 (더블 클릭) </div>
         <div class="fr"> 
-            <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBCF_INSTALL')">
             <span id="installBtn" class="btn btn-primary"  style="width:120px">정보 등록</span>
             </sec:authorize>
-            <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBCF_INSTALL')">
             <span id="modifyBtn" class="btn btn-info" style="width:120px">정보 수정</span>
             </sec:authorize>
             
-           <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
+           <sec:authorize access="hasAuthority('DEPLOY_HBCF_LIST')">
             <span id="manifestBtn" class="btn btn-warning" style="width:120px">배포 파일 확인</span>
             </sec:authorize>
             
-            <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBCF_DELETE')">
             <span id="deleteBtn" class="btn btn-danger" style="width:120px">정보 삭제</span>
             </sec:authorize>
         </div>
@@ -1111,7 +1111,7 @@ function popupComplete(){
     <div class="pdt20"> 
         <div class="title fl">배포 할 Private/Public CF 목록 (더블 클릭)</div>
         <div class="fr"> 
-            <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBCF_INSTALL')">
             <span id="installVmBtn" class="btn btn-primary"  style="width:120px">VM 설치</span>
             </sec:authorize>
         </div>
@@ -1121,14 +1121,14 @@ function popupComplete(){
     <div class="pdt20"> 
         <div class="title fl">배포 한 Private/Public CF 목록 </div>
         <div class="fr">
-            <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBCF_INSTALL')">
             <span id="modifyVmBtn" class="btn btn-info"  style="width:120px">VM 수정</span>
             </sec:authorize>
-             <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
+             <sec:authorize access="hasAuthority('DEPLOY_HBCF_LIST')">
             <span id="manifestVmBtn" class="btn btn-warning" style="width:120px">배포 파일 확인</span>
             </sec:authorize>
             
-            <sec:authorize access="hasAuthority('CONFIG_DIRECTOR_MENU')">
+            <sec:authorize access="hasAuthority('DEPLOY_HBCF_DELETE')">
             <span id="deleteVmBtn" class="btn btn-danger"  style="width:120px">VM 삭제</span>
             </sec:authorize>
         </div>

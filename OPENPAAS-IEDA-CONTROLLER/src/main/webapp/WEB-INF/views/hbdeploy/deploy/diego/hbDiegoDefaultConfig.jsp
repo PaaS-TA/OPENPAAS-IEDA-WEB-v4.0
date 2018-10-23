@@ -838,11 +838,11 @@ function deleteDiegoDefaultConfigInfo(id, defaultConfigName){
         </div>
     </form>
     <div id="regPopupBtnDiv" style="text-align: center; margin-top: 5px;">
-        <sec:authorize access="hasAuthority('DEPLOY_HBCF_DEFAULT_ADD')">
+        <sec:authorize access="hasAuthority('DEPLOY_HBDIEGO_DEFAULT_ADD')">
         </sec:authorize>
             <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
         <span id="resetBtn" onclick="resetForm('reset');" class="btn btn-info">취소</span>
-        <sec:authorize access="hasAuthority('DEPLOY_HBCF_DEFAULT_DELETE')">
+        <sec:authorize access="hasAuthority('DEPLOY_HBDIEGO_DEFAULT_DELETE')">
         </sec:authorize>
             <span id="deleteBtn" class="btn btn-danger">삭제</span>
         

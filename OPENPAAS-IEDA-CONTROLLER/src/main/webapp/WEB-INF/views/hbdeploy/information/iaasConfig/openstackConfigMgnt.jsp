@@ -504,7 +504,7 @@ $(window).resize(function() {
                     class="fa fa-cloud"></i>&nbsp;Openstack<b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu alert-dropdown">
-                    <sec:authorize access="hasAuthority('INFO_IAASCONFIG_AWS_LIST')">
+                    <sec:authorize access="hasAuthority('INFO_HBIAASCONFIG_OPENSTACK_LIST')">
                         <li><a href="javascript:goPage('<c:url value="/info/hbIaasConfig/aws"/>', 'AWS 관리');">AWS</a></li>
                     </sec:authorize>
                 </ul>
@@ -515,13 +515,13 @@ $(window).resize(function() {
         <div class="title fl">Openstack 환경 설정 목록</div>
         <div class="fr">
             <!-- Button -->
-            <sec:authorize access="hasAuthority('INFO_IAASCONFIG_OPENSTACK_CREATE')">
+            <sec:authorize access="hasAuthority('INFO_HBIAASCONFIG_OPENSTACK_CREATE')">
                 <span id="registConfigBtn" class="btn btn-primary"  style="width: 100px">등록</span>
             </sec:authorize>
-            <sec:authorize access="hasAuthority('INFO_IAASCONFIG_OPENSTACK_UPDATE')">
+            <sec:authorize access="hasAuthority('INFO_HBIAASCONFIG_OPENSTACK_UPDATE')">
                 <span id="updateConfigBtn" class="btn btn-info" style="width: 100px">수정</span>
             </sec:authorize>
-            <sec:authorize access="hasAuthority('INFO_IAASCONFIG_OPENSTACK_DELETE')">
+            <sec:authorize access="hasAuthority('INFO_HBIAASCONFIG_OPENSTACK_DELETE')">
                 <span id="deleteConfigBtn" class="btn btn-danger" style="width: 100px">삭제</span>
             </sec:authorize>
             <!-- //Btn -->
