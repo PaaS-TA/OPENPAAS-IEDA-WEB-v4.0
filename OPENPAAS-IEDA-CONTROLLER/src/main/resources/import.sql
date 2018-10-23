@@ -12,7 +12,7 @@ INSERT INTO ieda_common_code VALUES ( '104', 'GOOGLE', '104', 'Google' , 'Google
 INSERT INTO ieda_common_code VALUES ( '105', 'AZURE', '105', 'Azure' , 'MS Azure ', '4', null, null, 100, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '200', 'OS TYPE', '200', 'OS 유형' , 'OS Type', '1', null, null, null, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '201', 'UBUNTU', '201', '우분투' , 'Ubuntu', '0', null, null, 200, 'SYSTEM', now(), 'SYSTEM', now() );
-IN
+
 INSERT INTO ieda_common_code VALUES ( '211', 'TRUSTY', '211', 'Trusty' , 'Ubuntu Trusty', '0', 201, null, 200, 'SYSTEM', now(), 'SYSTEM', now() );
 
 INSERT INTO ieda_common_code VALUES ( '314', 'DEPLOY', '1000', 'Deploy' , 'Deploy', '0', null, null, null, 'SYSTEM', now(), 'SYSTEM', now() );
