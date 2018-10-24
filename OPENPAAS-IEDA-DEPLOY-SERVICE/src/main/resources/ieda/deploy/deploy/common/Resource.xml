@@ -25,6 +25,9 @@
             <result property="createDate" column="CREATE_DATE" />
             <result property="updateUserId" column="UPDATE_USER_ID"/>
             <result property="updateDate" column="UPDATE_DATE" />
+            <result property="enableWindowsStemcell" column="ENABLE_WINDOWS_STEMCELL"/>
+            <result property="windowsStemcellName" column="WINDOWS_STEMCELL_NAME" />
+            <result property="windowsStemcellVersion" column="WINDOWS_STEMCELL_VERSION" />
         </resultMap>
         
         <select id="selectResourceInfo" resultMap="resource">
@@ -59,6 +62,9 @@
                 ,create_date
                 ,update_user_id
                 ,update_date
+                ,enable_windows_stemcell
+                ,windows_stemcell_name
+                ,windows_stemcell_version
             )Values(
                  #{resource.id}
                 ,#{resource.deployType}
@@ -81,6 +87,9 @@
                 ,now()
                 ,#{resource.updateUserId}
                 ,now()
+                ,#{resource.enableWindowsStemcell}
+                ,#{resource.windowsStemcellName}
+                ,#{resource.windowsStemcellVersion}
             )
         </insert>
         
@@ -104,6 +113,9 @@
                 ,large_type_disk=#{resource.largeDisk}
                 ,update_user_id=#{resource.updateUserId}
                 ,update_date=now()
+                ,enable_windows_stemcell=#{resource.enableWindowsStemcell}
+                ,windows_stemcell_name=#{resource.windowsStemcellName}
+                ,windows_stemcell_version=#{resource.windowsStemcellVersion}
             Where id=#{resource.id}
             And deploy_type=#{resource.deployType}
         </update>

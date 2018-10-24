@@ -163,7 +163,9 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
         .andExpect(jsonPath("$.content.paastaMonitoringUse").value("yes"))
         .andExpect(jsonPath("$.content.ingestorIp").value("172.16.100.100"))
         .andExpect(jsonPath("$.content.countryCode").value("kor"))
-        .andExpect(jsonPath("$.content.stateName").value("seoul"));
+        .andExpect(jsonPath("$.content.stateName").value("seoul"))
+        .andExpect(jsonPath("$.content.cfAdminPassword").value("admin"))
+        .andExpect(jsonPath("$.content.inceptionOsUserName").value("ubuntu"));
     }
     
     /***************************************************
@@ -187,6 +189,8 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
         .andExpect(jsonPath("$.content.domain").value("test.domain"))
         .andExpect(jsonPath("$.content.paastaMonitoringUse").value("yes"))
         .andExpect(jsonPath("$.content.ingestorIp").value("172.16.100.100"))
+        .andExpect(jsonPath("$.content.cfAdminPassword").value("admin"))
+        .andExpect(jsonPath("$.content.inceptionOsUserName").value("ubuntu"))
         .andExpect(jsonPath("$.content.countryCode").value("kor"))
         .andExpect(jsonPath("$.content.stateName").value("seoul"));
     }
@@ -543,6 +547,8 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
         dto.setPaastaMonitoringUse("yes");
         dto.setReleaseName("cf");
         dto.setReleaseVersion("222");
+        dto.setCfAdminPassword("admin");
+        dto.setInceptionOsUserName("ubuntu");
         return dto;
     }
 
@@ -571,6 +577,8 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
         vo.setKeyFile("keyFile");
         vo.setOrganizationName("paasta");
         vo.setDeployStatus("deploying");
+        vo.setCfAdminPassword("admin");
+        vo.setInceptionOsUserName("ubuntu");
         return vo;
     }
 

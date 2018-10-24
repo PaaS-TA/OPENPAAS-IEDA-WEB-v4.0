@@ -27,6 +27,9 @@ public class ResourceVO {
     private Date createDate; // 생성일자
     private Date updateDate; // 수정일자
 
+    private String enableWindowsStemcell; // windows stemcell use
+    private String windowsStemcellName; // Azure IaaS Windows 스템셀 명
+    private String windowsStemcellVersion; // Azure IaaS windows 스템셀 버전
     
     public Integer getId() {
         return id;
@@ -179,4 +182,24 @@ public class ResourceVO {
             this.createDate = new Date(createDate.getTime());
         }
     }
+    
+    public String getEnableWindowsStemcell() {
+        return enableWindowsStemcell;
+    }
+    public void setEnableWindowsStemcell(String enableWindowsStemcell) {
+        this.enableWindowsStemcell = enableWindowsStemcell;
+    }
+    public String getWindowsStemcellName() {
+        return windowsStemcellName;
+    }
+    public void setWindowsStemcellName(String windowsStemcellName) {
+        this.windowsStemcellName = windowsStemcellName;
+    }
+    public String getWindowsStemcellVersion() {
+        return windowsStemcellVersion;
+    }
+    public void setWindowsStemcellVersion(String windowsStemcellVersion) {
+        this.windowsStemcellVersion = windowsStemcellVersion;
+    }
+    
 }

@@ -108,6 +108,7 @@ public class CfDeployAsyncServiceUnitTest extends BaseDeployControllerUnitTest {
         vo.setOptionResourceTemplate("resource.yml");
         vo.setMetaTemplate("meta.yml");
         vo.setMinReleaseVersion("2.7.0");
+        vo.setInputTemplate("addOption.yml");
         return vo;
     }
     
@@ -165,6 +166,8 @@ public class CfDeployAsyncServiceUnitTest extends BaseDeployControllerUnitTest {
         vo.setLoginSecret("test");
         if(type.equalsIgnoreCase("null")) vo.setIaasType("");
         if(type.equalsIgnoreCase("vsphere")) vo.setIaasType("vsphere");
+        vo.setCfAdminPassword("admin");
+        if(type.equalsIgnoreCase("paasta")) vo.setInceptionOsUserName("ubuntu");
         return vo;
     }
 }

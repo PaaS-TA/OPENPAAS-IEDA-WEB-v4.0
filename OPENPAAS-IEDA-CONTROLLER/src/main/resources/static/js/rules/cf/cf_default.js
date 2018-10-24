@@ -64,6 +64,22 @@ $("#defaultInfoForm").validate({
                         return checkEmpty( $(".w2ui-msg-body select[name='osConfReleases']").val() ); 
                     }
                 }
+            }, inceptionOsUserName: {
+                required: function(){
+                    if( $(".w2ui-msg-body #inceptionOsUserNameConfDiv").css("display") == "none"  ){
+                        return false;
+                    }else{
+                        return checkEmpty( $(".w2ui-msg-body input[name='inceptionOsUserName']").val() ); 
+                    }
+                }
+            }, cfAdminPassword: {
+                required: function(){
+                    return checkEmpty( $(".w2ui-msg-body input[name='cfAdminPassword']").val() ); 
+                }
+            }, cfdeployment: {
+                required: function(){
+                    return checkEmpty( $(".w2ui-msg-body select[name='cfdeployment']").val() ); 
+                }
             }
         }, messages: {
              directorUuid        : { required: "설치관리자 UUID" + text_required_msg }
@@ -77,6 +93,9 @@ $("#defaultInfoForm").validate({
             ,loggregatorReleases : { required: "Loggergator 릴리즈"+select_required_msg }
             ,userAddSsh          : { required: "Public SSH KEY" +text_required_msg}
             ,osConfReleases      : { required: "OS-CONF"+select_required_msg}
+            ,inceptionOsUserName : { required: "Inception User Name"+text_required_msg}
+            ,cfAdminPassword     : { required: "CF Admin Password"+text_required_msg}
+            ,cfdeployment        : { required: "CF Deployment Version" + text_required_msg}
         }, unhighlight: function(element) {
             setSuccessStyle(element);
         },errorPlacement: function(error, element) {

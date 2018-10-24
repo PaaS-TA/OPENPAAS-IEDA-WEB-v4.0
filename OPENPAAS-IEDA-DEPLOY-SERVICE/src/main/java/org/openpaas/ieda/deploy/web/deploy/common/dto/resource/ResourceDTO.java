@@ -10,9 +10,7 @@ public class ResourceDTO {
     @NotNull
     private String platform; //플랫폼 구분
     // 5. 리소스 정보
-    @NotNull
     private String stemcellName; //스템셀명
-    @NotNull
     private String stemcellVersion; //스템셀버전
     private String boshPassword; //VM 비밀번호
     private String smallFlavor;//small 인스턴스 유형
@@ -30,6 +28,9 @@ public class ResourceDTO {
     private String largeDisk;//large 인스턴스 유형 Disk
     
     private String keyFile;//key파일명
+    private String enableWindowsStemcell; //windows stemcell use
+    private String windowsStemcellName; // Azure IaaS Windows 스템셀 명
+    private String windowsStemcellVersion; // Azure IaaS windows 스템셀 버전
     
     public String getId() {
         return id;
@@ -156,6 +157,25 @@ public class ResourceDTO {
     }
     public void setKeyFile(String keyFile) {
         this.keyFile = keyFile;
+    }
+    
+    public String getEnableWindowsStemcell() {
+        return enableWindowsStemcell;
+    }
+    public void setEnableWindowsStemcell(String enableWindowsStemcell) {
+        this.enableWindowsStemcell = enableWindowsStemcell;
+    }
+    public String getWindowsStemcellName() {
+        return windowsStemcellName;
+    }
+    public void setWindowsStemcellName(String windowsStemcellName) {
+        this.windowsStemcellName = windowsStemcellName;
+    }
+    public String getWindowsStemcellVersion() {
+        return windowsStemcellVersion;
+    }
+    public void setWindowsStemcellVersion(String windowsStemcellVersion) {
+        this.windowsStemcellVersion = windowsStemcellVersion;
     }
     
 }

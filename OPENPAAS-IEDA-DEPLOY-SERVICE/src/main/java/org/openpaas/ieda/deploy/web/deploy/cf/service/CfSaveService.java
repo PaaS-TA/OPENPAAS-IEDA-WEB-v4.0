@@ -62,6 +62,8 @@ public class CfSaveService {
         vo.setOsConfReleaseName(dto.getOsConfReleaseName());
         vo.setOsConfReleaseVersion(dto.getOsConfReleaseVersion());
         vo.setCfDbtype(dto.getCfDbType());
+        vo.setInceptionOsUserName(dto.getInceptionOsUserName());
+        vo.setCfAdminPassword(dto.getCfAdminPassword());
         // 1.2 기본정보
         vo.setDomain(dto.getDomain());
         vo.setDomainOrganization(dto.getDomainOrganization());
@@ -173,7 +175,7 @@ public class CfSaveService {
     @Transactional
     public void saveCfJobsInfo(List<HashMap<String, String>> maps, Principal principal){
         if(  maps.size() != 0){
-            String deployType  =setMessageSourceValue("common.deploy.type.cf.name");
+            String deployType = setMessageSourceValue("common.deploy.type.cf.name");
             int cfId = Integer.parseInt(maps.get(0).get("id"));
             int count= cfDao.selectCfJobSettingInfoListBycfId( deployType, cfId).size();
             
@@ -246,6 +248,13 @@ public class CfSaveService {
             resourceVo.setMediumFlavor(dto.getMediumFlavor());
             resourceVo.setLargeFlavor(dto.getLargeFlavor());
         }
+        //azure windows stemcell setting
+        if("azure".equals(vo.getIaasType().toLowerCase())){
+            resourceVo.setEnableWindowsStemcell(dto.getEnableWindowsStemcell());
+            resourceVo.setWindowsStemcellName(dto.getWindowsStemcellName());
+            resourceVo.setWindowsStemcellVersion(dto.getWindowsStemcellVersion());
+        }
+        
         vo.setDeploymentFile(deploymentFile);
         vo.setUpdateUserId(principal.getName());
         

@@ -35,6 +35,8 @@ public class CfVO {
     private String userAddSsh;  //os-conf ssh public-key
     private String osConfReleaseName;//os-conf Release Name
     private String osConfReleaseVersion;//os-conf Release Version
+    private String inceptionOsUserName; //inception user name
+    private String cfAdminPassword; // cf 관리자 비밀번호
     
     //1.3 PaaS-TA 모니터링
     private String paastaMonitoringUse;//PaaS-TA 모니터링 사용 유무
@@ -297,6 +299,22 @@ public class CfVO {
     public void setOsConfReleaseVersion(String osConfReleaseVersion) {
         this.osConfReleaseVersion = osConfReleaseVersion;
     }
+
+	public String getInceptionOsUserName() {
+		return inceptionOsUserName;
+	}
+
+	public void setInceptionOsUserName(String inceptionOsUserName) {
+		this.inceptionOsUserName = inceptionOsUserName;
+	}
+
+	public String getCfAdminPassword() {
+		return cfAdminPassword;
+	}
+
+	public void setCfAdminPassword(String cfAdminPassword) {
+		this.cfAdminPassword = cfAdminPassword;
+	}
 
     
 }

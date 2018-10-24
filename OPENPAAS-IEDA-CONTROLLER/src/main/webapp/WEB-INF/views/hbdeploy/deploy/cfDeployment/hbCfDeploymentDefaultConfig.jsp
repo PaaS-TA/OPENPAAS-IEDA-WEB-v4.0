@@ -53,6 +53,8 @@ var resourceLayout = {
                    { field: 'domain', caption: '도메인', size:'20%', style:'text-align:center;'},
                    { field: 'domainOrganization', caption: '기본 조직명', size:'20%', style:'text-align:center;'},
                    { field: 'cfDbType', caption: 'CF Database 유형', size:'20%', style:'text-align:center;'},
+                   { field: 'inceptionOsUserName', hidden: true},
+                   { field: 'cfAdminPassword', hidden: true}
                   ],
             onSelect : function(event) {
                 event.onComplete = function() {
@@ -67,7 +69,8 @@ var resourceLayout = {
                     $('#deleteBtn').attr('disabled', true);
                     return;
                 }
-            },onLoad:function(event){
+            },
+            onLoad:function(event){
                 if(event.xhr.status == 403){
                     location.href = "/abuse";
                     event.preventDefault();
@@ -156,6 +159,8 @@ function settingDefaultInfo(){
     $("select[name=iaasType]").val(record.iaasType);
     $("input[name=domain]").val(record.domain);
     $("input[name=domainOrganization]").val(record.domainOrganization);
+    $("input[name=inceptionOsUserName]").val(record.inceptionOsUserName);
+    $("input[name=cfAdminPassword]").val(record.cfAdminPassword);
     
     var cfDeployment = record.cfDeploymentVersion;
     
@@ -163,7 +168,9 @@ function settingDefaultInfo(){
         releaseName : cfDeployment.split("/")[0],
         releaseVersion : cfDeployment.split("/")[1]
     }
+    
     getCfDeploymentVersionList(iaas);
+    checkUsePaasta(cfDeployment);
     
     option += "<option value='"+record.cfDbType+"' selected >"+record.cfDbType+"</option>";
      if("mySql" == record.cfDbType){
@@ -210,6 +217,8 @@ function registHbCfDeploymentDefaultConfigInfo(){
             domain                 : $("input[name='domain']").val(),
             domainOrganization     : $("input[name='domainOrganization']").val(),
             cfDbType               : $("select[name='cfDbType'] :selected").val(),
+            inceptionOsUserName    : $("input[name='inceptionOsUserName']").val(),
+            cfAdminPassword        : $("input[name='cfAdminPassword']").val()
     }
     $.ajax({
         type : "PUT",
@@ -290,6 +299,25 @@ function deleteHbCfDeploymentDefaultConfigInfo(id, defaultConfigName){
     });
 } 
 
+ /********************************************************
+  * 설명 : paasta 릴리즈 선택시 추가 입력 적용
+  * 기능 : checkUsePaasta(selected)
+  *********************************************************/
+ function checkUsePaasta(selected){
+     if(selected == ''){
+         return ;
+      }else{
+          var versionInfo = selected.split("/");
+          versionInfo = versionInfo[0];
+          if(versionInfo == 'paasta'){
+              $("#inceptionOsUserNameConfDiv").show();
+          }else{
+              $("#inceptionOsUserNameConfDiv").hide();
+              $("input[name=inceptionOsUserName]").val("");
+          }
+      }
+ }
+
 /********************************************************
  * 설명 : 화면 리사이즈시 호출
  *********************************************************/
@@ -328,6 +356,9 @@ function resetForm(status){
     $("input[name=domainOrganization]").val("");
     $("select[name=cfDbType]").val("");
     $("input[name=defaultInfoId]").val("");
+    $("input[name=inceptionOsUserName]").val("");
+    $("#inceptionOsUserNameConfDiv").hide();
+    $("input[name=cfAdminPassword]").val("");
         var option ="";
         $("select[name=cfDeploymentVersion]").html("<option value=''> CF Deployment 버전을 선택하세요.</option>");
         option += "<option value=''> CF Database 유형을 선택하세요.</option>";
@@ -380,7 +411,7 @@ function resetForm(status){
                    <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;">CF Deployment 버전 명</label>
                        <div>
-                           <select class="form-control" id="cfDeploymentVersion" name="cfDeploymentVersion"  style="width: 320px; margin-left: 20px;">
+                           <select class="form-control" id="cfDeploymentVersion" onchange='checkUsePaasta(this.value);' name="cfDeploymentVersion"  style="width: 320px; margin-left: 20px;">
                                <option value=""> 클라우드 인 환경을  먼저 선택하세요.</option>
                            </select>
                        </div>
@@ -407,7 +438,18 @@ function resetForm(status){
                            </select>
                        </div>
                    </div>
-                   
+                   <div class="w2ui-field" id="inceptionOsUserNameConfDiv"  hidden="true">
+                        <label style="width:40%;text-align: left;padding-left: 20px;">inception User Name</label>
+                        <div>
+                            <input class="form-control" name="inceptionOsUserName" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="inception 계정 명을 입력하세요." />
+                        </div>
+                    </div>
+                    <div class="w2ui-field" id="cfAdminPasswordConfDiv">
+                        <label style="width:40%;text-align: left;padding-left: 20px;">CF Admin Password</label>
+                        <div>
+                            <input class="form-control" name="cfAdminPassword" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="cf admin password를 입력하세요" />
+                        </div>
+                    </div>
                </div>
            </div>
         </div>
@@ -454,6 +496,18 @@ $(function() {
                 required: function(){
                     return checkEmpty( $("select[name='cfDbType']").val() );
                 }
+            }, inceptionOsUserName: {
+                required: function(){
+                    if( $("#inceptionOsUserNameConfDiv").css("display") == "none"  ){
+                        return false;
+                    }else{
+                        return checkEmpty( $(".w2ui-msg-body input[name='inceptionOsUserName']").val() ); 
+                    }
+                }
+            }, cfAdminPassword: {
+                required: function(){
+                    return checkEmpty( $(".w2ui-msg-body input[name='cfAdminPassword']").val() ); 
+                }
             }
         }, messages: {
             defaultConfigName: { 
@@ -468,6 +522,10 @@ $(function() {
                 required:  "기본 조직명 "+text_required_msg,
             }, cfDbType: { 
                 required:  "Cf DB 유형"+select_required_msg,
+            }, inceptionOsUserName : {
+                required: "Inception User Name"+text_required_msg
+            }, cfAdminPassword     : {
+                required: "CF Admin Password"+text_required_msg
             }
         }, unhighlight: function(element) {
             setHybridSuccessStyle(element);

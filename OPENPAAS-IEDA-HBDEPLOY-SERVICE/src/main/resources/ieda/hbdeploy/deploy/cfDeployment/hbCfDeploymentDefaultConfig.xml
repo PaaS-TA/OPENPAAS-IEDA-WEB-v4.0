@@ -12,6 +12,8 @@
         <result property="domain" column="DOMAIN" />
         <result property="domainOrganization" column="DOMAIN_ORGANIZATION" />
         <result property="cfDbType" column="CF_DB_TYPE" />
+        <result property="inceptionOsUserName" column="INCEPTION_OS_USER_NAME"/>
+        <result property="cfAdminPassword" column="CF_ADMIN_PASSWORD"/>
         <result property="createUserId" column="CREATE_USER_ID"/>
         <result property="createDate" column="CREATE_DATE" />
         <result property="updateUserId" column="UPDATE_USER_ID"/>
@@ -27,6 +29,8 @@
             ,domain as domain
             ,domain_organization as domain_organization
             ,cf_db_type as cf_db_type
+            ,inception_os_user_name as inception_os_user_name
+            ,cf_admin_password as cf_admin_password
             ,create_user_id as create_user_id
             ,create_date as create_date
             ,update_user_id as update_user_id
@@ -43,6 +47,8 @@
             ,domain
             ,domain_organization
             ,cf_db_type
+            ,inception_os_user_name
+            ,cf_admin_password
             ,create_user_id
             ,create_date
             ,update_user_id
@@ -54,6 +60,8 @@
             ,#{default.domain}
             ,#{default.domainOrganization}
             ,#{default.cfDbType}
+            ,#{default.inceptionOsUserName}
+            ,#{default.cfAdminPassword}
             ,#{default.createUserId}
             ,now()
             ,#{default.updateUserId}
@@ -69,6 +77,8 @@
             ,domain = #{default.domain}
             ,domain_organization = #{default.domainOrganization}
             ,cf_db_type = #{default.cfDbType}
+            ,inception_os_user_name = #{default.inceptionOsUserName}
+            ,cf_admin_password = #{default.cfAdminPassword}
             ,update_user_id = #{default.updateUserId}
             ,update_date = now()
         WHERE id = #{default.id}
@@ -83,6 +93,8 @@
             ,domain as domain
             ,domain_organization as domain_organization
             ,cf_db_type as cf_db_type
+            ,inception_os_user_name as inception_os_user_name
+            ,cf_admin_password as cf_admin_password
             ,create_user_id as create_user_id
             ,create_date as create_date
             ,update_user_id as update_user_id

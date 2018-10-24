@@ -155,7 +155,9 @@ CREATE TABLE ieda_manifest_template
   option_resource_template          VARCHAR(255),
   option_etc                        VARCHAR(255),
   meta_template                     VARCHAR(255),
-  input_template                    VARCHAR(255)  NOT NULL,
+  input_template                    VARCHAR(255),
+  input_template_second             VARCHAR(255),
+  input_template_third              VARCHAR(255),
   create_user_id                    VARCHAR(255)  NOT NULL,
   create_date                       DATE          NOT NULL,
   update_user_id                    VARCHAR(255)  NOT NULL,
@@ -329,6 +331,9 @@ CREATE TABLE ieda_resource
   create_date                       DATE          NOT NULL,
   update_user_id                    VARCHAR(255)  NOT NULL,
   update_date                       DATE          NOT NULL,
+  enable_windows_stemcell           VARCHAR(100) DEFAULT NULL,
+  windows_stemcell_name             VARCHAR(255) NULL,
+  windows_stemcell_version          VARCHAR(255) NULL,
   PRIMARY KEY (id, deploy_type)
 )ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
@@ -363,6 +368,8 @@ CREATE TABLE ieda_cf
   user_add_ssh                      LONGTEXT NULL,
   osconf_release_name               VARCHAR(255) NULL,
   osconf_release_version            VARCHAR(255) NULL,
+  inception_os_user_name            VARCHAR(255) NULL,
+  cf_admin_password                 VARCHAR(255) NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 
@@ -618,7 +625,9 @@ CREATE TABLE ieda_hb_cfDeployment_default_config
   cf_deployment_version                 VARCHAR(100) NOT NULL,
   domain                                VARCHAR(100) NOT NULL,
   domain_organization                   VARCHAR(100) NOT NULL,
-  cf_db_type                            VARCHAR(100) NOT NULL,  
+  cf_db_type                            VARCHAR(100) NOT NULL,
+  inception_os_user_name                VARCHAR(255) NULL,
+  cf_admin_password                     VARCHAR(255) NULL,
   create_user_id                        VARCHAR(255) NOT NULL,
   create_date                           DATE         NOT NULL,
   update_user_id                        VARCHAR(255) NOT NULL,

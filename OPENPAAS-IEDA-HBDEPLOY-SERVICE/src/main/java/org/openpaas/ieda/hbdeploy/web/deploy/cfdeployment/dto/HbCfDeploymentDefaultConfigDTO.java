@@ -14,6 +14,8 @@ public class HbCfDeploymentDefaultConfigDTO {
     private String domain;
     private String domainOrganization;
     private String cfDbType;
+    private String inceptionOsUserName; // inception User Name
+    private String cfAdminPassword; // cf admin password
     private String createUserId;//등록자 아이디
     
 	public Integer getId() {
@@ -60,6 +62,18 @@ public class HbCfDeploymentDefaultConfigDTO {
 	}
 	public void setCfDbType(String cfDbType) {
 		this.cfDbType = cfDbType;
+	}
+	public String getInceptionOsUserName() {
+		return inceptionOsUserName;
+	}
+	public void setInceptionOsUserName(String inceptionOsUserName) {
+		this.inceptionOsUserName = inceptionOsUserName;
+	}
+	public String getCfAdminPassword() {
+		return cfAdminPassword;
+	}
+	public void setCfAdminPassword(String cfAdminPassword) {
+		this.cfAdminPassword = cfAdminPassword;
 	}
 	public String getCreateUserId() {
 		return createUserId;
