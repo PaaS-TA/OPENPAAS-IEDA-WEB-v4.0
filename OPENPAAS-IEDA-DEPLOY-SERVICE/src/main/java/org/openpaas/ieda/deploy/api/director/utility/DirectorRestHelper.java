@@ -751,8 +751,8 @@ public class DirectorRestHelper {
                         sendTaskOutputWithTag(userId, messageTemplate, messageEndpoint, STARTED, tag, responseMessage);
                     }
                 }
-
-                if (taskInfo.getState().equalsIgnoreCase("done") || lastState.equalsIgnoreCase("finished")) {
+                // || lastState.equalsIgnoreCase("finished") 삭제
+                if (taskInfo.getState().equalsIgnoreCase("done")) {
                     LOGGER.debug("done && taskInfo "+ taskInfo.getState());
                     sendTaskOutputWithTag(userId, messageTemplate, messageEndpoint, DONE, tag, Arrays.asList("", "Task " + taskId + " done"));
                     status = DONE;
