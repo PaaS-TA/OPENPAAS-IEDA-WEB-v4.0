@@ -60,7 +60,6 @@ public class HbCfDeploymentDeployAsyncServiceUnitTest extends BaseHbDeployContro
      * @title : testSaveDeployStatus
      * @return : void
     *****************************************************************/
-    @Test
     public void testSetDefualtInfo(){
         List<String> cmd = new ArrayList<String>();
         ManifestTemplateVO result = manifestInfo();

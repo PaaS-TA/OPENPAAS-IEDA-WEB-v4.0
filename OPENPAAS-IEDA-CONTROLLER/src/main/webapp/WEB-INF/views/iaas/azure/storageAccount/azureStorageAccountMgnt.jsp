@@ -471,7 +471,7 @@ function addNewTable(){
         success : function(status) {
             w2popup.unlock();
             w2popup.close();
-            accountId = rgInfo.accountId;
+            accountId = tableInfo.accountId;
             doSearch();
         }, error : function(request, status, error) {
             w2popup.unlock();
@@ -564,7 +564,7 @@ function setAzureSubscription(){
      w2popup.lock(delete_lock_msg, true);
      var rgInfo = {
              accountId : record.accountId,
-             storageAccountId : record.storageAccountId,
+             storageAccountId : record.storageAccountId
      }
      $.ajax({
          type : "DELETE",
@@ -649,7 +649,7 @@ function setAzureSubscription(){
          success : function(status) {
              w2popup.unlock();
              w2utils.unlock($("#layout_layout_panel_main"));
-             accountId = rgInfo.accountId;
+             accountId = tableInfo.accountId;
              w2ui['azureStorageGrid'].clear();
              w2ui['azure_blobsGrid'].clear();
              w2ui['azure_tablesGrid'].clear();

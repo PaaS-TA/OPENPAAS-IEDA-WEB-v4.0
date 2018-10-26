@@ -55,35 +55,7 @@
 <script type="text/javascript" src="<c:url value='/js/prng4.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rng.js'/>"></script>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<style>
-	.material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;  /* Preferred icon size */
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-    -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: 'liga';
- 	}
-	 @font-face {
-	 font-family: 'Material Icons';
-	 font-style: normal;
-	 font-weight: 400;
-	 src: url(path/to/MaterialIcons-Regular.eot); /* For IE6-8 */
-	 src: local('Material Icons'),
-	     local('MaterialIcons-Regular'),
-	     url(path/to/MaterialIcons-Regular.woff2) format('woff2'),
-	     url(path/to/MaterialIcons-Regular.woff) format('woff'),
-	     url(path/to/MaterialIcons-Regular.ttf) format('truetype');
-</style>
+
 
 <script type="text/javascript">
 (function($) {

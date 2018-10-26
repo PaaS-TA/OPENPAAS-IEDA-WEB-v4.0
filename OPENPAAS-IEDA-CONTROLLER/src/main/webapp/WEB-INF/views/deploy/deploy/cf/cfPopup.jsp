@@ -1611,7 +1611,7 @@ function deletePopup(record){
         w2popup.open({
             width : 700,
             height : 500,
-            title : "<b>CF 삭제</b>",
+            title : "<b>CF-DEPLOYMENT 삭제</b>",
             body  : body,
             buttons : '<button class="btn" style="float: right; padding-right: 15%;" onclick="popupComplete();">닫기</button>',
             showMax : true,

@@ -117,9 +117,16 @@ public class CfDeployAsyncService {
             while ((info = bufferedReader.readLine()) != null){
                 accumulatedBuffer.append(info).append("\n");
                 Thread.sleep(20);
+                
+                if(info.contains("invalid argument") || info.contains("error") || info.contains("fail")){
+                    status = "error";
+                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
+                }
+                
                 if(info.contains("Release")){
                     DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Release Download Check:::"+info));
                 }
+                
                 if(info.contains("Preparing deployment: Preparing deployment")){
                     String taskId = info.split(" ")[1];
                     HttpClient httpClient = DirectorRestHelper.getHttpClient(directorInfo.getDirectorPort());

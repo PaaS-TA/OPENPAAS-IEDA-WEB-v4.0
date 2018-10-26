@@ -99,6 +99,7 @@ public class CfDeployAsyncServiceUnitTest extends BaseDeployControllerUnitTest {
         vo.setCommonOptionTemplate("option.yml");
         vo.setDeployType("cf-deployment");
         vo.setIaasPropertyTemplate("iaas.yml");
+        vo.setReleaseType("cf");
         vo.setIaasType("Openstack");
         vo.setId(1);
         vo.setInputTemplate("input.yml");
@@ -140,6 +141,8 @@ public class CfDeployAsyncServiceUnitTest extends BaseDeployControllerUnitTest {
         vo.setCountryCode("seoul");
         vo.setCreateUserId("admin");
         vo.setDeploymentFile("cf-yml");
+        vo.setCfAdminPassword("admin");
+        vo.setInceptionOsUserName("ubuntu");
         vo.setDeploymentName("cf");
         if(type.equalsIgnoreCase("null")) vo.setDeploymentFile("");
         vo.setDeployStatus("deploy");
