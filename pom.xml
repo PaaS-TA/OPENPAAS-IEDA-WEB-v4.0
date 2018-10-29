@@ -19,10 +19,7 @@
         <module>OPENPAAS-IEDA-CONTROLLER</module>
         <module>OPENPAAS-IEDA-COMMON-SERVICE</module>
         <module>OPENPAAS-IEDA-DEPLOY-SERVICE</module>
-        <module>OPENPAAS-IEDA-AWSMGNT-SERVICE</module>
-        <module>OPENPAAS-IEDA-OPENSTACKMGNT-SERVICE</module>
         <module>OPENPAAS-IEDA-IAASDASHBOARD-SERVICE</module>
-        <module>OPENPAAS-IEDA-AZUREMGNT-SERVICE</module>
         <module>OPENPAAS-IEDA-HBDEPLOY-SERVICE</module>
     </modules>
 
@@ -512,7 +509,7 @@
       <dependency>
         <groupId>com.microsoft.azure</groupId>
         <artifactId>azure-storage</artifactId>
-        <version>4.4.0</version>
+        <version>7.0.0</version>
       </dependency>
     </dependencies>
 

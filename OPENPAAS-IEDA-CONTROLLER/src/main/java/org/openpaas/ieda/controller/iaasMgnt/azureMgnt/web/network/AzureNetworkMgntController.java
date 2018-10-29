@@ -4,9 +4,9 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 
-import org.openpaas.ieda.azureMgnt.web.network.dao.AzureNetworkMgntVO;
-import org.openpaas.ieda.azureMgnt.web.network.dto.AzureNetworkMgntDTO;
-import org.openpaas.ieda.azureMgnt.web.network.service.AzureNetworkMgntService;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.network.dao.AzureNetworkMgntVO;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.network.dto.AzureNetworkMgntDTO;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.network.service.AzureNetworkMgntService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

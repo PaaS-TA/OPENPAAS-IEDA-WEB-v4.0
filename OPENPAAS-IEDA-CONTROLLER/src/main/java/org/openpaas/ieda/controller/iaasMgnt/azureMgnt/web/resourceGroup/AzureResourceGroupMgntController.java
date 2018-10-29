@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.openpaas.ieda.azureMgnt.web.resourceGroup.dao.AzureResourceGroupMgntVO;
-import org.openpaas.ieda.azureMgnt.web.resourceGroup.dto.AzureResourceGroupMgntDTO;
-import org.openpaas.ieda.azureMgnt.web.resourceGroup.service.AzureResourceGroupMgntService;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.resourceGroup.dao.AzureResourceGroupMgntVO;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.resourceGroup.dto.AzureResourceGroupMgntDTO;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.resourceGroup.service.AzureResourceGroupMgntService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

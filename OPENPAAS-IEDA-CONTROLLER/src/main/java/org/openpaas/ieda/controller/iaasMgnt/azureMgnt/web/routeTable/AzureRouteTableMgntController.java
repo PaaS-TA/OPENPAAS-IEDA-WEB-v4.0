@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.openpaas.ieda.azureMgnt.web.routeTable.dao.AzureRouteTableMgntVO;
-import org.openpaas.ieda.azureMgnt.web.routeTable.dto.AzureRouteTableMgntDTO;
-import org.openpaas.ieda.azureMgnt.web.routeTable.service.AzureRouteTableMgntService;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.routeTable.dao.AzureRouteTableMgntVO;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.routeTable.dto.AzureRouteTableMgntDTO;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.routeTable.service.AzureRouteTableMgntService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

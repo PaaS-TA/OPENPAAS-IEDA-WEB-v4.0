@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import org.openpaas.ieda.azureMgnt.web.publicIp.dao.AzurePublicIpMgntVO;
-import org.openpaas.ieda.azureMgnt.web.publicIp.dto.AzurePublicIpMgntDTO;
-import org.openpaas.ieda.azureMgnt.web.publicIp.service.AzurePublicIpMgntService;
 import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.controller.iaasMgnt.azureMgnt.web.storageAccount.AzureStorageAccountMgntController;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.publicIp.dao.AzurePublicIpMgntVO;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.publicIp.dto.AzurePublicIpMgntDTO;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.publicIp.service.AzurePublicIpMgntService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
