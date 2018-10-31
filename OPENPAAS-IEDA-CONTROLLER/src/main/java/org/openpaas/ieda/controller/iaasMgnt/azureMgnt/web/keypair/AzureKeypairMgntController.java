@@ -22,10 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class AzureKeypairMgntController {
-	@Autowired 
-	private AzureKeypairMgntService azureAzureKeypairMgntService;
-	
-	@Autowired
+    @Autowired 
+    private AzureKeypairMgntService azureAzureKeypairMgntService;
+    @Autowired
     private MessageSource message;
     private final static Logger LOG = LoggerFactory.getLogger(AzureKeypairMgntController.class);
     /***************************************************
@@ -71,7 +70,7 @@ public class AzureKeypairMgntController {
             LOG.info("================================================> Azure Keypair 생성");
      }
      try {
-    	 azureAzureKeypairMgntService.createKeypair(dto);
+         azureAzureKeypairMgntService.createKeypair(dto);
     } catch (Exception e) {
         String detailMessage = e.getMessage();
         if(!detailMessage.equals("") && detailMessage != "null"){

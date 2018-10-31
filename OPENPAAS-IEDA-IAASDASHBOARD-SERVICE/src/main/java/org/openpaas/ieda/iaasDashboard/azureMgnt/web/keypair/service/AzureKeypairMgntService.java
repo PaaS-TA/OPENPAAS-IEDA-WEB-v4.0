@@ -1,15 +1,13 @@
 package org.openpaas.ieda.iaasDashboard.azureMgnt.web.keypair.service;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.security.Key;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.common.exception.CommonException;
@@ -54,13 +52,11 @@ public class AzureKeypairMgntService {
         List<AzureKeypairMgntVO> list = new ArrayList<AzureKeypairMgntVO>();
         for (int i=0; i< results.size(); i++){
             String result = results.get(i);
-            if (result.contains(".pem")||result.contains(".pub")){
-                AzureKeypairMgntVO azureVo = new AzureKeypairMgntVO();
-                azureVo.setKeypairName(result);
-                azureVo.setAccountId(accountId);
-                azureVo.setRecid(i);
-                list.add(azureVo);
-            }
+            AzureKeypairMgntVO azureVo = new AzureKeypairMgntVO();
+            azureVo.setKeypairName(result);
+            azureVo.setAccountId(accountId);
+            azureVo.setRecid(i);
+            list.add(azureVo);
         }
         return list;
     }
@@ -72,39 +68,38 @@ public class AzureKeypairMgntService {
      * @return : void
      ***************************************************/
     public void createKeypair(AzureKeypairMgntDTO dto) {
-        String keypairName = dto.getKeypairName();
-        try{
-            try {
-              KeyPairGenerator kepairGen = KeyPairGenerator.getInstance("rsa");
-              kepairGen.initialize(2048);
-         
-              KeyPair keypair = kepairGen.generateKeyPair();
-              
-              Key publicKey = keypair.getPublic();
-              FileOutputStream output = new FileOutputStream(LocalDirectoryConfiguration.getSshDir()+"/"+ keypairName+".pub");
-              output.write(publicKey.getEncoded());
-              output.close();
-              
-              Key privateKey = keypair.getPrivate();
-              FileOutputStream output2 = new FileOutputStream(LocalDirectoryConfiguration.getSshDir()+"/"+ keypairName+".pem");
-              output2.write(privateKey.getEncoded());
-              output2.close();
-                
+        File publicKeyFile = new File(SSH_DIR+"/"+dto.getKeypairName()+".pub");
+        if(publicKeyFile.exists()){
+        	publicKeyFile.delete();
+        }
+        File privateKeyFile = new File(SSH_DIR+"/"+dto.getKeypairName());
+        if(privateKeyFile.exists()){
+        	privateKeyFile.delete();
+        }
+        try {
+            List<String> cmd = new ArrayList<String>();
+            cmd.add("ssh-keygen");
+            cmd.add("-t");
+            cmd.add("rsa");
+            cmd.add("-b");
+            cmd.add("2048");
+            cmd.add("-f");
+            cmd.add(SSH_DIR+"/"+dto.getKeypairName());
+            cmd.add("-q");
+            cmd.add("-P");
+            cmd.add("");
+            ProcessBuilder builder = new ProcessBuilder(cmd);
+            builder.redirectErrorStream(true);
+            Process process = builder.start();
+            InputStream inputStream = process.getInputStream();
+            String info = null;
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
+            while ((info = bufferedReader.readLine()) != null){
+                System.out.println(info);
+            }
             
-             } catch (NoSuchAlgorithmException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }catch (Exception e) {
-            String detailMessage = e.getMessage();
-            if(!detailMessage.equals("") && detailMessage != null){
-                throw new CommonException(
-                  detailMessage, detailMessage, HttpStatus.BAD_REQUEST);
-            }else{
-                e.printStackTrace();
-                throw new CommonException(
-                        message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
-            }
+        } catch (IOException e) {
+            throw new CommonException("Ioexception", "Key Pair 생성 중 에러가 발생했습니다.", HttpStatus.BAD_REQUEST);
         }
     }
     
