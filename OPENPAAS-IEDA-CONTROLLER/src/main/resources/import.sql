@@ -30,7 +30,7 @@ INSERT INTO ieda_common_code VALUES ( '323', 'DEPLOY_STATUS_FAILED', '1205', '�
 INSERT INTO ieda_common_code VALUES ( '324', 'DEPLOY_STATUS_DELETING', '1206', '삭제중' , '배포 삭제중', '6', 1200, null, 1000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '325', 'RELEASE_TYPE', '2000', '릴리즈 유형' , '릴리즈 유형', '0', null, null, null, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '326', 'BOSH', '2001', 'bosh 릴리즈' , 'bosh 릴리즈', '0', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
-INSERT INTO ieda_common_code VALUES ( '327', 'BOSH_CPI', '2002', 'bosh-cpi 릴리즈' , 'bosh-cpi 릴리즈', '1', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );s
+INSERT INTO ieda_common_code VALUES ( '327', 'BOSH_CPI', '2002', 'bosh-cpi 릴리즈' , 'bosh-cpi 릴리즈', '1', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '335', 'OS-CONF', '2010', 'of-config 릴리즈' , 'of-config 릴리즈', '10', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '337', 'BPM', '2012', 'bpm 릴리즈' , 'bpm 릴리즈', '12', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '338', 'ETC', '2013', '기타 릴리즈' , '기타 릴리즈', '13', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
