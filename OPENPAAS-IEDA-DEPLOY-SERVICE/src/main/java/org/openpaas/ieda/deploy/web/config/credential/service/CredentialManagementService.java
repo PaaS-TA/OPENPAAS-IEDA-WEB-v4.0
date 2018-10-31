@@ -77,7 +77,7 @@ public class CredentialManagementService {
      * @return : void
     ***************************************************/
     public void makeCredentialFile(CredentialManagementDTO dto, String credentialKeyName) {
-        String commonCredentialManifestPath = MANIFEST_TEMPLATE_DIR + "/bootstrap/266.2/common/directorcredential.yml";
+        String commonCredentialManifestPath = MANIFEST_TEMPLATE_DIR + "/bootstrap/common/directorcredential.yml";
         try {
             List<String> cmd = new ArrayList<String>(); //bosh 명령어 실행 줄
             cmd.add("bosh");
