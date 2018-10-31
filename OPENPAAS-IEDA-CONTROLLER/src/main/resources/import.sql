@@ -30,16 +30,8 @@ INSERT INTO ieda_common_code VALUES ( '323', 'DEPLOY_STATUS_FAILED', '1205', '�
 INSERT INTO ieda_common_code VALUES ( '324', 'DEPLOY_STATUS_DELETING', '1206', '삭제중' , '배포 삭제중', '6', 1200, null, 1000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '325', 'RELEASE_TYPE', '2000', '릴리즈 유형' , '릴리즈 유형', '0', null, null, null, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '326', 'BOSH', '2001', 'bosh 릴리즈' , 'bosh 릴리즈', '0', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
-INSERT INTO ieda_common_code VALUES ( '327', 'BOSH_CPI', '2002', 'bosh-cpi 릴리즈' , 'bosh-cpi 릴리즈', '1', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
-INSERT INTO ieda_common_code VALUES ( '328', 'CF', '2003', 'cf 릴리즈' , 'cf 릴리즈', '2', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
-INSERT INTO ieda_common_code VALUES ( '329', 'DIEGO', '2004', 'diego 릴리즈' , 'diego 릴리즈', '3', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
-INSERT INTO ieda_common_code VALUES ( '330', 'CFLINUXFS2-ROOT', '2005', 'cflinuxfs2-root 릴리즈' , 'cflinuxfs2-root 릴리즈', '4', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
-INSERT INTO ieda_common_code VALUES ( '331', 'GARDEN_LINUX', '2006', 'garden-linux 릴리즈' , 'garden-linux 릴리즈', '5', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
-INSERT INTO ieda_common_code VALUES ( '332', 'GARDEN-RUNC', '2007', 'garden-runc 릴리즈' , 'garden-runc 릴리즈', '6', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
-INSERT INTO ieda_common_code VALUES ( '333', 'ETCD', '2008', 'etcd-release 릴리즈' , 'etcd-release 릴리즈', '7', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
-INSERT INTO ieda_common_code VALUES ( '334', 'CFLINUXFS2', '2009', 'cf-linuxfs2 릴리즈' , 'cf-linuxfs2 릴리즈', '9', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
+INSERT INTO ieda_common_code VALUES ( '327', 'BOSH_CPI', '2002', 'bosh-cpi 릴리즈' , 'bosh-cpi 릴리즈', '1', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );s
 INSERT INTO ieda_common_code VALUES ( '335', 'OS-CONF', '2010', 'of-config 릴리즈' , 'of-config 릴리즈', '10', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
-INSERT INTO ieda_common_code VALUES ( '336', 'BOSH_MONITORING_AGENT', '2011', 'agent 릴리즈' , 'agent 릴리즈', '11', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '337', 'BPM', '2012', 'bpm 릴리즈' , 'bpm 릴리즈', '12', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '338', 'ETC', '2013', '기타 릴리즈' , '기타 릴리즈', '13', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '339', 'ROLE', '100000', '메뉴 별 권한' , '메뉴 별 권한', '0', null, null, null, 'SYSTEM', now(), 'SYSTEM', now() );
