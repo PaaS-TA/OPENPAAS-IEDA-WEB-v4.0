@@ -1921,7 +1921,7 @@ function popupClose() {
                  <div  class="panel-heading" style="padding:5px 5% 10px 5%;"><b>External 네트워크 정보</b></div>
                  <div class="panel-body">
                      <div class="w2ui-field">
-                         <label style="text-align: left;width:36%;font-size:11px;">설치관리자 IPs</label> 
+                         <label style="text-align: left;width:36%;font-size:11px;">디렉터 공인 IP</label> 
                          <div style="width: 60%">
                              <input name="publicStaticIp" type="text" style="display:inline-block;width:70%;" placeholder="예) 10.0.0.20"/>
                          </div>
@@ -1932,7 +1932,7 @@ function popupClose() {
                  <div  class="panel-heading" style="padding:5px 5% 10px 5%;"><b>Internal 네트워크 정보</b></div>
                  <div class="panel-body">
                      <div class="w2ui-field" >
-                         <label style="text-align: left;width:36%;font-size:11px;">설치관리자 내부망 IPs</label> 
+                         <label style="text-align: left;width:36%;font-size:11px;">디렉터 내부 IP</label> 
                          <div style="width: 60%">
                              <input name="privateStaticIp" type="text"  style="display:inline-block;width:70%;" placeholder="예) 10.0.0.20"/>
                          </div>
@@ -1989,7 +1989,7 @@ function popupClose() {
                  <div  class="panel-heading" style="padding:5px 5% 10px 5%;"><b>네트워크 External</b></div>
                  <div class="panel-body">
                      <div class="w2ui-field">
-                         <label style="text-align: left;width:36%;font-size:11px;">설치관리자 IPs</label> 
+                         <label style="text-align: left;width:36%;font-size:11px;">디렉터 공인 IP</label> 
                          <div style="width: 60%">
                              <input name="publicStaticIp" type="text"  style="display:inline-block;width:70%;" placeholder="예) 10.0.0.20"/>
                          </div>
@@ -2000,7 +2000,7 @@ function popupClose() {
                  <div  class="panel-heading" style="padding:5px 5% 10px 5%;"><b>네트워크 Internal</b></div>
                  <div class="panel-body">
                      <div class="w2ui-field" >
-                         <label style="text-align: left;width:36%;font-size:11px;">설치관리자 내부망 IPs</label> 
+                         <label style="text-align: left;width:36%;font-size:11px;">디렉터 내부 IP</label> 
                          <div style="width: 60%">
                              <input name="privateStaticIp" type="text"  style="display:inline-block;width:70%;" placeholder="예) 10.0.0.20"/>
                          </div>
@@ -2063,7 +2063,7 @@ function popupClose() {
                  <div  class="panel-heading" style="padding:5px 5% 10px 5%;"><b>네트워크 External</b></div>
                  <div class="panel-body">
                      <div class="w2ui-field">
-                         <label style="text-align: left;width:36%;font-size:11px;">설치관리자 IPs</label> 
+                         <label style="text-align: left;width:36%;font-size:11px;">디렉터 공인 IP</label> 
                          <div style="width: 60%">
                              <input name="publicStaticIp" type="text"  style="display:inline-block;width:70%;" placeholder="예) 10.0.0.20"/>
                          </div>
@@ -2074,7 +2074,7 @@ function popupClose() {
                  <div  class="panel-heading" style="padding:5px 5% 10px 5%;"><b>네트워크 Internal</b></div>
                  <div class="panel-body">
                      <div class="w2ui-field" >
-                         <label style="text-align: left;width:36%;font-size:11px;">설치관리자 내부망 IPs</label> 
+                         <label style="text-align: left;width:36%;font-size:11px;">디렉터 내부 IP</label> 
                          <div style="width: 60%">
                              <input name="privateStaticIp" type="text"  style="display:inline-block;width:70%;" placeholder="예) 10.0.0.20"/>
                          </div>
@@ -2138,7 +2138,7 @@ function popupClose() {
                  <div  class="panel-heading" style="padding:5px 5% 10px 5%;"><b>네트워크 External</b></div>
                  <div class="panel-body">
                      <div class="w2ui-field">
-                         <label style="text-align: left;width:36%;font-size:11px;">설치관리 IPs</label> 
+                         <label style="text-align: left;width:36%;font-size:11px;">디렉터 공인 IP</label> 
                          <div style="width: 60%">
                              <input name="publicStaticIp" type="text"  style="display:inline-block;width:70%;" placeholder="예) 10.0.0.20"/>
                          </div>

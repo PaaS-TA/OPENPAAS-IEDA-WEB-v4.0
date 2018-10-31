@@ -175,12 +175,12 @@ public class CfDeployAsyncService {
             cmd.add("inception_os_user_name="+vo.getInceptionOsUserName()+"");
             cmd.add("-o");
             cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getInputTemplate());
+        } else {
+            cmd.add("-o");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getMetaTemplate());
         }
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonJobTemplate());
-        cmd.add("-o");
-        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getMetaTemplate());
-
     }
 
     /****************************************************************
