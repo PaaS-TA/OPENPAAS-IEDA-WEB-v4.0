@@ -134,6 +134,12 @@ public class HbCfDeploymentDeployAsyncService {
             while ((info = bufferedReader.readLine()) != null){
                 accumulatedBuffer.append(info).append("\n");
                 Thread.sleep(20);
+                
+                if(info.contains("invalid argument") || info.contains("error") || info.contains("fail")){
+                    status = "error";
+                    HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(info));
+                }
+                
                 if(info.contains("Release")){
                     HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Release Download Check:::"+info));
                 }

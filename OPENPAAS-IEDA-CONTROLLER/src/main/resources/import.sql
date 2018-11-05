@@ -1,9 +1,6 @@
 insert into ieda_user ( user_id, user_password, user_name, email, role_id, init_pass_yn, create_user_id, create_date, update_user_id, update_date ) 
 values ( 'admin', HEX(AES_ENCRYPT('admin', 'raison')), '관리자', 'admin@example.com', 1000, 'N', 'system', now(), 'system', now());
 
-insert into ieda_user ( user_id, user_password, user_name, email, role_id, init_pass_yn, create_user_id, create_date, update_user_id, update_date ) 
-values ( 'deployer', HEX(AES_ENCRYPT('deployer', 'raison')), '배포', 'deployer@example.com', 1001, 'N', 'system', now(), 'system', now());
-
 INSERT INTO ieda_common_code VALUES ( '100', 'IAAS TYPE', '100', 'IaaS 유형' , 'IaaS Type', '0', null, null, null, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '101', 'OPENSTACK', '101', 'OpenStack' , 'Open Source', '0', null, null, 100, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '102', 'VSPHERE', '102', 'vSphere' , 'VMWare vSphere', '1', null, null, 100, 'SYSTEM', now(), 'SYSTEM', now() );

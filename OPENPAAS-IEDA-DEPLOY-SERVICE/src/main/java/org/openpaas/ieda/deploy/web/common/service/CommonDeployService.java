@@ -397,10 +397,14 @@ public class CommonDeployService{
         }
         try {
             InputStream inputs =  this.getClass().getClassLoader().getResourceAsStream("static/deploy_template/"+deployType+"/" + templateVersion + "/"+ iaasType.toLowerCase() + "/" +inputTemplate);
+            if(inputs == null){
+                throw new CommonException(getMessageValue("common.internalServerError.exception.code"),
+                        "Template 파일이 존재하지 않습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
             content = IOUtils.toString(inputs, "UTF-8");
         } catch (IOException e) {
             throw new CommonException(getMessageValue("common.internalServerError.exception.code"),
-                    getMessageValue("common.internalServerError.message"), HttpStatus.INTERNAL_SERVER_ERROR);
+                    "Template 파일이 존재하지 않습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return content;
     }

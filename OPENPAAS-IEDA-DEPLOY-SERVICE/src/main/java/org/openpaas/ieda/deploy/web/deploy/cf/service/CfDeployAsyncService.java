@@ -120,7 +120,7 @@ public class CfDeployAsyncService {
                 
                 if(info.contains("invalid argument") || info.contains("error") || info.contains("fail")){
                     status = "error";
-                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
+                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(info));
                 }
                 
                 if(info.contains("Release")){
