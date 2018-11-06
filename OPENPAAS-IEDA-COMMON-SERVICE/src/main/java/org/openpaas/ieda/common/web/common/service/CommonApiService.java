@@ -54,6 +54,7 @@ public class CommonApiService {
     public AWSStaticCredentialsProvider getAwsStaticCredentialsProvider(String accessKey, String secret){
         BasicAWSCredentials credential = new BasicAWSCredentials(accessKey, secret);
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(credential);
+        
         return provider;
     }
     

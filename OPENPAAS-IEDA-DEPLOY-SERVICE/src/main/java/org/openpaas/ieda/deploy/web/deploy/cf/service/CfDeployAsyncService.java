@@ -118,13 +118,17 @@ public class CfDeployAsyncService {
                 accumulatedBuffer.append(info).append("\n");
                 Thread.sleep(20);
                 
-                if(info.contains("invalid argument") || info.contains("error") || info.contains("fail")){
+                if(info.contains("invalid argument") || info.contains("error") || info.contains("fail") || info.contains("Error") || info.contains("Expected")){
                     status = "error";
                     DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(info));
                 }
                 
                 if(info.contains("Release")){
                     DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Release Download Check:::"+info));
+                }
+                
+                if(info.contains("cancelled")){
+                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "cancelled", Arrays.asList("Cancel Task:::"+info));
                 }
                 
                 if(info.contains("Preparing deployment: Preparing deployment")){
@@ -170,6 +174,8 @@ public class CfDeployAsyncService {
         cmd.add("stemcell_version="+vo.getResource().getStemcellVersion()+"");
         cmd.add("-v");
         cmd.add("cf_admin_password="+vo.getCfAdminPassword()+"");
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonJobTemplate());
         if(result.getReleaseType().equals("paasta")){
             cmd.add("-v");
             cmd.add("inception_os_user_name="+vo.getInceptionOsUserName()+"");
@@ -179,8 +185,6 @@ public class CfDeployAsyncService {
             cmd.add("-o");
             cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getMetaTemplate());
         }
-        cmd.add("-o");
-        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonJobTemplate());
     }
 
     /****************************************************************
@@ -231,7 +235,7 @@ public class CfDeployAsyncService {
     *****************************************************************/
     public void setWindowsCellUse(List<String> cmd, CfVO vo, ManifestTemplateVO result) {
         cmd.add("-v");
-        cmd.add("windows_stemcell_version="+vo.getResource().getWindowsStemcellVersion()+"");
+        cmd.add("windows_stemcell_version="+"\""+vo.getResource().getWindowsStemcellVersion()+"\""+"");
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getInputTemplateSecond());
     }

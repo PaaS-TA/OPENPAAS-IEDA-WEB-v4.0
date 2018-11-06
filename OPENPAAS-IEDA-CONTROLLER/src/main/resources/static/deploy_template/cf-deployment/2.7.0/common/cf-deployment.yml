@@ -447,7 +447,7 @@ instance_groups:
             authorities: uaa.resource
             authorized-grant-types: authorization_code,client_credentials,refresh_token
             scope: cloud_controller_service_permissions.read,openid,cloud_controller.read,cloud_controller.write,cloud_controller.admin
-            redirect-uri: "http://portal-web-user.((portal_domain)),http://portal-web-user.((portal_domain))/callback"
+            redirect-uri: "http://portal-web-user.52.231.166.115.xip.io,http://portal-web-user.52.231.166.115.xip.io/callback"
             secret: "portalclient"
             autoapprove: openid,cloud_controller_service_permissions.read
       uaadb:

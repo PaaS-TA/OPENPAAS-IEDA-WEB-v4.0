@@ -1,13 +1,3 @@
-azs:
-- name: z1
-  cloud_properties:
-    datacenters:
-    - clusters: [z1: {}]
-- name: z2
-  cloud_properties:
-    datacenters:
-    - clusters: [z2: {}]
-
 compilation:
   network: default
   reuse_compilation_vms: true

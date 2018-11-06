@@ -135,7 +135,7 @@ public class HbCfDeploymentDeployAsyncService {
                 accumulatedBuffer.append(info).append("\n");
                 Thread.sleep(20);
                 
-                if(info.contains("invalid argument") || info.contains("error") || info.contains("fail")){
+                if(info.contains("invalid argument") || info.contains("error") || info.contains("fail") || info.contains("Error") || info.contains("Expected")){
                     status = "error";
                     HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(info));
                 }
@@ -143,11 +143,17 @@ public class HbCfDeploymentDeployAsyncService {
                 if(info.contains("Release")){
                     HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Release Download Check:::"+info));
                 }
+                
+                if(info.contains("cancelled")){
+                	HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "cancelled", Arrays.asList("Cancel Task:::"+info));
+                }
+                
                 if(info.contains("Preparing deployment: Preparing deployment")){
                     String taskId = info.split(" ")[1];
                     HttpClient httpClient = HbDirectorRestHelper.getHttpClient(directorInfo.getDirectorPort());
                     status = HbDirectorRestHelper.trackToTask(directorInfo, messagingTemplate, messageEndpoint, httpClient, taskId, "event", principal.getName());
                 }
+
             }
             if( accumulatedBuffer != null ) {
                 accumulatedLog = accumulatedBuffer.toString();
@@ -195,16 +201,18 @@ public class HbCfDeploymentDeployAsyncService {
         cmd.add("stemcell_version="+vo.getHbCfDeploymentResourceConfigVO().getStemcellVersion()+"");
         cmd.add("-v");
         cmd.add("cf_admin_password="+vo.getHbCfDeploymentDefaultConfigVO().getCfAdminPassword()+"");
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonJobTemplate());
         if(result.getReleaseType().equals("paasta")){
             cmd.add("-v");
             cmd.add("inception_os_user_name="+vo.getHbCfDeploymentDefaultConfigVO().getInceptionOsUserName()+"");
             cmd.add("-o");
             cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getInputTemplate());
+        } else {
+            cmd.add("-o");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getMetaTemplate());
+        
         }
-        cmd.add("-o");
-        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonJobTemplate());
-        cmd.add("-o");
-        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getMetaTemplate());
     }
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
