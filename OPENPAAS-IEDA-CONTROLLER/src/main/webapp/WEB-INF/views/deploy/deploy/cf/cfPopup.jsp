@@ -1870,12 +1870,21 @@ function gridReload() {
                         </div>
                     </div>
                     <div class="w2ui-field">
-                        <label style="text-align: left; width: 36%; font-size: 11px;">도메인</label>
+                        <label style="text-align: left; width: 36%; font-size: 11px;">CF 도메인</label>
                         <div style=" width: 60%;">
-                            <input name="domain" type="text" style="isplay:inline-blcok; width: 80%;" required placeholder="도메인을 입력하세요. 예)cfdoamin.com" />
+                            <input name="domain" type="text" style="isplay:inline-blcok; width: 80%;" required placeholder="CF 설치 도메인을 입력하세요. 예)cfdoamin.com" />
                             <div class="isMessage"></div>
                         </div>
                     </div>
+                    
+<!--                     <div class="w2ui-field">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">PaaS-TA Portal 도메인</label>
+                        <div style=" width: 60%;">
+                            <input name="paastaPortalDomain" type="text" style="isplay:inline-blcok; width: 80%;" required placeholder="PaaS-TA Portal 도메인을 입력하세요. 예)cfdoamin.com" />
+                            <div class="isMessage"></div>
+                        </div>
+                    </div> -->
+                    
                     
 <!--                     <div class="w2ui-field">
                         <label style="text-align:left; width:36%; font-size:11px;">PaaS-TA 모니터링

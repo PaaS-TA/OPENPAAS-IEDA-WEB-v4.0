@@ -16,7 +16,6 @@ import org.openpaas.ieda.iaasDashboard.azureMgnt.web.keypair.dto.AzureKeypairMgn
 import org.openpaas.ieda.iaasDashboard.web.account.dao.IaasAccountMgntVO;
 import org.openpaas.ieda.iaasDashboard.web.common.service.CommonIaasService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +24,6 @@ public class AzureKeypairMgntService {
     
     @Autowired
     private CommonIaasService commonIaasService;
-    @Autowired
-    private MessageSource message;
     
     final private static String SSH_DIR = LocalDirectoryConfiguration.getSshDir();
     /***************************************************
@@ -88,6 +85,10 @@ public class AzureKeypairMgntService {
             cmd.add("-q");
             cmd.add("-P");
             cmd.add("");
+            
+            cmd.add("-C");
+            cmd.add("");
+            
             ProcessBuilder builder = new ProcessBuilder(cmd);
             builder.redirectErrorStream(true);
             Process process = builder.start();

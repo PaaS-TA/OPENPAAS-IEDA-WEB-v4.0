@@ -198,6 +198,9 @@ function saveAwsSecurityGroupInfo(){
               if( ($(this).attr("name")).indexOf("Udp") > -1 ){
                   protocol = "udp";
               }
+              if( ($(this).attr("name")).indexOf("Icmp") > -1 ){
+                  protocol = "icmp";
+              }
               var ingressRule = {
                      protocol: protocol
                     ,portRange : $(this).val()
@@ -210,6 +213,9 @@ function saveAwsSecurityGroupInfo(){
               var protocol = "tcp";
               if( ($(this).attr("name")).indexOf("Udp") > -1 ){
                   protocol = "udp";
+              }
+              if( ($(this).attr("name")).indexOf("Icmp") > -1 ){
+                  protocol = "icmp";
               }
               var ingressRule = {
                      protocol: protocol
@@ -594,11 +600,15 @@ $( window ).resize(function() {
                         <input type="text" name="boshDirector" value="25555" class="bosh_security_rules">
                         <input type="text" name="allTcp" value="0-65535" class="bosh_security_rules">
                         <input type="text" name="allUdp" value="0-65535" class="bosh_security_rules">
+                        <input type="text" name="allIcmp" value="0-65535" class="bosh_security_rules">
                     </div>
                     <div  style="display:none">
                         <input type="text" name="http" value="80" class="cf_security_rules">
                         <input type="text" name="https" value="443" class="cf_security_rules">
                         <input type="text" name="cfLogs" value="4443" class="cf_security_rules">
+                        <input type="text" name="allTcp" value="0-65535" class="cf_security_rules">
+                        <input type="text" name="allUdp" value="0-65535" class="cf_security_rules">
+                        <input type="text" name="allIcmp" value="0-65535" class="cf_security_rules">
                     </div>
                 </div>
             </div>

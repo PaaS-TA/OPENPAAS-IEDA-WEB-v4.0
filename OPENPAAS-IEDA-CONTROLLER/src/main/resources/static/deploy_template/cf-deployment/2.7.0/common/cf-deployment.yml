@@ -345,6 +345,11 @@ instance_groups:
               key: "((uaa_login_saml.private_key))"
               certificate: "((uaa_login_saml.certificate))"
               passphrase: ""
+        logout:
+          redirect:
+            parameter:
+              disable: "false"
+              whitelist: ["http://portal-web-user.((portal_domain))","http://portal-web-user.((portal_domain))/callback","http://portal-web-user.((portal_domain))/login"]
       uaa:
         sslCertificate: "((uaa_ssl.certificate))"
         sslPrivateKey: "((uaa_ssl.private_key))"
@@ -447,7 +452,7 @@ instance_groups:
             authorities: uaa.resource
             authorized-grant-types: authorization_code,client_credentials,refresh_token
             scope: cloud_controller_service_permissions.read,openid,cloud_controller.read,cloud_controller.write,cloud_controller.admin
-            redirect-uri: "http://portal-web-user.52.231.166.115.xip.io,http://portal-web-user.52.231.166.115.xip.io/callback"
+            redirect-uri: "http://portal-web-user.((portal_domain)),http://portal-web-user.((portal_domain))/callback"
             secret: "portalclient"
             autoapprove: openid,cloud_controller_service_permissions.read
       uaadb:

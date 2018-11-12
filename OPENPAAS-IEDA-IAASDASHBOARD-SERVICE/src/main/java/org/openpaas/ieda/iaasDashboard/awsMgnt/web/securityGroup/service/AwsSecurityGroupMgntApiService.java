@@ -116,7 +116,7 @@ public class AwsSecurityGroupMgntApiService {
     /***************************************************
      * @project : AWS 인프라 관리 대시보드
      * @description : AWS Security Group Ingress Rule 생성 실제 API 호출
-     * @title : saveSecurityGroupIngressRuleFromAws
+     * @title : saveSecurityGroupIngressRuleFromAwsf
      * @return : void
      ***************************************************/
     public Boolean saveSecurityGroupIngressRuleFromAws(IaasAccountMgntVO vo, AwsSecurityGroupMgntDTO dto, Region region ){
@@ -138,10 +138,18 @@ public class AwsSecurityGroupMgntApiService {
             userIdGroupPairs.withGroupId(dto.getGroupId()).withVpcId(dto.getVpcId());
             IpRange ipRange = new IpRange();
             ipRange.setCidrIp("0.0.0.0/0");
-            ipPermission.withIpv4Ranges(ipRange)
-                        .withIpProtocol(dto.getIngressRules().get(i).get("protocol"))
-                        .withFromPort(fromPort)
-                        .withToPort(toPort);
+            if(!"icmp".equals(dto.getIngressRules().get(i).get("protocol"))){
+                ipPermission.withIpv4Ranges(ipRange)
+                .withIpProtocol(dto.getIngressRules().get(i).get("protocol"))
+                .withFromPort(fromPort)
+                .withToPort(toPort);
+            } else {
+                ipPermission.withIpv4Ranges(ipRange)
+                .withIpProtocol(dto.getIngressRules().get(i).get("protocol"))
+                .withFromPort(-1)
+                .withToPort(-1);
+            }
+
             ingressRequest.withGroupId(dto.getGroupId()).withIpPermissions(ipPermission);
             AuthorizeSecurityGroupIngressResult ingressResult = ec2.authorizeSecurityGroupIngress(ingressRequest);
             if( ingressResult.getSdkHttpMetadata().getHttpStatusCode() == 200 ){
