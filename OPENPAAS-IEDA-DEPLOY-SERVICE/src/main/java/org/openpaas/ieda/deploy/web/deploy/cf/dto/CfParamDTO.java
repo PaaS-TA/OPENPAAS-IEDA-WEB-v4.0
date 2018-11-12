@@ -37,6 +37,7 @@ public class CfParamDTO {
         private String osConfReleaseVersion;//os-conf Release Version
         private String inceptionOsUserName; // Inception User Name
         private String cfAdminPassword; // cf admin password
+        private String portalDomain; // paasta portal url
         
         public String getId() {
             return id;
@@ -146,6 +147,13 @@ public class CfParamDTO {
         public void setCfAdminPassword(String cfAdminPassword) {
             this.cfAdminPassword = cfAdminPassword;
         }
+        public String getPortalDomain() {
+            return portalDomain;
+        }
+        public void setPortalDomain(String portalDomain) {
+            this.portalDomain = portalDomain;
+        }
+
     }
     
     public static class Delete{

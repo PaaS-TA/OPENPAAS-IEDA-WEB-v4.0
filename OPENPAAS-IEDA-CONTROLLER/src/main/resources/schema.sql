@@ -370,6 +370,7 @@ CREATE TABLE ieda_cf
   osconf_release_version            VARCHAR(255) NULL,
   inception_os_user_name            VARCHAR(255) NULL,
   cf_admin_password                 VARCHAR(255) NULL,
+  portal_domain                     VARCHAR(255) NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 

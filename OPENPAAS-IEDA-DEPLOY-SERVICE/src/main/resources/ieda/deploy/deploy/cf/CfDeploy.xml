@@ -32,6 +32,7 @@
         <result property="osConfReleaseVersion" column="OSCONF_RELEASE_VERSION"/>
         <result property="inceptionOsUserName" column="INCEPTION_OS_USER_NAME"/>
         <result property="cfAdminPassword" column="CF_ADMIN_PASSWORD"/>
+        <result property="portalDomain" column="PORTAL_DOMAIN"/>
         <collection property="resource" ofType="org.openpaas.ieda.deploy.web.deploy.common.dao.resource.ResourceVO"  javaType="org.openpaas.ieda.deploy.web.deploy.common.dao.resource.ResourceVO">
             <result property="id" column="RESOURCE_ID" />
             <result property="deployType" column="RESOURCE_DEPLOY_TYPE"/>
@@ -87,6 +88,7 @@
             ,c.osconf_release_version
             ,c.inception_os_user_name
             ,c.cf_admin_password
+            ,c.portal_domain
         From ieda_cf c 
          Where LOWER(c.iaas_type) = #{iaas}
     </select>
@@ -120,6 +122,7 @@
             ,osconf_release_version
             ,inception_os_user_name
             ,cf_admin_password
+            ,portal_domain
         From ieda_cf
         where id = #{id}
     </select>
@@ -226,6 +229,7 @@
             ,osconf_release_version
             ,inception_os_user_name
             ,cf_admin_password
+            ,portal_domain
         ) 
         Values(
              #{cf.id}
@@ -256,6 +260,7 @@
             ,#{cf.osConfReleaseVersion}
             ,#{cf.inceptionOsUserName}
             ,#{cf.cfAdminPassword}
+            ,#{cf.portalDomain}
         )
         <selectKey keyProperty="cf.id" resultType="int" order="AFTER">
             <if test="cf.id != 1"> SELECT LAST_INSERT_ID(); </if>
@@ -292,6 +297,7 @@
             ,osconf_release_version = #{cf.osConfReleaseVersion}
             ,inception_os_user_name = #{cf.inceptionOsUserName}
             ,cf_admin_password = #{cf.cfAdminPassword}
+            ,portal_domain = #{cf.portalDomain}
         Where id=#{cf.id}
     </update>
     
@@ -424,6 +430,7 @@
             ,osconf_release_version
             ,inception_os_user_name
             ,cf_admin_password
+            ,portal_domain
         From ieda_cf
        Where iaas_type = #{iaasType}
          And deployment_file = #{deploymentFile}

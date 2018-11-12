@@ -37,6 +37,7 @@ public class CfVO {
     private String osConfReleaseVersion;//os-conf Release Version
     private String inceptionOsUserName; //inception user name
     private String cfAdminPassword; // cf 관리자 비밀번호
+    private String portalDomain; // paasta portal url
     
     //1.3 PaaS-TA 모니터링
     private String paastaMonitoringUse;//PaaS-TA 모니터링 사용 유무
@@ -300,21 +301,29 @@ public class CfVO {
         this.osConfReleaseVersion = osConfReleaseVersion;
     }
 
-	public String getInceptionOsUserName() {
-		return inceptionOsUserName;
-	}
+    public String getInceptionOsUserName() {
+        return inceptionOsUserName;
+    }
 
-	public void setInceptionOsUserName(String inceptionOsUserName) {
-		this.inceptionOsUserName = inceptionOsUserName;
-	}
+    public void setInceptionOsUserName(String inceptionOsUserName) {
+        this.inceptionOsUserName = inceptionOsUserName;
+    }
 
-	public String getCfAdminPassword() {
-		return cfAdminPassword;
-	}
+    public String getCfAdminPassword() {
+        return cfAdminPassword;
+    }
 
-	public void setCfAdminPassword(String cfAdminPassword) {
-		this.cfAdminPassword = cfAdminPassword;
-	}
+    public void setCfAdminPassword(String cfAdminPassword) {
+        this.cfAdminPassword = cfAdminPassword;
+    }
+
+    public String getPortalDomain() {
+        return portalDomain;
+    }
+
+    public void setPortalDomain(String portalDomain) {
+        this.portalDomain = portalDomain;
+    }
 
     
 }

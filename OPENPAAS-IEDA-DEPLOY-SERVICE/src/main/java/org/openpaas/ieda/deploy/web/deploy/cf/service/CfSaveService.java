@@ -64,6 +64,8 @@ public class CfSaveService {
         vo.setCfDbtype(dto.getCfDbType());
         vo.setInceptionOsUserName(dto.getInceptionOsUserName());
         vo.setCfAdminPassword(dto.getCfAdminPassword());
+        vo.setPortalDomain(dto.getPortalDomain());
+        
         // 1.2 기본정보
         vo.setDomain(dto.getDomain());
         vo.setDomainOrganization(dto.getDomainOrganization());

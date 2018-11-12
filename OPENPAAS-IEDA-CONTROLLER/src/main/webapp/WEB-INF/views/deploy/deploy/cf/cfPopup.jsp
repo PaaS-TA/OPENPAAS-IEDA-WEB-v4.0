@@ -145,7 +145,8 @@ function setCfData(contents) {
         ingestorIp             : contents.ingestorIp,
         userAddSsh             : contents.userAddSsh,
         inceptionOsUserName    : contents.inceptionOsUserName,
-        cfAdminPassword        : contents.cfAdminPassword
+        cfAdminPassword        : contents.cfAdminPassword,
+        portalDomain           : contents.portalDomain
     }
     //네트워크 정보 
     for(var i=0; i<contents.networks.length; i++){
@@ -251,6 +252,7 @@ function defaultInfoPopup() {
                     $(".w2ui-msg-body select[name='osConfReleases']").val(defaultInfo.osConfRelease);
                     $(".w2ui-msg-body select[name='cfDbType']").val(defaultInfo.cfDbType);
                     $(".w2ui-msg-body input[name='cfAdminPassword']").val(defaultInfo.cfAdminPassword);
+                    $(".w2ui-msg-body input[name='portalDomain']").val(defaultInfo.portalDomain);
                     if( defaultInfo.releaseName == 'paasta'){
                         $(".w2ui-msg-body #inceptionOsUserNameConfDiv").show();
                         $(".w2ui-msg-body input[name='inceptionOsUserName']").val(defaultInfo.inceptionOsUserName);
@@ -471,7 +473,8 @@ function saveDefaultInfo() {
                 ingestorIp           : $(".w2ui-msg-body input[name='ingestorIp']").val(),
                 userAddSsh           : $(".w2ui-msg-body textarea[name='userAddSsh']").val(),
                 inceptionOsUserName  : $(".w2ui-msg-body input[name='inceptionOsUserName']").val(),
-                cfAdminPassword      : $(".w2ui-msg-body input[name='cfAdminPassword']").val()
+                cfAdminPassword      : $(".w2ui-msg-body input[name='cfAdminPassword']").val(),
+                portalDomain         : $(".w2ui-msg-body input[name='portalDomain']").val()
     }
     $.ajax({
         type : "PUT",
@@ -1872,11 +1875,17 @@ function gridReload() {
                     <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">CF 도메인</label>
                         <div style=" width: 60%;">
-                            <input name="domain" type="text" style="isplay:inline-blcok; width: 80%;" required placeholder="CF 설치 도메인을 입력하세요. 예)cfdoamin.com" />
+                            <input name="domain" type="text" style="isplay:inline-block; width: 80%;" required placeholder="CF 설치 도메인을 입력하세요. 예)cfdoamin.com" />
                             <div class="isMessage"></div>
                         </div>
                     </div>
-                    
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">Portal 도메인</label>
+                        <div style=" width: 60%;">
+                            <input name="portalDomain" type="text" style="isplay:inline-block; width: 80%;" placeholder="Portal 도메인 주소를 입력하세요 예)13.25.210.15.xip.io" />
+                            <div class="isMessage"></div>
+                        </div>
+                    </div>
 <!--                     <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">PaaS-TA Portal 도메인</label>
                         <div style=" width: 60%;">
