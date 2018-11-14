@@ -54,7 +54,8 @@ var resourceLayout = {
                    { field: 'domainOrganization', caption: '기본 조직명', size:'20%', style:'text-align:center;'},
                    { field: 'cfDbType', caption: 'CF Database 유형', size:'20%', style:'text-align:center;'},
                    { field: 'inceptionOsUserName', hidden: true},
-                   { field: 'cfAdminPassword', hidden: true}
+                   { field: 'cfAdminPassword', hidden: true},
+                   { field: 'portalDomain', hidden: true}
                   ],
             onSelect : function(event) {
                 event.onComplete = function() {
@@ -161,7 +162,7 @@ function settingDefaultInfo(){
     $("input[name=domainOrganization]").val(record.domainOrganization);
     $("input[name=inceptionOsUserName]").val(record.inceptionOsUserName);
     $("input[name=cfAdminPassword]").val(record.cfAdminPassword);
-    
+    $("input[name=portalDomain]").val(record.portalDomain);
     var cfDeployment = record.cfDeploymentVersion;
     
     defaultConfigInfo = {
@@ -218,7 +219,8 @@ function registHbCfDeploymentDefaultConfigInfo(){
             domainOrganization     : $("input[name='domainOrganization']").val(),
             cfDbType               : $("select[name='cfDbType'] :selected").val(),
             inceptionOsUserName    : $("input[name='inceptionOsUserName']").val(),
-            cfAdminPassword        : $("input[name='cfAdminPassword']").val()
+            cfAdminPassword        : $("input[name='cfAdminPassword']").val(),
+            portalDomain           : $("input[name='portalDomain']").val()
     }
     $.ajax({
         type : "PUT",
@@ -359,6 +361,7 @@ function resetForm(status){
     $("input[name=inceptionOsUserName]").val("");
     $("#inceptionOsUserNameConfDiv").hide();
     $("input[name=cfAdminPassword]").val("");
+    $("input[name=portalDomain]").val("");
         var option ="";
         $("select[name=cfDeploymentVersion]").html("<option value=''> CF Deployment 버전을 선택하세요.</option>");
         option += "<option value=''> CF Database 유형을 선택하세요.</option>";
@@ -448,6 +451,12 @@ function resetForm(status){
                         <label style="width:40%;text-align: left;padding-left: 20px;">CF Admin Password</label>
                         <div>
                             <input class="form-control" name="cfAdminPassword" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="cf admin password를 입력하세요" />
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Portal 도메인(Optional)</label>
+                        <div>
+                            <input class="form-control" name="portalDomain" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="Portal 도메인 주소를 입력하세요 예)13.25.210.15.xip.io"/>
                         </div>
                     </div>
                </div>

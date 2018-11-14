@@ -65,6 +65,7 @@ public class HbCfDeploymentDefaultConfigService {
             vo.setCfDbType(dto.getCfDbType());
             vo.setInceptionOsUserName(dto.getInceptionOsUserName());
             vo.setCfAdminPassword(dto.getCfAdminPassword());
+            vo.setPortalDomain(dto.getPortalDomain());
             vo.setCreateDate(vo.getCreateDate());
             vo.setUpdateUserId(principal.getName());
         }

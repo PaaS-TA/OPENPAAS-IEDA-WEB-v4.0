@@ -629,6 +629,7 @@ CREATE TABLE ieda_hb_cfDeployment_default_config
   cf_db_type                            VARCHAR(100) NOT NULL,
   inception_os_user_name                VARCHAR(255) NULL,
   cf_admin_password                     VARCHAR(255) NULL,
+  portal_domain                         VARCHAR(255) NULL,
   create_user_id                        VARCHAR(255) NOT NULL,
   create_date                           DATE         NOT NULL,
   update_user_id                        VARCHAR(255) NOT NULL,

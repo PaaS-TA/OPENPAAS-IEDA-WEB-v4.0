@@ -26,6 +26,9 @@
             <result property="domain" column="domain"/>
             <result property="domainOrganization" column="domain_organization"/>
             <result property="cfDbType" column="cf_db_type"/>
+            <result property="inceptionOsUserName" column="INCEPTION_OS_USER_NAME"/>
+            <result property="cfAdminPassword" column="CF_ADMIN_PASSWORD"/>
+            <result property="portalDomain" column="PORTAL_DOMAIN"/>
         </collection>
         <collection property="hbCfDeploymentNetworkConfigVO" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentNetworkConfigVO" javaType="org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentNetworkConfigVO">
             <result property="networkName" column="NETWORK_NAME" />
@@ -116,6 +119,9 @@
             ,cfdefault.domain
             ,cfdefault.domain_organization
             ,cfdefault.cf_db_type
+            ,cfdefault.inception_os_user_name
+            ,cfdefault.cf_admin_password
+            ,cfdefault.portal_domain
             ,cfnetwork.network_name
             ,cfnetwork.public_static_ip
             ,cfnetwork.subnet_reserved_ip
@@ -219,6 +225,9 @@
             ,cfdefault.domain
             ,cfdefault.domain_organization
             ,cfdefault.cf_db_type
+            ,cfdefault.inception_os_user_name
+            ,cfdefault.cf_admin_password
+            ,cfdefault.portal_domain
             ,cfnetwork.network_name
             ,cfnetwork.public_static_ip
             ,cfnetwork.subnet_reserved_ip

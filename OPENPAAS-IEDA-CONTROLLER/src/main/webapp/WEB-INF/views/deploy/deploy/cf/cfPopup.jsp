@@ -232,7 +232,7 @@ function defaultInfoPopup() {
     w2popup.open({
         title : "<b>CF-Deployment 설치</b>",
         width : 750,
-        height :465,
+        height :520,
         modal : true,
         body    : $("#defaultInfoDiv").html(),
         buttons : $("#DefaultInfoButtonDiv").html(),
@@ -1880,7 +1880,7 @@ function gridReload() {
                         </div>
                     </div>
                     <div class="w2ui-field">
-                        <label style="text-align: left; width: 36%; font-size: 11px;">Portal 도메인</label>
+                        <label style="text-align: left; width: 36%; font-size: 11px;">Portal 도메인(Optional)</label>
                         <div style=" width: 60%;">
                             <input name="portalDomain" type="text" style="isplay:inline-block; width: 80%;" placeholder="Portal 도메인 주소를 입력하세요 예)13.25.210.15.xip.io" />
                             <div class="isMessage"></div>

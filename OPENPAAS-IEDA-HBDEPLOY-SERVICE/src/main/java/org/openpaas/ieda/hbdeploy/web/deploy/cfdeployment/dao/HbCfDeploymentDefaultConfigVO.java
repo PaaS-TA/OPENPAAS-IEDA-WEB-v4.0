@@ -20,6 +20,7 @@ public class HbCfDeploymentDefaultConfigVO {
     private String cfDbType;
     private String inceptionOsUserName; // inception user name
     private String cfAdminPassword; // cf admin password
+    private String portalDomain; // portal Domain
     private String createUserId;//등록자 아이디
     private String updateUserId;//수정자 아이디
     private Date createDate;//등록일
@@ -116,4 +117,11 @@ public class HbCfDeploymentDefaultConfigVO {
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
+	public String getPortalDomain() {
+		return portalDomain;
+	}
+	public void setPortalDomain(String portalDomain) {
+		this.portalDomain = portalDomain;
+	}
+	
 }
