@@ -174,12 +174,12 @@ public class CfDeployAsyncService {
         cmd.add("stemcell_version="+vo.getResource().getStemcellVersion()+"");
         cmd.add("-v");
         cmd.add("cf_admin_password="+vo.getCfAdminPassword()+"");
-        if(vo.getPortalDomain() != null){
+        if(!StringUtils.isEmpty(vo.getPortalDomain()) && vo.getPortalDomain() != null){
             cmd.add("-v");
             cmd.add("portal_domain="+vo.getPortalDomain()+"");
         }else{
             cmd.add("-v");
-            cmd.add("portal_domain="+"");
+            cmd.add("portal_domain="+"\" +\"");
         }
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonJobTemplate());

@@ -389,7 +389,7 @@ public class StemcellManagementService {
     public String setStemcellDownLoadBaseUrlByVersionType(StemcellManagementDTO.Regist dto) {
         String baseUrl = "";
         try{
-            if(Float.parseFloat(dto.getStemcellVersion())>3264){
+            if(!dto.getOsName().equalsIgnoreCase("windows")){
                 if(dto.getLight().toLowerCase().equalsIgnoreCase("true")){//light stemcell
                     if( dto.getIaasType().toLowerCase().equalsIgnoreCase("aws") ){
                         baseUrl = PUBLIC_STEMCELLS_NEWEST_URL+SEPARATOR+"bosh-aws-light-stemcells";
@@ -399,10 +399,8 @@ public class StemcellManagementService {
                 }else{
                     baseUrl = PUBLIC_STEMCELLS_NEWEST_URL+SEPARATOR+"bosh-core-stemcells"+SEPARATOR+dto.getIaasType().toLowerCase();
                 }
-            }else if(dto.getOsName().equalsIgnoreCase("windows")){
-                baseUrl = PUBLIC_STEMCELLS_WINDOWS_URL+PUBLIC_STEMCELLS_NEWEST_URL.substring(8)+SEPARATOR;
             }else{
-                baseUrl = PUBLIC_STEMCELLS_OLDEST_URL+SEPARATOR+"bosh-stemcell"+SEPARATOR+dto.getIaasType().toLowerCase();
+                baseUrl = PUBLIC_STEMCELLS_WINDOWS_URL+PUBLIC_STEMCELLS_NEWEST_URL.substring(8)+SEPARATOR;
             }
         }catch(NumberFormatException e){
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),

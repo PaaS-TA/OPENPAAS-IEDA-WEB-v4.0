@@ -3,17 +3,6 @@
   value:
     instances: ((windows_cell_instance))
     jobs:
-    - consumes:
-        consul_client:
-          from: consul_client_link
-        consul_common:
-          from: consul_common_link
-        consul_server: nil
-      name: consul_agent_windows
-      properties:
-        syslog_daemon_config:
-          enable: false
-      release: consul
     - name: winc
       release: winc
     - name: winc-network
@@ -64,6 +53,9 @@
             preloaded_rootfses:
             - windows2016:oci:///C:/var/vcap/packages/windows2016fs
         enable_declarative_healthcheck: true
+        logging:
+          format:
+            timestamp: rfc3339
         loggregator:
           ca_cert: ((loggregator_ca.certificate))
           cert: ((loggregator_tls_agent.certificate))
@@ -75,9 +67,6 @@
           ca_cert: ((service_cf_internal_ca.certificate))
           cert: ((diego_rep_agent_v2.certificate))
           key: ((diego_rep_agent_v2.private_key))
-        logging:
-          format:
-            timestamp: "rfc3339"
       release: diego
     - name: route_emitter_windows
       properties:
@@ -88,14 +77,14 @@
               client_cert: ((diego_bbs_client.certificate))
               client_key: ((diego_bbs_client.private_key))
             local_mode: true
+        logging:
+          format:
+            timestamp: rfc3339
         loggregator:
           ca_cert: ((loggregator_ca.certificate))
           cert: ((loggregator_tls_agent.certificate))
           key: ((loggregator_tls_agent.private_key))
           use_v2_api: true
-        logging:
-          format:
-            timestamp: "rfc3339"
       release: diego
     - name: loggregator_agent_windows
       properties:
@@ -122,7 +111,7 @@
   value:
     alias: windows2016
     os: windows2016
-    version: "((windows_stemcell_version))"
+    version: "1709.13"
 - type: replace
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/stacks/name=windows2016?
   value:
@@ -139,26 +128,31 @@
     name: hwc-buildpack
     release: hwc-buildpack
 - type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/install_buildpacks/-
+  value:
+    name: binary_buildpack
+    package: binary-buildpack-windows2016
+- type: replace
   path: /releases/name=hwc-buildpack?
   value:
     name: hwc-buildpack
-    sha1: ba4a628beff026e4d1dd7e1a21eea708fbd4897f
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/hwc-buildpack-release?v=2.3.19
-    version: 2.3.19
+    sha1: 397491396861195f90c53b4126283e37f14bdb5f
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/hwc-buildpack-release?v=3.0.2
+    version: 3.0.2
 - type: replace
   path: /releases/name=winc?
   value:
     name: winc
-    sha1: 232aff9b04266bd743208160cc27f4266214e0ee
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/winc-release?v=1.4.0
-    version: 1.4.0
+    sha1: 1afdb374c3d4649212ff211dd157f0e78690d5fa
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/winc-release?v=1.5.0
+    version: 1.5.0
 - type: replace
   path: /releases/name=windows2016fs?
   value:
     name: windows2016fs
-    sha1: 76e6fc1096a8edf709753fd4470e393aba8275c2
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/windows2016fs-online-release?v=1.6.0
-    version: 1.6.0
+    sha1: a9ce6c752b79396e4c82f3f3b27d6b045ad220f7
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/windows2016fs-online-release?v=1.8.0
+    version: 1.8.0
 - type: replace
   path: /releases/name=windows-utilities?
   value:

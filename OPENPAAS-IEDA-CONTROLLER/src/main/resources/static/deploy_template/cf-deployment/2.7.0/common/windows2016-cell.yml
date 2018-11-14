@@ -1,7 +1,7 @@
 - type: replace
   path: /instance_groups/-
   value:
-    instances: 1
+    instances: ((windows_cell_instance))
     jobs:
     - consumes:
         consul_client:

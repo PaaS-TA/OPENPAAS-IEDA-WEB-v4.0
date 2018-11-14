@@ -80,6 +80,10 @@ $("#defaultInfoForm").validate({
                 required: function(){
                     return checkEmpty( $(".w2ui-msg-body select[name='cfdeployment']").val() ); 
                 }
+            }, paastaPortalDomain: {
+                required: function(){
+                    return checkEmpty( $(".w2ui-msg-body input[name='paastaPortalDomain']").val() ); 
+                }
             }
         }, messages: {
              directorUuid        : { required: "설치관리자 UUID" + text_required_msg }
@@ -96,6 +100,7 @@ $("#defaultInfoForm").validate({
             ,inceptionOsUserName : { required: "Inception User Name"+text_required_msg}
             ,cfAdminPassword     : { required: "CF Admin Password"+text_required_msg}
             ,cfdeployment        : { required: "CF Deployment Version" + text_required_msg}
+            ,paastaPortalDomain  : { required: "PaaS-TA 포털 버전" + text_required_msg}
         }, unhighlight: function(element) {
             setSuccessStyle(element);
         },errorPlacement: function(error, element) {

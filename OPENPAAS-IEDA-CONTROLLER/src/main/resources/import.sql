@@ -10,6 +10,8 @@ INSERT INTO ieda_common_code VALUES ( '105', 'AZURE', '105', 'Azure' , 'MS Azure
 INSERT INTO ieda_common_code VALUES ( '200', 'OS TYPE', '200', 'OS 유형' , 'OS Type', '1', null, null, null, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '201', 'UBUNTU', '201', '우분투' , 'Ubuntu', '0', null, null, 200, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '211', 'TRUSTY', '211', 'Trusty' , 'Ubuntu Trusty', '0', 201, null, 200, 'SYSTEM', now(), 'SYSTEM', now() );
+INSERT INTO ieda_common_code VALUES ( '212', 'XENIAL', '212', 'Xenial' , 'Ubuntu Xenial', '0', 201, null, 200, 'SYSTEM', now(), 'SYSTEM', now() );
+
 INSERT INTO ieda_common_code VALUES ( '203', 'WINDOWS', '203', 'Windows' , 'Windows', '2', null, null, 200, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '231', '2016', '231', '2016R' , 'Windows 2016R', '0', 203, null, 200, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '312', 'DEPLOY', '1000', 'Deploy' , 'Deploy', '0', null, null, null, 'SYSTEM', now(), 'SYSTEM', now() );
@@ -968,27 +970,38 @@ INSERT INTO ieda_manifest_template VALUES (32, 'CFDEPLOYMENT','openstack','paast
 INSERT INTO ieda_manifest_template VALUES (33, 'CFDEPLOYMENT','vsphere','paasta','3.5','2.7.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','use-compiled-releases.yml','','','SYSTEM',now(),'SYSTEM',now());
 INSERT INTO ieda_manifest_template VALUES (34, 'CFDEPLOYMENT','google','paasta','3.5','2.7.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','use-compiled-releases.yml','','','SYSTEM',now(),'SYSTEM',now());
 INSERT INTO ieda_manifest_template VALUES (35, 'CFDEPLOYMENT','azure','paasta','3.5','2.7.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','use-compiled-releases.yml','windows2016-cell.yml','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (36, 'CFDEPLOYMENT','aws','cf-deployment','5.0.0','5.0.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (37, 'CFDEPLOYMENT','openstack','cf-deployment','5.0.0','5.0.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (38, 'CFDEPLOYMENT','vsphere','cf-deployment','5.0.0','5.0.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (39, 'CFDEPLOYMENT','google','cf-deployment','5.0.0','5.0.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (40, 'CFDEPLOYMENT','azure','cf-deployment','5.0.0','5.0.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','','windows2016-cell.yml','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (41, 'CFDEPLOYMENT','aws','paasta','4.0','5.0.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','use-compiled-releases.yml','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (42, 'CFDEPLOYMENT','openstack','paasta','4.0','5.0.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','use-compiled-releases.yml','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (43, 'CFDEPLOYMENT','vsphere','paasta','4.0','5.0.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','use-compiled-releases.yml','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (44, 'CFDEPLOYMENT','google','paasta','4.0','5.0.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','use-compiled-releases.yml','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (45, 'CFDEPLOYMENT','azure','paasta','4.0','5.0.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','private-network.yml','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','use-compiled-releases.yml','windows2016-cell.yml','','SYSTEM',now(),'SYSTEM',now());
+
 
 
 
 
 
 #ieda_cf_job_template
-INSERT INTO ieda_cf_job_template VALUES ( '1000', '0', 'DEPLOY_TYPE_CF', 'adapter', '2.7.0', '4.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_cf_job_template VALUES ( '1001', '1', 'DEPLOY_TYPE_CF', 'api', '2.7.0', '4.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_cf_job_template VALUES ( '1002', '2', 'DEPLOY_TYPE_CF', 'cc-worker', '2.7.0', '4.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_cf_job_template VALUES ( '1003', '3', 'DEPLOY_TYPE_CF', 'consul', '2.7.0', '4.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_cf_job_template VALUES ( '1004', '4', 'DEPLOY_TYPE_CF', 'database', '2.7.0', '4.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_cf_job_template VALUES ( '1005', '5', 'DEPLOY_TYPE_CF', 'diego-api', '2.7.0', '4.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_cf_job_template VALUES ( '1006', '6', 'DEPLOY_TYPE_CF', 'diego-cell', '2.7.0', '4.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_cf_job_template VALUES ( '1007', '7', 'DEPLOY_TYPE_CF', 'doppler', '2.7.0', '4.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_cf_job_template VALUES ( '1008', '8', 'DEPLOY_TYPE_CF', 'haproxy', '2.7.0', '4.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_cf_job_template VALUES ( '1009', '9', 'DEPLOY_TYPE_CF', 'log-api', '2.7.0', '4.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_cf_job_template VALUES ( '1010', '10', 'DEPLOY_TYPE_CF', 'nats', '2.7.0', '4.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_cf_job_template VALUES ( '1011', '11', 'DEPLOY_TYPE_CF', 'router', '2.7.0', '4.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_cf_job_template VALUES ( '1012', '12', 'DEPLOY_TYPE_CF', 'scheduler', '2.7.0', '4.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_cf_job_template VALUES ( '1013', '13', 'DEPLOY_TYPE_CF', 'singleton-blobstore', '2.7.0', '4.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_cf_job_template VALUES ( '1014', '14', 'DEPLOY_TYPE_CF', 'tcp-router', '2.7.0', '4.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
-INSERT INTO ieda_cf_job_template VALUES ( '1015', '15', 'DEPLOY_TYPE_CF', 'uaa', '2.7.0', '4.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '1000', '0', 'DEPLOY_TYPE_CF', 'adapter', '2.7.0', '5.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '1001', '1', 'DEPLOY_TYPE_CF', 'api', '2.7.0', '5.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '1002', '2', 'DEPLOY_TYPE_CF', 'cc-worker', '2.7.0', '5.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '1003', '3', 'DEPLOY_TYPE_CF', 'consul', '2.7.0', '5.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '1004', '4', 'DEPLOY_TYPE_CF', 'database', '2.7.0', '5.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '1005', '5', 'DEPLOY_TYPE_CF', 'diego-api', '2.7.0', '5.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '1006', '6', 'DEPLOY_TYPE_CF', 'diego-cell', '2.7.0', '5.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '1007', '7', 'DEPLOY_TYPE_CF', 'doppler', '2.7.0', '5.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '1008', '8', 'DEPLOY_TYPE_CF', 'haproxy', '2.7.0', '5.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '1009', '9', 'DEPLOY_TYPE_CF', 'log-api', '2.7.0', '5.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '1010', '10', 'DEPLOY_TYPE_CF', 'nats', '2.7.0', '5.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '1011', '11', 'DEPLOY_TYPE_CF', 'router', '2.7.0', '5.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '1012', '12', 'DEPLOY_TYPE_CF', 'scheduler', '2.7.0', '5.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '1013', '13', 'DEPLOY_TYPE_CF', 'singleton-blobstore', '2.7.0', '5.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '1014', '14', 'DEPLOY_TYPE_CF', 'tcp-router', '2.7.0', '5.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
+INSERT INTO ieda_cf_job_template VALUES ( '1015', '15', 'DEPLOY_TYPE_CF', 'uaa', '2.7.0', '5.0.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
 
 
