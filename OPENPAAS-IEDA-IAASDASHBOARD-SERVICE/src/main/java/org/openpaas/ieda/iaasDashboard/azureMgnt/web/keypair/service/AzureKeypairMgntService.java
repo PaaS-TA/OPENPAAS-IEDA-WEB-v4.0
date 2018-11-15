@@ -85,7 +85,6 @@ public class AzureKeypairMgntService {
             cmd.add("-q");
             cmd.add("-P");
             cmd.add("");
-            
             cmd.add("-C");
             cmd.add("");
             

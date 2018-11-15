@@ -36,7 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class HbDirectorRestHelper {
     
     final private static String LOCK_DIR = LocalDirectoryConfiguration.getLockDir();
-    final private static int THREAD_SLEEP_TIME = 6 * 1000;
+    final private static int THREAD_SLEEP_TIME = 2 * 1000;
     final private static String HTTPS = "https";
     final private static String CANCELLED = "cancelled";
     final private static String STARTED = "started";

@@ -43,167 +43,167 @@ addons:
         targets:
         - query: '_'
           instance_group: diego-cell
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
         - query: '_'
           instance_group: windows-cell
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
         - query: '_'
           instance_group: windows2012R2-cell
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
         - query: '_'
           instance_group: windows2016-cell
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
         - query: '_'
           instance_group: isolated-diego-cell
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: auctioneer.service.cf.internal
         targets:
         - query: 'q-s4'
           instance_group: scheduler
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: bbs.service.cf.internal
         targets:
         - query: 'q-s4'
           instance_group: diego-api
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: bits.service.cf.internal
         targets:
         - query: '*'
           instance_group: bits
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: blobstore.service.cf.internal
         targets:
         - query: '*'
           instance_group: singleton-blobstore
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: cc-uploader.service.cf.internal
         targets:
         - query: '*'
           instance_group: api
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: cloud-controller-ng.service.cf.internal
         targets:
         - query: '*'
           instance_group: api
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: credhub.service.cf.internal
         targets:
         - query: '*'
           instance_group: credhub
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: doppler.service.cf.internal
         targets:
         - query: '*'
           instance_group: doppler
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: file-server.service.cf.internal
         targets:
         - query: '*'
           instance_group: api
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: gorouter.service.cf.internal
         targets:
         - query: '*'
           instance_group: router
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: locket.service.cf.internal
         targets:
         - query: '*'
           instance_group: diego-api
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: loggregator-trafficcontroller.service.cf.internal
         targets:
         - query: '*'
           instance_group: log-api
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: policy-server.service.cf.internal
         targets:
         - query: '*'
           instance_group: api
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: reverse-log-proxy.service.cf.internal
         targets:
         - query: '*'
           instance_group: log-api
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: routing-api.service.cf.internal
         targets:
         - query: '*'
           instance_group: api
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: silk-controller.service.cf.internal
         targets:
         - query: '*'
           instance_group: diego-api
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: sql-db.service.cf.internal
         targets:
         - query: '*'
           instance_group: database
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: ssh-proxy.service.cf.internal
         targets:
         - query: '*'
           instance_group: scheduler
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: tps.service.cf.internal
         targets:
         - query: '*'
           instance_group: scheduler
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
       - domain: uaa.service.cf.internal
         targets:
         - query: '*'
           instance_group: uaa
-          deployment: cf
+          deployment: ((deployment_name))
           network: default
           domain: bosh
 
@@ -665,6 +665,7 @@ instance_groups:
       router:
         route_services_secret: "((router_route_services_secret))"
       system_domain: "((system_domain))"
+      system_domain_organization: "((system_domain_org))"
       app_domains:
       - "((system_domain))"
       app_ssh:
