@@ -395,9 +395,16 @@ function resetForm(status){
                <div class="panel-heading"><b>기본 정보</b></div>
                <div class="panel-body" style="height:615px; overflow-y:auto;">
                    <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">배포 명 & 기본 정보 별칭</label>
+                       <label style="width:40%;text-align: left;padding-left: 20px;">기본 정보 별칭</label>
                        <div>
-                           <input class="form-control" name = "defaultConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="배포명 & 기본 정보 별칭을 입력 하세요."/>
+                           <input class="form-control" name = "defaultConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="기본 정보 별칭을 입력 하세요."/>
+                       </div>
+                   </div>
+                   
+                   <div class="w2ui-field">
+                       <label style="width:40%;text-align: left;padding-left: 20px;">배포 명</label>
+                       <div>
+                           <input class="form-control" value="cf" type="text" readonly  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="기본 정보 별칭을 입력 하세요."/>
                        </div>
                    </div>
                    
