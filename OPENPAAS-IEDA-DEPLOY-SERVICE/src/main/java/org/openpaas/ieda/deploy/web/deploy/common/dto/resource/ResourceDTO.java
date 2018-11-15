@@ -31,6 +31,7 @@ public class ResourceDTO {
     private String enableWindowsStemcell; //windows stemcell use
     private String windowsStemcellName; // Azure IaaS Windows 스템셀 명
     private String windowsStemcellVersion; // Azure IaaS windows 스템셀 버전
+    private String windowsCellInstance; //windows Cell Instance 수
     
     public String getId() {
         return id;
@@ -176,6 +177,12 @@ public class ResourceDTO {
     }
     public void setWindowsStemcellVersion(String windowsStemcellVersion) {
         this.windowsStemcellVersion = windowsStemcellVersion;
+    }
+    public String getWindowsCellInstance() {
+        return windowsCellInstance;
+    }
+    public void setWindowsCellInstance(String windowsCellInstance) {
+        this.windowsCellInstance = windowsCellInstance;
     }
     
 }

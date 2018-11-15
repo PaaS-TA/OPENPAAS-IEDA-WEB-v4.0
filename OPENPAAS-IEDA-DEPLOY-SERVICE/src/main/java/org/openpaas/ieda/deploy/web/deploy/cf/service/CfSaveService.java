@@ -255,6 +255,7 @@ public class CfSaveService {
             resourceVo.setEnableWindowsStemcell(dto.getEnableWindowsStemcell());
             resourceVo.setWindowsStemcellName(dto.getWindowsStemcellName());
             resourceVo.setWindowsStemcellVersion(dto.getWindowsStemcellVersion());
+            resourceVo.setWindowsCellInstance(dto.getWindowsCellInstance());
         }
         
         vo.setDeploymentFile(deploymentFile);

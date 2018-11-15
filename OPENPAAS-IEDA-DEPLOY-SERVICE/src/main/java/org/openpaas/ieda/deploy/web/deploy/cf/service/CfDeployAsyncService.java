@@ -179,7 +179,7 @@ public class CfDeployAsyncService {
             cmd.add("portal_domain="+vo.getPortalDomain()+"");
         }else{
             cmd.add("-v");
-            cmd.add("portal_domain="+"\" +\"");
+            cmd.add("portal_domain="+vo.getDomain()+"");
         }
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonJobTemplate());
@@ -243,6 +243,8 @@ public class CfDeployAsyncService {
     public void setWindowsCellUse(List<String> cmd, CfVO vo, ManifestTemplateVO result) {
         cmd.add("-v");
         cmd.add("windows_stemcell_version="+"\""+vo.getResource().getWindowsStemcellVersion()+"\""+"");
+        cmd.add("-v");
+        cmd.add("windows_cell_instance="+vo.getResource().getWindowsCellInstance());
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getInputTemplateSecond());
     }

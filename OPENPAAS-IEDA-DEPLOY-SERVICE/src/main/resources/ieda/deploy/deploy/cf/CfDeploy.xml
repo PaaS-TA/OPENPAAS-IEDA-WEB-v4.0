@@ -62,6 +62,7 @@
             <result property="windowsStemcellName" column="WINDOWS_STEMCELL_NAME" />
             <result property="windowsStemcellVersion" column="WINDOWS_STEMCELL_VERSION" />
             <result property="enableWindowsStemcell" column="ENABLE_WINDOWS_STEMCELL" />
+            <result property="windowsCellInstance" column="WINDOWS_CELL_INSTANCE" />
         </collection>
     </resultMap>
 
@@ -191,6 +192,7 @@
             ,windows_stemcell_name
             ,windows_stemcell_version
             ,enable_windows_stemcell
+            ,windows_cell_instance
         From (select * from ieda_cf where id = #{id} ) as cf
          Left Join ieda_resource as resource
               On cf.id = resource.id

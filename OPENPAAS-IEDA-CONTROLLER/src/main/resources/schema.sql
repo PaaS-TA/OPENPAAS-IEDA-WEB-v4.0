@@ -334,6 +334,7 @@ CREATE TABLE ieda_resource
   enable_windows_stemcell           VARCHAR(100) DEFAULT NULL,
   windows_stemcell_name             VARCHAR(255) NULL,
   windows_stemcell_version          VARCHAR(255) NULL,
+  windows_cell_instance             VARCHAR(255) NULL,
   PRIMARY KEY (id, deploy_type)
 )ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 

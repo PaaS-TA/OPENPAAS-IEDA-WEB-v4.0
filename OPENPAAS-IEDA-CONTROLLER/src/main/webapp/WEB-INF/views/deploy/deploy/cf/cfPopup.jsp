@@ -219,7 +219,8 @@ function setCfData(contents) {
                 runnerCpu        : contents.resource.runnerCpu,
                 enableWindowsStemcell : contents.resource.enableWindowsStemcell,
                 windowsStemcellName : contents.resource.windowsStemcellName,
-                windowsStemcellVersion : contents.resource.windowsStemcellVersion
+                windowsStemcellVersion : contents.resource.windowsStemcellVersion,
+                windowsCellInstance: contents.resource.windowsCellInstance
         }
     }
 }
@@ -241,7 +242,7 @@ function defaultInfoPopup() {
                 //릴리즈 정보 popup over
                  $('[data-toggle="popover"]').popover();
                  $(".paastaMonitoring-info").attr('data-content', "paasta-controller v3.0 이상에서 지원")
-                
+                 iaas='azure';
                  getDeploymentVersionList();
                  if ( !checkEmpty(defaultInfo )) {
                        //설치관리자 UUID
@@ -1100,6 +1101,7 @@ function resourceInfoPopup(div, height) {
                            if(resourceInfo.enableWindowsStemcell == 'true'){
                                $(".w2ui-msg-body input[name='windowStemcellUseCheck']").attr("checked", true);
                                $(".w2ui-msg-body input[name='windowsStemcellVersion']").val(resourceInfo.windowsStemcellVersion);
+                               $(".w2ui-msg-body input[name='windowsCellInstance']").val(resourceInfo.windowsCellInstance);
                                checkWindowsStemcellUseYn();
                            }else{
                                $(".w2ui-msg-body input[name='windowStemcellUseCheck']").attr("checked", false);
@@ -1165,7 +1167,7 @@ function getWindowsStemcellList(){
         success : function(data, status) {
             stemcells = new Array();
             if(data.records != null ){
-                var options= "<option value=''>스템셀을 업로드하세요.</option>";
+                var options= "<option value='dasdasdsadas'>스템셀을 업로드하세요.</option>";
                 data.records.map(function(obj) {
                     var resource_data = resourceInfo.windowsStemcellName + "/"+ resourceInfo.windowsStemcellVersion;
                     if( resource_data == obj.stemcellFileName+"/"+obj.stemcellVersion ){
@@ -1432,11 +1434,8 @@ function instanceControl(e){
  * 기능 : saveResourceInfo
  *********************************************************/
 function saveResourceInfo(type) {
-    if($(".w2ui-msg-body select[name='stemcells']").val() == ""){
-    }
+
     var stemcellInfos = $(".w2ui-msg-body select[name='stemcells'] :selected").val().split("/");
-    
-    
     var windowsStemcellInfoName = '';
     var windowsStemcellInfoVersion = '';
     
@@ -1451,7 +1450,6 @@ function saveResourceInfo(type) {
         var windowsStemcellUse = 'false';
         $(".w2ui-msg-body select[name='windowsStemcells']").val('');
     }
-    
     resourceInfo = {
             id               : cfId,
             iaas             : iaas.toUpperCase(),
@@ -1473,7 +1471,8 @@ function saveResourceInfo(type) {
             largeDisk        : $(".w2ui-msg-body input[name='largeFlavorDisk']").val(),
             enableWindowsStemcell : windowsStemcellUse,
             windowsStemcellName : windowsStemcellInfoName,
-            windowsStemcellVersion : windowsStemcellInfoVersion
+            windowsStemcellVersion : windowsStemcellInfoVersion,
+            windowsCellInstance : $(".w2ui-msg-body input[name='windowsCellInstance']").val()
     }
     if (type == 'after') {
         //Server send Cf Info
@@ -2688,6 +2687,15 @@ function gridReload() {
                             <div>
                                 <select name="windowsStemcells" style="display:inline-block; width: 80%;"></select>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-heading"><b>Windows Cell Instance</b></div>
+                <div class="panel-body"  style="padding:5px 5% 10px 5%;">
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 30%; font-size: 11px;">인스턴스 수</label>
+                        <div style=" width: 60%;">
+                            <input name="windowsCellInstance" style="display:inline-block; width: 80%;" maxlength="100" min="1" max="99" type="number" required placeholder="Windows Cell Instance 수를 입력하세요."/>
                         </div>
                     </div>
                 </div>

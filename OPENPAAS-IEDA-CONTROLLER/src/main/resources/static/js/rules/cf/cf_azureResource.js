@@ -33,6 +33,26 @@ $(function(){
                         return checkEmpty( $(".w2ui-msg-body select[name='windowsStemcells']").val() );
                     }
                 }
+            }, windowsCellInstance: {
+                required: function(){
+                    if( $(".w2ui-msg-body #windowsStemcellConfDiv").css("display") == "none"){
+                        return false;
+                    }else{
+                    	console.log(checkEmpty( $(".w2ui-msg-body input[name='windowsCellInstance']").val()));
+                        if ( checkEmpty( $(".w2ui-msg-body input[name='windowsCellInstance']").val()) ){
+                            return true;
+                        }
+                        var num = $(".w2ui-msg-body input[name='windowsCellInstance']").val();
+                        num = Number(num);
+                        if( num > 100){
+                            console.log("num > 100");
+                            return true;
+                        }else{
+                            console.log("num < 100");
+                            return false;
+                        }
+                    }
+                }
             }
         }, messages: {
             stemcells:{
@@ -47,6 +67,8 @@ $(function(){
                 required: "largeFlavor"+text_required_msg
             }, windowsStemcells : {
                 required: "windowsStemcell" +text_required_msg
+            }, windowsCellInstance : {
+                required: "1 부터 100까지 숫자만 입력 가능 합니다."
             }
         }, unhighlight: function(element) {
             setSuccessStyle(element);
