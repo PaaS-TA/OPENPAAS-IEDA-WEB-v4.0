@@ -242,7 +242,6 @@ function defaultInfoPopup() {
                 //릴리즈 정보 popup over
                  $('[data-toggle="popover"]').popover();
                  $(".paastaMonitoring-info").attr('data-content', "paasta-controller v3.0 이상에서 지원")
-                 iaas='azure';
                  getDeploymentVersionList();
                  if ( !checkEmpty(defaultInfo )) {
                        //설치관리자 UUID
@@ -1167,7 +1166,7 @@ function getWindowsStemcellList(){
         success : function(data, status) {
             stemcells = new Array();
             if(data.records != null ){
-                var options= "<option value='dasdasdsadas'>스템셀을 업로드하세요.</option>";
+                var options= "<option value=''>스템셀을 업로드하세요.</option>";
                 data.records.map(function(obj) {
                     var resource_data = resourceInfo.windowsStemcellName + "/"+ resourceInfo.windowsStemcellVersion;
                     if( resource_data == obj.stemcellFileName+"/"+obj.stemcellVersion ){
