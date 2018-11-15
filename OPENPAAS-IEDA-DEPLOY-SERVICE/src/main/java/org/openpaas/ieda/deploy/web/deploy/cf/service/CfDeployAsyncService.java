@@ -1,6 +1,7 @@
 package org.openpaas.ieda.deploy.web.deploy.cf.service;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.Principal;
@@ -50,6 +51,7 @@ public class CfDeployAsyncService {
      * @return : void
     *****************************************************************/
     public void deploy(CfParamDTO.Install dto, Principal principal, String platform) {
+        
         String deploymentFileName = "";
         String messageEndpoint =  "/deploy/cf/install/logs"; 
         CfVO vo = cfService.getCfInfo(Integer.parseInt(dto.getId()));
@@ -63,11 +65,15 @@ public class CfDeployAsyncService {
         String cloudConfigFile = DEPLOYMENT_DIR + SEPARATOR + deploymentFileName; 
         String errorMessage = message.getMessage("common.internalServerError.message", null, Locale.KOREA);
         String status = "";
-        
+
         try {
             BufferedReader bufferedReader = null;
-            String accumulatedLog= null;
             DirectorConfigVO directorInfo = directorConfigService.getDefaultDirector();
+            
+            if("5.0.0".equals(vo.getReleaseVersion()) || "4.0".equals(vo.getReleaseVersion())){
+                settingRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
+            }
+            
             List<String> cmd = new ArrayList<String>(); //bosh cloud config 명령어 실행 줄 Cloud Config 관련 Rest API를 아직 지원 안하는 것 같음 2018.08.01
             cmd.add("bosh");
             cmd.add("-e");
@@ -137,10 +143,6 @@ public class CfDeployAsyncService {
                     status = DirectorRestHelper.trackToTask(directorInfo, messagingTemplate, messageEndpoint, httpClient, taskId, "event", principal.getName());
                 }
             }
-            if( accumulatedBuffer != null ) {
-                accumulatedLog = accumulatedBuffer.toString();
-            }
-            
         }catch (RuntimeException e) {
             status = "error";
             DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> 설정을 확인 해주세요."));
@@ -156,6 +158,52 @@ public class CfDeployAsyncService {
         }
     }
     
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : BOSH Runtime Config 명령어 설정
+     * @title : settingRuntimeConfig
+     * @return : void
+    *****************************************************************/
+    private void settingRuntimeConfig(CfVO vo, DirectorConfigVO directorInfo, Principal principal, String messageEndpoint, ManifestTemplateVO result) {
+        String accumulatedLog= null;
+        BufferedReader bufferedReader = null;
+        try {
+            List<String> cmd = new ArrayList<String>();
+            cmd.add("bosh");
+            cmd.add("-e");
+            cmd.add(directorInfo.getDirectorName());
+            cmd.add("update-runtime-config");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/dns.yml");
+            cmd.add("--vars-store");
+            cmd.add(CF_CREDENTIAL_DIR+ SEPARATOR +vo.getDeploymentName()+"-runtime-cred.yml");
+            cmd.add("--tty");
+            cmd.add("-n");
+            ProcessBuilder builder = new ProcessBuilder(cmd);
+            builder.redirectErrorStream(true);
+            Process process = builder.start();
+            InputStream inputStream = process.getInputStream();
+            bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
+            String info = null;
+            StringBuffer accumulatedBuffer = new StringBuffer();
+            while ((info = bufferedReader.readLine()) != null){
+                accumulatedBuffer.append(info).append("\n");
+                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList(info));
+            }
+            if( accumulatedBuffer != null ) {
+                accumulatedLog = accumulatedBuffer.toString();
+            }
+            if ( !accumulatedLog.contains("Succeeded") ) {
+                String status = "error";
+                vo.setDeployStatus(status);
+                vo.setUpdateUserId(principal.getName());
+                saveDeployStatus(vo);
+                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
+            }
+        } catch (IOException e) {
+            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
+        }
+    }
+
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description : CF 기본 정보 설정
@@ -181,14 +229,16 @@ public class CfDeployAsyncService {
             cmd.add("-v");
             cmd.add("portal_domain="+vo.getDomain()+"");
         }
-        cmd.add("-o");
-        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonJobTemplate());
         if(result.getReleaseType().equals("paasta")){
+            cmd.add("-o");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/use_haproxy-compiled-release.yml");
             cmd.add("-v");
             cmd.add("inception_os_user_name="+vo.getInceptionOsUserName()+"");
             cmd.add("-o");
             cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getInputTemplate());
         } else {
+            cmd.add("-o");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonJobTemplate());
             cmd.add("-o");
             cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getMetaTemplate());
         }
@@ -244,7 +294,7 @@ public class CfDeployAsyncService {
         cmd.add("-v");
         cmd.add("windows_stemcell_version="+"\""+vo.getResource().getWindowsStemcellVersion()+"\""+"");
         cmd.add("-v");
-        cmd.add("windows_cell_instance="+vo.getResource().getWindowsCellInstance());
+        cmd.add("windows_cell_instance="+vo.getResource().getWindowsCellInstance()+"");
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getInputTemplateSecond());
     }
@@ -255,8 +305,13 @@ public class CfDeployAsyncService {
      * @return : CfVO
     *****************************************************************/
     public void postgresDbUse(List<String> cmd, ManifestTemplateVO result) {
-        cmd.add("-o");
-        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getOptionEtc());
+        if(result.getReleaseType().equals("paasta")){
+            cmd.add("-o");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getInputTemplateThird());
+        } else {
+            cmd.add("-o");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getOptionEtc());
+        }
     }
 
     /****************************************************************

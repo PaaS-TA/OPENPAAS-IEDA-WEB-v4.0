@@ -41,6 +41,7 @@ public class HbCfDeploymentDeleteAsyncService {
     
     private final static String SEPARATOR = System.getProperty("file.separator");
     private final static String DEPLOYMENT_DIR = LocalDirectoryConfiguration.getDeploymentDir();
+    final private static String HYBRID_CF_CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateHybridCfCredentialDir();
     private final static String KEY_DIR = LocalDirectoryConfiguration.getLockDir()+SEPARATOR;
     final static private String CF_MESSAGE_ENDPOINT =  "/deploy/hbCfDeployment/delete/logs";
     
@@ -136,6 +137,16 @@ public class HbCfDeploymentDeleteAsyncService {
         dto.setId(vo.getId());
         if ( vo != null ) {
             cfDeploymentDao.deleteCfDeploymentConfigInfo(dto);
+        }
+        String cloudConfigFileName = DEPLOYMENT_DIR + SEPARATOR + vo.getCloudConfigFile();
+        File file = new File(cloudConfigFileName);
+        if(file.exists()){
+            file.delete();
+        }
+        String runtimeConfigFileName = HYBRID_CF_CREDENTIAL_DIR + SEPARATOR + vo.getHbCfDeploymentDefaultConfigVO().getDeploymentName()+"runtime-cred.yml";
+        file = new File(runtimeConfigFileName);
+        if(file.exists()){
+            file.delete();
         }
     }
     

@@ -117,6 +117,9 @@ public class HbBootstrapDeleteDeployAsyncService{
                     bootstrapDao.deleteBootstrapInfo(dto);
                        //설치 관리자 삭제
                     deleteDirectorConfigInfo(vo.getIaasType(), vo.getDefaultConfigVo().getDirectorName());
+                    if(credentialFile.exists()){
+                    	credentialFile.delete();
+                    }
                 }
                 HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList(resultMessage));
             }

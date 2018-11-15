@@ -1,5 +1,6 @@
 package org.openpaas.ieda.deploy.web.deploy.cf.service;
 
+import java.io.File;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,7 +43,7 @@ public class CfDeleteDeployAsyncService {
     
     private final static String SEPARATOR = System.getProperty("file.separator");
     private final static String DEPLOYMENT_DIR = LocalDirectoryConfiguration.getDeploymentDir();
-    
+    final private static String CF_CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateCfDeploymentCredentialDir();
     final static private String CF_MESSAGE_ENDPOINT =  "/deploy/cf/delete/logs";
     final static private String CF_DIEGO_MESSAGE_ENDPOINT =  "/deploy/cfDiego/delete/logs";
     
@@ -123,6 +124,17 @@ public class CfDeleteDeployAsyncService {
             map.put("id", vo.getId().toString());
             map.put("deploy_type", cfDeployType);
             cfDao.deleteCfJobSettingListById(map);
+            
+            String cloudConfigFileName = DEPLOYMENT_DIR + SEPARATOR + vo.getDeploymentFile();
+            File file = new File(cloudConfigFileName);
+            if(file.exists()){
+                file.delete();
+            }
+            String runtimeConfigFileName = CF_CREDENTIAL_DIR + SEPARATOR + vo.getDeploymentName()+"runtime-cred.yml";
+            file = new File(runtimeConfigFileName);
+            if(file.exists()){
+                file.delete();
+            }
         }
     }
     

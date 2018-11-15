@@ -117,6 +117,9 @@ public class BootstrapDeleteDeployAsyncService{
                     bootstrapDao.deleteBootstrapInfo(vo.getId());
                     //설치 관리자 삭제
                     deleteDirectorConfigInfo(vo.getIaasType(), vo.getDirectorName());
+                    if(credentialFile.exists()){
+                    	credentialFile.delete();
+                    }
                 }
                 DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList(resultMessage));
             }
