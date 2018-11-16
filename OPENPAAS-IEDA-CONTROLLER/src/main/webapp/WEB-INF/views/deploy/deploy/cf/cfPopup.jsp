@@ -633,8 +633,7 @@ function defaultNetworkPopup(div, height){
             html+= field_div_label + "보안 그룹" + "</label>"; 
             html+= "<div style=' width: 60%;'>"+"<input name='cloudSecurityGroups_"+index+"'" + text_style +" placeholder='예) bosh-security, cf-security'/>"+"</div></div>";
             
-            
-            if( iaas.toLowerCase() == "aws" ){
+            if( iaas.toLowerCase() == "aws" || iaas.toLowerCase() == "openstack" ){
                 html+= field_div_label + "가용 영역" + "</label>"; 
                 html+= "<div style=' width: 60%;'>"+"<input name='availabilityZone_"+index+"'" + text_style +" placeholder='예) us-west-2'/>"+"</div></div>";
             }

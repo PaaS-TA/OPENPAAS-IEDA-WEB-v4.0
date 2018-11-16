@@ -376,8 +376,8 @@ function resetForm(status){
     <input type="hidden" name="credentialInfoId" />
         <div class="w2ui-page page-0" style="">
            <div class="panel panel-default">
-               <div class="panel-heading"><b>디렉터 인증서 정보</b></div>
-               <div class="panel-body" style="height:615px; overflow-y:auto;">
+               <div class="panel-heading"><b>디렉터 인증서 정보</b><p style="color:red;">BOOTSTRAP 설치 시 Public IP를 사용할 경우에만 값을 입력하세요.</p></div>
+               <div class="panel-body" style="height:575px; overflow-y:auto;">
                    <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;">디렉터 인증서 별칭</label>
                        <div>
@@ -404,6 +404,7 @@ function resetForm(status){
                    </div>
                    <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;">디렉터 Public IP</label>
+                       
                        <div>
                            <input class="form-control"  readonly name="directorPublicIp" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="디렉터 Public IP를 입력하세요."/>
                        </div>
@@ -442,13 +443,6 @@ $(function() {
         ignore : "",
         //onfocusout: true,
         rules: {
-            directorPublicIp : {
-                required : function(){
-                    return checkEmpty( $("input[name='directorPublicIp']").val() );
-                },  ipv4 : function(){
-                    return $("input[name='directorPublicIp']").val();
-                }
-            },
             directorPrivateIp : {
                 required : function(){
                     return checkEmpty( $("input[name='directorPrivateIp']").val() );
@@ -475,7 +469,6 @@ $(function() {
             },
         }, messages: {
             credentialConfigName: { required:  "디렉터 인증서 별칭" + text_required_msg },
-            directorPublicIp: {  required:  "디렉터 Public IP" + text_required_msg , ipv4: text_ip_msg},
             directorPrivateIp: {  required:  "디렉터 Private IP" + text_required_msg , ipv4: text_ip_msg},
             networkConfigInfo: {  required:  "네트워크 별칭" + text_required_msg },
             iaasType: {  required:  "클라우드 인프라 환경" + text_required_msg }

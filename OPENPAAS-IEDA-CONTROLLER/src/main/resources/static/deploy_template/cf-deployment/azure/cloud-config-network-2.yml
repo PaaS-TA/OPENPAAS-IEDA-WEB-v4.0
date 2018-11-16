@@ -23,7 +23,6 @@ networks:
       subnet_name: [subnet_name]
       security_group: [security_group]
     az: z1
-  subnets:
   - range: [range2]
     dns: [[dns2]]
     gateway: [gateway2]

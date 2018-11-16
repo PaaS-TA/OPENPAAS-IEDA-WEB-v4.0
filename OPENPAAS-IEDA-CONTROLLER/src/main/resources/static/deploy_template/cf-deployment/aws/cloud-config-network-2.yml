@@ -48,7 +48,6 @@ networks:
       subnet: [net_id]
       default_security_groups: [[security_group]]
     az: z1
-  subnets:
   - range: [range2]
     gateway: [gateway2]
     static: [[static2]]

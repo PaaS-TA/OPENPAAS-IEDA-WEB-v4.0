@@ -34,7 +34,6 @@ networks:
     static: [[static]]
     dns: [[dns]]
     az: z1
-  subnets:
   - cloud_properties:
       net_id: [net_id2]
       security_groups: [[security_group2]]

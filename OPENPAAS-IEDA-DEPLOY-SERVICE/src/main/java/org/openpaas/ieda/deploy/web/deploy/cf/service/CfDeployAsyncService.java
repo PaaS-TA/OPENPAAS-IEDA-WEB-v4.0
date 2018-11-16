@@ -228,7 +228,7 @@ public class CfDeployAsyncService {
             cmd.add("-e");
             cmd.add(directorInfo.getDirectorName());
             cmd.add("update-runtime-config");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/dns.yml");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/runtime-config-dns.yml");
             cmd.add("--vars-store");
             cmd.add(CF_CREDENTIAL_DIR+ SEPARATOR +vo.getDeploymentName()+"-runtime-cred.yml");
             cmd.add("--tty");
@@ -257,6 +257,9 @@ public class CfDeployAsyncService {
                 
                 if(info.contains("Creating new jobs")){
                     DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Creating new jobs:::"+info));
+                }
+                if(info.contains("Succeeded")){
+                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Bosh Runtime Config Succeeded:::"+info));
                 }
             }
             if( accumulatedBuffer != null ) {

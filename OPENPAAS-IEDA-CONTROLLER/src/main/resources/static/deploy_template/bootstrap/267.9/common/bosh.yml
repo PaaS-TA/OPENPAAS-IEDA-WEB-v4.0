@@ -3,16 +3,16 @@ name: bosh
 
 releases:
 - name: bosh
-  url: file:///[boshRelease]
+  url: file:///((boshRelease))
 - name: bpm
-  url: file:///[boshBpmRelease]
+  url: file:///((bpmRelease))
 
 resource_pools:
 - name: vms
   network: default
   env:
     bosh:
-      password: [boshPassword]
+      password: '*'
       mbus:
         cert: ((mbus_bootstrap_ssl))
 
@@ -24,10 +24,10 @@ networks:
 - name: default
   type: manual
   subnets:
-  - range: [subnetRange]
-    gateway: [subnetGateway]
-    static: [[privateStaticIp]]
-    dns: [[subnetDns]]
+  - range: ((internal_cidr))
+    gateway: ((internal_gw))
+    static: [((internal_ip))]
+    dns: [8.8.8.8]
 
 instance_groups:
 - name: bosh
@@ -43,24 +43,24 @@ instance_groups:
   persistent_disk_pool: disks
   networks:
   - name: default
-    static_ips: [[privateStaticIp]]
+    static_ips: [((internal_ip))]
   properties:
     agent:
-      mbus: nats://nats:((nats_password))@[privateStaticIp]:4222
+      mbus: nats://nats:((nats_password))@((internal_ip)):4222
       env:
         bosh:
           blobstores:
           - provider: dav
             options:
               # todo switch to using https
-              endpoint: http://[privateStaticIp]:25250
+              endpoint: http://((internal_ip)):25250
               user: agent
               password: ((blobstore_agent_password))
               tls:
                 cert:
                   ca: ((blobstore_ca.certificate))
     nats:
-      address: [privateStaticIp]
+      address: ((internal_ip))
       user: nats
       password: ((nats_password))
       tls:
@@ -85,7 +85,7 @@ instance_groups:
       database: bosh
       adapter: postgres
     blobstore:
-      address: [privateStaticIp]
+      address: ((internal_ip))
       port: 25250
       provider: dav
       director:
@@ -131,10 +131,10 @@ instance_groups:
         ca_cert: ((director_ssl.ca))
       resurrector_enabled: true
     ntp: &ntp
-    - [ntp]
+    - ((ntp))
 
 cloud_provider:
-  mbus: https://mbus:((mbus_bootstrap_password))@[privateStaticIp]:6868
+  mbus: https://mbus:((mbus_bootstrap_password))@((internal_ip)):6868
   cert: ((mbus_bootstrap_ssl))
   properties:
     agent: {mbus: "https://mbus:((mbus_bootstrap_password))@0.0.0.0:6868"}

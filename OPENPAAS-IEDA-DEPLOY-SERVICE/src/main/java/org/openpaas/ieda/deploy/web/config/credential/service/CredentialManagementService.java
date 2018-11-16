@@ -14,6 +14,7 @@ import org.openpaas.ieda.deploy.web.config.credential.dto.CredentialManagementDT
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class CredentialManagementService {
@@ -77,7 +78,10 @@ public class CredentialManagementService {
      * @return : void
     ***************************************************/
     public void makeCredentialFile(CredentialManagementDTO dto, String credentialKeyName) {
-        String commonCredentialManifestPath = MANIFEST_TEMPLATE_DIR + "/bootstrap/common/directorcredential.yml";
+        String commonCredentialManifestPath = MANIFEST_TEMPLATE_DIR + "/bootstrap/common/director-credential.yml";
+        if(StringUtils.isEmpty(dto.getDirectorPublicIp()) && dto.getDirectorPublicIp() == null){
+            dto.setDirectorPublicIp(dto.getDirectorPrivateIp());
+        }
         try {
             List<String> cmd = new ArrayList<String>(); //bosh 명령어 실행 줄
             cmd.add("bosh");

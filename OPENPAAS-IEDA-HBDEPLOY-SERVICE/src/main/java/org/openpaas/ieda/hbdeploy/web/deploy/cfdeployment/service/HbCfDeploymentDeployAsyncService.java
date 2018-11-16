@@ -238,7 +238,7 @@ public class HbCfDeploymentDeployAsyncService {
             cmd.add("-e");
             cmd.add(directorInfo.getDirectorName());
             cmd.add("update-runtime-config");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/dns.yml");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/runtime-config-dns.yml");
             cmd.add("--vars-store");
             cmd.add(HYBRID_CF_CREDENTIAL_DIR+ SEPARATOR +vo.getHbCfDeploymentDefaultConfigVO().getDefaultConfigName()+"-runtime-cred.yml");
             cmd.add("--tty");
@@ -266,6 +266,10 @@ public class HbCfDeploymentDeployAsyncService {
                 
                 if(info.contains("Creating new jobs")){
                     HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Creating new jobs:::"+info));
+                }
+                
+                if(info.contains("Succeeded")){
+                	HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Bosh Runtime Config Succeeded:::"+info));
                 }
             }
             if( accumulatedBuffer != null ) {

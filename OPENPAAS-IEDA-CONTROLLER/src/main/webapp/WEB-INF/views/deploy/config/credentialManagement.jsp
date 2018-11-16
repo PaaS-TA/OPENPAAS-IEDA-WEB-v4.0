@@ -58,8 +58,8 @@ $(function(){
     $("#addBtn").click(function(){
         w2popup.open({
             title     : "<b>디렉터 인증서 등록</b>",
-            width     : 600,
-            height    : 280,
+            width     : 650,
+            height    : 305,
             modal    : true,
             body    : $("#regPopupDiv").html(),
             buttons : $("#regPopupBtnDiv").html(),
@@ -216,7 +216,8 @@ function clearMainPage() {
         <div class="w2ui-page page-0" style="">
            <div class="panel panel-info"  style="margin-top:5px;">
                <div class="panel-heading"><b>디렉터 인증서 정보</b></div>
-               <div class="panel-body" style="height:143px; overflow-y:auto;">
+               <div class="panel-body" style="height:180px; overflow-y:auto;">
+               <p style="color:red;">BOOTSTRAP 설치 시 Public IP를 사용할 경우에만 값을 입력하세요.</p>
                    <div class="w2ui-field">
                        <label style="width:33%;text-align: left;padding-left: 20px;">디렉터 인증서 명</label>
                        <div>
@@ -266,16 +267,16 @@ $(function() {
                     return $(".w2ui-msg-body input[name='credentialName']").val();
                 }
             },
-            directorPublicIp : {
+            directorPrivateIp : {
                 required : function(){
-                    return checkEmpty( $(".w2ui-msg-body input[name='directorPublicIp']").val() );
+                    return checkEmpty( $(".w2ui-msg-body input[name='directorPrivateIp']").val() );
                 },  ipv4 : function(){
-                    return $(".w2ui-msg-body input[name='directorPublicIp']").val();
+                    return $(".w2ui-msg-body input[name='directorPrivateIp']").val();
                 }
              }
         }, messages: {
             credentialName: { required:  "디렉터 인증 서 명" + text_required_msg },
-            directorPublicIp: {  required:  "디렉터 공인 IPs" + text_required_msg , ipv4: text_ip_msg}
+            directorPrivateIp: {  required:  "디렉터 내부 IPs" + text_required_msg , ipv4: text_ip_msg}
         }, unhighlight: function(element) {
             setSuccessStyle(element);
         },errorPlacement: function(error, element) {
