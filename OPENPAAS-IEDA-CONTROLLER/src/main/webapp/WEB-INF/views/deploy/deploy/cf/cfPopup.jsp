@@ -512,7 +512,7 @@ function defaultNetworkPopup(div, height){
                     networkId = networkInfo[0].id;
                     setNetworkInfo(networkInfo);
                 }
-                if( iaas.toUpperCase() == "AWS" ){
+                if( iaas.toUpperCase() == "AWS" || iaas.toUpperCase() == "OPENSTACK"  ){
                     $(".w2ui-msg-body #availabilityZoneDiv").show();
                     $(".w2ui-msg-body #availabilityZoneDiv").css("display", "block");
                 }

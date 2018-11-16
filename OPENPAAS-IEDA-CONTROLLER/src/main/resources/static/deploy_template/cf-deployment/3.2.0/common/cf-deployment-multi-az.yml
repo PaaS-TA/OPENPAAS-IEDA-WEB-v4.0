@@ -220,6 +220,7 @@ instance_groups:
   instances: 1
   azs:
   - z1
+  - z2
   vm_type: minimal
   stemcell: default
   update:
@@ -243,6 +244,7 @@ instance_groups:
   instances: 1
   azs:
   - z1
+  - z2
   persistent_disk_type: 5GB
   vm_type: minimal
   stemcell: default
@@ -277,6 +279,7 @@ instance_groups:
   instances: 1
   azs:
   - z1
+  - z2
   vm_type: minimal
   stemcell: default
   networks:
@@ -300,6 +303,7 @@ instance_groups:
   instances: 1
   azs:
   - z1
+  - z2
   vm_type: minimal
   stemcell: default
   networks:
@@ -337,6 +341,7 @@ instance_groups:
   instances: 1
   azs:
   - z1
+  - z2
   vm_type: small
   stemcell: default
   update:
@@ -406,6 +411,7 @@ instance_groups:
   instances: 1
   azs:
   - z1
+  - z2
   vm_type: small
   stemcell: default
   update:
@@ -511,6 +517,7 @@ instance_groups:
   instances: 1
   azs:
   - z1
+  - z2
   vm_type: minimal
   stemcell: default
   networks:
@@ -698,6 +705,7 @@ instance_groups:
   instances: 1
   azs:
   - z1
+  - z2
   vm_type: small
   persistent_disk_type: 100GB
   stemcell: default
@@ -748,6 +756,7 @@ instance_groups:
   instances: 1
   azs:
   - z1
+  - z2
   vm_type: small
   vm_extensions:
   - 50GB_ephemeral_disk
@@ -1001,6 +1010,7 @@ instance_groups:
   instances: 1
   azs:
   - z1
+  - z2
   vm_type: minimal
   stemcell: default
   networks:
@@ -1044,6 +1054,7 @@ instance_groups:
   instances: 1
   azs:
   - z1
+  - z2
   vm_type: minimal
   vm_extensions:
   - cf-router-network-properties
@@ -1096,6 +1107,7 @@ instance_groups:
   instances: 1
   azs:
   - z1
+  - z2
   vm_type: minimal
   stemcell: default
   vm_extensions:
@@ -1122,6 +1134,7 @@ instance_groups:
   instances: 1
   azs:
   - z1
+  - z2
   migrated_from:
   - {name: cc-bridge}
   - {name: cc-clock}
@@ -1250,6 +1263,7 @@ instance_groups:
   instances: 1
   azs:
   - z1
+  - z2
   vm_type: minimal
   stemcell: default
   networks:
@@ -1423,7 +1437,7 @@ instance_groups:
 - name: diego-cell
   instances: 1
   azs:
-  - z1
+  - z2
   vm_type: small-highmem
   vm_extensions:
   - 100GB_ephemeral_disk
@@ -1531,6 +1545,7 @@ instance_groups:
   instances: 1
   azs:
   - z1
+  - z2
   vm_type: minimal
   stemcell: default
   update:
@@ -1608,6 +1623,7 @@ instance_groups:
   instances: 1
   azs:
   - z1
+  - z2
   lifecycle: errand
   vm_type: minimal
   stemcell: default

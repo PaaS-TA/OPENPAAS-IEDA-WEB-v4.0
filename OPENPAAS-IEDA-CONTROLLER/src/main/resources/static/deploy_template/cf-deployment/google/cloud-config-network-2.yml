@@ -10,6 +10,7 @@ compilation:
   zone: [availabilityzone]
   vm_type: small
   workers: 5
+  az: z1
 
 disk_types:
 - disk_size: 5000
@@ -34,8 +35,7 @@ networks:
     reserved: [[reserved]]
     static: [[static]]
     dns: [[dns]]
-- name: default2
-  type: manual
+    az: z1
   subnets:
   - cloud_properties:
       network_name: [network_name2]
@@ -48,7 +48,8 @@ networks:
     static: [[static2]]
     reserved: [[reserved2]]
     dns: [[dns2]]
-
+    az: z2
+    
 - name: vip
   type: vip
 

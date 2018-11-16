@@ -47,9 +47,7 @@ networks:
     cloud_properties:
       subnet: [net_id]
       default_security_groups: [[security_group]]
-
-- name: default2
-  type: manual
+    az: z1
   subnets:
   - range: [range2]
     gateway: [gateway2]
@@ -59,7 +57,7 @@ networks:
     cloud_properties:
       subnet: [net_id2]
       default_security_groups: [[security_group2]]
-
+    az: z2
 - name: vip
   type: vip
 
@@ -69,6 +67,7 @@ compilation:
   availability_zone: [availabilityzone]
   vm_type: small
   network: default
+  az: z1
   
 vm_extensions:
 - name: cf-router-network-properties

@@ -2,6 +2,9 @@
   path: /instance_groups/-
   value:
     instances: ((windows_cell_instance))
+    azs:
+    - z1
+    - z2
     jobs:
     - consumes:
         consul_client:

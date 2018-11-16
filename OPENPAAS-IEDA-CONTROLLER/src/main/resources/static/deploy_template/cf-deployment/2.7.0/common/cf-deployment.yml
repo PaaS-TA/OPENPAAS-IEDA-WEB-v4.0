@@ -38,6 +38,8 @@ instance_groups:
 - name: smoke-tests
   lifecycle: errand
   instances: 1
+  azs:
+  - z1
   vm_type: minimal
   stemcell: default
   update:
@@ -59,6 +61,8 @@ instance_groups:
         skip_ssl_validation: true
 - name: consul
   instances: 1
+  azs:
+  - z1
   persistent_disk_type: 5GB
   vm_type: minimal
   stemcell: default
@@ -91,6 +95,8 @@ instance_groups:
         server_key: "((consul_server.private_key))"
 - name: nats
   instances: 1
+  azs:
+  - z1
   vm_type: minimal
   stemcell: default
   networks:
@@ -112,6 +118,8 @@ instance_groups:
         user: nats
 - name: adapter
   instances: 1
+  azs:
+  - z1
   vm_type: minimal
   stemcell: default
   networks:
@@ -147,6 +155,8 @@ instance_groups:
   - name: singleton-database
   persistent_disk_type: 10GB
   instances: 1
+  azs:
+  - z1
   vm_type: small
   stemcell: default
   update:
@@ -214,6 +224,8 @@ instance_groups:
   migrated_from:
   - name: diego-bbs
   instances: 1
+  azs:
+  - z1
   vm_type: small
   stemcell: default
   update:
@@ -313,6 +325,8 @@ instance_groups:
         key: "((loggregator_tls_agent.private_key))"
 - name: uaa
   instances: 1
+  azs:
+  - z1
   vm_type: minimal
   stemcell: default
   networks:
@@ -496,6 +510,8 @@ instance_groups:
   migrated_from:
   - name: blobstore
   instances: 1
+  azs:
+  - z1
   vm_type: small
   persistent_disk_type: 100GB
   stemcell: default
@@ -542,6 +558,8 @@ instance_groups:
           - blobstore.((system_domain))
 - name: api
   instances: 1
+  azs:
+  - z1
   vm_type: small
   vm_extensions:
   - 50GB_ephemeral_disk
@@ -777,6 +795,8 @@ instance_groups:
             server_key: "((cc_bridge_cc_uploader_server.private_key))"
 - name: cc-worker
   instances: 1
+  azs:
+  - z1
   vm_type: minimal
   stemcell: default
   networks:
@@ -817,6 +837,8 @@ instance_groups:
   vm_extensions:
   - cf-router-network-properties
   instances: 1
+  azs:
+  - z1
   vm_type: minimal
   stemcell: default
   update:
@@ -860,6 +882,8 @@ instance_groups:
           port: 8443
 - name: tcp-router
   instances: 1
+  azs:
+  - z1
   vm_extensions:
   - cf-tcp-router-network-properties
   vm_type: minimal
@@ -886,6 +910,8 @@ instance_groups:
   vm_extensions:
   - diego-ssh-proxy-network-properties
   instances: 1
+  azs:
+  - z1
   migrated_from:
   - {name: cc-bridge}
   - {name: cc-clock}
@@ -999,6 +1025,8 @@ instance_groups:
               cn: "cloud-controller-ng.service.cf.internal"
 - name: doppler
   instances: 1
+  azs:
+  - z1
   vm_type: minimal
   stemcell: default
   networks:
@@ -1032,6 +1060,8 @@ instance_groups:
             key: "((loggregator_tls_doppler.private_key))"
 - name: diego-cell
   instances: 1
+  azs:
+  - z1
   vm_type: small-highmem
   vm_extensions:
   - 100GB_ephemeral_disk
@@ -1136,6 +1166,8 @@ instance_groups:
     
 - name: log-api
   instances: 1
+  azs:
+  - z1
   vm_type: minimal
   stemcell: default
   update:

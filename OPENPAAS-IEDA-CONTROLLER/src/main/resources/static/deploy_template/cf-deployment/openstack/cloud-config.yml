@@ -1,8 +1,14 @@
+azs:
+- name: z1
+  cloud_properties:
+    availability_zone: [availabilityzone]
+
 compilation:
   network: default
   reuse_compilation_vms: true
   vm_type: minimal
   workers: 5
+  az: z1
 
 disk_types:
 - disk_size: 5000
@@ -23,6 +29,7 @@ networks:
     reserved: [[reserved]]
     static: [[static]]
     dns: [[dns]]
+    az: z1
   type: manual
 - name: vip
   type: vip
@@ -42,7 +49,6 @@ vm_extensions:
       size: 102400
       type: gp2
   name: 100GB_ephemeral_disk
-  
   
 vm_types:
 - cloud_properties:

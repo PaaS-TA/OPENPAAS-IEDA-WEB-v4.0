@@ -115,11 +115,7 @@ public class BootstrapDeleteDeployAsyncService{
                     status = "done";
                     resultMessage = "BOOTSTRAP 삭제가 완료되었습니다.";
                     bootstrapDao.deleteBootstrapInfo(vo.getId());
-                    //설치 관리자 삭제
                     deleteDirectorConfigInfo(vo.getIaasType(), vo.getDirectorName());
-                    if(credentialFile.exists()){
-                    	credentialFile.delete();
-                    }
                 }
                 DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList(resultMessage));
             }

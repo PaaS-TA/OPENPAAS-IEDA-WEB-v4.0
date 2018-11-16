@@ -1,7 +1,16 @@
+azs:
+- name: z1
+  cloud_properties:
+    availability_zone: [availabilityzone]
+- name: z2
+  cloud_properties:
+    availability_zone: [availabilityzone2]
+
 compilation:
   network: default
   reuse_compilation_vms: true
   vm_type: minimal
+  az: z1
   workers: 5
 
 disk_types:
@@ -24,9 +33,7 @@ networks:
     reserved: [[reserved]]
     static: [[static]]
     dns: [[dns]]
-
-- name: default2
-  type: manual
+    az: z1
   subnets:
   - cloud_properties:
       net_id: [net_id2]
@@ -36,7 +43,8 @@ networks:
     reserved: [[reserved2]]
     static: [[static2]]
     dns: [[dns2]]
-  
+    az: z2
+    
 - name: vip
   type: vip
 

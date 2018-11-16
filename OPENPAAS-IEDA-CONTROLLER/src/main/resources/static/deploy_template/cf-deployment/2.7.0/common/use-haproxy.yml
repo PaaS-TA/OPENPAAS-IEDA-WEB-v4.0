@@ -9,6 +9,8 @@
   path: /instance_groups/name=smoke-tests:before
   value:
     instances: 1
+    azs:
+    - z1
     jobs:
     - name: haproxy
       properties:

@@ -73,7 +73,7 @@ public class CfDeployAsyncService {
             if("5.0.0".equals(vo.getReleaseVersion()) || "5.5.0".equals(vo.getReleaseVersion()) || "4.0".equals(vo.getReleaseVersion())){
                 settingRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
             } else {
-            	deleteRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
+                deleteRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
             }
             
             List<String> cmd = new ArrayList<String>(); //bosh cloud config 명령어 실행 줄 Cloud Config 관련 Rest API를 아직 지원 안하는 것 같음 2018.08.01
@@ -100,7 +100,14 @@ public class CfDeployAsyncService {
             cmd.add("-d");
             cmd.add(vo.getDeploymentName());
             cmd.add("deploy");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonBaseTemplate()+"");
+            if(vo.getNetworks() != null && vo.getNetworks().size() ==3){
+                if(vo.getNetworks().size() == 3){
+                    cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/cf-deployment-multi-az.yml");
+                }
+            } else {
+                cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonBaseTemplate()+"");
+            }
+            
             setDefualtInfo(cmd, vo, result);
             setPublicNetworkIpUse(cmd, vo, result);
             if("postgres".equals(vo.getCfDbType().toLowerCase())){
@@ -160,7 +167,7 @@ public class CfDeployAsyncService {
         }
     }
     
-	/****************************************************************
+    /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description : CF-Deploymnt 5.0.0/PaaS-TA 4.0 이상 BOSH Runtime Config 삭제 명령어 설정
      * @title : deleteRuntimeConfig
@@ -203,9 +210,9 @@ public class CfDeployAsyncService {
         } catch (IOException e) {
             DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
         }
-	}
+    }
 
-	/****************************************************************
+    /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description : CF-Deploymnt 5.0.0/PaaS-TA 4.0 이상 BOSH Runtime Config Update 명령어 설정
      * @title : settingRuntimeConfig
@@ -340,10 +347,6 @@ public class CfDeployAsyncService {
                     cmd.add("-o");
                     cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonOptionTemplate());
                 }
-            }
-            if(vo.getNetworks().size() == 3){
-                cmd.add("-o");
-                cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getOptionNetworkTemplate());
             }
         }
     }

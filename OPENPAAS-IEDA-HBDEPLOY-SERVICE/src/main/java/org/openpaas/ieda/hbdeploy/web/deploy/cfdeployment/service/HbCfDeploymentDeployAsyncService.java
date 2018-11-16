@@ -90,7 +90,7 @@ public class HbCfDeploymentDeployAsyncService {
             if("5.0.0".equals(vo.getHbCfDeploymentDefaultConfigVO().getCfDeploymentVersion()) || "5.0.0".equals(vo.getHbCfDeploymentDefaultConfigVO().getCfDeploymentVersion()) || "4.0".equals(vo.getHbCfDeploymentDefaultConfigVO().getCfDeploymentVersion())){
                 settingRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
             } else {
-            	deleteRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
+                deleteRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
             }
             
             HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Director Info Check Succeed...."));
@@ -148,7 +148,7 @@ public class HbCfDeploymentDeployAsyncService {
                     HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Release Download Check:::"+info));
                 }
                 if(info.contains("cancelled")){
-                	HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "cancelled", Arrays.asList("Cancel Task:::"+info));
+                    HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "cancelled", Arrays.asList("Cancel Task:::"+info));
                 }
                 if(info.contains("Preparing deployment: Preparing deployment")){
                     String taskId = info.split(" ")[1];
@@ -177,14 +177,14 @@ public class HbCfDeploymentDeployAsyncService {
         }
     }
     
-	/****************************************************************
+    /****************************************************************
      * @project : 이종 Paas 플랫폼 설치 자동화
      * @description : CF-Deploymnt 5.0.0/PaaS-TA 4.0 이상 BOSH Runtime Config 삭제 명령어 설정
      * @title : deleteRuntimeConfig
      * @return : void
     *****************************************************************/
     private void deleteRuntimeConfig(HbCfDeploymentVO vo, HbDirectorConfigVO directorInfo, Principal principal,
-			String messageEndpoint, ManifestTemplateVO result) {
+            String messageEndpoint, ManifestTemplateVO result) {
         String accumulatedLog= null;
         BufferedReader bufferedReader = null;
         try {
@@ -218,12 +218,12 @@ public class HbCfDeploymentDeployAsyncService {
                 HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
             }
         } catch (IOException e) {
-        	HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
+            HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
         }
-		
-	}
+        
+    }
 
-	/****************************************************************
+    /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description : BOSH Runtime Config 명령어 설정
      * @title : settingRuntimeConfig
@@ -257,15 +257,15 @@ public class HbCfDeploymentDeployAsyncService {
                 }
                 
                 if(info.contains("Downloading remote release")){
-                	HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Creating new packages:::"+info));
+                    HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Creating new packages:::"+info));
                 }
                 
                 if(info.contains("Creating new packages")){
-                	HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Creating new packages:::"+info));
+                    HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Creating new packages:::"+info));
                 }
                 
                 if(info.contains("Creating new jobs")){
-                	HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Creating new jobs:::"+info));
+                    HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Creating new jobs:::"+info));
                 }
             }
             if( accumulatedBuffer != null ) {
@@ -279,7 +279,7 @@ public class HbCfDeploymentDeployAsyncService {
                 HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
             }
         } catch (IOException e) {
-        	HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
+            HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
         }
     }
     

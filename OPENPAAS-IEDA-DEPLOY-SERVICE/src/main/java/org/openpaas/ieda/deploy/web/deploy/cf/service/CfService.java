@@ -35,7 +35,7 @@ public class CfService {
     @Autowired private CfDAO cfDao;
     @Autowired private NetworkDAO networkDao;
     @Autowired private ResourceDAO resourceDao;
-    @Autowired MessageSource message;
+    @Autowired private MessageSource message;
     @Autowired private CommonDeployDAO commonDao;
     
     final private static String SEPARATOR = System.getProperty("file.separator");
@@ -57,7 +57,6 @@ public class CfService {
                 cfInfo.setRecid(recid++);
                 cfInfo.setId(vo.getId());
                 cfInfo.setIaas(vo.getIaasType());
-
                 cfInfo.setCreateDate(vo.getCreateDate());
                 cfInfo.setUpdateDate(vo.getUpdateDate());
                 cfInfo.setDeploymentName(vo.getDeploymentName());

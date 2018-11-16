@@ -7,6 +7,7 @@ compilation:
   reuse_compilation_vms: true
   vm_type: small
   workers: 5
+  az: z1
 
 networks:
 - name: default
@@ -21,9 +22,7 @@ networks:
       virtual_network_name: [network_name]
       subnet_name: [subnet_name]
       security_group: [security_group]
-
-- name: default2
-  type: manual
+    az: z1
   subnets:
   - range: [range2]
     dns: [[dns2]]
@@ -34,6 +33,7 @@ networks:
       virtual_network_name: [network_name2]
       subnet_name: [subnet_name2]
       security_group: [security_group2]
+    az: z2
 
 - name: vip
   type: vip
