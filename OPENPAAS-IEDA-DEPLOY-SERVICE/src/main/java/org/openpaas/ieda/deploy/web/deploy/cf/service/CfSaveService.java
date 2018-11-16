@@ -74,7 +74,12 @@ public class CfSaveService {
         vo.setPaastaMonitoringUse(dto.getPaastaMonitoringUse());
         vo.setIngestorIp(dto.getIngestorIp());
         vo.setUpdateUserId(principal.getName());
-        
+        //배포 명 중복 검사
+        int count = cfDao.selectCfDeploymentNameDuplication(vo.getIaasType(), vo.getDeploymentName(), vo.getId());
+        if( count > 0 ){
+            throw new CommonException(setMessageSourceValue("common.conflict.exception.code"), 
+                    setMessageSourceValue("common.conflict.deployment.name.message"), HttpStatus.CONFLICT);
+        }
         if( StringUtils.isEmpty(dto.getId()) ){
             cfDao.insertCfInfo(vo);
         }else{

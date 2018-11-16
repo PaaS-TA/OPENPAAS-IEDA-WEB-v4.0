@@ -90,6 +90,8 @@ public class HbCfDeploymentDeployAsyncService {
             // CF-Deployment 5.0.0 버전 이상 bosh runtime config required
             if("5.0.0".equals(vo.getHbCfDeploymentDefaultConfigVO().getCfDeploymentVersion()) || "4.0".equals(vo.getHbCfDeploymentDefaultConfigVO().getCfDeploymentVersion())){
                 settingRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
+            } else {
+            	deleteRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
             }
             
             HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Director Info Check Succeed...."));
@@ -180,7 +182,54 @@ public class HbCfDeploymentDeployAsyncService {
         }
     }
     
-    /****************************************************************
+	/****************************************************************
+     * @project : 이종 Paas 플랫폼 설치 자동화
+     * @description : CF-Deploymnt 5.0.0/PaaS-TA 4.0 이상 BOSH Runtime Config 삭제 명령어 설정
+     * @title : deleteRuntimeConfig
+     * @return : void
+    *****************************************************************/
+    private void deleteRuntimeConfig(HbCfDeploymentVO vo, HbDirectorConfigVO directorInfo, Principal principal,
+			String messageEndpoint, ManifestTemplateVO result) {
+        String accumulatedLog= null;
+        BufferedReader bufferedReader = null;
+        try {
+            List<String> cmd = new ArrayList<String>();
+            cmd.add("bosh");
+            cmd.add("-e");
+            cmd.add(directorInfo.getDirectorName());
+            cmd.add("delete-config");
+            cmd.add("--type=runtime");
+            cmd.add("--name=default");
+            cmd.add("--tty");
+            cmd.add("-n");
+            ProcessBuilder builder = new ProcessBuilder(cmd);
+            builder.redirectErrorStream(true);
+            Process process = builder.start();
+            InputStream inputStream = process.getInputStream();
+            bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
+            String info = null;
+            StringBuffer accumulatedBuffer = new StringBuffer();
+            while ((info = bufferedReader.readLine()) != null){
+                accumulatedBuffer.append(info).append("\n");
+                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList(info));
+            }
+            if( accumulatedBuffer != null ) {
+                accumulatedLog = accumulatedBuffer.toString();
+            }
+            if ( !accumulatedLog.contains("Succeeded") ) {
+                String status = "error";
+                vo.setDeployStatus(status);
+                vo.setUpdateUserId(principal.getName());
+                saveDeployStatus(vo);
+                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
+            }
+        } catch (IOException e) {
+            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
+        }
+		
+	}
+
+	/****************************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description : BOSH Runtime Config 명령어 설정
      * @title : settingRuntimeConfig

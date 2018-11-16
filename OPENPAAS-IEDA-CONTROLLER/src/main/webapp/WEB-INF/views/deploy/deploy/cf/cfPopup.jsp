@@ -1822,7 +1822,7 @@ function gridReload() {
                     <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">배포 명</label>
                         <div style=" width: 60%;">
-                            <input name="deploymentName" type="text" value="cf" style="display:inline-block;width:80%;" readonly onkeydown="return fn_press_han(event, this);" onblur="return fn_press_han(event, this);"  style='ime-mode:inactive;' placeholder="배포 명을 입력하세요." />
+                            <input name="deploymentName" type="text" style="display:inline-block;width:80%;" onkeydown="return fn_press_han(event, this);" onblur="return fn_press_han(event, this);"  style='ime-mode:inactive;' placeholder="배포 명을 입력하세요." />
                         </div>
                     </div>
                     <div class="w2ui-field">
