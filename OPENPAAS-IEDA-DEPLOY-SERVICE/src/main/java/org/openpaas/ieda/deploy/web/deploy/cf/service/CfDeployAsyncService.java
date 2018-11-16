@@ -70,7 +70,7 @@ public class CfDeployAsyncService {
             BufferedReader bufferedReader = null;
             DirectorConfigVO directorInfo = directorConfigService.getDefaultDirector();
             
-            if("5.0.0".equals(vo.getReleaseVersion()) || "4.0".equals(vo.getReleaseVersion())){
+            if("5.0.0".equals(vo.getReleaseVersion()) || "5.5.0".equals(vo.getReleaseVersion()) || "4.0".equals(vo.getReleaseVersion())){
                 settingRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
             } else {
             	deleteRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
@@ -214,6 +214,7 @@ public class CfDeployAsyncService {
     private void settingRuntimeConfig(CfVO vo, DirectorConfigVO directorInfo, Principal principal, String messageEndpoint, ManifestTemplateVO result) {
         String accumulatedLog= null;
         BufferedReader bufferedReader = null;
+        String status = "";
         try {
             List<String> cmd = new ArrayList<String>();
             cmd.add("bosh");
@@ -234,13 +235,29 @@ public class CfDeployAsyncService {
             StringBuffer accumulatedBuffer = new StringBuffer();
             while ((info = bufferedReader.readLine()) != null){
                 accumulatedBuffer.append(info).append("\n");
-                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList(info));
+                if(info.contains("invalid argument") || info.contains("error") || info.contains("fail") || info.contains("Error") || info.contains("Expected")){
+                    status = "error";
+                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(info));
+                }
+                
+                if(info.contains("Downloading remote release")){
+                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Creating new packages:::"+info));
+                }
+                
+                if(info.contains("Creating new packages")){
+                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Creating new packages:::"+info));
+                }
+                
+                if(info.contains("Creating new jobs")){
+                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Creating new jobs:::"+info));
+                }
             }
             if( accumulatedBuffer != null ) {
                 accumulatedLog = accumulatedBuffer.toString();
             }
+            
             if ( !accumulatedLog.contains("Succeeded") ) {
-                String status = "error";
+                status = "error";
                 vo.setDeployStatus(status);
                 vo.setUpdateUserId(principal.getName());
                 saveDeployStatus(vo);

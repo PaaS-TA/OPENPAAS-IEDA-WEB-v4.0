@@ -14,7 +14,6 @@ import java.util.Locale;
 import org.apache.commons.httpclient.HttpClient;
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.common.exception.CommonException;
-import org.openpaas.ieda.deploy.api.director.utility.DirectorRestHelper;
 import org.openpaas.ieda.deploy.web.common.dao.CommonDeployDAO;
 import org.openpaas.ieda.deploy.web.common.dao.ManifestTemplateVO;
 import org.openpaas.ieda.hbdeploy.api.director.utility.HbDirectorRestHelper;
@@ -88,7 +87,7 @@ public class HbCfDeploymentDeployAsyncService {
                 }
             }
             // CF-Deployment 5.0.0 버전 이상 bosh runtime config required
-            if("5.0.0".equals(vo.getHbCfDeploymentDefaultConfigVO().getCfDeploymentVersion()) || "4.0".equals(vo.getHbCfDeploymentDefaultConfigVO().getCfDeploymentVersion())){
+            if("5.0.0".equals(vo.getHbCfDeploymentDefaultConfigVO().getCfDeploymentVersion()) || "5.0.0".equals(vo.getHbCfDeploymentDefaultConfigVO().getCfDeploymentVersion()) || "4.0".equals(vo.getHbCfDeploymentDefaultConfigVO().getCfDeploymentVersion())){
                 settingRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
             } else {
             	deleteRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
@@ -145,21 +144,17 @@ public class HbCfDeploymentDeployAsyncService {
                     status = "error";
                     HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(info));
                 }
-                
                 if(info.contains("Release")){
                     HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Release Download Check:::"+info));
                 }
-                
                 if(info.contains("cancelled")){
                 	HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "cancelled", Arrays.asList("Cancel Task:::"+info));
                 }
-                
                 if(info.contains("Preparing deployment: Preparing deployment")){
                     String taskId = info.split(" ")[1];
                     HttpClient httpClient = HbDirectorRestHelper.getHttpClient(directorInfo.getDirectorPort());
                     status = HbDirectorRestHelper.trackToTask(directorInfo, messagingTemplate, messageEndpoint, httpClient, taskId, "event", principal.getName());
                 }
-
             }
         }catch (RuntimeException e) {
             status = "error";
@@ -211,7 +206,6 @@ public class HbCfDeploymentDeployAsyncService {
             StringBuffer accumulatedBuffer = new StringBuffer();
             while ((info = bufferedReader.readLine()) != null){
                 accumulatedBuffer.append(info).append("\n");
-                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList(info));
             }
             if( accumulatedBuffer != null ) {
                 accumulatedLog = accumulatedBuffer.toString();
@@ -221,10 +215,10 @@ public class HbCfDeploymentDeployAsyncService {
                 vo.setDeployStatus(status);
                 vo.setUpdateUserId(principal.getName());
                 saveDeployStatus(vo);
-                DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
+                HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
             }
         } catch (IOException e) {
-            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
+        	HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
         }
 		
 	}
@@ -258,7 +252,21 @@ public class HbCfDeploymentDeployAsyncService {
             StringBuffer accumulatedBuffer = new StringBuffer();
             while ((info = bufferedReader.readLine()) != null){
                 accumulatedBuffer.append(info).append("\n");
-                HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList(info));
+                if(info.contains("invalid argument") || info.contains("error") || info.contains("fail") || info.contains("Error") || info.contains("Expected")){
+                    HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(info));
+                }
+                
+                if(info.contains("Downloading remote release")){
+                	HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Creating new packages:::"+info));
+                }
+                
+                if(info.contains("Creating new packages")){
+                	HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Creating new packages:::"+info));
+                }
+                
+                if(info.contains("Creating new jobs")){
+                	HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Creating new jobs:::"+info));
+                }
             }
             if( accumulatedBuffer != null ) {
                 accumulatedLog = accumulatedBuffer.toString();
@@ -271,7 +279,7 @@ public class HbCfDeploymentDeployAsyncService {
                 HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
             }
         } catch (IOException e) {
-            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
+        	HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
         }
     }
     
