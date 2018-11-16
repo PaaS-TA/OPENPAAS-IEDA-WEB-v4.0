@@ -111,7 +111,7 @@
   value:
     alias: windows2016
     os: windows2016
-    version: "1709.13"
+    version: "((windows_stemcell_version))"
 - type: replace
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/stacks/name=windows2016?
   value:
