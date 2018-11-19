@@ -671,6 +671,7 @@ instance_groups:
       router:
         route_services_secret: "((router_route_services_secret))"
       system_domain: "((system_domain))"
+      system_domain_organization: "((system_domain_org))"
       app_domains:
       - "((system_domain))"
       app_ssh:

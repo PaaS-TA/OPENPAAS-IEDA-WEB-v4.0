@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openpaas.ieda.hbdeploy.web.common.base.BaseHbDeployControllerUnitTest;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentDAO;
+import org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentDefaultConfigVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentVO;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -69,6 +70,10 @@ public class HbCfDeploymentDeleteAsyncServiceUnitTest extends BaseHbDeployContro
         vo.setCloudConfigFile("cloud-config.yml");
         vo.setCredentialConfigInfo("crendential-config");
         vo.setDefaultConfigInfo("default-config");
+        vo.setCloudConfigFile("1.yml");
+        HbCfDeploymentDefaultConfigVO hbVo = new HbCfDeploymentDefaultConfigVO();
+        hbVo.setDeploymentName("paasta");
+        vo.setHbCfDeploymentDefaultConfigVO(hbVo);
         vo.setIaasType("Openstack");
         vo.setResourceConfigInfo("resource-config");
         vo.setDeployStatus("done");

@@ -37,7 +37,6 @@ public class StemcellManagementService {
     final private static String LOCK_DIR=LocalDirectoryConfiguration.getLockDir();
     final private static String SEPARATOR = System.getProperty("file.separator");
     final static private String PUBLIC_STEMCELLS_NEWEST_URL = "https://s3.amazonaws.com"; 
-    final static private String PUBLIC_STEMCELLS_OLDEST_URL = "https://bosh-jenkins-artifacts.s3.amazonaws.com";
     final static private String PUBLIC_STEMCELLS_WINDOWS_URL = "https://bosh-windows-stemcells-production.";
     private final static Logger LOGGER = LoggerFactory.getLogger(StemcellManagementService.class);
     

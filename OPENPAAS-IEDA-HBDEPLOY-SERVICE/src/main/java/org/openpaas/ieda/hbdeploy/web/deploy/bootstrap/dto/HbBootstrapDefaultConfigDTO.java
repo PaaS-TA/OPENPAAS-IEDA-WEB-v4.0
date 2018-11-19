@@ -29,6 +29,9 @@ public class HbBootstrapDefaultConfigDTO {
     private String iaasType;
     private String defaultConfigName;
     private String boshBpmRelease; // BOSH BPM 릴리즈
+    private String osConfRelease; 
+    private String uaaRelease; 
+    private String credhubRelease; 
     
     public String getId() {
         return id;
@@ -126,5 +129,22 @@ public class HbBootstrapDefaultConfigDTO {
     public void setBoshBpmRelease(String boshBpmRelease) {
         this.boshBpmRelease = boshBpmRelease;
     }
-    
+    public String getOsConfRelease() {
+        return osConfRelease;
+    }
+    public void setOsConfRelease(String osConfRelease) {
+        this.osConfRelease = osConfRelease;
+    }
+    public String getUaaRelease() {
+        return uaaRelease;
+    }
+    public void setUaaRelease(String uaaRelease) {
+        this.uaaRelease = uaaRelease;
+    }
+    public String getCredhubRelease() {
+        return credhubRelease;
+    }
+    public void setCredhubRelease(String credhubRelease) {
+        this.credhubRelease = credhubRelease;
+    }
 }

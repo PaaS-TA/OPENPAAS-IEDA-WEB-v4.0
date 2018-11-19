@@ -373,10 +373,8 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
          html+= field_div_label + "보안 그룹" + "</label>"; 
          html+= "<div>"+"<input class='form-control' name='securityGroup_"+index+"'" + text_style +" placeholder='예) bosh-security, cf-security'/>"+"</div></div>";
          
-         if( $("select[name=iaasType]").val().toLowerCase() == "aws" ){
-             html+= field_div_label + "가용 영역" + "</label>"; 
-             html+= "<div>"+"<input class='form-control' name='availabilityZone_"+index+"'" + text_style +" placeholder='예) us-west-2'/>"+"</div></div>";
-         }
+         html+= field_div_label + "가용 영역" + "</label>"; 
+         html+= "<div>"+"<input class='form-control' name='availabilityZone_"+index+"'" + text_style +" placeholder='예) us-west-2'/>"+"</div></div>";
          html+= field_div_label + "서브넷 범위" + "</label>"; 
          html+= "<div>"+"<input class='form-control' name='subnetRange_"+index+"'" + text_style +" placeholder='예) 10.0.0.0/24'/>" + "</div></div>";
          
@@ -506,7 +504,7 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
     w2popup.unlock();
 }
 function iaasTypeChangeInput(value, record){
-    if( value.toUpperCase() == "AWS" ){
+    if( value.toUpperCase() == "AWS" || value.toUpperCase() == "OPENSTACK" ){
         $("#availabilityZoneDiv").show();
         $("#availabilityZoneDiv").css("display", "block");
         if(record.subnetStaticTo2 != null && record.subnetStaticTo2 != ""){
@@ -522,9 +520,6 @@ function iaasTypeChangeInput(value, record){
             $("input[name='subnetStaticTo_2']").val(record.subnetStaticTo2);
             $("input[name='availabilityZone_2']").val(record.availabilityZone2);
         }
-    } else {
-        $("#availabilityZoneDiv").hide();
-        $("#availabilityZoneDiv").css("display", "none");
     }
 }
 
@@ -683,7 +678,7 @@ function delInternalNetwork(preDiv, index){
                             <input class="form-control" name="securityGroup1" type="text"  style="width: 250px; margin-left: 20px;" placeholder="예) bosh-security, cf-security"/>
                         </div>
                     </div>
-                    <div class="w2ui-field" hidden="true" id="availabilityZoneDiv">
+                    <div class="w2ui-field" id="availabilityZoneDiv">
                         <label style="width:40%;text-align: left;padding-left: 20px;">가용 영역</label>
                         <div>
                             <input class="form-control" name="availabilityZone1" type="text"  style="width: 250px; margin-left: 20px;" placeholder="예) us-west-2"/>

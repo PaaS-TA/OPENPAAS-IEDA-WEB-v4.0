@@ -14,6 +14,9 @@ public class HbBootstrapDefaultConfigVO {
     private String boshRelease; // BOSH 릴리즈
     private String boshCpiRelease; // BOSH API 릴리즈
     private String boshBpmRelease; // BOSH BPM 릴리즈
+    private String uaaRelease; 
+    private String osConfRelease; 
+    private String credhubRelease; 
     private String snapshotSchedule;//스냅샷 스케줄
     private String enableSnapshots;//스냅샷 사용 유무
     private String ntp; // NTP
@@ -152,5 +155,22 @@ public class HbBootstrapDefaultConfigVO {
     public void setBoshBpmRelease(String boshBpmRelease) {
         this.boshBpmRelease = boshBpmRelease;
     }
-    
+    public String getOsConfRelease() {
+        return osConfRelease;
+    }
+    public void setOsConfRelease(String osConfRelease) {
+        this.osConfRelease = osConfRelease;
+    }
+    public String getUaaRelease() {
+        return uaaRelease;
+    }
+    public void setUaaRelease(String uaaRelease) {
+        this.uaaRelease = uaaRelease;
+    }
+    public String getCredhubRelease() {
+        return credhubRelease;
+    }
+    public void setCredhubRelease(String credhubRelease) {
+        this.credhubRelease = credhubRelease;
+    }
 }

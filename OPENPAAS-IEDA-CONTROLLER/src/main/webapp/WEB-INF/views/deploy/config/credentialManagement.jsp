@@ -217,7 +217,7 @@ function clearMainPage() {
            <div class="panel panel-info"  style="margin-top:5px;">
                <div class="panel-heading"><b>디렉터 인증서 정보</b></div>
                <div class="panel-body" style="height:180px; overflow-y:auto;">
-               <p style="color:red;">BOOTSTRAP 설치 시 Public IP를 사용할 경우에만 값을 입력하세요.</p>
+               <p style="color:red;">BOOTSTRAP 설치 시 Public IP를 사용할 경우만 Public IP 값을 입력하세요.</p>
                    <div class="w2ui-field">
                        <label style="width:33%;text-align: left;padding-left: 20px;">디렉터 인증서 명</label>
                        <div>

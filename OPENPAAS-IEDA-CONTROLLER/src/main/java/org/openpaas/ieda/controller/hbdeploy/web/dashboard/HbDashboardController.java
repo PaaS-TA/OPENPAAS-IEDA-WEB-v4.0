@@ -32,7 +32,7 @@ public class HbDashboardController extends BaseController {
     ***************************************************/
     @RequestMapping(value="/main/hbDashboard", method=RequestMethod.GET)
     public String goDashboard() {
-        return "/deploy/dashboard/dashboard";
+        return "/hbdeploy/config/hbListDirector";
     }
 
     /***************************************************

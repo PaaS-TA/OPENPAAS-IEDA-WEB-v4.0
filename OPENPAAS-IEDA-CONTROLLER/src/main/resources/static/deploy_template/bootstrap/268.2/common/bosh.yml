@@ -3,39 +3,31 @@ name: bosh
 
 releases:
 - name: bosh
-  url: file:///[boshRelease]
-- name: bosh-azure-cpi
-  url: file:///[boshCpiRelease]
+  url: file:///((boshRelease))
 - name: bpm
-  url: file:///[boshBpmRelease]
+  url: file:///((bpmRelease))
+
 resource_pools:
 - name: vms
-  network: public
-  stemcell: 
-    url: file:///[stemcell]
-  cloud_properties: 
-    instance_type: [cloudInstanceType]
+  network: default
   env:
     bosh:
-      password: [boshPassword]
+      password: '*'
+      mbus:
+        cert: ((mbus_bootstrap_ssl))
 
 disk_pools:
 - name: disks
-  disk_size: 40960
+  disk_size: 65_536
 
 networks:
-- name: private
+- name: default
   type: manual
   subnets:
-  - range: [subnetRange]
-    gateway: [subnetGateway]
-    static: [[privateStaticIp]]
-    dns: [[subnetDns]]
-    cloud_properties: 
-      virtual_network_name: [networkName]
-      subnet_name: [subnetId]
-- name: public
-  type: vip
+  - range: ((internal_cidr))
+    gateway: ((internal_gw))
+    static: [((internal_ip))]
+    dns: [8.8.8.8]
 
 instance_groups:
 - name: bosh
@@ -47,21 +39,30 @@ instance_groups:
   - {name: blobstore, release: bosh}
   - {name: director, release: bosh}
   - {name: health_monitor, release: bosh}
-  - {name: registry, release: bosh}
-  - {name: azure_cpi, release: bosh-azure-cpi}
   resource_pool: vms
   persistent_disk_pool: disks
   networks:
-  - name: private
-    static_ips: [[privateStaticIp]]
-    default: [dns, gateway]
-  - name: public
-    static_ips: [[publicStaticIp]]
+  - name: default
+    static_ips: [((internal_ip))]
   properties:
+    agent:
+      mbus: nats://nats:((nats_password))@((internal_ip)):4222
+      env:
+        bosh:
+          blobstores:
+          - provider: dav
+            options:
+              # todo switch to using https
+              endpoint: http://((internal_ip)):25250
+              user: agent
+              password: ((blobstore_agent_password))
+              tls:
+                cert:
+                  ca: ((blobstore_ca.certificate))
     nats:
-      address: [privateStaticIp]
+      address: ((internal_ip))
       user: nats
-      password: nats-password
+      password: ((nats_password))
       tls:
         ca: ((nats_server_tls.ca))
         client_ca:
@@ -80,29 +81,27 @@ instance_groups:
       listen_address: 127.0.0.1
       host: 127.0.0.1
       user: postgres
-      password: postgres-password
+      password: ((postgres_password))
       database: bosh
       adapter: postgres
     blobstore:
-      address: [privateStaticIp]
+      address: ((internal_ip))
       port: 25250
       provider: dav
       director:
         user: director
-        password: director-password
+        password: ((blobstore_director_password))
       agent:
         user: agent
-        password: agent-password
+        password: ((blobstore_agent_password))
       tls:
         cert:
           ca: ((blobstore_ca.certificate))
           certificate: ((blobstore_server_tls.certificate))
           private_key: ((blobstore_server_tls.private_key))
     director:
-      default_ssh_options:
-        gateway_host: [publicStaticIp]
       address: 127.0.0.1
-      name: abosh
+      name: ((director_name))
       db: *db
       flush_arp: true
       enable_post_deploy: true
@@ -122,60 +121,26 @@ instance_groups:
         local:
           users:
           - name: admin
-            password: admin
+            password: ((admin_password))
           - name: hm
-            password: hm-password
-      cpi_job: azure_cpi
+            password: ((hm_password))
     hm:
       director_account:
         user: hm
-        password: hm-password
+        password: ((hm_password))
         ca_cert: ((director_ssl.ca))
       resurrector_enabled: true
     ntp: &ntp
-    - [ntp]
-    agent:
-      mbus: nats://nats:nats-password@[privateStaticIp]:4222
-    registry:
-      address: [privateStaticIp]
-      host: [privateStaticIp]
-      db: # todo remove
-        host: 127.0.0.1
-        user: postgres
-        password: postgres-password
-        database: bosh
-        adapter: postgres
-      http:
-        user: registry
-        password: registry-password
-        port: 25777
-      username: registry
-      password: registry-password
-      port: 25777
-    azure: &cpi_conf
-      environment: AzureCloud
-      subscription_id: [azureSubscriptionId]
-      tenant_id: [commonTenant]
-      client_id: [accessUser]
-      client_secret: [accessSecret]
-      resource_group_name: [azureResourceGroup]
-      storage_account_name: [azureStorageAccountName]
-      default_security_group: [defaultSecurityGroups]
-      ssh_user: vcap
-      ssh_public_key: [azureSshPublicKey]
+    - time1.google.com
+    - time2.google.com
+    - time3.google.com
+    - time4.google.com
 
 cloud_provider:
-  mbus: https://mbus:mbus-password@[publicStaticIp]:6868
+  mbus: https://mbus:((mbus_bootstrap_password))@((internal_ip)):6868
+  cert: ((mbus_bootstrap_ssl))
   properties:
-    agent: {mbus: "https://mbus:mbus-password@0.0.0.0:6868"}
+    agent: {mbus: "https://mbus:((mbus_bootstrap_password))@0.0.0.0:6868"}
     blobstore: {provider: local, path: /var/vcap/micro_bosh/data/cache}
     ntp: *ntp
-    azure: *cpi_conf
-  template:
-    name: azure_cpi
-    release: bosh-azure-cpi
-  ssh_tunnel:
-    host: [publicStaticIp]
-    port: 22
-    user: vcap
-    private_key: [privateKeyPath]
+

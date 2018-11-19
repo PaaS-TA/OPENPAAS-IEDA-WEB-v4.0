@@ -414,12 +414,6 @@ $(function() {
                 },ipv4 : function(){
                     return $("input[name='privateStaticIp']").val()
                 }
-            }, publicStaticIp: { 
-                required: function(){
-                    return checkEmpty( $("input[name='publicStaticIp']").val() );
-                },ipv4 : function(){
-                    return $("input[name='publicStaticIp']").val()
-                }
             }, subnetRange: { 
                 required: function(){
                     return checkEmpty( $("input[name='subnetRange']").val() );
@@ -457,9 +451,6 @@ $(function() {
                 required:  "네트워크 별칭"+text_required_msg
             }, privateStaticIp: { 
                 required:  "디렉터 Private IP"+text_required_msg
-                ,ipv4 : text_ip_msg
-            }, publicStaticIp: { 
-                required:  "디렉터 Public IP" + text_required_msg
                 ,ipv4 : text_ip_msg
             }, subnetRange: { 
                 required:  "서브넷 범위"+select_required_msg

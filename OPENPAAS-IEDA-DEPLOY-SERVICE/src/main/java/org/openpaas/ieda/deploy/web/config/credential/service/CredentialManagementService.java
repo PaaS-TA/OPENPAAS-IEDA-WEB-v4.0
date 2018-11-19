@@ -78,8 +78,8 @@ public class CredentialManagementService {
      * @return : void
     ***************************************************/
     public void makeCredentialFile(CredentialManagementDTO dto, String credentialKeyName) {
-        String commonCredentialManifestPath = MANIFEST_TEMPLATE_DIR + "/bootstrap/common/director-credential.yml";
-        if(StringUtils.isEmpty(dto.getDirectorPublicIp()) && dto.getDirectorPublicIp() == null){
+        String commonCredentialManifestPath = MANIFEST_TEMPLATE_DIR + "/bootstrap/credential/director-credential.yml";
+        if(StringUtils.isEmpty(dto.getDirectorPublicIp()) || dto.getDirectorPublicIp() == null){
             dto.setDirectorPublicIp(dto.getDirectorPrivateIp());
         }
         try {

@@ -29,7 +29,7 @@
     network_name: ((network))
     subnetwork_name: ((subnetwork))
     ephemeral_external_ip: false
-    tags: ((tags))
+    tags: [((tags))]
 
 # Add CPI job
 - type: replace

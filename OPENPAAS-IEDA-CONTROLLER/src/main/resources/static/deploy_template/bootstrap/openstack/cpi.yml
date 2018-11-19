@@ -8,14 +8,13 @@
 - type: replace
   path: /resource_pools/name=vms/stemcell?
   value:
-    url: file:///[stemcell]
+    url: file:///((stemcell))
 
 # Configure sizes
 - type: replace
   path: /resource_pools/name=vms/cloud_properties?
   value:
     instance_type: ((cloudInstanceType))
-    availability_zone: ((az))
 
 - type: replace
   path: /networks/name=default/subnets/0/cloud_properties?
@@ -69,7 +68,7 @@
     project: ((openstack_project))
     region: ((region))
     default_key_name: ((default_key_name))
-    default_security_groups: ((default_security_groups))
+    default_security_groups: [((default_security_groups))]
     human_readable_vm_names: true
 
 - type: replace

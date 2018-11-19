@@ -108,8 +108,8 @@ public class HbBootstrapCredentialConfigService {
      * @return : void
     ***************************************************/
     public void makeCredentialFile(HbBootstrapCredentialConfigDTO dto, String credentialKeyName) {
-        String commonCredentialManifestPath = MANIFEST_TEMPLATE_DIR + "/bootstrap/264.7/common/director-credential.yml";
-        if(StringUtils.isEmpty(dto.getDirectorPublicIp()) && dto.getDirectorPublicIp() == null){
+        String commonCredentialManifestPath = MANIFEST_TEMPLATE_DIR + "/bootstrap/credential/director-credential.yml";
+        if(StringUtils.isEmpty(dto.getDirectorPublicIp()) || dto.getDirectorPublicIp() == null){
             dto.setDirectorPublicIp(dto.getDirectorPrivateIp());
         }
         try {

@@ -37,6 +37,12 @@
         <result property="credentialKeyName" column="credential_key_name"/>
         <result property="boshRelease" column="boshRelease"/>
         <result property="boshCpiRelease" column="bosh_cpi_release"/>
+        
+        <result property="boshBpmRelease" column="bosh_bpm_release"/>
+        <result property="uaaRelease" column="uaa_release"/>
+        <result property="osConfRelease" column="os_conf_release"/>
+        <result property="credhubRelease" column="cred_hub_release"/>
+        
         <result property="snapshotSchedule" column="snapshot_schedule"/>
         <result property="enableSnapshots" column="enable_snapshots"/>
         <result property="ntp" column="ntp"/>
@@ -99,6 +105,10 @@
         ,defaultInfo.credential_key_name
         ,defaultInfo.boshRelease
         ,defaultInfo.bosh_cpi_release
+        ,defaultInfo.bosh_bpm_release
+        ,defaultInfo.uaa_release
+        ,defaultInfo.os_conf_release
+        ,defaultInfo.cred_hub_release
         ,defaultInfo.enable_snapshots
         ,defaultInfo.snapshot_schedule
         ,defaultInfo.paasta_monitoring_use
@@ -176,6 +186,10 @@
         ,defaultInfo.credential_key_name
         ,defaultInfo.boshRelease
         ,defaultInfo.bosh_cpi_release
+        ,defaultInfo.bosh_bpm_release
+        ,defaultInfo.uaa_release
+        ,defaultInfo.os_conf_release
+        ,defaultInfo.cred_hub_release
         ,defaultInfo.enable_snapshots
         ,defaultInfo.snapshot_schedule
         ,defaultInfo.paasta_monitoring_use

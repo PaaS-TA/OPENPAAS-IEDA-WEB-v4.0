@@ -19,6 +19,8 @@
     <result property="boshCpiRelease" column ="BOSH_CPI_RELEASE"/>
     <result property="boshBpmRelease" column = "BOSH_BPM_RELEASE"/>
     <result property="osConfRelease" column ="OS_CONF_RELEASE"/>
+    <result property="uaaRelease" column ="UAA_RELEASE"/>
+    <result property="credhubRelease" column ="CRED_HUB_RELEASE"/>
     <result property="snapshotSchedule" column ="SNAPSHOT_SCHEDULE"/>
     <result property="enableSnapshots" column ="ENABLE_SNAPSHOTS"/>
     <result property="createUserId" column ="CREATE_USER_ID"/>
@@ -39,6 +41,9 @@
         ,boshRelease
         ,bosh_cpi_release
         ,bosh_bpm_release
+        ,os_conf_release
+        ,uaa_release
+        ,cred_hub_release
         ,enable_snapshots
         ,snapshot_schedule
         ,paasta_monitoring_use
@@ -60,6 +65,9 @@
         ,boshRelease
         ,bosh_cpi_release
         ,bosh_bpm_release
+        ,uaa_release
+        ,os_conf_release
+        ,cred_hub_release
         ,enable_snapshots
         ,snapshot_schedule
         ,paasta_monitoring_use
@@ -80,6 +88,9 @@
         ,#{default.boshRelease}
         ,#{default.boshCpiRelease}
         ,#{default.boshBpmRelease}
+        ,#{default.uaaRelease}
+        ,#{default.osConfRelease}
+        ,#{default.credhubRelease}
         ,#{default.enableSnapshots}
         ,#{default.snapshotSchedule}
         ,#{default.paastaMonitoringUse}
@@ -104,6 +115,9 @@
         ,ntp = #{default.ntp}
         ,bosh_cpi_release = #{default.boshCpiRelease}
         ,bosh_bpm_release = #{default.boshBpmRelease}
+        ,uaa_release = #{default.uaaRelease}
+        ,cred_hub_release = #{default.credhubRelease}
+        ,os_conf_release = #{default.osConfRelease}
         ,enable_snapshots = #{default.enableSnapshots}
         ,snapshot_schedule = #{default.snapshotSchedule}
         ,paasta_monitoring_use = #{default.paastaMonitoringUse}
@@ -128,6 +142,9 @@
         ,boshRelease
         ,bosh_cpi_release
         ,bosh_bpm_release
+        ,os_conf_release
+        ,uaa_release
+        ,cred_hub_release
         ,enable_snapshots
         ,snapshot_schedule
         ,paasta_monitoring_use

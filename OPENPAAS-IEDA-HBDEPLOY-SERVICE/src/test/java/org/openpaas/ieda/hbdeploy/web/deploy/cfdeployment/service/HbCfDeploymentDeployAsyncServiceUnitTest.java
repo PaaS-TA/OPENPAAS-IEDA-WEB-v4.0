@@ -122,6 +122,7 @@ public class HbCfDeploymentDeployAsyncServiceUnitTest extends BaseHbDeployContro
         vo.setCommonJobTemplate("instance.yml");
         vo.setCommonOptionTemplate("option.yml");
         vo.setDeployType("cf-deployment");
+        vo.setReleaseType("paasta");
         vo.setIaasPropertyTemplate("iaas.yml");
         vo.setIaasType("Openstack");
         vo.setId(1);

@@ -30,7 +30,9 @@ INSERT INTO ieda_common_code VALUES ( '324', 'DEPLOY_STATUS_DELETING', '1206', '
 INSERT INTO ieda_common_code VALUES ( '325', 'RELEASE_TYPE', '2000', '릴리즈 유형' , '릴리즈 유형', '0', null, null, null, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '326', 'BOSH', '2001', 'bosh 릴리즈' , 'bosh 릴리즈', '0', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '327', 'BOSH_CPI', '2002', 'bosh-cpi 릴리즈' , 'bosh-cpi 릴리즈', '1', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
-INSERT INTO ieda_common_code VALUES ( '335', 'OS-CONF', '2010', 'of-config 릴리즈' , 'of-config 릴리즈', '10', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
+INSERT INTO ieda_common_code VALUES ( '328', 'OS-CONF', '2003', 'of-config 릴리즈' , 'of-config 릴리즈', '10', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
+INSERT INTO ieda_common_code VALUES ( '329', 'UAA', '2004', 'uaa 릴리즈' , 'uaa 릴리즈', '10', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
+INSERT INTO ieda_common_code VALUES ( '330', 'CREDHUB', '2005', 'credhub 릴리즈' , 'credhub 릴리즈', '10', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '337', 'BPM', '2012', 'bpm 릴리즈' , 'bpm 릴리즈', '12', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '338', 'ETC', '2013', '기타 릴리즈' , '기타 릴리즈', '13', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '339', 'ROLE', '100000', '메뉴 별 권한' , '메뉴 별 권한', '0', null, null, null, 'SYSTEM', now(), 'SYSTEM', now() );
@@ -933,16 +935,16 @@ INSERT INTO ieda_role_detail VALUES ( '325', '1000', '208090', 'SYSTEM', now(), 
 
 
 #manifest tamplate info
-INSERT INTO ieda_manifest_template VALUES (1, 'BOOTSTRAP','openstack','bosh','264.7','264.7','bosh.yml','', 'uaa.yml', 'cpi.yml','','','credhub.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (2, 'BOOTSTRAP','aws','bosh','264.7','264.7','bosh.yml','', 'uaa.yml', 'cpi.yml','','','credhub.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (3, 'BOOTSTRAP','google','bosh','264.7','264.7','bosh.yml','', 'uaa.yml', 'cpi.yml','','','credhub.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (4, 'BOOTSTRAP','vsphere','bosh','264.7','264.7','bosh.yml','', 'uaa.yml', 'cpi.yml','','resource-pool.yml','credhub.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (5, 'BOOTSTRAP','azure','bosh','264.7','264.7','bosh.yml','', 'uaa.yml', 'cpi.yml','','','credhub.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (6, 'BOOTSTRAP','openstack','bosh','267.8','267.8','bosh.yml','', 'uaa.yml', 'cpi.yml','','','credhub.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (7, 'BOOTSTRAP','aws','bosh','267.8','267.8','bosh.yml','', 'uaa.yml', 'cpi.yml','','','credhub.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (8, 'BOOTSTRAP','google','bosh','267.8','267.8','bosh.yml','', 'uaa.yml', 'cpi.yml','','','credhub.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (9, 'BOOTSTRAP','vsphere','bosh','267.8','267.8','bosh.yml','', 'uaa.yml', 'cpi.yml','','resource-pool.yml','credhub.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
-INSERT INTO ieda_manifest_template VALUES (10, 'BOOTSTRAP','azure','bosh','267.8','267.8','bosh.yml','', 'uaa.yml', 'cpi.yml','','','credhub.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (1, 'BOOTSTRAP','openstack','bosh','267.8','267.8','bosh.yml','', 'uaa.yml', 'cpi.yml','','','credhub.yml','jumpbox-user.yml','keystone-v2.yml','external-ip-not-recommended.yml','external-ip-not-recommended-uaa.yml','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (2, 'BOOTSTRAP','aws','bosh','267.8','267.8','bosh.yml','', 'uaa.yml', 'cpi.yml','','','credhub.yml','jumpbox-user.yml','','external-ip-not-recommended.yml','external-ip-not-recommended-uaa.yml','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (3, 'BOOTSTRAP','google','bosh','267.8','267.8','bosh.yml','', 'uaa.yml', 'cpi.yml','','','credhub.yml','jumpbox-user.yml','','external-ip-not-recommended.yml','external-ip-not-recommended-uaa.yml','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (4, 'BOOTSTRAP','vsphere','bosh','267.8','267.8','bosh.yml','', 'uaa.yml', 'cpi.yml','','resource-pool.yml','credhub.yml','jumpbox-user.yml','','external-ip-not-recommended.yml','external-ip-not-recommended-uaa.yml','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (5, 'BOOTSTRAP','azure','bosh','267.8','267.8','bosh.yml','', 'uaa.yml', 'cpi.yml','','','credhub.yml','jumpbox-user.yml','','external-ip-not-recommended.yml','external-ip-not-recommended-uaa.yml','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (6, 'BOOTSTRAP','openstack','bosh','268.2','268.2','bosh.yml','', 'uaa.yml', 'cpi.yml','','','credhub.yml','jumpbox-user.yml','keystone-v2.yml','external-ip-not-recommended.yml','external-ip-not-recommended-uaa.yml','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (7, 'BOOTSTRAP','aws','bosh','268.2','268.2','bosh.yml','', 'uaa.yml', 'cpi.yml','','','credhub.yml','jumpbox-user.yml','','external-ip-not-recommended.yml','external-ip-not-recommended-uaa.yml','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (8, 'BOOTSTRAP','google','bosh','268.2','268.2','bosh.yml','', 'uaa.yml', 'cpi.yml','','','credhub.yml','jumpbox-user.yml','','external-ip-not-recommended.yml','external-ip-not-recommended-uaa.yml','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (9, 'BOOTSTRAP','vsphere','bosh','268.2','268.2','bosh.yml','', 'uaa.yml', 'cpi.yml','','resource-pool.yml','credhub.yml','jumpbox-user.yml','','external-ip-not-recommended.yml','external-ip-not-recommended-uaa.yml','SYSTEM',now(),'SYSTEM',now());
+INSERT INTO ieda_manifest_template VALUES (10, 'BOOTSTRAP','azure','bosh','268.2','268.2','bosh.yml','', 'uaa.yml', 'cpi.yml','','','credhub.yml','jumpbox-user.yml','','external-ip-not-recommended.yml','external-ip-not-recommended-uaa.yml','SYSTEM',now(),'SYSTEM',now());
 INSERT INTO ieda_manifest_template VALUES (11, 'CFDEPLOYMENT','aws','cf-deployment','2.7.0','2.7.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
 INSERT INTO ieda_manifest_template VALUES (12, 'CFDEPLOYMENT','openstack','cf-deployment','2.7.0','2.7.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
 INSERT INTO ieda_manifest_template VALUES (13, 'CFDEPLOYMENT','vsphere','cf-deployment','2.7.0','2.7.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
@@ -978,6 +980,7 @@ INSERT INTO ieda_manifest_template VALUES (42, 'CFDEPLOYMENT','openstack','cf-de
 INSERT INTO ieda_manifest_template VALUES (43, 'CFDEPLOYMENT','vsphere','cf-deployment','5.5.0','5.5.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
 INSERT INTO ieda_manifest_template VALUES (44, 'CFDEPLOYMENT','google','cf-deployment','5.5.0','5.5.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','','','','SYSTEM',now(),'SYSTEM',now());
 INSERT INTO ieda_manifest_template VALUES (45, 'CFDEPLOYMENT','azure','cf-deployment','5.5.0','5.5.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','','windows2016-cell.yml','','SYSTEM',now(),'SYSTEM',now());
+
 
 
 

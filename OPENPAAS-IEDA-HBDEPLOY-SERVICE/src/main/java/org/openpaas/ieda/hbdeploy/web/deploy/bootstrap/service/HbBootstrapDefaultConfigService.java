@@ -74,6 +74,9 @@ public class HbBootstrapDefaultConfigService {
             vo.setPaastaMonitoringIp(dto.getPaastaMonitoringIp());
             vo.setInfluxdbIp(dto.getInfluxdbIp());
             vo.setPaastaMonitoringRelease(dto.getPaastaMonitoringRelease());
+            vo.setUaaRelease(dto.getUaaRelease());
+            vo.setCredhubRelease(dto.getCredhubRelease());
+            vo.setOsConfRelease(dto.getOsConfRelease());
         }
         if( StringUtils.isEmpty(dto.getId()) ){
             bootstrapDefaultDao.insertBootstrapDefaultConfigInfo(vo);

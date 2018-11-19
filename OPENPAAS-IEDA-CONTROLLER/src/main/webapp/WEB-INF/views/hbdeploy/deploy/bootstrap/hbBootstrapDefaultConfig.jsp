@@ -55,6 +55,9 @@ var defaultLayout = {
                    { field: 'boshRelease', caption: 'BOSH 릴리즈', size:'130px', style:'text-align:center;'},
                    { field: 'boshCpiRelease', caption: 'BOSH CPI 릴리즈', size:'180px', style:'text-align:center;'},
                    { field: 'boshBpmRelease', caption: 'BOSH BPM 릴리즈', size:'180px', style:'text-align:center;'},
+                   { field: 'osConfRelease', caption: 'OS-CONF 릴리즈', size:'180px', style:'text-align:center;'},
+                   { field: 'uaaRelease', caption: 'UAA 릴리즈', size:'180px', style:'text-align:center;'},
+                   { field: 'credhubRelease', caption: 'CREDHUB 릴리즈', size:'180px', style:'text-align:center;'},
                    { field: 'ntp', caption: 'NTP 서버', size:'120px', style:'text-align:center;'}
                   ],
             onSelect : function(event) {
@@ -151,6 +154,7 @@ function getLocalBoshList(type){
         contentType : "application/json",
         async : true,
         success : function(data, status) {
+        	console.log(data);
             if( data.length == 0 ){
                 return;
             }
@@ -172,6 +176,34 @@ function getLocalBoshList(type){
                     
                 }
                 $("select[name='boshBpmRelease']").html(options);
+            } else if(type == "os-conf"){
+                var options = "<option value=''>OS-CONF 릴리즈를 선택하세요.</option>";
+                for( var i=0; i<data.length; i++ ){
+                    if( data[i] == boshInfo.osConfRelease ){
+                        options += "<option value='"+data[i]+"' selected >"+data[i]+"</option>";
+                    }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
+                    
+                }
+                $("select[name='osConfRelease']").html(options);
+            } else if(type == "uaa"){
+                var options = "<option value=''>UAA 릴리즈를 선택하세요.</option>";
+                for( var i=0; i<data.length; i++ ){
+                    if( data[i] == boshInfo.uaaRelease ){
+                        options += "<option value='"+data[i]+"' selected >"+data[i]+"</option>";
+                    }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
+                    
+                }
+                $("select[name='uaaRelease']").html(options);
+                
+            } else if(type == "credhub"){
+                var options = "<option value=''>CREDHUB 릴리즈를 선택하세요.</option>";
+                for( var i=0; i<data.length; i++ ){
+                    if( data[i] == boshInfo.credhubRelease ){
+                        options += "<option value='"+data[i]+"' selected >"+data[i]+"</option>";
+                    }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
+                    
+                }
+                $("select[name='credHubRelease']").html(options);
             }
         },
         error : function( e, status ) {
@@ -180,28 +212,6 @@ function getLocalBoshList(type){
     });
 }
 
-/******************************************************************
- * 기능 : checkBoshVersion(selected)
- * 설명 : BOSH 버전 체크 >> BPM Release 적용 여부 확인
- ******************************************************************/
-function checkBoshVersion(selected){
-    if(selected == ''){
-       return ;
-    }else{
-        var versionInfo = selected.split("bosh-");
-        versionInfo = versionInfo[1].split(".tgz");
-        versionInfo = parseInt(versionInfo);
-        console.log(versionInfo);
-        if(versionInfo >= 266){
-            getLocalBoshList('bpm');
-            $("#bpmConfDiv").show();
-        }else{
-            $("#bpmConfDiv").hide();
-            var options = "<option value=''>BPM 릴리즈를 선택하세요.</option>";
-            $("select[name='boshBpmRelease']").html(options);
-        }
-    }
-}
 
 /********************************************************
  * 설명 : Bosh 릴리즈 버전 목록 정보 조회
@@ -398,12 +408,24 @@ function getInitBoshReleaseList(iaasType){
         w2alert("클라우드 인프라 환경을 선택하세요.");
         $("select[name=boshRelease]").html("<option value='' >BOSH 릴리즈를 선택하세요.</option>");
         $("select[name=boshCpiRelease]").html("<option value='' >BOSH CPI 릴리즈를 선택하세요.</option>");
+        $("select[name=osConfRelease]").html("<option value='' >OS-CONF 릴리즈를 선택하세요.</option>");
+        $("select[name=uaaRelease]").html("<option value='' >UAA 릴리즈를 선택하세요.</option>");
+        $("select[name=credHubRelease]").html("<option value='' >CREDHUB 릴리즈를 선택하세요.</option>");
+        $("select[name=boshBpmRelease]").html("<option value='' >BPM 릴리즈를 선택하세요.</option>");
+        $("select[name=boshBpmRelease]").attr("disabled", "disabled");
+        $("select[name=credHubRelease]").attr("disabled", "disabled");
+        $("select[name=uaaRelease]").attr("disabled", "disabled");
         $("select[name=boshRelease]").attr("disabled", "disabled");
         $("select[name=boshCpiRelease]").attr("disabled", "disabled");
+        $("select[name=osConfRelease]").attr("disabled", "disabled");
         return;
     }
     $("select[name=boshRelease]").removeAttr("disabled");
     $("select[name=boshCpiRelease]").removeAttr("disabled");
+    $("select[name=osConfRelease]").removeAttr("disabled");
+    $("select[name=credHubRelease]").removeAttr("disabled");
+    $("select[name=boshBpmRelease]").removeAttr("disabled");
+    $("select[name=uaaRelease]").removeAttr("disabled");
     iaas = iaasType;
     //BOSH CPI 릴리즈 정보 가져오기
     getLocalBoshCpiList('bosh_cpi', iaas);
@@ -417,6 +439,14 @@ function getInitBoshReleaseList(iaasType){
     getLocalBoshList('bosh');
     //BPM 릴리즈 정보 가져오기
     getLocalBoshList('bpm');
+    //OS Conf 릴리즈 정보 가져오기
+    getLocalBoshList('os-conf');
+    //UAA 릴리즈 정보 가져오기
+    getLocalBoshList('uaa');
+    //Credhub 릴리즈 정보 가져오기
+    getLocalBoshList('credhub');
+    
+    
     
 
 }
@@ -470,6 +500,8 @@ function registBootstrapDefaultConfigInfo(){
             credentialKeyName   : $("select[name=credentialKeyName]").val(),
             ntp                 : $("input[name=ntp]").val(),
             boshRelease         : $("select[name=boshRelease]").val(),
+            credhubRelease      : $("select[name=credHubRelease]").val(),
+            uaaRelease          : $("select[name=uaaRelease]").val(),
             osConfRelease       : $("select[name=osConfRelease]").val(),
             boshCpiRelease      : $("select[name=boshCpiRelease]").val(),
             boshBpmRelease      : $("select[name=boshBpmRelease]").val(),
@@ -540,7 +572,6 @@ function settingDefaultInfo(){
             $("select[name='paastaMonitoringRelease']").val(record.paastaMonitoringRelease);
         }else{
             $("input[name='paastaMonitoring']").attr("checked", false);
-            //$("select[name=paastaMonitoringRelease]").attr("disabled", true);
         }
     }
     if( !checkEmpty(record.boshBpmRelease) ){
@@ -623,6 +654,17 @@ function resetForm(status){
     $("select[name=boshCpiRelease]").html("<option value='' >BOSH CPI 릴리즈를 선택하세요.</option>");
     $("select[name=boshCpiRelease]").attr("disabled", "disabled");
     $("select[name=boshBpmRelease]").html("<option value='' >BOSH BPM 릴리즈를 선택하세요.</option>");
+    
+    $("select[name=boshBpmRelease]").attr("disabled", "disabled");
+    $("select[name=osConfRelease]").attr("disabled", "disabled");
+    $("select[name=osConfRelease]").html("<option value='' >OS-CONF 릴리즈를 선택하세요.</option>");
+    
+    $("select[name=credHubRelease]").attr("disabled", "disabled");
+    $("select[name=credHubRelease]").html("<option value='' >CREDHUB 릴리즈를 선택하세요.</option>");
+    
+    $("select[name=uaaRelease]").attr("disabled", "disabled");
+    $("select[name=uaaRelease]").html("<option value='' >UAA 릴리즈를 선택하세요.</option>");
+    
     $("input[name='paastaMonitoring']").attr("checked", false);
     $("select[name=paastaMonitoringRelease]").html("<option value='' >PaaS-TA 모니터링 릴리즈를 선택하세요.</option>");
     $("select[name=paastaMonitoringRelease]").attr("disabled", "disabled");
@@ -708,7 +750,7 @@ function resetForm(status){
                            <span class="glyphicon glyphicon glyphicon-question-sign boshRelase-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="hover" data-html="true" title="설치 지원 버전 목록"></span>
                        </label>
                        <div>
-                           <select class="form-control" disabled name="boshRelease" style="width: 320px; margin-left: 20px;" onchange="checkBoshVersion(this.value)">
+                           <select class="form-control" disabled name="boshRelease" style="width: 320px; margin-left: 20px;">
                                <option value="" >BOSH 릴리즈를 선택하세요.</option>
                            </select>
                        </div>
@@ -723,7 +765,7 @@ function resetForm(status){
                        </div>
                    </div>
                    
-                   <div class="w2ui-field" id="bpmConfDiv" hidden="true">
+                   <div class="w2ui-field" id="bpmConfDiv">
                        <label style="width:40%;text-align: left;padding-left: 20px;">BOSH BPM 릴리즈</label>
                        <div>
                            <select class="form-control" name="boshBpmRelease" style="width: 320px; margin-left: 20px;">
@@ -732,11 +774,29 @@ function resetForm(status){
                        </div>
                    </div>
                    
-                    <div class="w2ui-field" id="osConfDiv" hidden="true"> 
+                    <div class="w2ui-field" id="osConfDiv"> 
                         <label style="width:40%;text-align: left;padding-left: 20px;">OS-CONF 릴리즈</label>
                         <div>
                             <select name="osConfRelease" class="form-control" style="width: 320px; margin-left: 20px;">
                                 <option value="">OS-CONF 릴리즈를 선택하세요.</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="w2ui-field"> 
+                        <label style="width:40%;text-align: left;padding-left: 20px;">UAA 릴리즈</label>
+                        <div>
+                            <select name="uaaRelease" class="form-control" style="width: 320px; margin-left: 20px;">
+                                <option value="">UAA 릴리즈를 선택하세요.</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="w2ui-field"> 
+                        <label style="width:40%;text-align: left;padding-left: 20px;">CREDHUB 릴리즈</label>
+                        <div>
+                            <select name="credHubRelease" class="form-control" style="width: 320px; margin-left: 20px;">
+                                <option value="">CREDHUB 릴리즈를 선택하세요.</option>
                             </select>
                         </div>
                     </div>
@@ -832,11 +892,21 @@ $(function() {
                 required: function(){
                     return checkEmpty( $("select[name='boshCpiRelease']").val() );
                 }
+            }, osConfigRelease: { 
+                required: function(){
+                    return checkEmpty( $("select[name='osConfRelease']").val() );
+                }
+            }, credHubRelease: { 
+                required: function(){
+                    return checkEmpty( $("select[name='credHubRelease']").val() );
+                }
+            }, uaaRelease: { 
+                required: function(){
+                    return checkEmpty( $("select[name='uaaRelease']").val() );
+                }
             }, boshBpmRelease: { 
                 required: function(){
-                    if(!($("select[name='boshRelease']").val()=='bosh-264.7.0.tgz')){
-                        return checkEmpty( $(".w2ui-msg-body select[name='boshBpmRelease']").val() );
-                    }else return false;
+                    return checkEmpty( $("select[name='boshBpmRelease']").val() );
                 }
             }, snapshotSchedule: { 
                 required: function(){
@@ -890,7 +960,7 @@ $(function() {
                 required: function(){
                     return checkEmpty( $("input[name='defaultConfigName']").val() );
                 }
-            }
+          }
         }, messages: {
             deploymentName: { 
                  required:  "배포명" + text_required_msg
@@ -904,6 +974,12 @@ $(function() {
                 required:  "BOSH 릴리즈" + select_required_msg
             }, boshCpiRelease: { 
                 required:  "BOSH CPI 릴리즈"+select_required_msg
+            }, credHubRelease: { 
+                required:  "CREDHUB 릴리즈"+select_required_msg
+            }, uaaRelease: { 
+                required:  "UAA 릴리즈"+select_required_msg
+            }, osConfigRelease: { 
+                required:  "OS-CONF 릴리즈"+select_required_msg
             }, boshBpmRelease: { 
                 required:  "BOSH BPM 릴리즈"+select_required_msg
             }, snapshotSchedule: { 
