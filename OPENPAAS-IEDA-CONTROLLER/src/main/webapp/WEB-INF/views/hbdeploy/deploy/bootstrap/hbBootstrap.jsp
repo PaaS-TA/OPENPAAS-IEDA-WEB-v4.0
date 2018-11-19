@@ -863,20 +863,6 @@ function createSettingFile(data){
             iaasType       : data.iaasType,
             id : data.id
     }
-    $.ajax({
-        type : "POST",
-        url : "/deploy/hbBootstrap/install/createSettingFile",
-        contentType : "application/json",
-        async : true,
-        data : JSON.stringify(deploymentInfo),
-        success : function(status) {
-            getDeployInfo(data.deploymentFile);
-        },
-        error :function(request, status, error) {
-            var errorResult = JSON.parse(request.responseText);
-            w2alert(errorResult.message, "BOOTSTRAP 배포 파일 생성");
-        }
-    });
 }
 
 /******************************************************************

@@ -311,7 +311,7 @@ function resetForm(status){
     <input type="hidden" name="networkInfoId" />
         <div class="w2ui-page page-0" style="">
            <div class="panel panel-default">
-               <div class="panel-heading"><b>네트워크 정보</b></div>
+               <div class="panel-heading"><b>네트워크 정보</b><p style="color:red;">BOOTSTRAP 설치 시 Public IP를 사용할 경우만 Public IP 값을 입력하세요.</p></div>
                <div class="panel-body" style="height:615px; overflow-y:auto;">
                    <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;">네트워크 정보 별칭</label>

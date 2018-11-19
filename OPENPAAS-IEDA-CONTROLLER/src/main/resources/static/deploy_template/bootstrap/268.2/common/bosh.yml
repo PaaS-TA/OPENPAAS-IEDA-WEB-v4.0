@@ -27,7 +27,7 @@ networks:
   - range: ((internal_cidr))
     gateway: ((internal_gw))
     static: [((internal_ip))]
-    dns: [8.8.8.8]
+    dns: [((internal_dns))]
 
 instance_groups:
 - name: bosh
@@ -121,7 +121,7 @@ instance_groups:
         local:
           users:
           - name: admin
-            password: ((admin_password))
+            password: admin
           - name: hm
             password: ((hm_password))
     hm:
@@ -131,10 +131,7 @@ instance_groups:
         ca_cert: ((director_ssl.ca))
       resurrector_enabled: true
     ntp: &ntp
-    - time1.google.com
-    - time2.google.com
-    - time3.google.com
-    - time4.google.com
+    - ((ntp))
 
 cloud_provider:
   mbus: https://mbus:((mbus_bootstrap_password))@((internal_ip)):6868

@@ -52,7 +52,7 @@
           users:
           - name: admin
             groups: [bosh.admin]
-            password: ((admin_password))
+            password: admin
         clients:
           bosh_cli:
             override: true
@@ -67,7 +67,7 @@
             authorized-grant-types: client_credentials
             scope: ""
             authorities: bosh.admin
-            secret: ((admin_password))
+            secret: admin
           hm:
             override: true
             authorized-grant-types: client_credentials
@@ -114,3 +114,4 @@
 - type: replace
   path: /instance_groups/name=bosh/properties/hm/director_account/client_secret?
   value: ((hm_password))
+
