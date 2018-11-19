@@ -5,12 +5,16 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.deploy.api.director.dto.DirectorInfoDTO;
 import org.openpaas.ieda.deploy.api.director.utility.DirectorRestHelper;
+import org.openpaas.ieda.deploy.web.common.dao.CommonDeployDAO;
+import org.openpaas.ieda.deploy.web.common.dao.ManifestTemplateVO;
 import org.openpaas.ieda.deploy.web.config.setting.service.DirectorConfigService;
 import org.openpaas.ieda.deploy.web.deploy.bootstrap.dao.BootstrapDAO;
 import org.openpaas.ieda.deploy.web.deploy.bootstrap.dao.BootstrapVO;
@@ -30,6 +34,7 @@ public class BootstrapDeployAsyncService {
     @Autowired private DirectorConfigService directorConfigService;
     @Autowired private BootstrapDAO bootstrapDao;
     @Autowired private MessageSource message;
+    @Autowired private CommonDeployDAO commonDao;
     
     final private static String SEPARATOR = System.getProperty("file.separator");
     final private static String DEPLOYMENT_DIR = LocalDirectoryConfiguration.getDeploymentDir() + SEPARATOR;
@@ -37,6 +42,8 @@ public class BootstrapDeployAsyncService {
     final private static String CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateCredentialDir() + SEPARATOR;
     final private static String MESSAGE_ENDPOINT = "/deploy/bootstrap/install/logs"; 
     private final static Logger LOGGER = LoggerFactory.getLogger(BootstrapDeployAsyncService.class);
+    private final static String MANIFEST_TEMPLATE_DIR = LocalDirectoryConfiguration.getManifastTemplateDir();
+    final private static String PRIVATE_KEY_PATH = LocalDirectoryConfiguration.getSshDir()+SEPARATOR;
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
@@ -49,15 +56,16 @@ public class BootstrapDeployAsyncService {
         String status = "";
         String accumulatedLog= null;
         BufferedReader bufferedReader = null;
-        BootstrapVO bootstrapInfo = null;
+        BootstrapVO bootstrapInfo = new BootstrapVO();
         try {
             bootstrapInfo = bootstrapDao.selectBootstrapInfo(Integer.parseInt(dto.getId()));
+            ManifestTemplateVO result = commonDao.selectManifetTemplate(bootstrapInfo.getIaasType(), "267.8", "BOOTSTRAP", "bosh");
             String deployFile = "";
+            
             if( bootstrapInfo != null ) {
                 deployFile = DEPLOYMENT_DIR + bootstrapInfo.getDeploymentFile();
-            }else {
-                bootstrapInfo = new BootstrapVO(); 
             }
+            
             File deploymentFile = new File(deployFile);
             
             if( deploymentFile.exists() ) {
@@ -67,9 +75,15 @@ public class BootstrapDeployAsyncService {
                 bootstrapInfo.setDeployStatus( deployStatus );
                 saveDeployStatus(bootstrapInfo);
                 //2. bosh 실행
-                ProcessBuilder builder = new ProcessBuilder("bosh", "create-env", deployFile, 
-                        "--state="+deployFile.replace(".yml", "")+"-state.json", 
-                        "--vars-store="+CREDENTIAL_DIR+ bootstrapInfo.getCredentialKeyName() , "--tty");
+                List<String> cmd = new ArrayList<String>();
+                cmd.add("bosh");
+                cmd.add("create-env");
+                cmd.add(deployFile);
+                cmd.add("--state="+deployFile.replace(".yml", "")+"-state.json");
+                cmd.add("--vars-store="+CREDENTIAL_DIR+ bootstrapInfo.getCredentialKeyName());
+                setDefaultOptionConfig(cmd, bootstrapInfo, result);
+                cmd.add("--tty");
+                ProcessBuilder builder = new ProcessBuilder(cmd);
                 builder.redirectErrorStream(true);
                 Process process = builder.start();
 
@@ -164,6 +178,47 @@ public class BootstrapDeployAsyncService {
                     LOGGER.debug("check delete lock File  : "  + check); 
                 }
             }
+        }
+    }
+    
+    public void setDefaultOptionConfig(List<String> cmd, BootstrapVO bootstrapInfo, ManifestTemplateVO result){
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/bootstrap/"+result.getMinReleaseVersion()+"/"+bootstrapInfo.getIaasType()+"/"+result.getIaasPropertyTemplate());
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/bootstrap/"+result.getMinReleaseVersion()+"/"+bootstrapInfo.getIaasType()+"/"+result.getCommonOptionTemplate());
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/bootstrap/"+result.getMinReleaseVersion()+"/"+bootstrapInfo.getIaasType()+"/"+result.getOptionEtc());
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/bootstrap/"+result.getMinReleaseVersion()+"/"+bootstrapInfo.getIaasType()+"/"+result.getMetaTemplate());
+        if(bootstrapInfo.getIaasType().equals("aws")){
+            cmd.add("-v");
+            cmd.add("internal_cidr="+bootstrapInfo.getSubnetRange()+"");
+            cmd.add("-v");
+            cmd.add("internal_gw="+bootstrapInfo.getSubnetGateway()+"");
+            cmd.add("-v");
+            cmd.add("internal_ip="+bootstrapInfo.getPrivateStaticIp()+"");
+            cmd.add("-v");
+            cmd.add("director_name="+bootstrapInfo.getDirectorName()+"");
+            cmd.add("-v");
+            cmd.add("access_key_id="+bootstrapInfo.getIaasAccount().get("commonAccessUser").toString()+"");
+            cmd.add("-v");
+            cmd.add("secret_access_key="+bootstrapInfo.getIaasAccount().get("commonAccessSecret").toString()+"");
+            cmd.add("-v");
+            cmd.add("region="+bootstrapInfo.getIaasConfig().getCommonRegion()+"");
+            cmd.add("-v");
+            cmd.add("az="+bootstrapInfo.getIaasAccount().get("commonAccessUser").toString()+"");
+            cmd.add("-v");
+            cmd.add("default_key_name="+bootstrapInfo.getIaasConfig().getCommonKeypairName()+"");
+            cmd.add("-v");
+            cmd.add("default_security_groups="+bootstrapInfo.getIaasConfig().getCommonSecurityGroup()+"");
+            cmd.add("--var-file");
+            cmd.add("private_key="+PRIVATE_KEY_PATH+bootstrapInfo.getIaasConfig().getCommonKeypairPath()+"");
+            cmd.add("-v");
+            cmd.add("subnet_id="+bootstrapInfo.getSubnetId()+"");
+        }
+        if(bootstrapInfo.getIaasType().equals("vsphere")){
+            cmd.add("-o");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/bootstrap/"+result.getMinReleaseVersion()+"/"+bootstrapInfo.getIaasType()+"/"+result.getOptionResourceTemplate());
         }
     }
     
