@@ -64,7 +64,9 @@ public class BootStrapDeployDTO{
         private String influxdbIp;
         private String paastaMonitoringRelease; //PaaS-TA 모니터링 사용시 릴리즈
         private String osConfRelease;
-        private String boshBpmRelease; //BOSH BPM 릴리즈 (bosh version 264 이상)
+        private String boshBpmRelease; //BOSH BPM 릴리즈
+        private String boshUaaRelease; //BOSH uaa 릴리즈
+        private String boshCredhubRelease; //BOSH Credhub 릴리즈
         public String getId() {
             return id;
         }
@@ -160,6 +162,18 @@ public class BootStrapDeployDTO{
         }
         public void setBoshBpmRelease(String boshBpmRelease) {
             this.boshBpmRelease = boshBpmRelease;
+        }
+        public String getBoshUaaRelease() {
+            return boshUaaRelease;
+        }
+        public void setBoshUaaRelease(String boshUaaRelease) {
+            this.boshUaaRelease = boshUaaRelease;
+        }
+        public String getBoshCredhubRelease() {
+            return boshCredhubRelease;
+        }
+        public void setBoshCredhubRelease(String boshCredhubRelease) {
+            this.boshCredhubRelease = boshCredhubRelease;
         }
         
     }

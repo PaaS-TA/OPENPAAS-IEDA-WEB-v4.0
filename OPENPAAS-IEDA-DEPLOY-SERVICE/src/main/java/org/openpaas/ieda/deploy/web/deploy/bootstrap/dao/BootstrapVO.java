@@ -27,6 +27,8 @@ public class BootstrapVO {
     private String boshRelease; // BOSH 릴리즈
     private String boshCpiRelease; // BOSH API 릴리즈
     private String boshBpmRelease; // BOSH Bpm 릴리즈
+    private String boshCredhubRelease; // BOSH Credhub 릴리즈
+    private String boshUaaRelease; //BOSH uaa 릴리즈
     private String snapshotSchedule;//스냅샷 스케줄
     private String enableSnapshots;//스냅샷 사용 유무
     private String ntp; // NTP
@@ -360,6 +362,22 @@ public class BootstrapVO {
 
     public void setBoshBpmRelease(String boshBpmRelease) {
         this.boshBpmRelease = boshBpmRelease;
+    }
+
+    public String getBoshCredhubRelease() {
+        return boshCredhubRelease;
+    }
+
+    public void setBoshCredhubRelease(String boshCredhubRelease) {
+        this.boshCredhubRelease = boshCredhubRelease;
+    }
+
+    public String getBoshUaaRelease() {
+        return boshUaaRelease;
+    }
+
+    public void setBoshUaaRelease(String boshUaaRelease) {
+        this.boshUaaRelease = boshUaaRelease;
     }
 
 }

@@ -21,7 +21,9 @@
     <result property="boshRelease" column ="BOSH_RELEASE"/>
     <result property="boshCpiRelease" column ="BOSH_CPI_RELEASE"/>
     <result property="boshBpmRelease" column ="BOSH_BPM_RELEASE"/>
+    <result property="boshUaaRelease" column ="BOSH_UAA_RELEASE"/>
     <result property="osConfRelease" column ="OS_CONF_RELEASE"/>
+    <result property="boshCredhubRelease" column ="BOSH_CRED_HUB_RELEASE" />
     <result property="snapshotSchedule" column ="SNAPSHOT_SCHEDULE"/>
     <result property="enableSnapshots" column ="ENABLE_SNAPSHOTS"/>
     <result property="privateStaticIp" column ="PRIVATE_STATIC_IP"/>
@@ -89,7 +91,9 @@
         ,bootstrap.iaas_type as iaas_type
         ,bootstrap.bosh_cpi_release as bosh_cpi_release
         ,bootstrap.bosh_bpm_release as bosh_bpm_release
+        ,bootstrap.bosh_uaa_release as bosh_uaa_release
         ,bootstrap.os_conf_release as os_conf_release
+        ,bootstrap.bosh_cred_hub_release as bosh_cred_hub_release
         ,bootstrap.bosh_password as bosh_password
         ,bootstrap.bosh_release as bosh_release
         ,bootstrap.cloud_instance_type as cloud_instance_type
@@ -128,7 +132,9 @@ Order by iaas_type asc, update_date asc
             ,bootstrap.iaas_type as iaas_type
             ,bootstrap.bosh_cpi_release as bosh_cpi_release
             ,bootstrap.bosh_bpm_release as bosh_bpm_release
+            ,bootstrap.bosh_uaa_release as bosh_uaa_release
             ,bootstrap.os_conf_release as os_conf_release
+            ,bootstrap.bosh_cred_hub_release as bosh_cred_hub_release
             ,bootstrap.bosh_password as bosh_password
             ,bootstrap.bosh_release as bosh_release
             ,bootstrap.enable_snapshots as enable_snapshots
@@ -241,6 +247,8 @@ Order by iaas_type asc, update_date asc
         iaas_config_id = #{bootstrap.iaasConfigId}
         ,bosh_cpi_release = #{bootstrap.boshCpiRelease}
         ,bosh_bpm_release = #{bootstrap.boshBpmRelease}
+        ,bosh_uaa_release = #{bootstrap.boshUaaRelease}
+        ,bosh_cred_hub_release = #{bootstrap.boshCredhubRelease}
         ,bosh_password = #{bootstrap.boshPassword}
         ,ntp= #{bootstrap.ntp}
         ,bosh_release = #{bootstrap.boshRelease}

@@ -32,9 +32,19 @@ $(function() {
                 }
             }, boshBpmRelease: { 
                 required: function(){
-                    if(!($(".w2ui-msg-body select[name='boshRelease']").val()=='bosh-264.7.0.tgz')){
-                        return checkEmpty( $(".w2ui-msg-body select[name='boshBpmRelease']").val() );
-                    }else return false;
+                	return checkEmpty( $(".w2ui-msg-body select[name='boshBpmRelease']").val() );
+                }
+            }, osConfRelease: { 
+                required: function(){
+                	return checkEmpty( $(".w2ui-msg-body select[name='osConfRelease']").val() );
+                }
+            }, boshCredhubRelease: { 
+                required: function(){
+                    return checkEmpty( $(".w2ui-msg-body select[name='boshCredhubRelease']").val() );
+                }
+            }, boshUaaRelease: { 
+                required: function(){
+                    return checkEmpty( $(".w2ui-msg-body select[name='boshUaaRelease']").val() );
                 }
             }, snapshotSchedule: { 
                 required: function(){
@@ -82,6 +92,12 @@ $(function() {
                 required:  "BOSH CPI 릴리즈"+select_required_msg
             }, boshBpmRelease: { 
                 required:  "BOSH BPM 릴리즈"+select_required_msg
+            }, osConfRelease: { 
+                required:  "BOSH OS_CONF 릴리즈"+select_required_msg
+            }, boshCredhubRelease: { 
+                required:  "BOSH Credhub 릴리즈"+select_required_msg
+            }, boshUaaRelease: { 
+                required:  "BOSH uaa 릴리즈"+select_required_msg
             }, snapshotSchedule: { 
                 required:  "스냅샷 스케쥴"+text_required_msg
             }, ingestorIp: {

@@ -26,6 +26,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class BootstrapDeployAsyncService {
@@ -41,9 +42,12 @@ public class BootstrapDeployAsyncService {
     final private static String KEY_DIR = LocalDirectoryConfiguration.getLockDir()+SEPARATOR;
     final private static String CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateCredentialDir() + SEPARATOR;
     final private static String MESSAGE_ENDPOINT = "/deploy/bootstrap/install/logs"; 
-    private final static Logger LOGGER = LoggerFactory.getLogger(BootstrapDeployAsyncService.class);
-    private final static String MANIFEST_TEMPLATE_DIR = LocalDirectoryConfiguration.getManifastTemplateDir();
+    final private static String RELEASE_DIR = LocalDirectoryConfiguration.getReleaseDir();
+    final private static String STEMCELL_DIR = LocalDirectoryConfiguration.getStemcellDir();
+    final private static String MANIFEST_TEMPLATE_PATH = LocalDirectoryConfiguration.getManifastTemplateDir() + SEPARATOR +"bootstrap";
     final private static String PRIVATE_KEY_PATH = LocalDirectoryConfiguration.getSshDir()+SEPARATOR;
+    private final static Logger LOGGER = LoggerFactory.getLogger(BootstrapDeployAsyncService.class);
+    
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
@@ -63,7 +67,7 @@ public class BootstrapDeployAsyncService {
             String deployFile = "";
             
             if( bootstrapInfo != null ) {
-                deployFile = DEPLOYMENT_DIR + bootstrapInfo.getDeploymentFile();
+                deployFile = MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getTemplateVersion()  + SEPARATOR  + "common" + SEPARATOR  + result.getCommonBaseTemplate();
             }
             
             File deploymentFile = new File(deployFile);
@@ -79,9 +83,19 @@ public class BootstrapDeployAsyncService {
                 cmd.add("bosh");
                 cmd.add("create-env");
                 cmd.add(deployFile);
-                cmd.add("--state="+deployFile.replace(".yml", "")+"-state.json");
+                cmd.add("--state="+ DEPLOYMENT_DIR + bootstrapInfo.getDeploymentFile().replace(".yml","")+"-state.json");
                 cmd.add("--vars-store="+CREDENTIAL_DIR+ bootstrapInfo.getCredentialKeyName());
-                setDefaultOptionConfig(cmd, bootstrapInfo, result);
+                
+                settingBoshInfo(cmd, bootstrapInfo);
+                settingIaasCpiInfo(cmd, bootstrapInfo, result);
+                settingUaaInfo(cmd, bootstrapInfo, result);
+                settingCredhubInfo(cmd, bootstrapInfo, result);
+                settingJumpBoxInfo(cmd, bootstrapInfo, result);
+                
+                if(!StringUtils.isEmpty(bootstrapInfo.getPublicStaticIp()) && bootstrapInfo.getPublicStaticIp() != null){
+                    settingPublicIpInfo(cmd, bootstrapInfo, result);
+                }
+                
                 cmd.add("--tty");
                 ProcessBuilder builder = new ProcessBuilder(cmd);
                 builder.redirectErrorStream(true);
@@ -181,45 +195,141 @@ public class BootstrapDeployAsyncService {
         }
     }
     
-    public void setDefaultOptionConfig(List<String> cmd, BootstrapVO bootstrapInfo, ManifestTemplateVO result){
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description :  BOSH Release 관련 CMD 정의 
+     * @title : settingBoshInfo
+     * @return : void
+    *****************************************************************/
+    private void settingBoshInfo(List<String> cmd, BootstrapVO vo){
+        cmd.add("-v");
+        cmd.add("boshRelease="+ RELEASE_DIR + SEPARATOR + vo.getBoshRelease()+ "");
+        cmd.add("-v");
+        cmd.add("bpmRelease="+ RELEASE_DIR + SEPARATOR + vo.getBoshBpmRelease()+ "");
+        cmd.add("-v");
+        cmd.add("internal_cidr="+ vo.getSubnetRange()+ "");
+        cmd.add("-v");
+        cmd.add("internal_gw="+ vo.getSubnetGateway()+ "");
+        cmd.add("-v");
+        cmd.add("internal_dns="+ vo.getSubnetDns()+ "");
+        cmd.add("-v");
+        cmd.add("ntp="+ vo.getNtp()+ "");
+        cmd.add("-v");
+        cmd.add("director_name="+ vo.getDirectorName()+ "");
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description :  Public IP 사용 CMD 정의
+     * @title : settingPublicIpInfo
+     * @return : void
+    *****************************************************************/
+    private void settingPublicIpInfo(List<String> cmd, BootstrapVO vo, ManifestTemplateVO result){
         cmd.add("-o");
-        cmd.add(MANIFEST_TEMPLATE_DIR+"/bootstrap/"+result.getMinReleaseVersion()+"/"+bootstrapInfo.getIaasType()+"/"+result.getIaasPropertyTemplate());
+        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + result.getInputTemplateSecond());
         cmd.add("-o");
-        cmd.add(MANIFEST_TEMPLATE_DIR+"/bootstrap/"+result.getMinReleaseVersion()+"/"+bootstrapInfo.getIaasType()+"/"+result.getCommonOptionTemplate());
+        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/"  + result.getInputTemplateThird());
+        cmd.add("-v");
+        cmd.add("external_ip="+ vo.getPublicStaticIp() + "");
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description :  JumpBox CMD 정의
+     * @title : settingJumpBoxInfo
+     * @return : void
+    *****************************************************************/
+    private void settingJumpBoxInfo(List<String> cmd, BootstrapVO vo, ManifestTemplateVO result){
         cmd.add("-o");
-        cmd.add(MANIFEST_TEMPLATE_DIR+"/bootstrap/"+result.getMinReleaseVersion()+"/"+bootstrapInfo.getIaasType()+"/"+result.getOptionEtc());
+        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + result.getMetaTemplate());
+        cmd.add("-v");
+        cmd.add("osRelease="+ RELEASE_DIR + SEPARATOR + vo.getOsConfRelease()+ "");
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description :  Credhub CMD 정의
+     * @title : settingCredhubInfo
+     * @return : void
+    *****************************************************************/
+    private void settingCredhubInfo(List<String> cmd, BootstrapVO vo, ManifestTemplateVO result){
         cmd.add("-o");
-        cmd.add(MANIFEST_TEMPLATE_DIR+"/bootstrap/"+result.getMinReleaseVersion()+"/"+bootstrapInfo.getIaasType()+"/"+result.getMetaTemplate());
-        if(bootstrapInfo.getIaasType().equals("aws")){
+        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + result.getOptionEtc());
+        cmd.add("-v");
+        cmd.add("credhubRelease="+ RELEASE_DIR + SEPARATOR + vo.getBoshCredhubRelease()+ "");
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description :  Uaa CMD 정의
+     * @title : settingUaaInfo
+     * @return : void
+    *****************************************************************/
+    private void settingUaaInfo(List<String> cmd, BootstrapVO vo, ManifestTemplateVO result){
+    	cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + result.getCommonOptionTemplate());
+        cmd.add("-v");
+        cmd.add("uaaRelease="+ RELEASE_DIR + SEPARATOR + vo.getBoshUaaRelease()+ "");
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description :  CPI CMD 정의
+     * @title : settingIaasCpiInfo
+     * @return : void
+    *****************************************************************/
+    private void settingIaasCpiInfo(List<String> cmd, BootstrapVO vo, ManifestTemplateVO result){
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + vo.getIaasType().toLowerCase() + SEPARATOR + result.getIaasPropertyTemplate());
+        if("aws".equalsIgnoreCase(vo.getIaasType())){
             cmd.add("-v");
-            cmd.add("internal_cidr="+bootstrapInfo.getSubnetRange()+"");
+            cmd.add("az=" + vo.getIaasConfig().getCommonAvailabilityZone());
             cmd.add("-v");
-            cmd.add("internal_gw="+bootstrapInfo.getSubnetGateway()+"");
+            cmd.add("subnet_id=" + vo.getSubnetId());
             cmd.add("-v");
-            cmd.add("internal_ip="+bootstrapInfo.getPrivateStaticIp()+"");
+            cmd.add("region=" + vo.getIaasAccount().get("commonRegion").toString());
             cmd.add("-v");
-            cmd.add("director_name="+bootstrapInfo.getDirectorName()+"");
+            cmd.add("access_key_id=" + vo.getIaasAccount().get("commonAccessUser").toString());
             cmd.add("-v");
-            cmd.add("access_key_id="+bootstrapInfo.getIaasAccount().get("commonAccessUser").toString()+"");
+            cmd.add("secret_access_key=" + vo.getIaasAccount().get("commonAccessSecret").toString());
+        }else {
             cmd.add("-v");
-            cmd.add("secret_access_key="+bootstrapInfo.getIaasAccount().get("commonAccessSecret").toString()+"");
+            cmd.add("net_id=" + vo.getSubnetId());
             cmd.add("-v");
-            cmd.add("region="+bootstrapInfo.getIaasConfig().getCommonRegion()+"");
+            cmd.add("auth_url=" + vo.getIaasAccount().get("commonAccessEndpoint").toString());
             cmd.add("-v");
-            cmd.add("az="+bootstrapInfo.getIaasAccount().get("commonAccessUser").toString()+"");
+            cmd.add("openstack_username=" + vo.getIaasAccount().get("commonAccessUser").toString());
             cmd.add("-v");
-            cmd.add("default_key_name="+bootstrapInfo.getIaasConfig().getCommonKeypairName()+"");
-            cmd.add("-v");
-            cmd.add("default_security_groups="+bootstrapInfo.getIaasConfig().getCommonSecurityGroup()+"");
-            cmd.add("--var-file");
-            cmd.add("private_key="+PRIVATE_KEY_PATH+bootstrapInfo.getIaasConfig().getCommonKeypairPath()+"");
-            cmd.add("-v");
-            cmd.add("subnet_id="+bootstrapInfo.getSubnetId()+"");
+            cmd.add("openstack_password=" + vo.getIaasAccount().get("commonAccessSecret").toString());
+            if(vo.getIaasAccount().get("openstackVersion").toString().equalsIgnoreCase("v3")){
+                cmd.add("-v");
+                cmd.add("openstack_domain=" + vo.getIaasAccount().get("openstackDomain").toString());
+                cmd.add("-v");
+                cmd.add("openstack_project=" + vo.getIaasAccount().get("commonProject").toString());
+                cmd.add("-v");
+                cmd.add("region=" + vo.getIaasAccount().get("commonRegion").toString());
+            }else {
+                cmd.add("-o");
+                cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + vo.getIaasType().toLowerCase() + SEPARATOR  + result.getInputTemplate());
+                cmd.add("-v");
+                cmd.add("openstack_tenant=" + vo.getIaasAccount().get("commonTenant").toString());
+            }
         }
-        if(bootstrapInfo.getIaasType().equals("vsphere")){
-            cmd.add("-o");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/bootstrap/"+result.getMinReleaseVersion()+"/"+bootstrapInfo.getIaasType()+"/"+result.getOptionResourceTemplate());
-        }
+        cmd.add("-v");
+        cmd.add("boshCpiRelease=" + RELEASE_DIR + SEPARATOR + vo.getBoshCpiRelease() + "");
+        cmd.add("-v");
+        cmd.add("stemcell=" + STEMCELL_DIR + SEPARATOR + vo.getStemcell() + "");
+        cmd.add("-v");
+        cmd.add("cloudInstanceType=" + vo.getCloudInstanceType());
+        cmd.add("-v");
+        cmd.add("internal_ip=" + vo.getPrivateStaticIp());
+        cmd.add("-v");
+        cmd.add("default_key_name=" + vo.getIaasConfig().getCommonKeypairName());
+        cmd.add("-v");
+        cmd.add("default_security_groups=" + vo.getIaasConfig().getCommonSecurityGroup());
+        cmd.add("-v");
+        cmd.add("private_key=" + PRIVATE_KEY_PATH + vo.getIaasConfig().getCommonKeypairPath());
+        
     }
     
     /****************************************************************

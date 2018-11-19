@@ -77,18 +77,20 @@ function setBootstrapData(contents){
             iaasConfigId : contents.iaasConfigId
     }
     boshInfo = {
-            id               : bootstrapId,
-            iaas             : contents.iaasType,
-            deploymentName   : contents.deploymentName,
-            directorName     : contents.directorName,
-            credentialKeyName: contents.credentialKeyName,
-            ntp              : contents.ntp,
-            boshRelease      : contents.boshRelease,
-            boshCpiRelease   : contents.boshCpiRelease,
-            boshBpmRelease   : contents.boshBpmRelease,
-            osConfRelease    : contents.osConfRelease,
-            enableSnapshots  : contents.enableSnapshots,
-            snapshotSchedule : contents.snapshotSchedule,
+            id                 : bootstrapId,
+            iaas               : contents.iaasType,
+            deploymentName     : contents.deploymentName,
+            directorName       : contents.directorName,
+            credentialKeyName  : contents.credentialKeyName,
+            ntp                : contents.ntp,
+            boshRelease        : contents.boshRelease,
+            boshCpiRelease     : contents.boshCpiRelease,
+            boshBpmRelease     : contents.boshBpmRelease,
+            boshCredhubRelease : contents.boshCredhubRelease,
+            boshUaaRelease     : contents.boshUaaRelease,
+            osConfRelease      : contents.osConfRelease,
+            enableSnapshots    : contents.enableSnapshots,
+            snapshotSchedule   : contents.snapshotSchedule,
             paastaMonitoringUse : contents.paastaMonitoringUse,
             paastaMonitoringIp : contents.paastaMonitoringIp,
             paastaMonitoringRelease : contents.paastaMonitoringRelease,
@@ -296,7 +298,7 @@ function settingIaasConfigInfo(val){
                         $(".w2ui-msg-body div#openstackDomain").css("display", "none");
                         $(".w2ui-msg-body div#commonTenant").css("display", "none");
                         $(".w2ui-msg-body #region").css("display", "none");
-                        $(".w2ui-msg-body input[name=commonRegion]").val("");
+                        $(".w2ui-msg-body  input[name=commonRegion]").val("");
                         $(".w2ui-msg-body input[name=commonProject]").val("");
                     }else{
                         $(".w2ui-msg-body commonProject").css("display", "block");
@@ -387,21 +389,17 @@ function saveIaasConfigInfo(){
  * 설명 : Default Info popup
  ***************************************************************** */
 function defaultInfoPop(iaas){
-     settingPopupTab("progressStep_6", iaas);
+     settingPopupTab("progressStep_5", iaas);
      w2popup.open({
         title   : "<b>BOOTSTRAP 설치</b>",
         width   : 730,
-        height  : 760,
+        height  : 855,
         onClose : popupClose,
         modal   : true,
         body    : $("#DefaultInfoDiv").html(),
         buttons : $("#DefaultInfoButtonDiv").html(),
         onOpen:function(event){
             event.onComplete = function(){
-                if( iaas == "Google" ){
-                    $(".w2ui-msg-body #osConfDiv").show();
-                }
-                
                 $(".w2ui-msg-body input[name='ingestorIp']").attr("disabled", true);
                 $(".w2ui-msg-body input[name='influxdbIp']").attr("disabled", true);
                 $('[data-toggle="popover"]').popover();
@@ -434,10 +432,7 @@ function defaultInfoPop(iaas){
                             $(".w2ui-msg-body  select[name=paastaMonitoringRelease]").attr("disabled", true);
                         }
                     }
-                    if( !checkEmpty(boshInfo.boshBpmRelease) ){
-                        $(".w2ui-msg-body #bpmConfDiv").show();
-                    }
-                }else{
+                }else{c
                     $('input:radio[name=enableSnapshots]:input[value=false]').attr("checked", true);
                     enableSnapshotsFn("false");
                     checkPaasTAMonitoringUseYn();
@@ -452,9 +447,12 @@ function defaultInfoPop(iaas){
                 getLocalBoshCpiList('bosh_cpi', iaas);
                 //BOSH BPM 릴리즈 정보 가져오기
                 getLocalBoshList('bpm');
-                if( iaas == "Google" ){
-                    getLocalBoshList('os-conf');
-                }
+                //BOSH OS-CONF 릴리즈 정보 가져오기
+                getLocalBoshList('os-conf');
+                //BOSH credhub 릴리즈 정보 가져오기
+                getLocalBoshList('credhub');
+                //BOSH uaa 릴리즈 정보 가져오기
+                getLocalBoshList('uaa');
                 $('[data-toggle="popover"]').popover();
                 getReleaseVersionList();
             }
@@ -558,6 +556,22 @@ function getLocalBoshList(type){
                     }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
                 }
                 $(".w2ui-msg-body select[name='boshBpmRelease']").html(options);
+            } else if(type == 'credhub') {
+                var options = "<option value=''>CredHub 릴리즈를 선택하세요.</option>";
+                for( var i=0; i<data.length; i++ ){
+                    if( data[i] == boshInfo.boshCredhubRelease ){
+                        options += "<option value='"+data[i]+"' selected>"+data[i]+"</option>";
+                    }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
+                }
+                $(".w2ui-msg-body select[name='boshCredhubRelease']").html(options);
+            } else if(type == 'uaa') {
+                var options = "<option value=''>uaa 릴리즈를 선택하세요.</option>";
+                for( var i=0; i<data.length; i++ ){
+                    if( data[i] == boshInfo.boshUaaRelease ){
+                        options += "<option value='"+data[i]+"' selected>"+data[i]+"</option>";
+                    }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
+                }
+                $(".w2ui-msg-body select[name='boshUaaRelease']").html(options);
             }
         },
         error : function( e, status ) {
@@ -570,7 +584,7 @@ function getLocalBoshList(type){
  * 기능 : checkBoshVersion(selected)
  * 설명 : BOSH 버전 체크 >> BPM Release 적용 여부 확인
  ******************************************************************/
-function checkBoshVersion(selected){
+/* function checkBoshVersion(selected){
     if(selected == ''){
        return ;
     }else{
@@ -586,7 +600,7 @@ function checkBoshVersion(selected){
             $(".w2ui-msg-body select[name='boshBpmRelease']").html(options);
         }
     }
-}
+} */
 
  /******************************************************************
   * 기능 : getLocalBoshCpiList
@@ -714,6 +728,8 @@ function saveDefaultInfo(type){
             osConfRelease       : $(".w2ui-msg-body select[name=osConfRelease]").val(),
             boshCpiRelease      : $(".w2ui-msg-body select[name=boshCpiRelease]").val(),
             boshBpmRelease      : $(".w2ui-msg-body select[name=boshBpmRelease]").val(),
+            boshCredhubRelease  : $(".w2ui-msg-body select[name=boshCredhubRelease]").val(),
+            boshUaaRelease      : $(".w2ui-msg-body select[name=boshUaaRelease]").val(),
             enableSnapshots     : $(".w2ui-msg-body input:radio[name=enableSnapshots]:checked").val(),
             snapshotSchedule    : $(".w2ui-msg-body input[name=snapshotSchedule]").val(),
             influxdbIp : influxdbIp,
@@ -777,7 +793,7 @@ function selectNetworkInfoPopup(iaas){
  * 설명 : Network Info Popup
  ***************************************************************** */
 function networkInfoPopup(div, btn, height){
-    settingPopupTab("progressStep_6", iaas);
+    settingPopupTab("progressStep_5", iaas);
     w2popup.open({
         title   : "<b>BOOTSTRAP 설치</b>",
         width   : 730,
@@ -977,8 +993,8 @@ function saveResourceInfo(type){
             data : JSON.stringify(resourceInfo),
             success : function(data, status) {
                 w2popup.unlock();
-                w2popup.clear();
-                createSettingFile(data);
+                confirmDeploy('after', data);
+                //createSettingFile(data);
             },
             error :function(request, status, error) {
                 w2popup.unlock();
@@ -1009,9 +1025,9 @@ function createSettingFile(data){
         data : JSON.stringify(deploymentInfo),
         success : function(status) {
             var credentialFile = data.credentialKeyName;
-            w2alert("BOOTSTRAP 설치 성공 후 <br> 설치 관리자 설정 Credential 파일 명은 <br><strong><font color='red'> "+credentialFile+" </strong></font>입니다.");
+            //w2alert("BOOTSTRAP 설치 성공 후 <br> 설치 관리자 설정 Credential 파일 명은 <br><strong><font color='red'> "+credentialFile+" </strong></font>입니다.");
             deployFileName = deploymentInfo.deploymentFile;
-            deployPopup();
+            confirmDeploy('after');
         },
         error :function(request, status, error) {
             var errorResult = JSON.parse(request.responseText);
@@ -1074,14 +1090,16 @@ function getDeployInfo(){
  * 기능 : confirmDeploy
  * 설명 : bootstrap Install Confirm
  ***************************************************************** */
-function confirmDeploy(type){
+function confirmDeploy(type, data){
     if(type == 'after'){        
         w2confirm({
             msg          : "BOOTSTRAP를 설치하시겠습니까?",
             title        : w2utils.lang('BOOTSTRAP 설치'),
             yes_text     : "예",
             no_text      : "아니오",
-            yes_callBack : installPopup
+            yes_callBack : function(event){
+                installPopup(data);
+            }
         });
     } else{
         w2popup.clear();
@@ -1133,15 +1151,20 @@ function popupComplete(){
   * 설명 : Boostrap 설치
   ***************************************************************** */
 var bootstrapInstallSocket = null;
-function installPopup(){
+function installPopup(data){
+    deploymentInfo = {
+            iaasType       : data.iaasType,
+            deploymentFile : data.deploymentFile
+    }
     settingPopupTab("InstallDiv", iaas);
-    
+    console.log('11');
     if(!lockFileSet(deploymentInfo.deploymentFile)) return;
     var message = "BOOTSTRAP ";
     var requestParameter = {
             id : bootstrapId,
             iaasType: iaas
     };
+    console.log('12');
     w2popup.open({
         title   : "<b>BOOTSTRAP 설치</b>",
         width   : 800,
@@ -1353,12 +1376,11 @@ function popupClose() {
 <input type="hidden" name="iaasType" />
 <div id="AWSInfoDiv" style="width:100%;height:100%;" hidden="true">
     <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
-        <ul class="progressStep_6" >
+        <ul class="progressStep_5" >
             <li class="active">AWS 정보</li>
             <li class="before">기본 정보</li>
             <li class="before">네트워크 정보</li>
             <li class="before">리소스 정보</li>
-            <li class="before">배포 파일 정보</li>
             <li class="before">설치</li>
         </ul>
     </div>
@@ -1425,12 +1447,11 @@ function popupClose() {
 </div>
 <div id="OpenstackInfoDiv" style="width:100%;height:100%;" hidden="true">
     <div style="margin-left:2%;display:inline-block;width:97%; padding-top:20px;">
-        <ul class="progressStep_6" >
+        <ul class="progressStep_5" >
             <li class="active">Openstack 정보</li>
             <li class="before">기본 정보</li>
             <li class="before">네트워크 정보</li>
             <li class="before">리소스 정보</li>
-            <li class="before">배포 파일 정보</li>
             <li class="before">설치</li>
         </ul>
     </div>
@@ -1521,12 +1542,11 @@ function popupClose() {
 </div>
 <div id="vSphereInfoDiv" style="width:100%;height:100%;" hidden="true">
     <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
-        <ul class="progressStep_6" >
+        <ul class="progressStep_5" >
             <li class="active">vSphere 정보</li>
             <li class="before">기본 정보</li>
             <li class="before">네트워크 정보</li>
             <li class="before">리소스 정보</li>
-            <li class="before">배포 파일 정보</li>
             <li class="before">설치</li>
         </ul>
     </div>
@@ -1611,12 +1631,11 @@ function popupClose() {
 </div>
 <div id="GoogleInfoDiv" style="width:100%;height:100%;" hidden="true">
     <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
-        <ul class="progressStep_6" >
+        <ul class="progressStep_5" >
             <li class="active">Google 정보</li>
             <li class="before">기본 정보</li>
             <li class="before">네트워크 정보</li>
             <li class="before">리소스 정보</li>
-            <li class="before">배포 파일 정보</li>
             <li class="before">설치</li>
         </ul>
     </div>
@@ -1678,12 +1697,11 @@ function popupClose() {
 
 <div id="azureInfoDiv" style="width:100%;height:100%;" hidden="true">
     <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
-        <ul class="progressStep_6" >
+        <ul class="progressStep_5" >
             <li class="active">Azure 정보</li>
             <li class="before">기본 정보</li>
             <li class="before">네트워크 정보</li>
             <li class="before">리소스 정보</li>
-            <li class="before">배포 파일 정보</li>
             <li class="before">설치</li>
         </ul>
     </div>
@@ -1768,12 +1786,11 @@ function popupClose() {
 <div id="DefaultInfoDiv" style="width:100%;height:100%;" hidden="true">
     <form id="defaultInfoForm" >
         <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
-            <ul class="progressStep_6" >
+            <ul class="progressStep_5" >
                 <li class="pass"></li>
                 <li class="active">기본 정보</li>
                 <li class="before">네트워크 정보</li>
                 <li class="before">리소스 정보</li>
-                <li class="before">배포 파일 정보</li>
                 <li class="before">설치</li>
             </ul>
         </div>
@@ -1813,7 +1830,7 @@ function popupClose() {
                             <span class="glyphicon glyphicon glyphicon-question-sign boshRelase-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="hover" data-html="true" title="설치 지원 버전 목록"></span>
                         </label>
                         <div style="width: 60%">
-                            <select name="boshRelease"  class="form-control select-control" onchange="checkBoshVersion(this.value)">
+                            <select name="boshRelease"  class="form-control select-control" >
                                 <option value="">BOSH 릴리즈를 선택하세요.</option>
                             </select>
                         </div>
@@ -1826,7 +1843,7 @@ function popupClose() {
                             </select>
                         </div>
                     </div>
-                    <div class="w2ui-field" id="bpmConfDiv"  hidden="true">
+                    <div class="w2ui-field">
                         <label style="text-align:left; width:36%; font-size:11px;">BOSH BPM 릴리즈</label>
                         <div style="width: 60%">
                             <select name="boshBpmRelease" class="form-control select-control">
@@ -1834,7 +1851,7 @@ function popupClose() {
                             </select>
                         </div>
                     </div>
-                    <div class="w2ui-field" id="osConfDiv" hidden="true"> 
+                    <div class="w2ui-field"> 
                         <label style="text-align:left; width:36%; font-size:11px;">OS-CONF 릴리즈</label>
                         <div style="width: 60%">
                             <select name="osConfRelease" class="form-control select-control">
@@ -1842,7 +1859,22 @@ function popupClose() {
                             </select>
                         </div>
                     </div>
-                    
+                    <div class="w2ui-field">
+                        <label style="text-align:left; width:36%; font-size:11px;">BOSH Credhub 릴리즈</label>
+                        <div style="width: 60%">
+                            <select name="boshCredhubRelease" class="form-control select-control">
+                                <option value="">BOSH Credhub 릴리즈를 선택하세요.</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align:left; width:36%; font-size:11px;">BOSH uaa 릴리즈</label>
+                        <div style="width: 60%">
+                            <select name="boshUaaRelease" class="form-control select-control">
+                                <option value="">BOSH uaa 릴리즈를 선택하세요.</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">스냅샷기능 사용여부</label>
                         <div style="width: 60%">
@@ -1907,12 +1939,11 @@ function popupClose() {
 <div id="NetworkInfoDiv" style="width:100%;height:100%;" hidden="true">
     <form id="networkInfoForm">
         <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
-            <ul class="progressStep_6" >
+            <ul class="progressStep_5" >
                 <li class="pass"></li>
                 <li class="pass">기본 정보</li>
                 <li class="active">네트워크 정보</li>
                 <li class="before">리소스 정보</li>
-                <li class="before">배포 파일 정보</li>
                 <li class="before">설치</li>
             </ul>
         </div>
@@ -1975,12 +2006,11 @@ function popupClose() {
 <div id="GoogleNetworkInfoDiv" style="width:100%;height:100%;" hidden="true">
     <form id="GoogleNetworkInfoForm">
         <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
-            <ul class="progressStep_6" >
+            <ul class="progressStep_5" >
                 <li class="pass">Google 정보</li>
                 <li class="pass">기본 정보</li>
                 <li class="active">네트워크 정보</li>
                 <li class="before">리소스 정보</li>
-                <li class="before">배포 파일 정보</li>
                 <li class="before">설치</li>
             </ul>
         </div>
@@ -2049,12 +2079,11 @@ function popupClose() {
 <div id="AzureNetworkInfoDiv" style="width:100%;height:100%;" hidden="true">
     <form id="azureNetworkInfoForm">
         <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
-            <ul class="progressStep_6" >
+            <ul class="progressStep_5" >
                 <li class="pass">Azure 정보</li>
                 <li class="pass">기본 정보</li>
                 <li class="active">네트워크 정보</li>
                 <li class="before">리소스 정보</li>
-                <li class="before">배포 파일 정보</li>
                 <li class="before">설치</li>
             </ul>
         </div>
@@ -2124,12 +2153,11 @@ function popupClose() {
 <div id="VsphereNetworkInfoDiv" style="width:100%;height:100%;" hidden="true">
     <form id="vSphereNetworkInfoForm">
         <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
-            <ul class="progressStep_6" >
+            <ul class="progressStep_5" >
                 <li class="pass"></li>
                 <li class="pass">기본 정보</li>
                 <li class="active">네트워크 정보</li>
                 <li class="before">리소스 정보</li>
-                <li class="before">배포 파일 정보</li>
                 <li class="before">설치</li>
             </ul>
         </div>
@@ -2218,12 +2246,11 @@ function popupClose() {
 <div id="ResourceInfoDiv" style="width:100%;height:100%;" hidden="true">
     <form id="resourceInfoForm">
         <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
-            <ul class="progressStep_6" >
+            <ul class="progressStep_5" >
                 <li class="pass"></li>
                 <li class="pass">기본 정보</li>
                 <li class="pass">네트워크 정보</li>
                 <li class="active">리소스 정보</li>
-                <li class="before">배포 파일 정보</li>
                 <li class="before">설치</li>
             </ul>
         </div>
@@ -2287,7 +2314,7 @@ function popupClose() {
 <!-- Deploy DIV -->
 <div id="DeployDiv" style="width:100%;height:100%;" hidden="true">
     <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
-        <ul class="progressStep_6" >
+        <ul class="progressStep_5" >
             <li class="pass"></li>
             <li class="pass">기본 정보</li>
             <li class="pass">네트워크 정보</li>
@@ -2308,12 +2335,11 @@ function popupClose() {
 <!-- Install DIV -->
 <div id="InstallDiv" style="width:100%;height:100%;" hidden="true">
     <div style="margin-left:2%;display:inline-block;width:97%;padding-top:20px;">
-        <ul class="progressStep_6" >
+        <ul class="progressStep_5" >
             <li class="pass"></li>
             <li class="pass">기본 정보</li>
             <li class="pass">네트워크 정보</li>
             <li class="pass">리소스 정보</li>
-            <li class="pass">배포 파일 정보</li>
             <li class="active">설치</li>
         </ul>
     </div>
@@ -2322,7 +2348,7 @@ function popupClose() {
     </div>
     <div class="w2ui-buttons" id="InstallDivButtons" hidden="true">
             <!-- 설치 실패 시 -->
-            <button class="btn" id="deployPopupBtn" style="float: left;" onclick="deployPopup();" disabled>이전</button>
+            <button class="btn" id="deployPopupBtn" style="float: left;" onclick="confirmDeploy('before');" disabled>이전</button>
             <button class="btn" style="float: right; padding-right: 15%" onclick="popupComplete();">닫기</button>
     </div>
 </div>
