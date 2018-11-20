@@ -51,7 +51,6 @@ public class HbBootstrapService {
     final static Logger LOGGER = LoggerFactory.getLogger(HbBootstrapService.class);
     
     /***************************************************
-     * @param installStatus 
      * @project : Paas 플랫폼 설치 자동화
      * @description : Bootstrap 목록 조회
      * @title : bootstrapList
@@ -63,7 +62,6 @@ public class HbBootstrapService {
     }
 
     /***************************************************
-     * @param iaas 
      * @param hybridMgntId 
      * @project : Paas 플랫폼 설치 자동화
      * @description : Bootstrap 정보 상세 조회
@@ -80,9 +78,8 @@ public class HbBootstrapService {
     }
     
     /***************************************************
-     * @param iaas 
      * @project : Paas 플랫폼 설치 자동화
-     * @description : 입력 정보를 바탕으로 manifest 생성
+     * @description : 입력 정보를 바탕으로 manifest 생성 (삭제 예정)
      * @title : createSettingFile
      * @return : void
     ***************************************************/
@@ -136,9 +133,8 @@ public class HbBootstrapService {
     }
     
     /***************************************************
-     * @param string 
      * @project : Paas 플랫폼 설치 자동화
-     * @description : Manifest Template 디렉토리 정보
+     * @description : Manifest Template 디렉토리 정보 (삭제 예정)
      * @title : setOptionManifestTemplateInfo
      * @return : ManifestTemplateVO
     ***************************************************/
@@ -190,7 +186,7 @@ public class HbBootstrapService {
 
     /***************************************************
      * @project : Paas 플랫폼 설치 자동화
-     * @description : 화면에 입력한 값을 Input Template 파일의 항목과 치환 하기위해 데이터 설정
+     * @description : 화면에 입력한 값을 Input Template 파일의 항목과 치환 하기위해 데이터 설정 (삭제 예정)
      * @title : makeReplaceItems
      * @return : List<ReplaceItemDTO>
     ***************************************************/

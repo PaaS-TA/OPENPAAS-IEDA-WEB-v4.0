@@ -330,7 +330,7 @@ function setstemcellFilePath(fileInput){
  * 기능 : openBrowse
  *********************************************************/
 function openBrowse(){
-    if($('.w2ui-msg-body #browser').attr('disabled') == "disabled") return;    
+    if($('.w2ui-msg-body #browser').attr('disabled') == "disabled") return;
     $(".w2ui-msg-body input[name='stemcellPathFile[]']").click();
 }
 

@@ -42,14 +42,13 @@
           verification_key: ((uaa_jwt_signing_key.public_key))
         scim:
           groups:
-            bosh.admin: 'User has admin access on any Director'
-            bosh.read: 'User has read access on any Director'
-            bosh.stemcells.upload: 'User can upload new stemcells'
-            bosh.releases.upload: 'User can upload new releases'
+          - scim.write
+          - scim.read
+          - bosh.admin
           users:
           - name: admin
             groups: [bosh.admin]
-            password: admin
+            password: "admin"
         clients:
           bosh_cli:
             override: true
@@ -64,7 +63,7 @@
             authorized-grant-types: client_credentials
             scope: ""
             authorities: bosh.admin
-            secret: ((admin_password))
+            secret: admin
           hm:
             override: true
             authorized-grant-types: client_credentials

@@ -90,8 +90,8 @@ public class HbBootstrapDeployAsyncService {
                 
                 settingBoshInfo(bootstrapInfo, cmd);
                 settingIaasCpiInfo(bootstrapInfo, cmd, result);
-                settingUaaInfo(bootstrapInfo, cmd, result);
-                settingCredhubInfo(bootstrapInfo, cmd, result);
+                //settingUaaInfo(bootstrapInfo, cmd, result);
+                //settingCredhubInfo(bootstrapInfo, cmd, result);
                 settingJumpBoxInfo(bootstrapInfo, cmd, result);
                 
                 if(!StringUtils.isEmpty(bootstrapInfo.getNetworkConfigVo().getPublicStaticIp()) && bootstrapInfo.getNetworkConfigVo().getPublicStaticIp() != null){
@@ -126,16 +126,22 @@ public class HbBootstrapDeployAsyncService {
                 saveDeployStatus(bootstrapInfo, principal);
                 HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "error", Arrays.asList( "설치할 배포 파일(" + deployFile + ")이 존재하지 않습니다."));
             } else {
-                if ( accumulatedLog.contains("Failed deploying") || accumulatedLog.contains("Failed")) {
+                if ( !accumulatedLog.contains("Succeeded")) {
                     status = "error";
                     bootstrapInfo.setDeployStatus(message.getMessage("common.deploy.status.failed", null, Locale.KOREA) );
                     saveDeployStatus(bootstrapInfo, principal);
                     HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "error", Arrays.asList("", "BOOTSTRAP 설치 중 오류가 발생하였습니다.<br> 배포 정보 및 로그를 확인 하세요."));
                 }    else {
                     // 타겟 테스트
-                    HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("","BOOTSTRAP 디렉터 정보 : https://" + bootstrapInfo.getNetworkConfigVo().getPublicStaticIp() + ":25555"));
+                    String bootstrapIp = "";
+                    if(!StringUtils.isEmpty(bootstrapInfo.getNetworkConfigVo().getPublicStaticIp()) && bootstrapInfo.getNetworkConfigVo().getPublicStaticIp() != null){
+                        bootstrapIp = bootstrapInfo.getNetworkConfigVo().getPublicStaticIp();
+                    } else {
+                        bootstrapIp = bootstrapInfo.getNetworkConfigVo().getPrivateStaticIp();
+                    }
+                    HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("","BOOTSTRAP 디렉터 정보 : https://" + bootstrapIp + ":25555"));
                     HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("BOOTSTRAP 디렉터 타겟 접속 테스트..."));
-                    DirectorInfoDTO directorInfo = directorConfigService.getDirectorInfo(bootstrapInfo.getNetworkConfigVo().getPublicStaticIp(), 25555, "admin", "admin");
+                    DirectorInfoDTO directorInfo = directorConfigService.getDirectorInfo(bootstrapIp, 25555, "admin", "admin");
                     
                     if ( directorInfo == null ) {
                         status = "error";
@@ -229,8 +235,6 @@ public class HbBootstrapDeployAsyncService {
     private void settingPublicIpInfo(HbBootstrapVO vo, List<String> cmd, ManifestTemplateVO result) {
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + result.getInputTemplateSecond());
-        cmd.add("-o");
-        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/"  + result.getInputTemplateThird());
         cmd.add("-v");
         cmd.add("external_ip="+ vo.getNetworkConfigVo().getPublicStaticIp() + "");
     }
@@ -254,12 +258,12 @@ public class HbBootstrapDeployAsyncService {
      * @title : settingCredhubInfo
      * @return : void
     *****************************************************************/
-    private void settingCredhubInfo(HbBootstrapVO vo, List<String> cmd, ManifestTemplateVO result) {
+/*    private void settingCredhubInfo(HbBootstrapVO vo, List<String> cmd, ManifestTemplateVO result) {
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + result.getOptionEtc());
         cmd.add("-v");
         cmd.add("credhubRelease="+ RELEASE_DIR + SEPARATOR + vo.getDefaultConfigVo().getCredhubRelease()+ "");
-    }
+    }*/
 
     /****************************************************************
      * @project : 이종 Paas 플랫폼 설치 자동화
@@ -267,13 +271,13 @@ public class HbBootstrapDeployAsyncService {
      * @title : settingUaaInfo
      * void : settingUaaInfo
     *****************************************************************/
-    private void settingUaaInfo(HbBootstrapVO vo, List<String> cmd, ManifestTemplateVO result) {
+/*    private void settingUaaInfo(HbBootstrapVO vo, List<String> cmd, ManifestTemplateVO result) {
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + result.getCommonOptionTemplate());
         cmd.add("-v");
         cmd.add("uaaRelease="+ RELEASE_DIR + SEPARATOR + vo.getDefaultConfigVo().getUaaRelease()+ "");
     }
-
+*/
     /****************************************************************
      * @project : 이종 Paas 플랫폼 설치 자동화
      * @description : CPI CMD 정의

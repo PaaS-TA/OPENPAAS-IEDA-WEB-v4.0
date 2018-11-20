@@ -56,8 +56,8 @@ var defaultLayout = {
                    { field: 'boshCpiRelease', caption: 'BOSH CPI 릴리즈', size:'180px', style:'text-align:center;'},
                    { field: 'boshBpmRelease', caption: 'BOSH BPM 릴리즈', size:'180px', style:'text-align:center;'},
                    { field: 'osConfRelease', caption: 'OS-CONF 릴리즈', size:'180px', style:'text-align:center;'},
-                   { field: 'uaaRelease', caption: 'UAA 릴리즈', size:'180px', style:'text-align:center;'},
-                   { field: 'credhubRelease', caption: 'CREDHUB 릴리즈', size:'180px', style:'text-align:center;'},
+/*                    { field: 'uaaRelease', caption: 'UAA 릴리즈', size:'180px', style:'text-align:center;'},
+                   { field: 'credhubRelease', caption: 'CREDHUB 릴리즈', size:'180px', style:'text-align:center;'}, */
                    { field: 'ntp', caption: 'NTP 서버', size:'120px', style:'text-align:center;'}
                   ],
             onSelect : function(event) {
@@ -409,8 +409,8 @@ function getInitBoshReleaseList(iaasType){
         $("select[name=boshRelease]").html("<option value='' >BOSH 릴리즈를 선택하세요.</option>");
         $("select[name=boshCpiRelease]").html("<option value='' >BOSH CPI 릴리즈를 선택하세요.</option>");
         $("select[name=osConfRelease]").html("<option value='' >OS-CONF 릴리즈를 선택하세요.</option>");
-        $("select[name=uaaRelease]").html("<option value='' >UAA 릴리즈를 선택하세요.</option>");
-        $("select[name=credHubRelease]").html("<option value='' >CREDHUB 릴리즈를 선택하세요.</option>");
+/*         $("select[name=uaaRelease]").html("<option value='' >UAA 릴리즈를 선택하세요.</option>");
+        $("select[name=credHubRelease]").html("<option value='' >CREDHUB 릴리즈를 선택하세요.</option>"); */
         $("select[name=boshBpmRelease]").html("<option value='' >BPM 릴리즈를 선택하세요.</option>");
         $("select[name=boshBpmRelease]").attr("disabled", "disabled");
         $("select[name=credHubRelease]").attr("disabled", "disabled");
@@ -423,9 +423,9 @@ function getInitBoshReleaseList(iaasType){
     $("select[name=boshRelease]").removeAttr("disabled");
     $("select[name=boshCpiRelease]").removeAttr("disabled");
     $("select[name=osConfRelease]").removeAttr("disabled");
-    $("select[name=credHubRelease]").removeAttr("disabled");
+    //$("select[name=credHubRelease]").removeAttr("disabled");
     $("select[name=boshBpmRelease]").removeAttr("disabled");
-    $("select[name=uaaRelease]").removeAttr("disabled");
+    //$("select[name=uaaRelease]").removeAttr("disabled");
     iaas = iaasType;
     //BOSH CPI 릴리즈 정보 가져오기
     getLocalBoshCpiList('bosh_cpi', iaas);
@@ -783,7 +783,7 @@ function resetForm(status){
                         </div>
                     </div>
                     
-                    <div class="w2ui-field"> 
+<!--                     <div class="w2ui-field"> 
                         <label style="width:40%;text-align: left;padding-left: 20px;">UAA 릴리즈</label>
                         <div>
                             <select name="uaaRelease" class="form-control" style="width: 320px; margin-left: 20px;">
@@ -799,7 +799,7 @@ function resetForm(status){
                                 <option value="">CREDHUB 릴리즈를 선택하세요.</option>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
                     
                     <div class="w2ui-field">
                         <label style="width:43%;text-align: left;padding-left: 20px;">스냅샷기능 사용여부</label>
