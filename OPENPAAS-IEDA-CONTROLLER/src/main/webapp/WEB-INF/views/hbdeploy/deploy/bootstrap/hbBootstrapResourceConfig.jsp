@@ -370,13 +370,6 @@ function resetForm(status){
                            <input class="form-control"  name="instanceType" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="인스턴스 유형 입력하세요."/>
                        </div>
                    </div>
-                   <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">VM 비밀번호 </label>
-                       <div>
-                           <input class="form-control" name="vmPassword" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="VM 비밀번호를 입력하세요."/>
-                       </div>
-                   </div>
-                   
                </div>
            </div>
         </div>
@@ -413,10 +406,6 @@ $(function() {
                 required: function(){
                     return checkEmpty( $("input[name='instanceType']").val() );
                 }
-            }, vmPassword: { 
-                required: function(){
-                    return checkEmpty( $("input[name='vmPassword']").val() );
-                }
             }
         }, messages: {
             resourceConfigName: { 
@@ -427,8 +416,6 @@ $(function() {
                 required:  "Stemcell Name"+select_required_msg,
             }, instanceType: { 
                 required:  "Instance Type"+text_required_msg,
-            }, vmPassword: { 
-                required:  "VM Password"+text_required_msg,
             }
         }, unhighlight: function(element) {
             setHybridSuccessStyle(element);
