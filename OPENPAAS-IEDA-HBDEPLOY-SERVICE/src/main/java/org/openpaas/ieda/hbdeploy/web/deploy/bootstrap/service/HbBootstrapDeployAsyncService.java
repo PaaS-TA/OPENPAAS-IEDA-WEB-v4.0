@@ -289,9 +289,9 @@ public class HbBootstrapDeployAsyncService {
         cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + vo.getIaasType().toLowerCase() + SEPARATOR + result.getIaasPropertyTemplate());
         if("aws".equalsIgnoreCase(vo.getIaasType())){
             cmd.add("-v");
-            cmd.add("az=" + vo.getIaasConfig().getCommonAvailabilityZone());
+            cmd.add("az=" + vo.getIaasConfig().getCommonAvailabilityZone() + "");
             cmd.add("-v");
-            cmd.add("subnet_id=" + vo.getNetworkConfigVo().getSubnetId());
+            cmd.add("subnet_id=" + vo.getNetworkConfigVo().getSubnetId() + "");
             cmd.add("-v");
             cmd.add("region=" + vo.getIaasAccount().get("commonRegion").toString());
             cmd.add("-v");

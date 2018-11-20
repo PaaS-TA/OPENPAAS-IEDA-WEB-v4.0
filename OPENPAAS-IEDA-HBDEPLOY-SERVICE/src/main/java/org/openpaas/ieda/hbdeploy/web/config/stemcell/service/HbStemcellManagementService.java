@@ -149,6 +149,8 @@ public class HbStemcellManagementService {
                 dao.updateHybridStemcell(dto);
             }
             vo = dao.selectHybridStemcellById(dto.getId());
+            LOGGER.info(vo.getDownloadLink());
+            LOGGER.info(vo.getStemcellFileName());
         } catch(RuntimeException e){
             throw new CommonException(message.getMessage("common.internalServerError.exception.code", null, Locale.KOREA),
                     message.getMessage("common.internalServerError.message", null, Locale.KOREA), HttpStatus.INTERNAL_SERVER_ERROR);

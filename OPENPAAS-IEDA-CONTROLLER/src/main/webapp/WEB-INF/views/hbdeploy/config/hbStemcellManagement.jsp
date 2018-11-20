@@ -472,6 +472,7 @@ function setRegistType(value){
   * 기능 : stemcellRegist
   **************************************************************/
  function stemcellRegist(){
+	  
      var stemcellInfo = {
              id               : $(".w2ui-msg-body input[name='id']").val(),
              stemcellName     : $(".w2ui-msg-body input[name='stemcellName']").val(),
@@ -487,7 +488,8 @@ function setRegistType(value){
              light            : $(".w2ui-msg-body :checkbox[name='light']").is(':checked'),
              downloadStatus   : ""
      }
-     
+     console.log("stemcellInfo");
+     console.log(stemcellInfo);
      if(stemcellInfo.fileType == "file"){
          if($(".w2ui-msg-body input[name='stemcellSize']").val() == 0){
               w2alert("스템셀 파일을 찾을 수 없습니다. 확인해주세요.", "스템셀 파일 업로드");
@@ -603,6 +605,11 @@ function setRegistType(value){
   **************************************************************/
  var fail_count = 0;
  function stemcellFileDownload(stemcellInfo){
+	 
+	 console.log("stemcellInfo2");
+	 console.log(stemcellInfo);
+	 
+	 
      lock( '다운로드 중입니다.', true);
      var socket = new SockJS("<c:url value='/config/hbstemcell/regist/stemcellDownloading'/>");
      downloadClient = Stomp.over(socket);
