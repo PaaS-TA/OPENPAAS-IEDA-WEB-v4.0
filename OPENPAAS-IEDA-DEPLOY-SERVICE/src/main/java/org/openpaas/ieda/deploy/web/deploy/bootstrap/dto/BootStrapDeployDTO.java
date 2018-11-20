@@ -279,7 +279,6 @@ public class BootStrapDeployDTO{
         @NotNull
         private String stemcell; //스템셀
         private String cloudInstanceType; //인스턴스유형
-        @NotNull
         private String boshPassword; //VM 비밀번호
         private String resourcePoolCpu;//리소스 풀 CPU
         private String resourcePoolRam;//리소스 풀 RAM

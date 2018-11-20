@@ -76,8 +76,6 @@ $(function() {
             , {field: 'boshRelease', caption: 'BOSH 릴리즈', size: '100px'}
             , {field: 'boshCpiRelease', caption: 'BOSH CPI 릴리즈', size: '200px'}
             , {field: 'boshBpmRelease', caption: 'BOSH BPM 릴리즈', size: '200px'}
-            , {field: 'boshUaaRelease', caption: 'BOSH UAA 릴리즈', size: '200px'}
-            , {field: 'boshCredhubRelease', caption: 'BOSH CREDHUB 릴리즈', size: '200px'}
             , {field: 'subnetId', caption: '네트워크 ID', size: '200px'}
             , {field: 'subnetRange', caption: '서브넷 범위', size: '100px'}
             , {field: 'publicStaticIp', caption: '디렉터 공인 IP', size: '100px'}
