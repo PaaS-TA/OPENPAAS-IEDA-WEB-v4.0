@@ -922,7 +922,7 @@ $(function() {
                     stemcellInfo.stemcellFileName = data.stemcellFileName;
                     initView();//재조회
                     if(stemcellInfo.fileType == "file"){
-                        stemcellFileUpload(stemcellInfo);        
+                        stemcellFileUpload(stemcellInfo);
                     }else if(stemcellInfo.fileType == "url"){
                         stemcellFileDownload(stemcellInfo);
                     }else if (stemcellInfo.fileType == "version"){
