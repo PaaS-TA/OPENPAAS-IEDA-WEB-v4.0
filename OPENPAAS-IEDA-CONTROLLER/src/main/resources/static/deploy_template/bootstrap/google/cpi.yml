@@ -8,7 +8,7 @@
 - type: replace
   path: /resource_pools/name=vms/stemcell?
   value:
-    url: file:///[stemcell]
+    url: file:///((stemcell))
 
 # Configure sizes
 - type: replace
