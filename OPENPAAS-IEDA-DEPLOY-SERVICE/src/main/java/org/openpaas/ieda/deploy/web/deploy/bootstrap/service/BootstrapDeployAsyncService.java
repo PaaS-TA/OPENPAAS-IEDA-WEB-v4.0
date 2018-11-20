@@ -10,7 +10,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import org.hsqldb.lib.StringUtil;
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
+import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.deploy.api.director.dto.DirectorInfoDTO;
 import org.openpaas.ieda.deploy.api.director.utility.DirectorRestHelper;
 import org.openpaas.ieda.deploy.web.common.dao.CommonDeployDAO;
@@ -23,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -88,8 +91,8 @@ public class BootstrapDeployAsyncService {
                 
                 settingBoshInfo(cmd, bootstrapInfo);
                 settingIaasCpiInfo(cmd, bootstrapInfo, result);
-                settingUaaInfo(cmd, bootstrapInfo, result);
-                settingCredhubInfo(cmd, bootstrapInfo, result);
+                //settingUaaInfo(cmd, bootstrapInfo, result);
+                //settingCredhubInfo(cmd, bootstrapInfo, result);
                 settingJumpBoxInfo(cmd, bootstrapInfo, result);
                 
                 if(!StringUtils.isEmpty(bootstrapInfo.getPublicStaticIp()) && bootstrapInfo.getPublicStaticIp() != null){
@@ -97,6 +100,7 @@ public class BootstrapDeployAsyncService {
                 }
                 
                 cmd.add("--tty");
+                
                 ProcessBuilder builder = new ProcessBuilder(cmd);
                 builder.redirectErrorStream(true);
                 Process process = builder.start();
@@ -124,16 +128,23 @@ public class BootstrapDeployAsyncService {
                 saveDeployStatus(bootstrapInfo);
                 DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "error", Arrays.asList( "설치할 배포 파일(" + deployFile + ")이 존재하지 않습니다."));
             } else {
-                if ( accumulatedLog.contains("Failed deploying") || accumulatedLog.contains("Failed")) {
+                if (!accumulatedLog.contains("Succeeded")) {
                     status = "error";
                     bootstrapInfo.setDeployStatus(message.getMessage("common.deploy.status.failed", null, Locale.KOREA) );
                     saveDeployStatus(bootstrapInfo);
                     DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "error", Arrays.asList("", "BOOTSTRAP 설치 중 오류가 발생하였습니다.<br> 배포 정보 및 로그를 확인 하세요."));
                 }    else {
                     // 타겟 테스트
-                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("","BOOTSTRAP 디렉터 정보 : https://" + bootstrapInfo.getPublicStaticIp() + ":25555"));
-                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("BOOTSTRAP 디렉터 타겟 접속 테스트..."));
-                    DirectorInfoDTO directorInfo = directorConfigService.getDirectorInfo(bootstrapInfo.getPublicStaticIp(), 25555, "admin", "admin");
+                    DirectorInfoDTO directorInfo = null;
+                    if(bootstrapInfo.getPrivateStaticIp().isEmpty() || bootstrapInfo.getPrivateStaticIp() == null){
+                        DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("","BOOTSTRAP 디렉터 정보 : https://" + bootstrapInfo.getPublicStaticIp() + ":25555"));
+                        DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("BOOTSTRAP 디렉터 타겟 접속 테스트..."));
+                        directorInfo = directorConfigService.getDirectorInfo(bootstrapInfo.getPublicStaticIp(), 25555, "admin", "admin");
+                    }else{
+                        DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("","BOOTSTRAP 디렉터 정보 : https://" + bootstrapInfo.getPrivateStaticIp() + ":25555"));
+                        DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("BOOTSTRAP 디렉터 타겟 접속 테스트..."));
+                        directorInfo = directorConfigService.getDirectorInfo(bootstrapInfo.getPrivateStaticIp(), 25555, "admin", "admin");
+                    }
                     
                     if ( directorInfo == null ) {
                         status = "error";
@@ -246,31 +257,31 @@ public class BootstrapDeployAsyncService {
         cmd.add("osRelease="+ RELEASE_DIR + SEPARATOR + vo.getOsConfRelease()+ "");
     }
     
-    /****************************************************************
+/*    *//****************************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description :  Credhub CMD 정의
      * @title : settingCredhubInfo
      * @return : void
-    *****************************************************************/
+    *****************************************************************//*
     private void settingCredhubInfo(List<String> cmd, BootstrapVO vo, ManifestTemplateVO result){
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + result.getOptionEtc());
         cmd.add("-v");
         cmd.add("credhubRelease="+ RELEASE_DIR + SEPARATOR + vo.getBoshCredhubRelease()+ "");
-    }
+    }*/
     
-    /****************************************************************
+/*    *//****************************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description :  Uaa CMD 정의
      * @title : settingUaaInfo
      * @return : void
-    *****************************************************************/
+    *****************************************************************//*
     private void settingUaaInfo(List<String> cmd, BootstrapVO vo, ManifestTemplateVO result){
     	cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + result.getCommonOptionTemplate());
         cmd.add("-v");
         cmd.add("uaaRelease="+ RELEASE_DIR + SEPARATOR + vo.getBoshUaaRelease()+ "");
-    }
+    }*/
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화

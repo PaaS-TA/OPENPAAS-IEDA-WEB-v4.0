@@ -29,7 +29,7 @@ var text_ip_msg = '<spring:message code="common.text.validate.ip.message"/>';//I
  * 설명 : 변수 설정
 ***************************************************************** */
 var bootstrapId= "";
-var iaasConfigInfo="";//인프라 환경 설정 정ㅈ보
+var iaasConfigInfo="";//인프라 환경 설정 정보
 var boshInfo = ""; //기본 정보
 var networkInfo = "";//네트워크 정보
 var resourceInfo = "";//리소스 정보
@@ -113,7 +113,6 @@ function setBootstrapData(contents){
     resourceInfo = {
             id                : bootstrapId,
             stemcell          : contents.stemcell,
-            boshPassword      : contents.boshPassword,
             cloudInstanceType : contents.cloudInstanceType,
             resourcePoolCpu   : contents.resourcePoolCpu,
             resourcePoolRam   : contents.resourcePoolRam,
@@ -450,9 +449,9 @@ function defaultInfoPop(iaas){
                 //BOSH OS-CONF 릴리즈 정보 가져오기
                 getLocalBoshList('os-conf');
                 //BOSH credhub 릴리즈 정보 가져오기
-                getLocalBoshList('credhub');
+                //getLocalBoshList('credhub');
                 //BOSH uaa 릴리즈 정보 가져오기
-                getLocalBoshList('uaa');
+                //getLocalBoshList('uaa');
                 $('[data-toggle="popover"]').popover();
                 getReleaseVersionList();
             }
@@ -728,8 +727,8 @@ function saveDefaultInfo(type){
             osConfRelease       : $(".w2ui-msg-body select[name=osConfRelease]").val(),
             boshCpiRelease      : $(".w2ui-msg-body select[name=boshCpiRelease]").val(),
             boshBpmRelease      : $(".w2ui-msg-body select[name=boshBpmRelease]").val(),
-            boshCredhubRelease  : $(".w2ui-msg-body select[name=boshCredhubRelease]").val(),
-            boshUaaRelease      : $(".w2ui-msg-body select[name=boshUaaRelease]").val(),
+            //boshCredhubRelease  : $(".w2ui-msg-body select[name=boshCredhubRelease]").val(),
+            //boshUaaRelease      : $(".w2ui-msg-body select[name=boshUaaRelease]").val(),
             enableSnapshots     : $(".w2ui-msg-body input:radio[name=enableSnapshots]:checked").val(),
             snapshotSchedule    : $(".w2ui-msg-body input[name=snapshotSchedule]").val(),
             influxdbIp : influxdbIp,
@@ -950,8 +949,8 @@ function getStemcellList(iaas){
 function setReourceData(){
     if(resourceInfo != ""){
         $(".w2ui-msg-body #stemcell").val(resourceInfo.stemcell);
-//         $(".w2ui-msg-body input[name='stemcell']").data('selected', {text:resourceInfo.stemcell});
-        $(".w2ui-msg-body input[name='boshPassword']").val(resourceInfo.boshPassword);
+//        $(".w2ui-msg-body input[name='stemcell']").data('selected', {text:resourceInfo.stemcell});
+//        $(".w2ui-msg-body input[name='boshPassword']").val(resourceInfo.boshPassword);
         if(iaas.toUpperCase() != 'VSPHERE') { 
             $(".w2ui-msg-body input[name='cloudInstanceType']").val(resourceInfo.cloudInstanceType);
         }else{
@@ -974,7 +973,6 @@ function saveResourceInfo(type){
     resourceInfo = {
             id                : bootstrapId,
             stemcell          : $(".w2ui-msg-body select[name='stemcell']").val(),
-            boshPassword      : $(".w2ui-msg-body input[name='boshPassword']").val(),
             cloudInstanceType : cloudInstanceType,
             resourcePoolCpu   : $(".w2ui-msg-body input[name='resourcePoolCpu']").val(),
             resourcePoolRam   : $(".w2ui-msg-body input[name='resourcePoolRam']").val(),
@@ -1859,22 +1857,22 @@ function popupClose() {
                             </select>
                         </div>
                     </div>
-                    <div class="w2ui-field">
+<!--                     <div class="w2ui-field">
                         <label style="text-align:left; width:36%; font-size:11px;">BOSH Credhub 릴리즈</label>
                         <div style="width: 60%">
                             <select name="boshCredhubRelease" class="form-control select-control">
                                 <option value="">BOSH Credhub 릴리즈를 선택하세요.</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="w2ui-field">
+                    </div> -->
+<!--                     <div class="w2ui-field">
                         <label style="text-align:left; width:36%; font-size:11px;">BOSH uaa 릴리즈</label>
                         <div style="width: 60%">
                             <select name="boshUaaRelease" class="form-control select-control">
                                 <option value="">BOSH uaa 릴리즈를 선택하세요.</option>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="w2ui-field">
                         <label style="text-align: left;width:36%;font-size:11px;">스냅샷기능 사용여부</label>
                         <div style="width: 60%">
@@ -2292,13 +2290,6 @@ function popupClose() {
                         <label style="text-align: left;width:36%;font-size:11px;">리소스 풀 DISK</label>
                         <div style="width: 60%">
                             <input name="resourcePoolDisk" type="text"  style="display:inline-block;width:70%;" placeholder="리소스 풀 DISK 예) 20000" onkeydown="return onlyNumber(event);"  onkeyup='removeChar(event)' style='ime-mode:disabled;'  />
-                        </div>
-                    </div>
-                    
-                    <div class="w2ui-field">
-                        <label style="text-align: left;width:36%;font-size:11px;">VM 비밀번호</label>
-                        <div style="width: 60%">
-                            <input name="boshPassword" type="text"  style="display:inline-block;width:70%;" placeholder="VM 비밀번호를 입력하세요."/>
                         </div>
                     </div>
                 </div>
