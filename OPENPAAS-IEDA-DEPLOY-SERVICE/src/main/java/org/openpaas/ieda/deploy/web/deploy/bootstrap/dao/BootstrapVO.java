@@ -383,12 +383,12 @@ public class BootstrapVO {
 		this.syslogPort = syslogPort;
 	}
 
-	public String getSyslogTranport() {
+	public String getSyslogTransport() {
 		return syslogTransport;
 	}
 
-	public void setSyslogTranport(String syslogTranport) {
-		this.syslogTransport = syslogTranport;
+	public void setSyslogTransport(String syslogTransport) {
+		this.syslogTransport = syslogTransport;
 	}
 
 	public String getPaastaMonitoringAgentRelease() {

@@ -232,7 +232,7 @@ CREATE TABLE ieda_bootstrap
   update_date                       DATE          NOT NULL,
   paasta_monitoring_use             VARCHAR(100) NULL,
   paasta_monitoring_agent_release   VARCHAR(100) NULL,
-  paasta_monitoring_system_release  VARCHAR(100) NULL,
+  paasta_monitoring_syslog_release  VARCHAR(100) NULL,
   metric_url                        VARCHAR(100) NULL,
   syslog_address                    VARCHAR(100) NULL,
   syslog_port                       VARCHAR(100) NULL,

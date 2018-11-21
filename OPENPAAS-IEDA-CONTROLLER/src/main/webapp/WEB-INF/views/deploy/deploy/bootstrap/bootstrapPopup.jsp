@@ -402,8 +402,6 @@ function defaultInfoPop(iaas){
         buttons : $("#DefaultInfoButtonDiv").html(),
         onOpen:function(event){
             event.onComplete = function(){
-                $(".w2ui-msg-body input[name='ingestorIp']").attr("disabled", true);
-                $(".w2ui-msg-body input[name='influxdbIp']").attr("disabled", true);
                 $('[data-toggle="popover"]').popover();
                 $(".paastaMonitoring-info").attr('data-content', "paasta v4.0 이상에서 지원")
                 if( !checkEmpty(boshInfo) && boshInfo != "" ){
@@ -430,7 +428,7 @@ function defaultInfoPop(iaas){
                             $(".w2ui-msg-body input[name='syslogTransport']").removeAttr("disabled");
                             
                             $(".w2ui-msg-body select[name='paastaMonitoringAgentRelease']").val(boshInfo.paastaMonitoringAgentRelease);
-                            $(".w2ui-msg-body select[name='paastaMonitoringAgentRelease']").val(boshInfo.paastaMonitoringSyslogRelease);
+                            $(".w2ui-msg-body select[name='paastaMonitoringSyslogRelease']").val(boshInfo.paastaMonitoringSyslogRelease);
                             $(".w2ui-msg-body input[name='metricUrl']").val(boshInfo.metricUrl);
                             $(".w2ui-msg-body input[name='syslogAddress']").val(boshInfo.syslogAddress);
                             $(".w2ui-msg-body input[name='syslogPort']").val(boshInfo.syslogPort);
@@ -445,7 +443,7 @@ function defaultInfoPop(iaas){
                             $(".w2ui-msg-body input[name='syslogTransport']").attr("disabled", true);
                         }
                     }
-                }else{c
+                }else{
                     $('input:radio[name=enableSnapshots]:input[value=false]').attr("checked", true);
                     enableSnapshotsFn("false");
                     checkPaasTAMonitoringUseYn();
@@ -466,6 +464,9 @@ function defaultInfoPop(iaas){
                 //getLocalBoshList('credhub');
                 //BOSH uaa 릴리즈 정보 가져오기
                 //getLocalBoshList('uaa');
+                //ETC 릴리즈 정보 가져오기(PaaS-TA Monitoring 릴리즈)
+                getLocalPaasTAMonitoringReleaseList('PAASTA-MONITORING');
+                getLocalPaasTAMonitoringReleaseList('SYSLOG');
                 $('[data-toggle="popover"]').popover();
                 getReleaseVersionList();
             }
@@ -665,15 +666,15 @@ function enableSnapshotsFn(value){
 function checkPaasTAMonitoringUseYn(){
     var value = $("#paastaMonitoring:checked").val();
     if( value == "on"){
-        $(".w2ui-msg-body  select[name=paastaMonitoringAgentRelease]").attr("disabled", true);
-        $(".w2ui-msg-body  select[name=paastaMonitoringSyslogRelease]").attr("disabled", true);
-        $(".w2ui-msg-body  input[name=metricUrl]").attr("disabled", true);
-        $(".w2ui-msg-body  input[name=syslogAddress]").attr("disabled", true);
-        $(".w2ui-msg-body  input[name=syslogPort]").attr("disabled", true);
-        $(".w2ui-msg-body  input[name=syslogTransport]").attr("disabled", true);
+        $(".w2ui-msg-body  select[name=paastaMonitoringAgentRelease]").attr("disabled", false);
+        $(".w2ui-msg-body  select[name=paastaMonitoringSyslogRelease]").attr("disabled", false);
+        $(".w2ui-msg-body  input[name=metricUrl]").attr("disabled", false);
+        $(".w2ui-msg-body  input[name=syslogAddress]").attr("disabled", false);
+        $(".w2ui-msg-body  input[name=syslogPort]").attr("disabled", false);
+        $(".w2ui-msg-body  input[name=syslogTransport]").attr("disabled", false);
         //ETC 릴리즈 정보 가져오기(PaaS-TA Monitoring 릴리즈)
-        getLocalPaasTAMonitoringReleaseList('BOSH_MONITORING_AGENT');
-        getLocalPaasTAMonitoringReleaseList('BOSH_MONITORING_AGENT');
+        getLocalPaasTAMonitoringReleaseList('PAASTA-MONITORING');
+        getLocalPaasTAMonitoringReleaseList('SYSLOG');
     }else{
         $(".w2ui-msg-body  select[name=paastaMonitoringAgentRelease]").val("");
         $(".w2ui-msg-body  select[name=paastaMonitoringSyslogRelease]").val("");
@@ -706,15 +707,24 @@ function getLocalPaasTAMonitoringReleaseList(type){
             if( data.length == 0 ){
                 return;
             }
-            if(type == 'BOSH_MONITORING_AGENT'){
-                var options = '<option value="">PaaS-TA 모니터링 릴리즈를 선택하세요.</option>';
+            if(type == 'PAASTA-MONITORING'){
+                var options = '<option value="">PaaS-TA 모니터링 Agent 릴리즈를 선택하세요.</option>';
                 for( var i=0; i<data.length; i++ ){
-                    if( data[i] == boshInfo.paastaMonitoringRelease){
+                    if( data[i] == boshInfo.paastaMonitoringAgentRelease){
                         options += "<option value='"+data[i]+"' selected >"+data[i]+"</option>";
                     }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
                     
                 }
-                $(".w2ui-msg-body select[name='paastaMonitoringRelease']").html(options);
+                $(".w2ui-msg-body select[name='paastaMonitoringAgentRelease']").html(options);
+            }else if(type == 'SYSLOG'){
+                var options = '<option value="">PaaS-TA 모니터링 Syslog 릴리즈를 선택하세요.</option>';
+                for( var i=0; i<data.length; i++ ){
+                    if( data[i] == boshInfo.paastaMonitoringSyslogRelease){
+                        options += "<option value='"+data[i]+"' selected >"+data[i]+"</option>";
+                    }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
+                    
+                }
+                $(".w2ui-msg-body select[name='paastaMonitoringSyslogRelease']").html(options);
             }
         },
         error: function(e, status){
@@ -731,22 +741,24 @@ function getLocalPaasTAMonitoringReleaseList(type){
  * 설명 : Default Info Save
  ***************************************************************** */
 function saveDefaultInfo(type){
+    var monitoringUse = "";
+    var monitoringAgentRelease = "";
+    var monitoringSyslogRelease = "";
+    var metricUrl = "";
+    var syslogAddress = "";
+    var syslogPort = "";
+    var syslogTransport = "";
+    
     if( $("#paastaMonitoring:checked").val() == "on"){
-        var monitoringUse = "true";
-        var monitoringAgentRelease = $(".w2ui-msg-body select[name=paastaMonitoringAgentRelease]").val();
-        var monitoringSyslogRelease = $(".w2ui-msg-body select[name=paastaMonitoringSyslogRelease]").val();
-        var metrincUrl = $(".w2ui-msg-body input[name=metricUrl]").val();
-        var syslogAddress = $(".w2ui-msg-body input[name='syslogAddress']").val();
-        var syslogPort = $(".w2ui-msg-body input[name='syslogPort']").val();
-        var syslogTransport = $(".w2ui-msg-body input[name='syslogTransport']").val();
+        monitoringUse = "true";
+        monitoringAgentRelease = $(".w2ui-msg-body select[name=paastaMonitoringAgentRelease]").val();
+        monitoringSyslogRelease = $(".w2ui-msg-body select[name=paastaMonitoringSyslogRelease]").val();
+        metricUrl = $(".w2ui-msg-body input[name=metricUrl]").val();
+        syslogAddress = $(".w2ui-msg-body input[name='syslogAddress']").val();
+        syslogPort = $(".w2ui-msg-body input[name='syslogPort']").val();
+        syslogTransport = $(".w2ui-msg-body input[name='syslogTransport']").val();
     }else{
-        var monitoringUse = "false";
-        var monitoringAgentRelease = $(".w2ui-msg-body select[name=paastaMonitoringAgentRelease]").val("");
-        var monitoringSyslogRelease = $(".w2ui-msg-body select[name=paastaMonitoringSyslogRelease]").val("");
-        var metrincUrl = $(".w2ui-msg-body input[name=metricUrl]").val("");
-        var syslogAddress = $(".w2ui-msg-body input[name='syslogAddress']").val("");
-        var syslogPort = $(".w2ui-msg-body input[name='syslogPort']").val("");
-        var syslogTransport = $(".w2ui-msg-body input[name='syslogTransport']").val("");
+        monitoringUse = "false";
     }
     boshInfo = {
             id                            : iaasConfigInfo.id,
@@ -758,8 +770,6 @@ function saveDefaultInfo(type){
             osConfRelease                 : $(".w2ui-msg-body select[name=osConfRelease]").val(),
             boshCpiRelease                : $(".w2ui-msg-body select[name=boshCpiRelease]").val(),
             boshBpmRelease                : $(".w2ui-msg-body select[name=boshBpmRelease]").val(),
-            //boshCredhubRelease          : $(".w2ui-msg-body select[name=boshCredhubRelease]").val(),
-            //boshUaaRelease              : $(".w2ui-msg-body select[name=boshUaaRelease]").val(),
             enableSnapshots               : $(".w2ui-msg-body input:radio[name=enableSnapshots]:checked").val(),
             snapshotSchedule              : $(".w2ui-msg-body input[name=snapshotSchedule]").val(),
             paastaMonitoringUse           : monitoringUse,
@@ -1927,7 +1937,7 @@ function popupClose() {
                         <span class="glyphicon glyphicon glyphicon-question-sign paastaMonitoring-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="click" data-html="true"></span>
                         </label>
                         <div style="width: 60%">
-                            <input name="paastaMonitoring" type="checkbox" id="paastaMonitoring" onclick="checkPaasTAMonitoringUseYn()"/>사용
+                            <input name="paastaMonitoring" type="checkbox" id="paastaMonitoring" onChange="checkPaasTAMonitoringUseYn()"/>사용
                         </div>
                     </div>
                 </div>
@@ -1939,7 +1949,7 @@ function popupClose() {
                     <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">PaaS-TA 모니터링 Agent 릴리즈</label>
                         <div style="width: 60%">
-                            <select name="paastaMonitoringAgentRelease" class="form-control select-control">
+                            <select name="paastaMonitoringAgentRelease" class="form-control select-control" >
                                 <option value="">PaaS-TA 모니터링 Agent 릴리즈를 선택하세요.</option>
                             </select>
                         </div>
@@ -1947,7 +1957,7 @@ function popupClose() {
                     <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">PaaS-TA 모니터링 Syslog 릴리즈</label>
                         <div style="width: 60%">
-                            <select name="paastaMonitoringSyslogRelease" class="form-control select-control">
+                            <select name="paastaMonitoringSyslogRelease" class="form-control select-control" >
                                 <option value="">PaaS-TA 모니터링 Syslog 릴리즈를 선택하세요.</option>
                             </select>
                         </div>
@@ -1955,13 +1965,13 @@ function popupClose() {
                     <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">Metric URL</label>
                         <div style="width: 60%">
-                            <input name="MetricUrl" type="text" style="display:inline-block; width: 70%;" placeholder="예)10.0.15.11:8059" />
+                            <input name="metricUrl" type="text" style="display:inline-block; width: 70%;"  placeholder="예)10.0.15.11:8059" />
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">Syslog Address</label>
                         <div style="width: 60%">
-                            <input name="syslogAddress" type="text" style="display:inline-block; width: 70%;" placeholder="예)10.0.0.0" />
+                            <input name="syslogAddress" type="text" style="display:inline-block; width: 70%;"  placeholder="예)10.0.0.0" />
                         </div>
                     </div>
                     <div class="w2ui-field">
@@ -1973,12 +1983,11 @@ function popupClose() {
                     <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">Syslog Transport</label>
                         <div style="width: 60%">
-                            <input name="syslogtTransport" type="text" style="display:inline-block; width: 70%;" placeholder="예)relp" />
+                            <input name="syslogTransport" type="text" style="display:inline-block; width: 70%;" placeholder="예)relp" />
                         </div>
                     </div>
                 </div>
              </div>
-            
         </div>
     </form>
     <div class="w2ui-buttons" id="DefaultInfoButtonDiv"hidden="true">

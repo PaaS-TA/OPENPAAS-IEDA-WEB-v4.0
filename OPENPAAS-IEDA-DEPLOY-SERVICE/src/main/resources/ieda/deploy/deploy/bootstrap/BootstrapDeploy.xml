@@ -121,7 +121,7 @@
         ,bootstrap.paasta_monitoring_agent_release as paasta_monitoring_agent_release
         ,bootstrap.paasta_monitoring_syslog_release as paasta_monitoring_syslog_release
         ,bootstrap.metric_url as metric_url
-        ,bootstrap.syslog_url as syslog_url
+        ,bootstrap.syslog_address as syslog_address
         ,bootstrap.syslog_port as syslog_port
         ,bootstrap.syslog_transport as syslog_transport
         ,config.iaas_config_alias as iaas_config_alias
@@ -175,7 +175,7 @@ Order by iaas_type asc, update_date asc
             ,bootstrap.paasta_monitoring_agent_release as paasta_monitoring_agent_release
             ,bootstrap.paasta_monitoring_syslog_release as paasta_monitoring_syslog_release
             ,bootstrap.metric_url as metric_url
-            ,bootstrap.syslog_url as syslog_url
+            ,bootstrap.syslog_address as syslog_address
             ,bootstrap.syslog_port as syslog_port
             ,bootstrap.syslog_transport as syslog_transport
             ,config.iaas_config_alias as iaas_config_alias

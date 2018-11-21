@@ -69,7 +69,7 @@ public class BootStrapDeployDTO{
         private String metricUrl; //PaaS-TA 모니터링
         private String syslogAddress; //PaaS-TA 모니터링
         private String syslogPort; //PaaS-TA 모니터링
-        private String syslogTranport; //PaaS-TA 모니터링
+        private String syslogTransport; //PaaS-TA 모니터링
         
         public String getId() {
             return id;
@@ -191,11 +191,11 @@ public class BootStrapDeployDTO{
         public void setSyslogPort(String syslogPort) {
             this.syslogPort = syslogPort;
         }
-        public String getSyslogTranport() {
-            return syslogTranport;
+        public String getSyslogTransport() {
+            return syslogTransport;
         }
-        public void setSyslogTranport(String syslogTranport) {
-            this.syslogTranport = syslogTranport;
+        public void setSyslogTransport(String syslogTransport) {
+            this.syslogTransport = syslogTransport;
         }
         
     }

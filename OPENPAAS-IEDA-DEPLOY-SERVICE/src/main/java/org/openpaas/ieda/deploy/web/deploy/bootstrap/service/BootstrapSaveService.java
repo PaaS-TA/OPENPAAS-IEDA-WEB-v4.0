@@ -86,7 +86,7 @@ public class BootstrapSaveService {
             vo.setMetricUrl(dto.getMetricUrl());
             vo.setSyslogAddress(dto.getSyslogAddress());
             vo.setSyslogPort(dto.getSyslogPort());
-            vo.setSyslogTranport(dto.getSyslogTranport());
+            vo.setSyslogTransport(dto.getSyslogTransport());
             vo.setOsConfRelease(dto.getOsConfRelease());
             vo.setBoshUaaRelease(dto.getBoshUaaRelease());
             vo.setBoshCredhubRelease(dto.getBoshCredhubRelease());
