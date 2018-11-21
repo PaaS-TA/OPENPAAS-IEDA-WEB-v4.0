@@ -256,10 +256,10 @@ public class HbStemcellManagementService {
                  if(dto.getFileType().toLowerCase().equalsIgnoreCase("url") && dto.getStemcellUrl().contains("bosh.io")){
                      contains = "Location:";
                  }else{
-                     contains ="https:";
+                     contains ="filename";
                  }
                  if(info.contains(contains) && !flag){
-                     search = info.split("/");
+                     search = info.split("=");
                      dto.setStemcellFileName(search[search.length-1]);
                      dto.setStemcellVersion(setStemcellVersionWithWget(dto));
                      flag = true;
