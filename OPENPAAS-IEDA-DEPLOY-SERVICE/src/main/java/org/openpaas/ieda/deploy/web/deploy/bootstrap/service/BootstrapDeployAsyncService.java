@@ -99,6 +99,10 @@ public class BootstrapDeployAsyncService {
                     settingPublicIpInfo(cmd, bootstrapInfo, result);
                 }
                 
+                if(bootstrapInfo.getPaastaMonitoringUse().equals("on")){
+                    settingPaastaMonitoring(cmd, bootstrapInfo, result);
+                }
+                
                 cmd.add("--tty");
                 
                 ProcessBuilder builder = new ProcessBuilder(cmd);
@@ -341,6 +345,27 @@ public class BootstrapDeployAsyncService {
         cmd.add("-v");
         cmd.add("private_key=" + PRIVATE_KEY_PATH + vo.getIaasConfig().getCommonKeypairPath());
         
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : 모니터링 CMD 정의
+     * @title : settingPaastaMonitoring
+     * @return : void
+    *****************************************************************/
+    private void settingPaastaMonitoring(List<String> cmd, BootstrapVO vo, ManifestTemplateVO result){
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + "syslog.yml");
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + "paasta-monitoring-agent.yml");
+        cmd.add("-v");
+        cmd.add("metric_url="+ RELEASE_DIR + SEPARATOR + "");
+        cmd.add("-v");
+        cmd.add("syslog_address="+ RELEASE_DIR + SEPARATOR +  "");
+        cmd.add("-v");
+        cmd.add("syslog_port="+ RELEASE_DIR + SEPARATOR +  "");
+        cmd.add("-v");
+        cmd.add("syslog_transport="+ RELEASE_DIR + SEPARATOR + "");
     }
     
     /****************************************************************

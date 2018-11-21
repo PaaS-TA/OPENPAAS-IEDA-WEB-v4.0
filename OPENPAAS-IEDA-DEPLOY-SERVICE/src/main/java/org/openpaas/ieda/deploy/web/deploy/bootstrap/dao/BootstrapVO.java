@@ -32,11 +32,14 @@ public class BootstrapVO {
     private String snapshotSchedule;//스냅샷 스케줄
     private String enableSnapshots;//스냅샷 사용 유무
     private String ntp; // NTP
-    private String paastaMonitoringUse; //PaaS-TA 모니터링 사용 유무
-    private String paastaMonitoringIp; //PaaS-TA 모니터링 사용시 ingrestorIP
-    private String influxdbIp;
-    private String paastaMonitoringRelease; //PaaS-TA 모니터링 사용시 릴리즈
     private String osConfRelease;
+    private String paastaMonitoringUse; //PaaS-TA 모니터링 사용 유무
+    private String paastaMonitoringAgentRelease; //PaaS-TA 모니터링 사용시 Agent 릴리즈
+    private String paastaMonitoringSyslogRelease; //PaaS-TA 모니터링 사용시 Syslog 릴리즈
+    private String metricUrl; //PaaS-TA 모니터링
+    private String syslogAddress; //PaaS-TA 모니터링
+    private String syslogPort; //PaaS-TA 모니터링
+    private String syslogTransport; //PaaS-TA 모니터링
     /** Network Info **/
     private String subnetId; // 네트워크id
     private String privateStaticIp; // 디렉터 내부 ip
@@ -332,30 +335,6 @@ public class BootstrapVO {
         this.paastaMonitoringUse = paastaMonitoringUse;
     }
 
-    public String getPaastaMonitoringIp() {
-        return paastaMonitoringIp;
-    }
-
-    public void setPaastaMonitoringIp(String paastaMonitoringIp) {
-        this.paastaMonitoringIp = paastaMonitoringIp;
-    }
-
-    public String getPaastaMonitoringRelease() {
-        return paastaMonitoringRelease;
-    }
-
-    public void setPaastaMonitoringRelease(String paastaMonitoringRelease) {
-        this.paastaMonitoringRelease = paastaMonitoringRelease;
-    }
-
-    public String getInfluxdbIp() {
-        return influxdbIp;
-    }
-
-    public void setInfluxdbIp(String influxdbIp) {
-        this.influxdbIp = influxdbIp;
-    }
-
     public String getBoshBpmRelease() {
         return boshBpmRelease;
     }
@@ -379,5 +358,53 @@ public class BootstrapVO {
     public void setBoshUaaRelease(String boshUaaRelease) {
         this.boshUaaRelease = boshUaaRelease;
     }
+
+	public String getMetricUrl() {
+		return metricUrl;
+	}
+
+	public void setMetricUrl(String metricUrl) {
+		this.metricUrl = metricUrl;
+	}
+
+	public String getSyslogAddress() {
+		return syslogAddress;
+	}
+
+	public void setSyslogAddress(String syslogAddress) {
+		this.syslogAddress = syslogAddress;
+	}
+
+	public String getSyslogPort() {
+		return syslogPort;
+	}
+
+	public void setSyslogPort(String syslogPort) {
+		this.syslogPort = syslogPort;
+	}
+
+	public String getSyslogTranport() {
+		return syslogTransport;
+	}
+
+	public void setSyslogTranport(String syslogTranport) {
+		this.syslogTransport = syslogTranport;
+	}
+
+	public String getPaastaMonitoringAgentRelease() {
+		return paastaMonitoringAgentRelease;
+	}
+
+	public void setPaastaMonitoringAgentRelease(String paastaMonitoringAgentRelease) {
+		this.paastaMonitoringAgentRelease = paastaMonitoringAgentRelease;
+	}
+
+	public String getPaastaMonitoringSyslogRelease() {
+		return paastaMonitoringSyslogRelease;
+	}
+
+	public void setPaastaMonitoringSyslogRelease(String paastaMonitoringSyslogRelease) {
+		this.paastaMonitoringSyslogRelease = paastaMonitoringSyslogRelease;
+	}
 
 }

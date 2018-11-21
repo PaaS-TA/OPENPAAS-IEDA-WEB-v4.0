@@ -1903,24 +1903,43 @@ function popupClose() {
                 <div class="panel-heading"><b>PaaS-TA 모니터링 정보</b></div>
                 <div class="panel-body">
                     <div class="w2ui-field">
-                        <label style="text-align: left; width: 36%; font-size: 11px;">PaaS-TA 모니터링 Ingestor 서버 IP</label>
+                        <label style="text-align: left; width: 36%; font-size: 11px;">PaaS-TA 모니터링 Agent 릴리즈</label>
                         <div style="width: 60%">
-                            <input name="ingestorIp" type="text" style="display:inline-block; width: 70%;" placeholder="예)10.0.0.0" />
-                        </div>
-                    </div>
-                    <div class="w2ui-field">
-                        <label style="text-align: left; width: 36%; font-size: 11px;">PaaS-TA 모니터링 Influxdb 서버 IP</label>
-                        <div style="width: 60%">
-                            <input name="influxdbIp" type="text" style="display:inline-block; width: 70%;" placeholder="예)10.0.0.0" />
-                        </div>
-                    </div>
-                    
-                    <div class="w2ui-field">
-                        <label style="text-align: left; width: 36%; font-size: 11px;">PaaS-TA 모니터링 릴리즈</label>
-                        <div style="width: 60%">
-                            <select name="paastaMonitoringRelease" class="form-control select-control">
-                                <option value="">PaaS-TA 모니터링 릴리즈를 선택하세요.</option>
+                            <select name="paastaMonitoringAgentRelease" class="form-control select-control">
+                                <option value="">PaaS-TA 모니터링 Agent 릴리즈를 선택하세요.</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">PaaS-TA 모니터링 Syslog 릴리즈</label>
+                        <div style="width: 60%">
+                            <select name="paastaMonitoringSyslogRelease" class="form-control select-control">
+                                <option value="">PaaS-TA 모니터링 Syslog 릴리즈를 선택하세요.</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">Metric URL</label>
+                        <div style="width: 60%">
+                            <input name="MetricUrl" type="text" style="display:inline-block; width: 70%;" placeholder="예)10.0.15.11:8059" />
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">Syslog Address</label>
+                        <div style="width: 60%">
+                            <input name="syslogAddress" type="text" style="display:inline-block; width: 70%;" placeholder="예)10.0.0.0" />
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">Syslog Port</label>
+                        <div style="width: 60%">
+                            <input name="syslogPort" type="text" style="display:inline-block; width: 70%;" placeholder="예)2514" />
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">Syslog Transport</label>
+                        <div style="width: 60%">
+                            <input name="syslogtTransport" type="text" style="display:inline-block; width: 70%;" placeholder="예)relp" />
                         </div>
                     </div>
                 </div>

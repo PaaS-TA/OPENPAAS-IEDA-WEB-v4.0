@@ -81,9 +81,12 @@ public class BootstrapSaveService {
             vo.setSnapshotSchedule(dto.getSnapshotSchedule().trim());
             vo.setUpdateUserId(principal.getName());
             vo.setPaastaMonitoringUse(dto.getPaastaMonitoringUse());
-            vo.setPaastaMonitoringIp(dto.getPaastaMonitoringIp());
-            vo.setInfluxdbIp(dto.getInfluxdbIp());
-            vo.setPaastaMonitoringRelease(dto.getPaastaMonitoringRelease());
+            vo.setPaastaMonitoringAgentRelease(dto.getPaastaMonitoringAgentRelease());
+            vo.setPaastaMonitoringSyslogRelease(dto.getPaastaMonitoringSyslogRelease());
+            vo.setMetricUrl(dto.getMetricUrl());
+            vo.setSyslogAddress(dto.getSyslogAddress());
+            vo.setSyslogPort(dto.getSyslogPort());
+            vo.setSyslogTranport(dto.getSyslogTranport());
             vo.setOsConfRelease(dto.getOsConfRelease());
             vo.setBoshUaaRelease(dto.getBoshUaaRelease());
             vo.setBoshCredhubRelease(dto.getBoshCredhubRelease());
