@@ -28,11 +28,16 @@
         <result property="deployStatus" column="DEPLOY_STATUS" />
         <result property="taskId" column="TASK_ID" />
         <result property="userAddSsh" column="USER_ADD_SSH" />
-        <result property="osConfReleaseName" column="OSCONF_RELEASE_NAME" />
-        <result property="osConfReleaseVersion" column="OSCONF_RELEASE_VERSION"/>
         <result property="inceptionOsUserName" column="INCEPTION_OS_USER_NAME"/>
         <result property="cfAdminPassword" column="CF_ADMIN_PASSWORD"/>
         <result property="portalDomain" column="PORTAL_DOMAIN"/>
+        <result property="paastaMonitoringUse" column="PAASTA_MONITORING_USE"/>
+        <result property="metricUrl" column="METRIC_URL"/>
+        <result property="syslogAddress" column="SYSLOG_ADDRESS"/>
+        <result property="syslogPort" column="SYSLOG_PORT"/>
+        <result property="syslogCustomRule" column="SYSLOG_CUSTOM_RULE"/>
+        <result property="syslogFallbackServers" column="SYSLOG_FALLBACK_SERVERS"/>
+        
         <collection property="resource" ofType="org.openpaas.ieda.deploy.web.deploy.common.dao.resource.ResourceVO"  javaType="org.openpaas.ieda.deploy.web.deploy.common.dao.resource.ResourceVO">
             <result property="id" column="RESOURCE_ID" />
             <result property="deployType" column="RESOURCE_DEPLOY_TYPE"/>
@@ -82,11 +87,15 @@
             ,release_name
             ,release_version
             ,task_id
+            ,paasta_monitoring_use
+            ,metric_url 
+            ,syslog_address
+            ,syslog_port
+            ,syslog_custom_rule
+            ,syslog_fallback_servers
             ,c.create_date as create_date
             ,c.update_date as update_date
             ,c.user_add_ssh
-            ,c.osconf_release_name
-            ,c.osconf_release_version
             ,c.inception_os_user_name
             ,c.cf_admin_password
             ,c.portal_domain
@@ -108,8 +117,6 @@
             ,cf_db_type
             ,release_name
             ,release_version
-            ,loggregator_release_name
-            ,loggregator_release_version
             ,country_code
             ,state_name
             ,locality_name
@@ -119,11 +126,15 @@
             ,key_file
             ,task_id
             ,user_add_ssh
-            ,osconf_release_name
-            ,osconf_release_version
             ,inception_os_user_name
             ,cf_admin_password
             ,portal_domain
+            ,paasta_monitoring_use
+            ,metric_url 
+            ,syslog_address
+            ,syslog_port
+            ,syslog_custom_rule
+            ,syslog_fallback_servers
         From ieda_cf
         where id = #{id}
     </select>
@@ -184,8 +195,6 @@
             ,runner_type_disk
             ,task_id
             ,user_add_ssh
-            ,osconf_release_name
-            ,osconf_release_version
             ,inception_os_user_name
             ,enable_windows_stemcell
             ,cf_admin_password
@@ -193,6 +202,12 @@
             ,windows_stemcell_version
             ,enable_windows_stemcell
             ,windows_cell_instance
+            ,paasta_monitoring_use
+            ,metric_url 
+            ,syslog_address
+            ,syslog_port
+            ,syslog_custom_rule
+            ,syslog_fallback_servers
         From (select * from ieda_cf where id = #{id} ) as cf
          Left Join ieda_resource as resource
               On cf.id = resource.id
@@ -209,8 +224,6 @@
             ,director_uuid
             ,release_name
             ,release_version
-            ,loggregator_release_name
-            ,loggregator_release_version
             ,domain
             ,cf_db_type
             ,domain_organization
@@ -227,11 +240,15 @@
             ,update_date
             ,update_user_id
             ,user_add_ssh
-            ,osconf_release_name
-            ,osconf_release_version
             ,inception_os_user_name
             ,cf_admin_password
             ,portal_domain
+            ,paasta_monitoring_use
+            ,metric_url 
+            ,syslog_address
+            ,syslog_port
+            ,syslog_custom_rule
+            ,syslog_fallback_servers
         ) 
         Values(
              #{cf.id}
@@ -240,8 +257,6 @@
             ,#{cf.directorUuid}
             ,#{cf.releaseName}
             ,#{cf.releaseVersion}
-            ,#{cf.loggregatorReleaseName}
-            ,#{cf.loggregatorReleaseVersion}
             ,#{cf.domain}
             ,#{cf.cfDbType}
             ,#{cf.domainOrganization}
@@ -258,11 +273,15 @@
             ,now()
             ,#{cf.updateUserId}
             ,#{cf.userAddSsh}
-            ,#{cf.osConfReleaseName}
-            ,#{cf.osConfReleaseVersion}
             ,#{cf.inceptionOsUserName}
             ,#{cf.cfAdminPassword}
             ,#{cf.portalDomain}
+            ,#{cf.paastaMonitoringUse}
+            ,#{cf.metricUrl}
+            ,#{cf.syslogAddress}
+            ,#{cf.syslogPort}
+            ,#{cf.syslogCustomRule}
+            ,#{cf.syslogFallbackServers}
         )
         <selectKey keyProperty="cf.id" resultType="int" order="AFTER">
             <if test="cf.id != 1"> SELECT LAST_INSERT_ID(); </if>
@@ -277,8 +296,6 @@
             ,director_uuid=#{cf.directorUuid}
             ,release_name=#{cf.releaseName}
             ,release_version=#{cf.releaseVersion}
-            ,loggregator_release_name=#{cf.loggregatorReleaseName}
-            ,loggregator_release_version=#{cf.loggregatorReleaseVersion}
             ,domain=#{cf.domain}
             ,domain_organization=#{cf.domainOrganization}
             ,cf_db_type=#{cf.cfDbType}
@@ -295,11 +312,15 @@
             ,update_user_id = #{cf.updateUserId}
             ,update_date = now()
             ,user_add_ssh = #{cf.userAddSsh}
-            ,osconf_release_name = #{cf.osConfReleaseName}
-            ,osconf_release_version = #{cf.osConfReleaseVersion}
             ,inception_os_user_name = #{cf.inceptionOsUserName}
             ,cf_admin_password = #{cf.cfAdminPassword}
             ,portal_domain = #{cf.portalDomain}
+            ,paasta_monitoring_use = #{cf.paastaMonitoringUse}
+            ,metric_url = #{cf.metricUrl}
+            ,syslog_address = #{cf.syslogAddress}
+            ,syslog_port = #{cf.syslogPort}
+            ,syslog_custom_rule = #{cf.syslogCustomRule}
+            ,syslog_fallback_servers = #{cf.syslogFallbackServers}
         Where id=#{cf.id}
     </update>
     
@@ -417,8 +438,6 @@
             ,domain_organization
             ,release_name
             ,release_version
-            ,loggregator_release_name
-            ,loggregator_release_version
             ,country_code
             ,state_name
             ,locality_name
@@ -428,11 +447,15 @@
             ,key_file
             ,task_id
             ,user_add_ssh
-            ,osconf_release_name
-            ,osconf_release_version
             ,inception_os_user_name
             ,cf_admin_password
             ,portal_domain
+            ,paasta_monitoring_use
+            ,metric_url 
+            ,syslog_address
+            ,syslog_port
+            ,syslog_custom_rule
+            ,syslog_fallback_servers
         From ieda_cf
        Where iaas_type = #{iaasType}
          And deployment_file = #{deploymentFile}

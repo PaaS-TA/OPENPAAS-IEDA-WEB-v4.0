@@ -153,6 +153,18 @@ function initView(){
  * 기능 : getLocalBoshList
  * 설명 : BOSH 릴리즈 정보
  ***************************************************************** */
+function settingMonitoringView(value){
+    if(value == "bosh-268.2.0.tgz"){
+        $("#paastaMonitoring").attr("disabled", false);
+    } else {
+        $("#paastaMonitoring").attr("disabled", true);
+    }
+}
+
+/******************************************************************
+ * 기능 : getLocalBoshList
+ * 설명 : BOSH 릴리즈 정보
+ ***************************************************************** */
 function getLocalBoshList(type){
     $.ajax({
         type : "GET",
@@ -754,7 +766,7 @@ function resetForm(status){
                            <span class="glyphicon glyphicon glyphicon-question-sign boshRelase-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="hover" data-html="true" title="설치 지원 버전 목록"></span>
                        </label>
                        <div>
-                           <select class="form-control" disabled name="boshRelease" style="width: 320px; margin-left: 20px;">
+                           <select class="form-control" onchange="settingMonitoringView(this.value);"  disabled name="boshRelease" style="width: 320px; margin-left: 20px;">
                                <option value="" >BOSH 릴리즈를 선택하세요.</option>
                            </select>
                        </div>
@@ -826,7 +838,7 @@ function resetForm(status){
                         <span class="glyphicon glyphicon glyphicon-question-sign paastaMonitoring-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="click" data-html="true"></span>
                         </label>
                         <div style="width: 60%">
-                            <input style="margin-left: 20px;" name="paastaMonitoring" type="checkbox" id="paastaMonitoring" onclick="checkPaasTAMonitoringUseYn(this.value);"/>사용
+                            <input style="margin-left: 20px;" disabled name="paastaMonitoring" type="checkbox" id="paastaMonitoring" onclick="checkPaasTAMonitoringUseYn(this.value);"/>사용
                         </div>
                     </div>
                     <div class="w2ui-field">

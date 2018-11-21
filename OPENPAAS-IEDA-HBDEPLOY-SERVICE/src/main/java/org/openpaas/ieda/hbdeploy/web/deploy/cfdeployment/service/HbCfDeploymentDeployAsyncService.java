@@ -60,19 +60,19 @@ public class HbCfDeploymentDeployAsyncService {
         
         ManifestTemplateVO result = commonDao.selectManifetTemplate(vo.getIaasType(), cfDeploymentVersion, "CFDEPLOYMENT", cfDeploymentType);
         if(result == null){
-            throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), 
-                    "설치 가능한 CF Deployment 버전을 확인 하세요.", HttpStatus.BAD_REQUEST);
+            HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("설치 가능한 CF Deployment 버전을 확인하세요."));
         }
         deploymentFileName = vo != null ? vo.getCloudConfigFile() : "";
-        
+        String status = "";
+        try {
         if ( StringUtils.isEmpty(deploymentFileName) ) {
             throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), 
                     message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
         }
         String cloudConfigFile = DEPLOYMENT_DIR + SEPARATOR + deploymentFileName; 
-        String status = "";
+        
         cfDeploymentService.commonCreateCloudConfig(vo, result);
-        try {
+        
             BufferedReader bufferedReader = null;
             HbDirectorConfigVO directorInfo = directorConfigDao.selectHbDirectorConfigBySeq(Integer.parseInt(vo.getHbCfDeploymentResourceConfigVO().getDirectorInfo()));
             String httpStatus = directorConfigService.isExistBoshEnvLogin(directorInfo.getDirectorUrl(), directorInfo.getDirectorPort(), directorInfo.getUserId(), directorInfo.getUserPassword());
@@ -86,8 +86,8 @@ public class HbCfDeploymentDeployAsyncService {
                 }
             }
             // CF-Deployment 5.0.0 버전 이상 bosh runtime config required
-            if("5.0.0".equals(vo.getHbCfDeploymentDefaultConfigVO().getCfDeploymentVersion()) || "5.0.0".equals(vo.getHbCfDeploymentDefaultConfigVO().getCfDeploymentVersion()) || "4.0".equals(vo.getHbCfDeploymentDefaultConfigVO().getCfDeploymentVersion())){
-                settingRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
+            if("5.0.0".equals(cfDeploymentVersion) || "5.0.0".equals(cfDeploymentVersion) || "4.0".equals(cfDeploymentVersion)){
+                status = settingRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
             } else {
                 deleteRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
             }
@@ -117,7 +117,7 @@ public class HbCfDeploymentDeployAsyncService {
             cmd.add("-d");
             cmd.add(vo.getHbCfDeploymentDefaultConfigVO().getDefaultConfigName());
             cmd.add("deploy");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonBaseTemplate()+"");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getCommonBaseTemplate()+"");
             setDefualtInfo(cmd, vo, result);
             setPublicNetworkIpUse(cmd, vo, result);
             if("postgres".equals(vo.getHbCfDeploymentDefaultConfigVO().getCfDbType())){
@@ -125,7 +125,7 @@ public class HbCfDeploymentDeployAsyncService {
             }
             setJobSetting(cmd, vo, result);
             if("true".equalsIgnoreCase(vo.getHbCfDeploymentDefaultConfigVO().getPaastaMonitoringUse())){
-                if(!"4.0".equalsIgnoreCase(result.getTemplateVersion()) && !"paasta".equalsIgnoreCase(result.getReleaseType())){
+                if(!"4.0".equalsIgnoreCase(cfDeploymentVersion) && !"paasta".equalsIgnoreCase(result.getReleaseType())){
                     HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("PaaS-TA 모니터링은 paasta-4.0에서 사용 가능 합니다."));
                 }
                 settingPaasTaMonitoringInfo(vo, cmd, result);
@@ -144,7 +144,6 @@ public class HbCfDeploymentDeployAsyncService {
             while ((info = bufferedReader.readLine()) != null){
                 accumulatedBuffer.append(info).append("\n");
                 Thread.sleep(20);
-                
                 if(info.contains("invalid argument") || info.contains("error") || info.contains("fail") || info.contains("Error") || info.contains("Expected")){
                     status = "error";
                     HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(info));
@@ -155,11 +154,18 @@ public class HbCfDeploymentDeployAsyncService {
                 if(info.contains("cancelled")){
                     HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "cancelled", Arrays.asList("Cancel Task:::"+info));
                 }
+                
+                if(info.contains("no such file or directory")){
+                    status = "error";
+                    HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(info));
+                }
+                
                 if(info.contains("Preparing deployment: Preparing deployment")){
                     String taskId = info.split(" ")[1];
                     HttpClient httpClient = HbDirectorRestHelper.getHttpClient(directorInfo.getDirectorPort());
                     status = HbDirectorRestHelper.trackToTask(directorInfo, messagingTemplate, messageEndpoint, httpClient, taskId, "event", principal.getName());
                 }
+
             }
         }catch (RuntimeException e) {
             status = "error";
@@ -174,6 +180,12 @@ public class HbCfDeploymentDeployAsyncService {
                 lockFile.delete();
             }
         }
+        
+        if("".equals(status)){
+            status = "error";
+            HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("Manifest 조합 중 에러가 발생했습니다.<br> 설정을 확인 해주세요."));
+        }
+        
         String deployStatus = message.getMessage("common.deploy.status."+status.toLowerCase(), null, Locale.KOREA);
         if ( vo != null ) {
             vo.setDeployStatus(deployStatus);
@@ -234,8 +246,9 @@ public class HbCfDeploymentDeployAsyncService {
      * @title : settingRuntimeConfig
      * @return : void
     *****************************************************************/
-    private void settingRuntimeConfig(HbCfDeploymentVO vo, HbDirectorConfigVO directorInfo, Principal principal, String messageEndpoint, ManifestTemplateVO result) {
+    private String settingRuntimeConfig(HbCfDeploymentVO vo, HbDirectorConfigVO directorInfo, Principal principal, String messageEndpoint, ManifestTemplateVO result) {
         String accumulatedLog= null;
+        String status = "";
         BufferedReader bufferedReader = null;
         try {
             List<String> cmd = new ArrayList<String>();
@@ -243,7 +256,7 @@ public class HbCfDeploymentDeployAsyncService {
             cmd.add("-e");
             cmd.add(directorInfo.getDirectorName());
             cmd.add("update-runtime-config");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/runtime-config-dns.yml");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/runtime-config-dns.yml");
             cmd.add("--vars-store");
             cmd.add(HYBRID_CF_CREDENTIAL_DIR+ SEPARATOR +vo.getHbCfDeploymentDefaultConfigVO().getDefaultConfigName()+"-runtime-cred.yml");
             cmd.add("--tty");
@@ -259,6 +272,7 @@ public class HbCfDeploymentDeployAsyncService {
                 accumulatedBuffer.append(info).append("\n");
                 if(info.contains("invalid argument") || info.contains("error") || info.contains("fail") || info.contains("Error") || info.contains("Expected")){
                     HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(info));
+                    status = "error";
                 }
                 
                 if(info.contains("Downloading remote release")){
@@ -281,7 +295,7 @@ public class HbCfDeploymentDeployAsyncService {
                 accumulatedLog = accumulatedBuffer.toString();
             }
             if ( !accumulatedLog.contains("Succeeded") ) {
-                String status = "error";
+                status = "error";
                 vo.setDeployStatus(status);
                 vo.setUpdateUserId(principal.getName());
                 saveDeployStatus(vo);
@@ -290,6 +304,7 @@ public class HbCfDeploymentDeployAsyncService {
         } catch (IOException e) {
             HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
         }
+        return status;
     }
     
     public void saveDeployStatus(HbCfDeploymentVO vo) {
@@ -324,16 +339,16 @@ public class HbCfDeploymentDeployAsyncService {
 
         if(result.getReleaseType().equals("paasta")){
             cmd.add("-o");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common//common/use_haproxy-compiled-release.yml");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/use-haproxy-compiled-release.yml");
             cmd.add("-v");
             cmd.add("inception_os_user_name="+vo.getHbCfDeploymentDefaultConfigVO().getInceptionOsUserName()+"");
             cmd.add("-o");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getInputTemplate());
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getInputTemplate());
         } else {
             cmd.add("-o");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonJobTemplate());
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getCommonJobTemplate());
             cmd.add("-o");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getMetaTemplate());
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getMetaTemplate());
         
         }
     }
@@ -378,7 +393,7 @@ public class HbCfDeploymentDeployAsyncService {
         cmd.add("scheduler_instance="+vo.getHbCfDeploymentInstanceConfigVO().getScheduler()+"");
         
         cmd.add("-o");
-        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getOptionResourceTemplate());
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getOptionResourceTemplate());
     }
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
@@ -392,11 +407,11 @@ public class HbCfDeploymentDeployAsyncService {
                 cmd.add("-v");
                 cmd.add("haproxy_public_ip="+vo.getHbCfDeploymentNetworkConfigVO().getPublicStaticIp()+"");
                 cmd.add("-o");
-                cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonOptionTemplate());
+                cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getCommonOptionTemplate());
             }
             if(vo.getHbCfDeploymentNetworkConfigVO().getSubnetId2() != null && !"".equals(vo.getHbCfDeploymentNetworkConfigVO().getSubnetId2())){
                 cmd.add("-o");
-                cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getOptionNetworkTemplate());
+                cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getOptionNetworkTemplate());
             }
         }
     }
@@ -409,9 +424,9 @@ public class HbCfDeploymentDeployAsyncService {
     *****************************************************************/
     private void settingPaasTaMonitoringInfo(HbCfDeploymentVO vo, List<String> cmd, ManifestTemplateVO result) {
         cmd.add("-o");
-        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/enable-component-syslog.yml");
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/enable-component-syslog.yml");
         cmd.add("-o");
-        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/paasta-monitoring.yml");
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/paasta-monitoring.yml");
         cmd.add("-v");
         cmd.add("metric_url="+vo.getHbCfDeploymentDefaultConfigVO().getMetricUrl()+"");
         cmd.add("-v");
@@ -433,10 +448,10 @@ public class HbCfDeploymentDeployAsyncService {
     public void postgresDbUse(List<String> cmd, ManifestTemplateVO result) {
         if(result.getReleaseType().equals("paasta")){
             cmd.add("-o");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getInputTemplateThird());
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getInputTemplateThird());
         } else {
             cmd.add("-o");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getOptionEtc());
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getOptionEtc());
         }
     }
     

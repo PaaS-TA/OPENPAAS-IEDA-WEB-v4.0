@@ -353,8 +353,6 @@ CREATE TABLE ieda_cf
   cf_db_type                        VARCHAR(100),
   release_name                      VARCHAR(100),
   release_version                   VARCHAR(100),
-  loggregator_release_name          VARCHAR(100),
-  loggregator_release_version       VARCHAR(100),
   domain                            VARCHAR(100),
   domain_organization               VARCHAR(100),
   country_code                      VARCHAR(255),
@@ -372,11 +370,15 @@ CREATE TABLE ieda_cf
   update_user_id                    VARCHAR(255)  NOT NULL,
   update_date                       DATE          NOT NULL,
   user_add_ssh                      LONGTEXT NULL,
-  osconf_release_name               VARCHAR(255) NULL,
-  osconf_release_version            VARCHAR(255) NULL,
   inception_os_user_name            VARCHAR(255) NULL,
   cf_admin_password                 VARCHAR(255) NULL,
   portal_domain                     VARCHAR(255) NULL,
+  paasta_monitoring_use             VARCHAR(100) DEFAULT NULL,
+  metric_url                        VARCHAR(255) NULL,
+  syslog_address                    VARCHAR(255) NULL,
+  syslog_port                       VARCHAR(255) NULL,
+  syslog_custom_rule                VARCHAR(255) NULL,
+  syslog_fallback_servers           VARCHAR(255) NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED CHARSET=utf8;
 

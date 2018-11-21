@@ -111,7 +111,6 @@ $(function() {
              var record = w2ui['config_cfDeployment_grid2'].get(event.recid);
              var grid = this;
              var gridName = "";
-             console.log(record.deployStatus);
              if(record.deployStatus != null){
                  gridName = "config_cfDeployment_grid3";
              } else {

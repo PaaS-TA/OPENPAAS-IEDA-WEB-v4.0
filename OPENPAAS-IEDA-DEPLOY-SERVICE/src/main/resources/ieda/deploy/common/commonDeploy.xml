@@ -105,7 +105,7 @@ AND
         UPPER(deploy_type) = #{deployType}
     AND
         LOWER(iaas_type) = #{iaas}
-    ORDER BY id ASC
+    ORDER BY templateversion ASC
     ]]>
 </select>
 

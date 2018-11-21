@@ -92,7 +92,6 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
             assertEquals(expectCfList.get(i).getDeploymentFile(), resultList.get(i).getDeploymentFile());
             assertEquals(expectCfList.get(i).getDeploymentName(), resultList.get(i).getDeploymentName());
             assertEquals(expectCfList.get(i).getDeployStatus(), resultList.get(i).getDeployStatus());
-            assertEquals(expectCfList.get(i).getIngestorIp(), resultList.get(i).getIngestorIp());
             assertEquals(expectCfList.get(i).getPaastaMonitoringUse(), resultList.get(i).getPaastaMonitoringUse());
             assertEquals(expectCfList.get(i).getTaskId(), resultList.get(i).getTaskId());
             assertEquals(expectResource.getStemcellName(), resultList.get(i).getStemcellName());
@@ -120,7 +119,6 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
             assertEquals(expectCfList.get(i).getDeploymentFile(), resultList.get(i).getDeploymentFile());
             assertEquals(expectCfList.get(i).getDeploymentName(), resultList.get(i).getDeploymentName());
             assertEquals(expectCfList.get(i).getDeployStatus(), resultList.get(i).getDeployStatus());
-            assertEquals(expectCfList.get(i).getIngestorIp(), resultList.get(i).getIngestorIp());
             assertEquals(expectCfList.get(i).getPaastaMonitoringUse(), resultList.get(i).getPaastaMonitoringUse());
             assertEquals(expectCfList.get(i).getTaskId(), resultList.get(i).getTaskId());
             assertEquals(expectResource.getStemcellName(), resultList.get(i).getStemcellName());
@@ -306,7 +304,6 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
         vo.setReleaseName("cf");
         vo.setPaastaMonitoringUse("yes");
         vo.setOrganizationName("pass-ta");
-        vo.setIngestorIp("172.16.100.100");
         vo.setKeyFile("cf-key.yml");
         vo.setLocalityName("mapo");
         vo.setLoginSecret("test");
@@ -499,7 +496,6 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
         vo.setReleaseName("cf");
         vo.setPaastaMonitoringUse("yes");
         vo.setOrganizationName("pass-ta");
-        vo.setIngestorIp("172.16.100.100");
         vo.setKeyFile("cf-key.yml");
         vo.setLocalityName("mapo");
         vo.setLoginSecret("test");
@@ -526,7 +522,6 @@ public class CfServiceUnitTest extends BaseDeployControllerUnitTest {
         vo.getKeyFile();
         vo.getLoginSecret();
         vo.getPaastaMonitoringUse();
-        vo.getIngestorIp();
         vo.getNetwork();
         list.add(vo);
         return list;

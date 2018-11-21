@@ -71,7 +71,7 @@ public class CfDeployAsyncService {
             DirectorConfigVO directorInfo = directorConfigService.getDefaultDirector();
             
             if("5.0.0".equals(vo.getReleaseVersion()) || "5.5.0".equals(vo.getReleaseVersion()) || "4.0".equals(vo.getReleaseVersion())){
-                settingRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
+                status = settingRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
             } else {
                 deleteRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
             }
@@ -102,13 +102,20 @@ public class CfDeployAsyncService {
             cmd.add("deploy");
             if(vo.getNetworks() != null && vo.getNetworks().size() ==3){
                 if(vo.getNetworks().size() == 3){
-                    cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/cf-deployment-multi-az.yml");
+                    cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/cf-deployment-multi-az.yml");
                 }
             } else {
-                cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonBaseTemplate()+"");
+                cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getCommonBaseTemplate()+"");
+            }
+            setDefualtInfo(cmd, vo, result);
+            
+            if("true".equalsIgnoreCase(vo.getPaastaMonitoringUse())){
+                if(!"4.0".equalsIgnoreCase(vo.getReleaseVersion()) && !"paasta".equalsIgnoreCase(result.getReleaseType())){
+                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("PaaS-TA 모니터링은 paasta-4.0에서 사용 가능 합니다."));
+                }
+                settingPaasTaMonitoringInfo(vo, cmd, result);
             }
             
-            setDefualtInfo(cmd, vo, result);
             setPublicNetworkIpUse(cmd, vo, result);
             if("postgres".equals(vo.getCfDbType().toLowerCase())){
                 postgresDbUse(cmd, result);
@@ -146,6 +153,11 @@ public class CfDeployAsyncService {
                     DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "cancelled", Arrays.asList("Cancel Task:::"+info));
                 }
                 
+                if(info.contains("no such file or directory")){
+                    status = "error";
+                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(info));
+                }
+                
                 if(info.contains("Preparing deployment: Preparing deployment")){
                     String taskId = info.split(" ")[1];
                     HttpClient httpClient = DirectorRestHelper.getHttpClient(directorInfo.getDirectorPort());
@@ -159,6 +171,10 @@ public class CfDeployAsyncService {
             status = "error";
             DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(errorMessage));
         } 
+        if("".equals(status)){
+            status = "error";
+            DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("Manifest 조합 중 에러가 발생했습니다.<br> 설정을 확인 해주세요."));
+        }
         String deployStatus = message.getMessage("common.deploy.status."+status.toLowerCase(), null, Locale.KOREA);
         if ( vo != null ) {
             vo.setDeployStatus(deployStatus);
@@ -167,6 +183,29 @@ public class CfDeployAsyncService {
         }
     }
     
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : CF-Deploymnt 5.0.0/PaaS-TA 4.0 이상 BOSH Runtime Config 삭제 명령어 설정
+     * @title : settingPaasTaMonitoringInfo
+     * @return : void
+    *****************************************************************/
+    private void settingPaasTaMonitoringInfo(CfVO vo, List<String> cmd, ManifestTemplateVO result) {
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/enable-component-syslog.yml");
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/paasta-monitoring.yml");
+        cmd.add("-v");
+        cmd.add("metric_url="+vo.getMetricUrl()+"");
+        cmd.add("-v");
+        cmd.add("syslog_address="+vo.getSyslogAddress()+"");
+        cmd.add("-v");
+        cmd.add("syslog_port="+vo.getSyslogPort()+"");
+        cmd.add("-v");
+        cmd.add("syslog_custom_rule="+vo.getSyslogCustomRule()+"");
+        cmd.add("-v");
+        cmd.add("syslog_fallback_servers="+vo.getSyslogFallbackServers()+"");
+    }
+
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description : CF-Deploymnt 5.0.0/PaaS-TA 4.0 이상 BOSH Runtime Config 삭제 명령어 설정
@@ -218,7 +257,7 @@ public class CfDeployAsyncService {
      * @title : settingRuntimeConfig
      * @return : void
     *****************************************************************/
-    private void settingRuntimeConfig(CfVO vo, DirectorConfigVO directorInfo, Principal principal, String messageEndpoint, ManifestTemplateVO result) {
+    private String settingRuntimeConfig(CfVO vo, DirectorConfigVO directorInfo, Principal principal, String messageEndpoint, ManifestTemplateVO result) {
         String accumulatedLog= null;
         BufferedReader bufferedReader = null;
         String status = "";
@@ -228,7 +267,7 @@ public class CfDeployAsyncService {
             cmd.add("-e");
             cmd.add(directorInfo.getDirectorName());
             cmd.add("update-runtime-config");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/runtime-config-dns.yml");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/runtime-config-dns.yml");
             cmd.add("--vars-store");
             cmd.add(CF_CREDENTIAL_DIR+ SEPARATOR +vo.getDeploymentName()+"-runtime-cred.yml");
             cmd.add("--tty");
@@ -276,6 +315,7 @@ public class CfDeployAsyncService {
         } catch (IOException e) {
             DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("CF-Deployment 설치 중 에러가 발생 했습니다.<br> Runtime config를 확인 해주세요."));
         }
+        return status;
     }
 
     /****************************************************************
@@ -305,16 +345,16 @@ public class CfDeployAsyncService {
         }
         if(result.getReleaseType().equals("paasta")){
             cmd.add("-o");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/use_haproxy-compiled-release.yml");
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/use-haproxy-compiled-release.yml");
             cmd.add("-v");
             cmd.add("inception_os_user_name="+vo.getInceptionOsUserName()+"");
             cmd.add("-o");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getInputTemplate());
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getInputTemplate());
         } else {
             cmd.add("-o");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonJobTemplate());
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getCommonJobTemplate());
             cmd.add("-o");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getMetaTemplate());
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getMetaTemplate());
         }
     }
 
@@ -331,7 +371,7 @@ public class CfDeployAsyncService {
                 cmd.add(vo.getJobs().get(i).get("job_name")+"_instance="+String.valueOf(vo.getJobs().get(i).get("instances"))+"");
             }
             cmd.add("-o");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getOptionResourceTemplate());
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getOptionResourceTemplate());
         }
     }
     /****************************************************************
@@ -348,7 +388,7 @@ public class CfDeployAsyncService {
                     cmd.add("-v");
                     cmd.add("haproxy_public_ip="+vo.getNetworks().get(i).getPublicStaticIp()+"");
                     cmd.add("-o");
-                    cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getCommonOptionTemplate());
+                    cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getCommonOptionTemplate());
                 }
             }
         }
@@ -366,7 +406,7 @@ public class CfDeployAsyncService {
         cmd.add("-v");
         cmd.add("windows_cell_instance="+vo.getResource().getWindowsCellInstance()+"");
         cmd.add("-o");
-        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getInputTemplateSecond());
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getInputTemplateSecond());
     }
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
@@ -377,10 +417,10 @@ public class CfDeployAsyncService {
     public void postgresDbUse(List<String> cmd, ManifestTemplateVO result) {
         if(result.getReleaseType().equals("paasta")){
             cmd.add("-o");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getInputTemplateThird());
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getInputTemplateThird());
         } else {
             cmd.add("-o");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/"+result.getOptionEtc());
+            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getOptionEtc());
         }
     }
 

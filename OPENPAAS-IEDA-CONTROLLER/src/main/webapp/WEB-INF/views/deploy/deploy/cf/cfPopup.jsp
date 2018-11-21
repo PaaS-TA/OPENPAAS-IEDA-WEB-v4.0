@@ -2,12 +2,6 @@
 /* =================================================================
  * 상세설명 : CF Deployment
  * =================================================================
- * 수정일    작성자             내용     
- * -----------------------------------------------------------------
- * 2016.10  지향은    화면 수정 및 vSphere 클라우드 기능 추가
- * 2016.12  지향은    CF 목록과 팝업 화면 .jsp 분리 및 설치 버그 수정 
- * 2017.09  지향은    CF for Google
- * =================================================================
  */ 
 %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -133,20 +127,22 @@ function setCfData(contents) {
         directorUuid           : contents.directorUuid,
         releaseName            : contents.releaseName,
         releaseVersion         : contents.releaseVersion,
-        appSshFingerprint      : contents.appSshFingerprint,
-        deaMemoryMB            : contents.deaMemoryMB,
-        deaDiskMB              : contents.deaDiskMB,
         domain                 : contents.domain,
         description            : contents.description,
         domainOrganization     : contents.domainOrganization,        
         loginSecret            : contents.loginSecret,
         cfDbType               : contents.cfDbType,
-        paastaMonitoringUse    : contents.paastaMonitoringUse,
-        ingestorIp             : contents.ingestorIp,
         userAddSsh             : contents.userAddSsh,
         inceptionOsUserName    : contents.inceptionOsUserName,
         cfAdminPassword        : contents.cfAdminPassword,
-        portalDomain           : contents.portalDomain
+        portalDomain           : contents.portalDomain,
+        paastaMonitoringUse      : contents.paastaMonitoringUse,
+        metricUrl                : contents.metricUrl,
+        syslogAddress            : contents.syslogAddress,
+        syslogPort               : contents.syslogPort,
+        syslogCustomRule         : contents.syslogCustomRule,
+        syslogFallbackServers    : contents.syslogFallbackServers
+        
     }
     //네트워크 정보 
     for(var i=0; i<contents.networks.length; i++){
@@ -233,7 +229,7 @@ function defaultInfoPopup() {
     w2popup.open({
         title : "<b>CF-Deployment 설치</b>",
         width : 750,
-        height :520,
+        height :850,
         modal : true,
         body    : $("#defaultInfoDiv").html(),
         buttons : $("#DefaultInfoButtonDiv").html(),
@@ -241,7 +237,7 @@ function defaultInfoPopup() {
             event.onComplete = function() {
                 //릴리즈 정보 popup over
                  $('[data-toggle="popover"]').popover();
-                 $(".paastaMonitoring-info").attr('data-content', "paasta-controller v3.0 이상에서 지원")
+                 $(".paastaMonitoring-info").attr('data-content', "paasta-4.0 이상에서 지원")
                  getDeploymentVersionList();
                  if ( !checkEmpty(defaultInfo )) {
                        //설치관리자 UUID
@@ -260,10 +256,16 @@ function defaultInfoPopup() {
                     //CF 정보
                     $(".w2ui-msg-body input[name='domain']").val(defaultInfo.domain);
                     
-                    if( !checkEmpty(defaultInfo.ingestorIp) ){//PaaS-TA 모니터링 체크 
+                    if( !checkEmpty(defaultInfo.metricUrl) ){//PaaS-TA 모니터링 체크 
+                        //$('.w2ui-msg-body #paastaMonitoring').attr('disabled',false);
+                        setDisabledMonitoring(defaultInfo.releaseName+"/"+defaultInfo.releaseVersion);
                         $(".w2ui-msg-body input:checkbox[name='paastaMonitoring']").attr("checked", true);
                         checkPaasTAMonitoringUseYn();
-                        $(".w2ui-msg-body input[name='ingestorIp']").val(defaultInfo.ingestorIp);
+                        $(".w2ui-msg-body input[name='metricUrl']").val(defaultInfo.metricUrl);
+                        $(".w2ui-msg-body input[name='syslogAddress']").val(defaultInfo.syslogAddress);
+                        $(".w2ui-msg-body input[name='syslogPort']").val(defaultInfo.syslogPort);
+                        $(".w2ui-msg-body input[name='syslogCustomRule']").val(defaultInfo.syslogCustomRule);
+                        $(".w2ui-msg-body input[name='syslogFallbackServers']").val(defaultInfo.syslogFallbackServers);
                     }
                 } else{
                     if( !checkEmpty($("#directorUuid").text()) ){
@@ -295,10 +297,10 @@ function getCfDeployment() {
                 var option = "<option value=''>CF Deployment를 선택하세요.</option>";
                 data.map(function(obj) {
                     releases.push(obj.templateVersion);
-                    if( defaultInfo.releaseName == obj.releaseType && defaultInfo.releaseVersion == obj.templateVersion){
-                        option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"' selected>"+obj.releaseType+"/"+obj.templateVersion+"</option>";
+                    if( defaultInfo.releaseName == obj.releaseType && defaultInfo.releaseVersion == obj.minReleaseVersion){
+                        option += "<option value='"+obj.releaseType+"/"+obj.minReleaseVersion+"' selected>"+obj.releaseType+"/"+obj.minReleaseVersion+"</option>";
                     }else{
-                        option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"'>"+obj.releaseType+"/"+obj.templateVersion+"</option>";    
+                        option += "<option value='"+obj.releaseType+"/"+obj.minReleaseVersion+"'>"+obj.releaseType+"/"+obj.minReleaseVersion+"</option>";    
                     }
                 });
             
@@ -333,103 +335,21 @@ function checkUsePaasta(selected){
      }
 }
 
-/********************************************************
- * 설명 : Loggregator 릴리즈 조회
- * 기능 : getLoggregatorRelease
- *********************************************************/
-function getLoggregatorRelease(){
-    $.ajax({
-        type : "GET",
-        url : "/common/deploy/release/list/loggregator",
-        contentType : "application/json",
-        success : function(data, status) {
-            w2popup.unlock();
-            var option = "";
-            if( data.records.length > 0){
-                data.records.map(function(obj) {
-                    option += "<option value='"+obj.name+"/"+obj.version+"'>"+obj.name+"/"+obj.version+"</option>";
-                });
-            }else{
-                option ="<option value=''>loggregator 릴리즈가 필요합니다.</option>"
-            }
-            $(".w2ui-msg-body select[name='loggregatorReleases']").html(option);
-        },
-        error : function(e, status) {
-            w2popup.unlock();
-            w2alert("Cf Release List 를 가져오는데 실패하였습니다.", "CF Deployment");
-        }
-    });
-}
-/********************************************************
- * 설명 : OS-CONF 릴리즈 조회
- * 기능 : getOsConfRelease
- *********************************************************/
-function getOsConfRelease(){
-    $.ajax({
-        type : "GET",
-        url : "/common/deploy/release/list/os-conf",
-        contentType : "application/json",
-        success : function(data, status){
-            osConfReleases = new Array();
-            if( data.records != null){
-                w2popup.unlock();
-                var option = "<option value=''>OS-CONF 릴리즈를 선택하세요.</option>";
-                data.records.map(function(obj) {
-                    osConfReleases.push(obj.version);
-                    if( defaultInfo.osConfReleaseName == obj.name && defaultInfo.osConfReleaseVersion == obj.version){
-                        option += "<option value='"+obj.name+"/"+obj.version+"' selected>"+obj.name+"/"+obj.version+"</option>";
-                    }else{
-                        option += "<option value='"+obj.name+"/"+obj.version+"'>"+obj.name+"/"+obj.version+"</option>";    
-                    }
-                });
-            }
-            $(".w2ui-msg-body select[name='osConfReleases']").html(option);
-        },
-        error : function(e, status){
-            w2popup.unlock();
-            w2alert("OS-CONF Release List 를 가져오는데 실패하였습니다.", "CF Deployment");
-        }
-    });
-}
 
 /********************************************************
- * 설명 : paasta-controller v2.0 이상에서 지원 
+ * 설명 : paasta v4.0 이상에서 지원 
  * 기능 : setDisabledMonitoring
  *********************************************************/
 function setDisabledMonitoring(val){
     if( !checkEmpty(val) || val != "undefined/undefined"){
         var cfReleaseName = val.split("/")[0];
         var cfReleaseVersion = val.split("/")[1];
-        //paasta-controller v2.0.0 이상 PaaS-TA 모니터링 지원 checkbox
-        if( cfReleaseName.indexOf("paasta-controller") > -1 && ( compare(cfReleaseVersion, "2.0") > -1 || compare(cfReleaseVersion, "3.0") > -1 || compare(cfReleaseVersion, "3.1") > -1) ){
+        if( cfReleaseName == "paasta" ){
             $('.w2ui-msg-body #paastaMonitoring').attr('disabled',false);
         }else{
-            if( $(".w2ui-msg-body input:checkbox[name='paastaMonitoring']").is(":checked")){
-                $(".w2ui-msg-body input:checkbox[name='paastaMonitoring']").prop('checked',false);
-                checkPaasTAMonitoringUseYn();
-            }
             $('.w2ui-msg-body #paastaMonitoring').attr('disabled',true);
         }
     }
-}
-
-/********************************************************
- * 설명 : 272 이상일 경우 화면 설정
- * 기능 : setInputDisplay
- *********************************************************/
-function setInputDisplay(val){
-    var name = val.split("/")[0];
-    var version = val.split("/")[1];
-    if( Number(version) >= 272 || (name.indexOf("paasta-controller") > -1 && compare(version, "3.0") > -1 ) || (name.indexOf("paasta-controller") > -1 && compare(version, "3.1") > -1 )){
-        //핑거프린트 자동 입력
-        $(".w2ui-msg-body #loggregator").css("display", "block");
-        if( Number(version) == "3.1" || Number(version) == "287" ){
-            $(".w2ui-msg-body #loggregator").css("display", "none");
-            $(".w2ui-msg-body #loggregator").val("");
-        }
-    } 
-    getLoggregatorRelease();
-    getOsConfRelease();
 }
 
 /********************************************************
@@ -439,13 +359,24 @@ function setInputDisplay(val){
 function checkPaasTAMonitoringUseYn(value){
     var cnt = $("input[name=paastaMonitoring]:checkbox:checked").length;
     if(cnt > 0 ){
-        $(".w2ui-msg-body input[name='ingestorIp']").attr("disabled", false);
+        $(".w2ui-msg-body input[name='metricUrl']").attr("disabled", false);
+        $(".w2ui-msg-body input[name='syslogAddress']").attr("disabled", false);
+        $(".w2ui-msg-body input[name='syslogCustomRule']").attr("disabled", false);
+        $(".w2ui-msg-body input[name='syslogFallbackServers']").attr("disabled", false);
+        $(".w2ui-msg-body input[name='syslogPort']").attr("disabled", false);
     }else{
-        $(".w2ui-msg-body input[name='ingestorIp']").css({"border-color" : "rgb(187, 187, 187)"}).parent().find(".isMessage").text("");
         //값 초기화
-        $(".w2ui-msg-body input[name='ingestorIp']").val("");
+        $(".w2ui-msg-body input[name='metricUrl']").val("");
+        $(".w2ui-msg-body input[name='syslogAddress']").val("");
+        $(".w2ui-msg-body input[name='syslogCustomRule']").val("");
+        $(".w2ui-msg-body input[name='syslogFallbackServers']").val("");
+        $(".w2ui-msg-body input[name='syslogPort']").val("");
         //Read-only
-        $(".w2ui-msg-body input[name='ingestorIp']").attr("disabled", true);
+        $(".w2ui-msg-body input[name='metricUrl']").attr("disabled", true);
+        $(".w2ui-msg-body input[name='syslogAddress']").attr("disabled", true);
+        $(".w2ui-msg-body input[name='syslogCustomRule']").attr("disabled", true);
+        $(".w2ui-msg-body input[name='syslogFallbackServers']").attr("disabled", true);
+        $(".w2ui-msg-body input[name='syslogPort']").attr("disabled", true);
     }
      
 }
@@ -456,8 +387,13 @@ function checkPaasTAMonitoringUseYn(value){
  *********************************************************/
 function saveDefaultInfo() {
     var release = $(".w2ui-msg-body select[name='cfdeployment']").val();
-    var loggregatorRelease = $(".w2ui-msg-body select[name='loggregatorReleases']").val();
-    var osConfRelease = $(".w2ui-msg-body select[name='osConfReleases']").val();
+    
+    if( $("#paastaMonitoring:checked").val() == "on"){
+        var monitoringUse = "true";
+    } else {
+        var monitoringUse = "false";
+    }
+    
     defaultInfo = {
                 id                   : (cfId) ? cfId : "",
                 iaas                 : iaas.toUpperCase(),
@@ -474,7 +410,13 @@ function saveDefaultInfo() {
                 userAddSsh           : $(".w2ui-msg-body textarea[name='userAddSsh']").val(),
                 inceptionOsUserName  : $(".w2ui-msg-body input[name='inceptionOsUserName']").val(),
                 cfAdminPassword      : $(".w2ui-msg-body input[name='cfAdminPassword']").val(),
-                portalDomain         : $(".w2ui-msg-body input[name='portalDomain']").val()
+                portalDomain         : $(".w2ui-msg-body input[name='portalDomain']").val(),
+                paastaMonitoring     : monitoringUse,
+                metricUrl            : $(".w2ui-msg-body input[name='metricUrl']").val(),
+                syslogAddress        : $(".w2ui-msg-body input[name='syslogAddress']").val(),
+                syslogCustomRule     : $(".w2ui-msg-body input[name='syslogCustomRule']").val(),
+                syslogFallbackServers: $(".w2ui-msg-body input[name='syslogFallbackServers']").val(),
+                syslogPort           : $(".w2ui-msg-body input[name='syslogPort']").val()
     }
     $.ajax({
         type : "PUT",
@@ -1216,16 +1158,22 @@ function getWindowsStemcellList(){
  * 기능 : resourceJobSettingsPop
  *********************************************************/
 function resourceJobSettingsPop(){
+    var paastaReleaseVersion = "";
+    if(defaultInfo.releaseVersion == "4.0"){
+        paastaReleaseVersion = "5.5.0";
+    } else {
+        paastaReleaseVersion = defaultInfo.releaseVersion;
+    }
     var flag = false;
     for( var i=0; i < releases.length; i++ ){
-        if( releases[i] == defaultInfo.releaseVersion ) flag = true;
+        if( releases[i] == paastaReleaseVersion ) flag = true;
     }
     if( !flag ){
         w2alert("지원하지 않는 릴리즈 입니다. ",true);
         return;
     }
     w2popup.open({
-        title   : '<b>CF Deployment</b>',
+        title   : '<b>CF Deployment 설치</b>',
         width   : 750,
         height  : 685,
         showMax : true,
@@ -1324,7 +1272,12 @@ function jobPopupComplete(){
  * 기능 : settingCfJobs
  *********************************************************/
 function settingCfJobs(){
-    var release_version = defaultInfo.releaseVersion;
+    var release_version = "";
+    if(defaultInfo.releaseVersion == "4.0"){
+        release_version = "5.5.0";
+    } else {
+        release_version = defaultInfo.releaseVersion;
+    }
     $.ajax({
         type : "GET",
         url : "/deploy/cf/install/save/job/list/"+release_version+"/"+'DEPLOY_TYPE_CF',
@@ -1690,7 +1643,7 @@ function settingIaasPopup(type){
              resourceInfoPopup("#azureResourceInfo", 690);
          }else{
              resourceInfoPopup("#resourceInfo",690 );
-        }
+         }
      }
 }
 /********************************************************
@@ -1829,7 +1782,7 @@ function gridReload() {
                         <span class="glyphicon glyphicon glyphicon-question-sign cf-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="click" data-html="true" title="<b>설치 지원 버전 목록</b>"></span>
                         </label>
                         <div style=" width: 60%;">
-                            <select name="cfdeployment" onchange='setDisabledMonitoring(this.value); setInputDisplay(this.value); checkUsePaasta(this.value);' style="display:inline-block; width: 80%;">
+                            <select name="cfdeployment" onchange='setDisabledMonitoring(this.value); checkUsePaasta(this.value);' style="display:inline-block; width: 80%;">
                                 <option value="">CF-DEPLOYMENT 버전을 선택하세요.</option>
                             </select>
                         </div>
@@ -1879,66 +1832,56 @@ function gridReload() {
                     <div class="w2ui-field">
                         <label style="text-align: left; width: 36%; font-size: 11px;">Portal 도메인(Optional)</label>
                         <div style=" width: 60%;">
-                            <input name="portalDomain" type="text" style="isplay:inline-block; width: 80%;" placeholder="Portal 도메인 주소를 입력하세요 예)13.25.210.15.xip.io" />
+                            <input name="portalDomain" type="text" style="isplay:inline-block; width: 80%;" placeholder="Portal 도메인 주소를 입력하세요 예)portal.xip.io" />
                             <div class="isMessage"></div>
                         </div>
                     </div>
-<!--                     <div class="w2ui-field">
-                        <label style="text-align: left; width: 36%; font-size: 11px;">PaaS-TA Portal 도메인</label>
-                        <div style=" width: 60%;">
-                            <input name="paastaPortalDomain" type="text" style="isplay:inline-blcok; width: 80%;" required placeholder="PaaS-TA Portal 도메인을 입력하세요. 예)cfdoamin.com" />
-                            <div class="isMessage"></div>
-                        </div>
-                    </div> -->
-                    
-                    
-<!--                     <div class="w2ui-field">
+                   <div class="w2ui-field">
                         <label style="text-align:left; width:36%; font-size:11px;">PaaS-TA 모니터링
                         <span class="glyphicon glyphicon glyphicon-question-sign paastaMonitoring-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="click" data-html="true"></span>
                         </label>
                         <div style=" width: 60%;">
-                            <input name="paastaMonitoring" type="checkbox" id="paastaMonitoring" onchange="checkPaasTAMonitoringUseYn(this);" disabled />사용
+                            <input name="paastaMonitoring" type="checkbox" disabled id="paastaMonitoring" onchange="checkPaasTAMonitoringUseYn(this);"/>사용
                         </div>
-                    </div> -->
+                    </div>
                 </div>
             </div>
-<!--             <div class="panel panel-info" style="margin-top:2%;">
-                <div class="panel-heading"><b>CF 정보</b></div>
-                <div class="panel-body" >
-                    <div class="w2ui-field">
-                        <label style="text-align: left; width: 36%; font-size: 11px;">도메인</label>
-                        <div style=" width: 60%;">
-                            <input name="domain" type="text" style="isplay:inline-blcok; width: 80%;" required placeholder="도메인을 입력하세요. 예)cfdoamin.com" />
-                            <div class="isMessage"></div>
-                        </div>
-                    </div>
-                    <div class="w2ui-field">
-                        <label style="text-align: left; width: 36%; font-size: 11px;">도메인 설명</label>
-                        <div style=" width: 60%;">
-                            <input name="description" type="text" style="isplay:inline-blcok; width: 80%;" required placeholder="도메인에 대한 설명을 입력하세요." />
-                            <div class="isMessage"></div>
-                        </div>
-                    </div>
-                    <div class="w2ui-field">
-                        <label style="text-align: left; width: 36%; font-size: 11px;">로그인 비밀번호</label>
-                        <div style=" width: 60%;">
-                            <input name="loginSecret" type="text" style="display:inline-blcok; width: 80%;" required placeholder="로그인 비밀번호룰 입력하세요." />
-                            <div class="isMessage"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>    
             <div class="panel panel-info" style="margin-top:2%;">
                 <div class="panel-heading"><b>PaaS-TA 모니터링 정보</b></div>
                 <div class="panel-body">
                     <div class="w2ui-field">
-                        <label style="text-align: left; width: 36%; font-size: 11px;">PaaS-TA 모니터링 Ingestor 서버 IP</label>
+                        <label style="text-align: left; width: 36%; font-size: 11px;">Metric URL</label>
                         <div style=" width: 60%;">
-                            <input name="ingestorIp" type="text" style="display:inline-blcok; width: 80%;" disabled placeholder="예)10.0.0.0" />
+                            <input name="metricUrl" type="text" style="display:inline-blcok; width: 80%;" disabled placeholder="예)10.0.15.11:8059" />
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">Syslog Address</label>
+                        <div style=" width: 60%;">
+                            <input name="syslogAddress" type="text" style="display:inline-blcok; width: 80%;" disabled placeholder="예)10.0.0.0" />
+                        </div>
+                    </div>
+                    
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">Syslog Custom Rule</label>
+                        <div style=" width: 60%;">
+                            <input name="syslogCustomRule" type="text" style="display:inline-blcok; width: 80%;" disabled placeholder="예)if ($msg contains 'DEBUG') then stop" />
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">Syslog Fallback Servers</label>
+                        <div style=" width: 60%;">
+                            <input name="syslogFallbackServers" type="text" style="display:inline-blcok; width: 80%;" disabled placeholder="예)[]" />
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="text-align: left; width: 36%; font-size: 11px;">Syslog Port</label>
+                        <div style=" width: 60%;">
+                            <input name="syslogPort" type="text" style="display:inline-blcok; width: 80%;" disabled placeholder="예)2514" />
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
         </div>
     </form>
     <div id="DefaultInfoButtonDiv" class="w2ui-buttons" hidden="true">
@@ -2624,7 +2567,7 @@ function gridReload() {
             <div class="panel panel-info">    
                 <div class="panel-heading" style="position:relative"><b>리소스 정보</b>
                     <!-- <div style="position: absolute;right: 10px ;top: 2px; ">
-                        <a class="btn btn-info btn-sm" onclick="resourceJobSettingsPop();">고급 기능</a>
+                        <a class="btn btn-info btn-sm" onclick="ㅇ();">고급 기능</a>
                     </div> -->
                 </div>
                 

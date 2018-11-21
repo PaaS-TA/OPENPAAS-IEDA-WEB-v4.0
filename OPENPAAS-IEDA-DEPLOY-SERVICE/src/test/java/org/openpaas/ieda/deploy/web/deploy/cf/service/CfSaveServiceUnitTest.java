@@ -520,7 +520,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
         vo.setReleaseName("cf");
         vo.setPaastaMonitoringUse("yes");
         vo.setOrganizationName("pass-ta");
-        vo.setIngestorIp("172.16.100.100");
         vo.setKeyFile("cf-key.yml");
         vo.setLocalityName("mapo");
         vo.setLoginSecret("test");
@@ -573,7 +572,6 @@ public class CfSaveServiceUnitTest extends BaseDeployControllerUnitTest {
         dto.setDirectorUuid("uuid");
         dto.setDomain("domain");
         dto.setIaas("openstack");
-        dto.setIngestorIp("172.16.100.1");
         dto.setDomainOrganization("paas-ta");
         dto.setPaastaMonitoringUse("yes");
         dto.setReleaseName("cf");

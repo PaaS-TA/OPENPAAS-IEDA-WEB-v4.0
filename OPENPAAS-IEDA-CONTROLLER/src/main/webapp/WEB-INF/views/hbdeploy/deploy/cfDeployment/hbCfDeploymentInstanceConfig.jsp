@@ -169,10 +169,10 @@ $(function(){
                 if( data != null){
                     option = "<option value=''>CF Deployment를 선택하세요.</option>";
                     data.map(function(obj) {
-                          if( instanceConfigInfo.cfDeploymentName == obj.releaseType && instanceConfigInfo.cfDeploymentVersion == obj.templateVersion){
-                           option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"' selected>"+obj.releaseType+"/"+obj.templateVersion+"</option>";
+                          if( instanceConfigInfo.cfDeploymentName == obj.releaseType && instanceConfigInfo.cfDeploymentVersion == obj.minReleaseVersion){
+                           option += "<option value='"+obj.releaseType+"/"+obj.minReleaseVersion+"' selected>"+obj.releaseType+"/"+obj.minReleaseVersion+"</option>";
                         }else{
-                        option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"'>"+obj.releaseType+"/"+obj.templateVersion+"</option>";    
+                        option += "<option value='"+obj.releaseType+"/"+obj.minReleaseVersion+"'>"+obj.releaseType+"/"+obj.minReleaseVersion+"</option>";    
                         } 
                     });
                 }

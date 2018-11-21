@@ -340,10 +340,10 @@ function getCfDeployment(iaas) {
             success : function(data, status) {
                 if( data != null){
                     data.map(function(obj) {
-                        if( releaseInfo.releaseName == obj.releaseType && releaseInfo.releaseVersion == obj.templateVersion){
-                            option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"' selected>"+obj.releaseType+"/"+obj.templateVersion+"</option>";
+                        if( releaseInfo.releaseName == obj.releaseType && releaseInfo.releaseVersion == obj.minReleaseVersion){
+                            option += "<option value='"+obj.releaseType+"/"+obj.minReleaseVersion+"' selected>"+obj.releaseType+"/"+obj.minReleaseVersion+"</option>";
                         }else{
-                            option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"'>"+obj.releaseType+"/"+obj.templateVersion+"</option>";    
+                            option += "<option value='"+obj.releaseType+"/"+obj.minReleaseVersion+"'>"+obj.releaseType+"/"+obj.minReleaseVersion+"</option>";    
                         }
                     });
 

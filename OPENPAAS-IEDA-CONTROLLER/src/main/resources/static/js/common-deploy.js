@@ -16,7 +16,6 @@ function getDefaultDirector(url, type) {
         success : function(data) {
             if (!checkEmpty(data)) {
                 if(type!="hybrid"){
-                	console.log("directorInfodiv : "+directorInfoDiv);
                     $("#isDefaultDirector").html(directorInfoDiv);
                     setDefaultDirectorInfo(data);
                 } else{
@@ -564,7 +563,6 @@ function getDirectorList(){
         url : "/common/use/hbDirector",
         async : true,
         success : function(data){
-            console.log(data);
             var $object = jQuery("#directors");
             var directorList = "";
             if(data != null){

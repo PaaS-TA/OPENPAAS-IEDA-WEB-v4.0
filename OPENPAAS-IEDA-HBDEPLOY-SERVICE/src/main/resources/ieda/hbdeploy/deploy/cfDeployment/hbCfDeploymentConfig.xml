@@ -29,6 +29,13 @@
             <result property="inceptionOsUserName" column="INCEPTION_OS_USER_NAME"/>
             <result property="cfAdminPassword" column="CF_ADMIN_PASSWORD"/>
             <result property="portalDomain" column="PORTAL_DOMAIN"/>
+	        <result property="paastaMonitoringUse" column="PAASTA_MONITORING_USE"/>
+	        <result property="metricUrl" column="METRIC_URL"/>
+	        <result property="syslogAddress" column="SYSLOG_ADDRESS"/>
+	        <result property="syslogPort" column="SYSLOG_PORT"/>
+	        <result property="syslogCustomRule" column="SYSLOG_CUSTOM_RULE"/>
+	        <result property="syslogFallbackServers" column="SYSLOG_FALLBACK_SERVERS"/>
+            
         </collection>
         <collection property="hbCfDeploymentNetworkConfigVO" ofType="org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentNetworkConfigVO" javaType="org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentNetworkConfigVO">
             <result property="networkName" column="NETWORK_NAME" />
@@ -122,6 +129,12 @@
             ,cfdefault.inception_os_user_name
             ,cfdefault.cf_admin_password
             ,cfdefault.portal_domain
+            ,cfdefault.paasta_monitoring_use 
+            ,cfdefault.metric_url
+            ,cfdefault.syslog_address
+            ,cfdefault.syslog_port
+            ,cfdefault.syslog_custom_rule
+            ,cfdefault.syslog_fallback_servers
             ,cfnetwork.network_name
             ,cfnetwork.public_static_ip
             ,cfnetwork.subnet_reserved_ip
@@ -228,6 +241,12 @@
             ,cfdefault.inception_os_user_name
             ,cfdefault.cf_admin_password
             ,cfdefault.portal_domain
+            ,cfdefault.paasta_monitoring_use 
+            ,cfdefault.metric_url
+            ,cfdefault.syslog_address
+            ,cfdefault.syslog_port
+            ,cfdefault.syslog_custom_rule
+            ,cfdefault.syslog_fallback_servers
             ,cfnetwork.network_name
             ,cfnetwork.public_static_ip
             ,cfnetwork.subnet_reserved_ip

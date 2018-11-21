@@ -542,7 +542,6 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
         dto.setDomain("domain");
         dto.setIaas("openstack");
         dto.setId("1");
-        dto.setIngestorIp("172.16.100.1");
         dto.setDomainOrganization("paas-ta");
         dto.setPaastaMonitoringUse("yes");
         dto.setReleaseName("cf");
@@ -568,7 +567,6 @@ public class CfControllerUnitTest extends BaseControllerUnitTest{
         vo.setDeploymentFile("cf-yml");
         vo.setDomain("test.domain");
         vo.setPaastaMonitoringUse("yes");
-        vo.setIngestorIp("172.16.100.100");
         vo.setCountryCode("kor");
         vo.setStateName("seoul");
         vo.setLocalityName("mapo");

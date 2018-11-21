@@ -167,7 +167,6 @@ function checkPaasTAMonitoringUseYn(type){
         $("input[name='syslogPort']").val('');
         $("input[name='syslogCustomRule']").val('');
         $("input[name='syslogFallbackServers']").val('');
-        
         $('input:checkbox[id="paastaMonitoring"]').removeAttr('checked');
     }
 }
@@ -349,10 +348,10 @@ function deleteHbCfDeploymentDefaultConfigInfo(id, defaultConfigName){
             if( data != null){
                 option = "<option value=''>CF Deployment 버전을 선택하세요.</option>";
                 data.map(function(obj) {
-                      if( defaultConfigInfo.releaseName == obj.releaseType && defaultConfigInfo.releaseVersion == obj.templateVersion){
-                       option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"' selected>"+obj.releaseType+"/"+obj.templateVersion+"</option>";
+                      if( defaultConfigInfo.releaseName == obj.releaseType && defaultConfigInfo.releaseVersion == obj.minReleaseVersion){
+                       option += "<option value='"+obj.releaseType+"/"+obj.minReleaseVersion+"' selected>"+obj.releaseType+"/"+obj.minReleaseVersion+"</option>";
                     }else{
-                    option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"'>"+obj.releaseType+"/"+obj.templateVersion+"</option>";    
+                    option += "<option value='"+obj.releaseType+"/"+obj.minReleaseVersion+"'>"+obj.releaseType+"/"+obj.minReleaseVersion+"</option>";    
                     } 
                 });
             }
@@ -377,11 +376,17 @@ function deleteHbCfDeploymentDefaultConfigInfo(id, defaultConfigName){
           versionInfo = versionInfo[0];
           if(versionInfo == 'paasta'){
               $("#inceptionOsUserNameConfDiv").show();
+              $("#paastaMonitoring").attr("disabled", false);
           }else{
               $("#inceptionOsUserNameConfDiv").hide();
               $("input[name=inceptionOsUserName]").val("");
+              $("#paastaMonitoring").attr("disabled", true);
           }
       }
+     
+
+     
+     
  }
 
 /********************************************************
@@ -543,7 +548,7 @@ function resetForm(status){
                         <span class="glyphicon glyphicon glyphicon-question-sign paastaMonitoring-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="click" data-html="true"></span>
                         </label>
                         <div style="width: 60%">
-                            <input style="margin-left: 20px;" name="paastaMonitoring" type="checkbox" id="paastaMonitoring" onclick="checkPaasTAMonitoringUseYn(this.value);"/>사용
+                            <input style="margin-left: 20px;" name="paastaMonitoring" disabled type="checkbox" id="paastaMonitoring" onclick="checkPaasTAMonitoringUseYn(this.value);"/>사용
                         </div>
                     </div>
                     <div class="w2ui-field">

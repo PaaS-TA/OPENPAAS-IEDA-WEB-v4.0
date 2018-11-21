@@ -21,8 +21,6 @@ public class CfParamDTO {
         @NotNull
         private String releaseVersion; //릴리즈 버전
         
-        private String loggregatorReleaseName;
-        private String loggregatorReleaseVersion;
         private String cfDbType;
         
         // 1.2 기본정보
@@ -31,13 +29,20 @@ public class CfParamDTO {
         @NotNull
         private String domainOrganization; //도메인 그룹
         private String paastaMonitoringUse;//PaaS-TA 모니터링 사용 유무
-        private String ingestorIp;//PaaS-TA 모니터링 DB 서버 IP
         private String userAddSsh;//os-conf ssh public-key
         private String osConfReleaseName;//os-conf Release Name
         private String osConfReleaseVersion;//os-conf Release Version
         private String inceptionOsUserName; // Inception User Name
         private String cfAdminPassword; // cf admin password
         private String portalDomain; // paasta portal url
+        
+        private String metricUrl;
+        private String syslogAddress;
+        private String syslogPort;
+        private String syslogCustomRule;
+        private String syslogFallbackServers;
+        
+        
         
         public String getId() {
             return id;
@@ -81,18 +86,6 @@ public class CfParamDTO {
         public void setCfDbType(String cfDbType) {
             this.cfDbType = cfDbType;
         }
-        public String getLoggregatorReleaseName() {
-            return loggregatorReleaseName;
-        }
-        public void setLoggregatorReleaseName(String loggregatorReleaseName) {
-            this.loggregatorReleaseName = loggregatorReleaseName;
-        }
-        public String getLoggregatorReleaseVersion() {
-            return loggregatorReleaseVersion;
-        }
-        public void setLoggregatorReleaseVersion(String loggregatorReleaseVersion) {
-            this.loggregatorReleaseVersion = loggregatorReleaseVersion;
-        }
         public String getDomain() {
             return domain;
         }
@@ -111,11 +104,35 @@ public class CfParamDTO {
         public void setPaastaMonitoringUse(String paastaMonitoringUse) {
             this.paastaMonitoringUse = paastaMonitoringUse;
         }
-        public String getIngestorIp() {
-            return ingestorIp;
+        public String getMetricUrl() {
+            return metricUrl;
         }
-        public void setIngestorIp(String ingestorIp) {
-            this.ingestorIp = ingestorIp;
+        public void setMetricUrl(String metricUrl) {
+            this.metricUrl = metricUrl;
+        }
+        public String getSyslogAddress() {
+            return syslogAddress;
+        }
+        public void setSyslogAddress(String syslogAddress) {
+            this.syslogAddress = syslogAddress;
+        }
+        public String getSyslogPort() {
+            return syslogPort;
+        }
+        public void setSyslogPort(String syslogPort) {
+            this.syslogPort = syslogPort;
+        }
+        public String getSyslogCustomRule() {
+            return syslogCustomRule;
+        }
+        public void setSyslogCustomRule(String syslogCustomRule) {
+            this.syslogCustomRule = syslogCustomRule;
+        }
+        public String getSyslogFallbackServers() {
+            return syslogFallbackServers;
+        }
+        public void setSyslogFallbackServers(String syslogFallbackServers) {
+            this.syslogFallbackServers = syslogFallbackServers;
         }
         public String getUserAddSsh() {
             return userAddSsh;

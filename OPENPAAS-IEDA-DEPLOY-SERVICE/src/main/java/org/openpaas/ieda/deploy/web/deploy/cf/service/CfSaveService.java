@@ -56,23 +56,22 @@ public class CfSaveService {
         vo.setDirectorUuid(dto.getDirectorUuid());
         vo.setReleaseName(dto.getReleaseName());
         vo.setReleaseVersion(dto.getReleaseVersion());
-        vo.setLoggregatorReleaseName(dto.getLoggregatorReleaseName());
-        vo.setLoggregatorReleaseVersion(dto.getLoggregatorReleaseVersion());
         vo.setUserAddSsh(dto.getUserAddSsh());
-        vo.setOsConfReleaseName(dto.getOsConfReleaseName());
-        vo.setOsConfReleaseVersion(dto.getOsConfReleaseVersion());
         vo.setCfDbtype(dto.getCfDbType());
         vo.setInceptionOsUserName(dto.getInceptionOsUserName());
         vo.setCfAdminPassword(dto.getCfAdminPassword());
         vo.setPortalDomain(dto.getPortalDomain());
-        
         // 1.2 기본정보
         vo.setDomain(dto.getDomain());
         vo.setDomainOrganization(dto.getDomainOrganization());
         
         //1.3 PaaS-TA 모니터링 
         vo.setPaastaMonitoringUse(dto.getPaastaMonitoringUse());
-        vo.setIngestorIp(dto.getIngestorIp());
+        vo.setSyslogAddress(dto.getSyslogAddress());
+        vo.setSyslogCustomRule(dto.getSyslogCustomRule());
+        vo.setSyslogFallbackServers(dto.getSyslogFallbackServers());
+        vo.setSyslogPort(dto.getSyslogPort());
+        vo.setMetricUrl(dto.getMetricUrl());
         vo.setUpdateUserId(principal.getName());
         //배포 명 중복 검사
         int count = cfDao.selectCfDeploymentNameDuplication(vo.getIaasType(), vo.getDeploymentName(), vo.getId());

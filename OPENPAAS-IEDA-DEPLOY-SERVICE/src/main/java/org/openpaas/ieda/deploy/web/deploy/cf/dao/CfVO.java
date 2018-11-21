@@ -23,8 +23,6 @@ public class CfVO {
     private String directorUuid;//설치관리자 UUID
     private String releaseName;//릴리즈명
     private String releaseVersion; //릴리즈 버전
-    private String loggregatorReleaseName;
-    private String loggregatorReleaseVersion;
     private String cfDbType;
     
     // 1.2 기본정보
@@ -33,16 +31,19 @@ public class CfVO {
     private String domainOrganization;//도메인 그룹
     private String loginSecret; //로그인 비밀번호
     private String userAddSsh;  //os-conf ssh public-key
-    private String osConfReleaseName;//os-conf Release Name
-    private String osConfReleaseVersion;//os-conf Release Version
     private String inceptionOsUserName; //inception user name
     private String cfAdminPassword; // cf 관리자 비밀번호
     private String portalDomain; // paasta portal url
+
+    
     
     //1.3 PaaS-TA 모니터링
     private String paastaMonitoringUse;//PaaS-TA 모니터링 사용 유무
-    private String ingestorIp;//PaaS-TA 모니터링 DB 서버 IP
-    
+    private String metricUrl;
+    private String syslogAddress;
+    private String syslogPort;
+    private String syslogCustomRule;
+    private String syslogFallbackServers;
     //2. 네트워크 목록 정보
     private List<NetworkVO> networks;
     //2.1 네트워크 정보
@@ -132,21 +133,6 @@ public class CfVO {
     }
     public void setReleaseVersion(String releaseVersion) {
         this.releaseVersion = releaseVersion;
-    }
-    public String getLoggregatorReleaseName() {
-        return loggregatorReleaseName;
-    }
-
-    public void setLoggregatorReleaseName(String loggregatorReleaseName) {
-        this.loggregatorReleaseName = loggregatorReleaseName;
-    }
-
-    public String getLoggregatorReleaseVersion() {
-        return loggregatorReleaseVersion;
-    }
-
-    public void setLoggregatorReleaseVersion(String loggregatorReleaseVersion) {
-        this.loggregatorReleaseVersion = loggregatorReleaseVersion;
     }
     public String getDomain() {
         return domain;
@@ -262,13 +248,6 @@ public class CfVO {
     public void setPaastaMonitoringUse(String paastaMonitoringUse) {
         this.paastaMonitoringUse = paastaMonitoringUse;
     }
-    public String getIngestorIp() {
-        return ingestorIp;
-    }
-    public void setIngestorIp(String ingestorIp) {
-        this.ingestorIp = ingestorIp;
-    }
-
     public List<HashMap<String, Object>> getJobs() {
         return jobs;
     }
@@ -284,23 +263,6 @@ public class CfVO {
     public void setUserAddSsh(String userAddSsh) {
         this.userAddSsh = userAddSsh;
     }
-
-    public String getOsConfReleaseName() {
-        return osConfReleaseName;
-    }
-
-    public void setOsConfReleaseName(String osConfReleaseName) {
-        this.osConfReleaseName = osConfReleaseName;
-    }
-
-    public String getOsConfReleaseVersion() {
-        return osConfReleaseVersion;
-    }
-
-    public void setOsConfReleaseVersion(String osConfReleaseVersion) {
-        this.osConfReleaseVersion = osConfReleaseVersion;
-    }
-
     public String getInceptionOsUserName() {
         return inceptionOsUserName;
     }
@@ -323,6 +285,50 @@ public class CfVO {
 
     public void setPortalDomain(String portalDomain) {
         this.portalDomain = portalDomain;
+    }
+
+    public String getMetricUrl() {
+        return metricUrl;
+    }
+
+    public void setMetricUrl(String metricUrl) {
+        this.metricUrl = metricUrl;
+    }
+
+    public String getSyslogAddress() {
+        return syslogAddress;
+    }
+
+    public void setSyslogAddress(String syslogAddress) {
+        this.syslogAddress = syslogAddress;
+    }
+
+    public String getSyslogPort() {
+        return syslogPort;
+    }
+
+    public void setSyslogPort(String syslogPort) {
+        this.syslogPort = syslogPort;
+    }
+
+    public String getSyslogCustomRule() {
+        return syslogCustomRule;
+    }
+
+    public void setSyslogCustomRule(String syslogCustomRule) {
+        this.syslogCustomRule = syslogCustomRule;
+    }
+
+    public String getSyslogFallbackServers() {
+        return syslogFallbackServers;
+    }
+
+    public void setSyslogFallbackServers(String syslogFallbackServers) {
+        this.syslogFallbackServers = syslogFallbackServers;
+    }
+
+    public void setCfDbType(String cfDbType) {
+        this.cfDbType = cfDbType;
     }
 
     

@@ -140,7 +140,6 @@ public class CfDeleteDeployAsyncServiceUnitTest extends BaseDeployControllerUnit
         vo.setReleaseName("cf");
         vo.setPaastaMonitoringUse("yes");
         vo.setOrganizationName("pass-ta");
-        vo.setIngestorIp("172.16.100.100");
         vo.setKeyFile("cf-key.yml");
         vo.setLocalityName("mapo");
         vo.setLoginSecret("test");

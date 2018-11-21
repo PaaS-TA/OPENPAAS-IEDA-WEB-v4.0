@@ -68,7 +68,6 @@ public class CfService {
                 cfInfo.setDescription(vo.getDescription());
                 cfInfo.setDomainOrganization(vo.getDomainOrganization());
                 cfInfo.setPaastaMonitoringUse(vo.getPaastaMonitoringUse());
-                cfInfo.setIngestorIp(vo.getIngestorIp());
                 cfInfo.setKeyFile(vo.getKeyFile());
                 cfInfo.setUserAddSsh(vo.getUserAddSsh());
                 //NETWORK
