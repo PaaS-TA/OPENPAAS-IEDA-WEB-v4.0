@@ -77,24 +77,27 @@ function setBootstrapData(contents){
             iaasConfigId : contents.iaasConfigId
     }
     boshInfo = {
-            id                 : bootstrapId,
-            iaas               : contents.iaasType,
-            deploymentName     : contents.deploymentName,
-            directorName       : contents.directorName,
-            credentialKeyName  : contents.credentialKeyName,
-            ntp                : contents.ntp,
-            boshRelease        : contents.boshRelease,
-            boshCpiRelease     : contents.boshCpiRelease,
-            boshBpmRelease     : contents.boshBpmRelease,
-            boshCredhubRelease : contents.boshCredhubRelease,
-            boshUaaRelease     : contents.boshUaaRelease,
-            osConfRelease      : contents.osConfRelease,
-            enableSnapshots    : contents.enableSnapshots,
-            snapshotSchedule   : contents.snapshotSchedule,
-            paastaMonitoringUse : contents.paastaMonitoringUse,
-            paastaMonitoringIp : contents.paastaMonitoringIp,
-            paastaMonitoringRelease : contents.paastaMonitoringRelease,
-            influxdbIp : contents.influxdbIp
+            id                            : bootstrapId,
+            iaas                          : contents.iaasType,
+            deploymentName                : contents.deploymentName,
+            directorName                  : contents.directorName,
+            credentialKeyName             : contents.credentialKeyName,
+            ntp                           : contents.ntp,
+            boshRelease                   : contents.boshRelease,
+            boshCpiRelease                : contents.boshCpiRelease,
+            boshBpmRelease                : contents.boshBpmRelease,
+            boshCredhubRelease            : contents.boshCredhubRelease,
+            boshUaaRelease                : contents.boshUaaRelease,
+            osConfRelease                 : contents.osConfRelease,
+            enableSnapshots               : contents.enableSnapshots,
+            snapshotSchedule              : contents.snapshotSchedule,
+            paastaMonitoringUse           : contents.paastaMonitoringUse,
+            paastaMonitoringAgentRelease  : contents.paastaMonitoringAgentRelease,
+            paastaMonitoringSyslogRelease : contents.paastaMonitoringSyslogRelease,
+            metricUrl                     : contents.metricUrl,
+            syslogAddress                 : contents.syslogAddress,
+            syslogPort                    : contents.syslogPort,
+            syslogTransport               : contents.syslogTransport
     }
     networkInfo = {
             id                  : bootstrapId,
@@ -402,7 +405,7 @@ function defaultInfoPop(iaas){
                 $(".w2ui-msg-body input[name='ingestorIp']").attr("disabled", true);
                 $(".w2ui-msg-body input[name='influxdbIp']").attr("disabled", true);
                 $('[data-toggle="popover"]').popover();
-                $(".paastaMonitoring-info").attr('data-content', "paasta-controller v3.0 이상에서 지원")
+                $(".paastaMonitoring-info").attr('data-content', "paasta v4.0 이상에서 지원")
                 if( !checkEmpty(boshInfo) && boshInfo != "" ){
                     $(".w2ui-msg-body input[name='deploymentName']").val(boshInfo.deploymentName);
                     $(".w2ui-msg-body input[name='directorName']").val(boshInfo.directorName);
@@ -419,16 +422,27 @@ function defaultInfoPop(iaas){
                     if( !checkEmpty(boshInfo.paastaMonitoringUse) ){
                         if( boshInfo.paastaMonitoringUse == "true"){
                             $(".w2ui-msg-body input[name='paastaMonitoring']").attr("checked", true);
-                            $(".w2ui-msg-body input[name='ingestorIp']").removeAttr("disabled");
-                            $(".w2ui-msg-body input[name='ingestorIp']").val(boshInfo.paastaMonitoringIp);
+                            $(".w2ui-msg-body select[name=paastaMonitoringAgentRelease]").removeAttr("disabled");
+                            $(".w2ui-msg-body select[name=paastaMonitoringSyslogRelease]").removeAttr("disabled");
+                            $(".w2ui-msg-body input[name='metricUrl']").removeAttr("disabled");
+                            $(".w2ui-msg-body input[name='syslogAddress']").removeAttr("disabled");
+                            $(".w2ui-msg-body input[name='syslogPort']").removeAttr("disabled");
+                            $(".w2ui-msg-body input[name='syslogTransport']").removeAttr("disabled");
                             
-                            $(".w2ui-msg-body input[name='influxdbIp']").removeAttr("disabled");
-                            $(".w2ui-msg-body input[name='influxdbIp']").val(boshInfo.influxdbIp);
-                            
-                            $(".w2ui-msg-body select[name='paastaMonitoringRelease']").val(boshInfo.paastaMonitoringRelease);
+                            $(".w2ui-msg-body select[name='paastaMonitoringAgentRelease']").val(boshInfo.paastaMonitoringAgentRelease);
+                            $(".w2ui-msg-body select[name='paastaMonitoringAgentRelease']").val(boshInfo.paastaMonitoringSyslogRelease);
+                            $(".w2ui-msg-body input[name='metricUrl']").val(boshInfo.metricUrl);
+                            $(".w2ui-msg-body input[name='syslogAddress']").val(boshInfo.syslogAddress);
+                            $(".w2ui-msg-body input[name='syslogPort']").val(boshInfo.syslogPort);
+                            $(".w2ui-msg-body input[name='syslogTransport']").val(boshInfo.syslogTransport);
                         }else{
                             $(".w2ui-msg-body input[name='paastaMonitoring']").attr("checked", false);
-                            $(".w2ui-msg-body  select[name=paastaMonitoringRelease]").attr("disabled", true);
+                            $(".w2ui-msg-body select[name=paastaMonitoringAgentRelease]").attr("disabled", true);
+                            $(".w2ui-msg-body select[name=paastaMonitoringSyslogRelease]").attr("disabled", true);
+                            $(".w2ui-msg-body input[name='metricUrl']").attr("disabled", true);
+                            $(".w2ui-msg-body input[name='syslogAddress']").attr("disabled", true);
+                            $(".w2ui-msg-body input[name='syslogPort']").attr("disabled", true);
+                            $(".w2ui-msg-body input[name='syslogTransport']").attr("disabled", true);
                         }
                     }
                 }else{c
@@ -651,19 +665,30 @@ function enableSnapshotsFn(value){
 function checkPaasTAMonitoringUseYn(){
     var value = $("#paastaMonitoring:checked").val();
     if( value == "on"){
-        $(".w2ui-msg-body  input[name=ingestorIp]").attr("disabled", false);
-        $(".w2ui-msg-body  input[name=influxdbIp]").attr("disabled", false);
-        $(".w2ui-msg-body  select[name=paastaMonitoringRelease]").attr("disabled", false);
+        $(".w2ui-msg-body  select[name=paastaMonitoringAgentRelease]").attr("disabled", true);
+        $(".w2ui-msg-body  select[name=paastaMonitoringSyslogRelease]").attr("disabled", true);
+        $(".w2ui-msg-body  input[name=metricUrl]").attr("disabled", true);
+        $(".w2ui-msg-body  input[name=syslogAddress]").attr("disabled", true);
+        $(".w2ui-msg-body  input[name=syslogPort]").attr("disabled", true);
+        $(".w2ui-msg-body  input[name=syslogTransport]").attr("disabled", true);
         //ETC 릴리즈 정보 가져오기(PaaS-TA Monitoring 릴리즈)
         getLocalPaasTAMonitoringReleaseList('BOSH_MONITORING_AGENT');
+        getLocalPaasTAMonitoringReleaseList('BOSH_MONITORING_AGENT');
     }else{
-        $(".w2ui-msg-body  input[name=ingestorIp]").val("");
-        $(".w2ui-msg-body  select[name=paastaMonitoringRelease]").val("");
-        $(".w2ui-msg-body  input[name=ingestorIp]").attr("disabled", true);
+        $(".w2ui-msg-body  select[name=paastaMonitoringAgentRelease]").val("");
+        $(".w2ui-msg-body  select[name=paastaMonitoringSyslogRelease]").val("");
+        $(".w2ui-msg-body  input[name=metricUrl]").val("");
+        $(".w2ui-msg-body  input[name=syslogAddress]").val("");
+        $(".w2ui-msg-body  input[name=syslogPort]").val("");
+        $(".w2ui-msg-body  input[name=syslogTransport]").val("");
         
-        $(".w2ui-msg-body  input[name=influxdbIp]").attr("disabled", true);
-        $(".w2ui-msg-body  input[name=influxdbIp]").val("");
-        $(".w2ui-msg-body  select[name=paastaMonitoringRelease]").attr("disabled", true);
+        $(".w2ui-msg-body  select[name=paastaMonitoringAgentRelease]").attr("disabled", true);
+        $(".w2ui-msg-body  select[name=paastaMonitoringSyslogRelease]").attr("disabled", true);
+        $(".w2ui-msg-body  input[name=metricUrl]").attr("disabled", true);
+        $(".w2ui-msg-body  input[name=syslogAddress]").attr("disabled", true);
+        $(".w2ui-msg-body  input[name=syslogPort]").attr("disabled", true);
+        $(".w2ui-msg-body  input[name=syslogTransport]").attr("disabled", true);
+        
     }
 }
 
@@ -708,33 +733,42 @@ function getLocalPaasTAMonitoringReleaseList(type){
 function saveDefaultInfo(type){
     if( $("#paastaMonitoring:checked").val() == "on"){
         var monitoringUse = "true";
-        var ingrestorIp = $(".w2ui-msg-body input[name=ingestorIp]").val();
-        var monitoringRelease = $(".w2ui-msg-body select[name=paastaMonitoringRelease]").val();
-        var influxdbIp = $(".w2ui-msg-body input[name='influxdbIp']").val();
+        var monitoringAgentRelease = $(".w2ui-msg-body select[name=paastaMonitoringAgentRelease]").val();
+        var monitoringSyslogRelease = $(".w2ui-msg-body select[name=paastaMonitoringSyslogRelease]").val();
+        var metrincUrl = $(".w2ui-msg-body input[name=metricUrl]").val();
+        var syslogAddress = $(".w2ui-msg-body input[name='syslogAddress']").val();
+        var syslogPort = $(".w2ui-msg-body input[name='syslogPort']").val();
+        var syslogTransport = $(".w2ui-msg-body input[name='syslogTransport']").val();
     }else{
         var monitoringUse = "false";
-        var influxdbIp =  "";
-        var ingrestorIp = "";
-        var monitoringRelease = "";
+        var monitoringAgentRelease = $(".w2ui-msg-body select[name=paastaMonitoringAgentRelease]").val("");
+        var monitoringSyslogRelease = $(".w2ui-msg-body select[name=paastaMonitoringSyslogRelease]").val("");
+        var metrincUrl = $(".w2ui-msg-body input[name=metricUrl]").val("");
+        var syslogAddress = $(".w2ui-msg-body input[name='syslogAddress']").val("");
+        var syslogPort = $(".w2ui-msg-body input[name='syslogPort']").val("");
+        var syslogTransport = $(".w2ui-msg-body input[name='syslogTransport']").val("");
     }
     boshInfo = {
-            id                  : iaasConfigInfo.id,
-            deploymentName      : $(".w2ui-msg-body input[name=deploymentName]").val(),
-            directorName        : $(".w2ui-msg-body input[name=directorName]").val(),
-            credentialKeyName   : $(".w2ui-msg-body select[name=credentialKeyName]").val(),
-            ntp                 : $(".w2ui-msg-body input[name=ntp]").val(),
-            boshRelease         : $(".w2ui-msg-body select[name=boshRelease]").val(),
-            osConfRelease       : $(".w2ui-msg-body select[name=osConfRelease]").val(),
-            boshCpiRelease      : $(".w2ui-msg-body select[name=boshCpiRelease]").val(),
-            boshBpmRelease      : $(".w2ui-msg-body select[name=boshBpmRelease]").val(),
-            //boshCredhubRelease  : $(".w2ui-msg-body select[name=boshCredhubRelease]").val(),
-            //boshUaaRelease      : $(".w2ui-msg-body select[name=boshUaaRelease]").val(),
-            enableSnapshots     : $(".w2ui-msg-body input:radio[name=enableSnapshots]:checked").val(),
-            snapshotSchedule    : $(".w2ui-msg-body input[name=snapshotSchedule]").val(),
-            influxdbIp : influxdbIp,
-            paastaMonitoringUse : monitoringUse,
-            paastaMonitoringIp  : ingrestorIp,
-            paastaMonitoringRelease : monitoringRelease
+            id                            : iaasConfigInfo.id,
+            deploymentName                : $(".w2ui-msg-body input[name=deploymentName]").val(),
+            directorName                  : $(".w2ui-msg-body input[name=directorName]").val(),
+            credentialKeyName             : $(".w2ui-msg-body select[name=credentialKeyName]").val(),
+            ntp                           : $(".w2ui-msg-body input[name=ntp]").val(),
+            boshRelease                   : $(".w2ui-msg-body select[name=boshRelease]").val(),
+            osConfRelease                 : $(".w2ui-msg-body select[name=osConfRelease]").val(),
+            boshCpiRelease                : $(".w2ui-msg-body select[name=boshCpiRelease]").val(),
+            boshBpmRelease                : $(".w2ui-msg-body select[name=boshBpmRelease]").val(),
+            //boshCredhubRelease          : $(".w2ui-msg-body select[name=boshCredhubRelease]").val(),
+            //boshUaaRelease              : $(".w2ui-msg-body select[name=boshUaaRelease]").val(),
+            enableSnapshots               : $(".w2ui-msg-body input:radio[name=enableSnapshots]:checked").val(),
+            snapshotSchedule              : $(".w2ui-msg-body input[name=snapshotSchedule]").val(),
+            paastaMonitoringUse           : monitoringUse,
+            paastaMonitoringAgentRelease  : monitoringAgentRelease,
+            paastaMonitoringSyslogRelease : monitoringSyslogRelease,
+            metricUrl                     : metricUrl,
+            syslogAddress                 : syslogAddress,
+            syslogPort                    : syslogPort,
+            syslogTransport               : syslogTransport
     }
     if(type == 'before'){
         w2popup.unlock();
