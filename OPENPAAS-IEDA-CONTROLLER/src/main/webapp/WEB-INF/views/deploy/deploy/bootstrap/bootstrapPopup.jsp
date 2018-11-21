@@ -598,23 +598,20 @@ function getLocalBoshList(type){
  * 기능 : checkBoshVersion(selected)
  * 설명 : BOSH 버전 체크 >> BPM Release 적용 여부 확인
  ******************************************************************/
-/* function checkBoshVersion(selected){
+function checkBoshVersion(selected){
     if(selected == ''){
        return ;
     }else{
         var versionInfo = selected.split("bosh-");
         versionInfo = versionInfo[1].split(".tgz");
         versionInfo = parseFloat(versionInfo);
-        if(versionInfo >= 266){
-            getLocalBoshList('bpm');
-            $(".w2ui-msg-body #bpmConfDiv").show();
+        if(versionInfo >= 268.2){
+            $(".w2ui-msg-body input:checkbox[name=paastaMonitoring]").removeAttr("disabled");
         }else{
-            $(".w2ui-msg-body #bpmConfDiv").hide();
-            var options = "<option value=''>BPM 릴리즈를 선택하세요.</option>";
-            $(".w2ui-msg-body select[name='boshBpmRelease']").html(options);
+        	$(".w2ui-msg-body input:checkbox[name=paastaMonitoring]").attr("disabled", true);
         }
     }
-} */
+}
 
  /******************************************************************
   * 기능 : getLocalBoshCpiList
@@ -1872,7 +1869,7 @@ function popupClose() {
                             <span class="glyphicon glyphicon glyphicon-question-sign boshRelase-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="hover" data-html="true" title="설치 지원 버전 목록"></span>
                         </label>
                         <div style="width: 60%">
-                            <select name="boshRelease"  class="form-control select-control" >
+                            <select name="boshRelease"  class="form-control select-control" onChange="checkBoshVersion(this.value)">
                                 <option value="">BOSH 릴리즈를 선택하세요.</option>
                             </select>
                         </div>
@@ -1937,7 +1934,7 @@ function popupClose() {
                         <span class="glyphicon glyphicon glyphicon-question-sign paastaMonitoring-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="click" data-html="true"></span>
                         </label>
                         <div style="width: 60%">
-                            <input name="paastaMonitoring" type="checkbox" id="paastaMonitoring" onChange="checkPaasTAMonitoringUseYn()"/>사용
+                            <input name="paastaMonitoring" type="checkbox" id="paastaMonitoring" disabled="disabled" onChange="checkPaasTAMonitoringUseYn()"/>사용
                         </div>
                     </div>
                 </div>
