@@ -142,7 +142,7 @@ function initView(){
      $("input[name='syslogTransport']").attr("disabled", true);
      
      $('[data-toggle="popover"]').popover();
-     $(".paastaMonitoring-info").attr('data-content', "paasta  v4.0 이상에서 지원")
+     $(".paastaMonitoring-info").attr('data-content', "paasta  v4.0 이상에서 지원");
      $('input:radio[name=enableSnapshots]:input[value=false]').attr("checked", true);
      enableSnapshotsFn("false");
      checkPaasTAMonitoringUseYn();

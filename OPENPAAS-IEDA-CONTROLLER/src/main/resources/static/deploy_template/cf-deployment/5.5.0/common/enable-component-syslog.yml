@@ -13,7 +13,6 @@
             ((syslog_custom_rule))
             if ($programname startswith "vcap.") then stop
           fallback_servers: ((syslog_fallback_servers))
-#          permitted_peer: ((syslog_permitted_peer))
           port: ((syslog_port))
           tls_enabled: false 
           transport: relp 

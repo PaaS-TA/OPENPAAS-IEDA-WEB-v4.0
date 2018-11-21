@@ -66,6 +66,12 @@ public class HbCfDeploymentDefaultConfigService {
             vo.setInceptionOsUserName(dto.getInceptionOsUserName());
             vo.setCfAdminPassword(dto.getCfAdminPassword());
             vo.setPortalDomain(dto.getPortalDomain());
+            vo.setMetricUrl(dto.getMetricUrl());
+            vo.setSyslogAddress(dto.getSyslogAddress());
+            vo.setSyslogPort(dto.getSyslogPort());
+            vo.setSyslogCustomRule(dto.getSyslogCustomRule());
+            vo.setSyslogFallbackServers(dto.getSyslogFallbackServers());
+            vo.setPaastaMonitoringUse(dto.getPaastaMonitoringUse());
             vo.setCreateDate(vo.getCreateDate());
             vo.setUpdateUserId(principal.getName());
         }

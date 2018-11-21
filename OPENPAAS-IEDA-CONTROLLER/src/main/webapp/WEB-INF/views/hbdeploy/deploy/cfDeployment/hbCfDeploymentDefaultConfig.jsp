@@ -114,8 +114,10 @@ $(function(){
     $('#default_Grid').w2layout(resourceLayout.layout2);
     w2ui.layout2.content('left', $().w2grid(resourceLayout.grid));
     w2ui['layout2'].content('main', $('#regPopupDiv').html());
+    $('[data-toggle="popover"]').popover();
+    $(".paastaMonitoring-info").attr('data-content', "paasta  v4.0 이상에서 지원");
+    checkPaasTAMonitoringUseYn();
     doSearch();
-    
     $("#deleteBtn").click(function(){
         if($("#deleteBtn").attr('disabled') == "disabled") return;
         var selected = w2ui['default_Grid'].getSelection();
@@ -142,6 +144,34 @@ $(function(){
     });
 });
 
+/******************************************************************
+ * 기능 : checkPaasTAMonitoringUseYn
+ * 설명 : PaaS-TA 모니터링 가능 사용여부(사용일 경우)
+ ***************************************************************** */
+function checkPaasTAMonitoringUseYn(type){
+    var value = $("#paastaMonitoring:checked").val();
+    if( value == "on"){
+        $("input[name='metricUrl']").attr("disabled", false);
+        $("input[name='syslogAddress']").attr("disabled", false);
+        $("input[name='syslogPort']").attr("disabled", false);
+        $("input[name='syslogCustomRule']").attr("disabled", false);
+        $("input[name='syslogFallbackServers']").attr("disabled", false);
+    }else{
+        $("input[name='metricUrl']").attr("disabled", true);
+        $("input[name='syslogAddress']").attr("disabled", true);
+        $("input[name='syslogPort']").attr("disabled", true);
+        $("input[name='syslogCustomRule']").attr("disabled", true);
+        $("input[name='syslogFallbackServers']").attr("disabled", true);
+        $("input[name='metricUrl']").val('');
+        $("input[name='syslogAddress']").val('');
+        $("input[name='syslogPort']").val('');
+        $("input[name='syslogCustomRule']").val('');
+        $("input[name='syslogFallbackServers']").val('');
+        
+        $('input:checkbox[id="paastaMonitoring"]').removeAttr('checked');
+    }
+}
+
 /********************************************************
  * 설명 : 기본  수정 정보 설정
  * 기능 : settingDefaultInfo
@@ -164,6 +194,31 @@ function settingDefaultInfo(){
     $("input[name=cfAdminPassword]").val(record.cfAdminPassword);
     $("input[name=portalDomain]").val(record.portalDomain);
     var cfDeployment = record.cfDeploymentVersion;
+    
+    if( !checkEmpty(record.paastaMonitoringUse) ){
+        if( record.paastaMonitoringUse == "true"){
+            
+            $("input[name='paastaMonitoring']").attr("checked", true);
+            $("input[name='metricUrl']").removeAttr("disabled");
+            $("input[name='metricUrl']").val(record.metricUrl);
+            
+            $("input[name='syslogAddress']").removeAttr("disabled");
+            $("input[name='syslogAddress']").val(record.syslogAddress);
+            
+            $("input[name='syslogPort']").removeAttr("disabled");
+            $("input[name='syslogPort']").val(record.syslogPort);
+            
+            $("input[name='syslogCustomRule']").removeAttr("disabled");
+            $("input[name='syslogCustomRule']").val(record.syslogCustomRule);
+            
+            $("input[name='syslogFallbackServers']").removeAttr("disabled");
+            $("input[name='syslogFallbackServers']").val(record.syslogFallbackServers);
+            
+        }else{
+            $("input[name='paastaMonitoring']").attr("checked", false);
+        }
+    }
+    
     
     defaultConfigInfo = {
         releaseName : cfDeployment.split("/")[0],
@@ -209,6 +264,11 @@ function doButtonStyle() {
  * 기능 : registHbCfDeploymentDefaultConfigInfo
  *********************************************************/
 function registHbCfDeploymentDefaultConfigInfo(){
+    if( $("#paastaMonitoring:checked").val() == "on"){
+        var monitoringUse = "true";
+    } else {
+        var monitoringUse = "false";
+    }
     w2popup.lock("등록 중입니다.", true);
     defaultConfigInfo = {
             id                     : $("input[name='defaultInfoId']").val(),
@@ -220,7 +280,13 @@ function registHbCfDeploymentDefaultConfigInfo(){
             cfDbType               : $("select[name='cfDbType'] :selected").val(),
             inceptionOsUserName    : $("input[name='inceptionOsUserName']").val(),
             cfAdminPassword        : $("input[name='cfAdminPassword']").val(),
-            portalDomain           : $("input[name='portalDomain']").val()
+            portalDomain           : $("input[name='portalDomain']").val(),
+            metricUrl              : $("input[name='metricUrl']").val(),
+            syslogAddress          : $("input[name='syslogAddress']").val(),
+            syslogPort             : $("input[name='syslogPort']").val(),
+            syslogCustomRule       : $("input[name='syslogCustomRule']").val(),
+            syslogFallbackServers  : $("input[name='syslogFallbackServers']").val(),
+            paastaMonitoringUse : monitoringUse
     }
     $.ajax({
         type : "PUT",
@@ -276,12 +342,12 @@ function deleteHbCfDeploymentDefaultConfigInfo(id, defaultConfigName){
     var option ="";
     $.ajax({
         type : "GET",
-        url :"/common/deploy/list/releaseInfo/cfDeployment/"+iaasType, 
+        url :"/common/deploy/list/releaseInfo/cfdeployment/"+iaasType, 
         contentType : "application/json",
         success : function(data, status) {
             releases = new Array();
             if( data != null){
-                option = "<option value=''>CF Deployment를 선택하세요.</option>";
+                option = "<option value=''>CF Deployment 버전을 선택하세요.</option>";
                 data.map(function(obj) {
                       if( defaultConfigInfo.releaseName == obj.releaseType && defaultConfigInfo.releaseVersion == obj.templateVersion){
                        option += "<option value='"+obj.releaseType+"/"+obj.templateVersion+"' selected>"+obj.releaseType+"/"+obj.templateVersion+"</option>";
@@ -291,8 +357,6 @@ function deleteHbCfDeploymentDefaultConfigInfo(id, defaultConfigName){
                 });
             }
             $("select#cfDeploymentVersion").html(option);
-            //setInputDisplay(defaultInfo.releaseName+"/"+defaultInfo.releaseVersion);
-            //setDisabledMonitoring(defaultInfo.releaseName+"/"+defaultInfo.releaseVersion);
         },
         error : function(e, status) {
             w2popup.unlock();
@@ -348,7 +412,7 @@ function clearMainPage() {
  * 기능 : resetForm
  *********************************************************/
 function resetForm(status){
-    
+	defaultConfigInfo = [];
     $(".panel-body").find("p").remove();
     $(".panel-body").children().children().children().css("borderColor", "#bbb");
     $("input[name=defaultConfigName]").val("");
@@ -362,12 +426,27 @@ function resetForm(status){
     $("#inceptionOsUserNameConfDiv").hide();
     $("input[name=cfAdminPassword]").val("");
     $("input[name=portalDomain]").val("");
-        var option ="";
-        $("select[name=cfDeploymentVersion]").html("<option value=''> CF Deployment 버전을 선택하세요.</option>");
-        option += "<option value=''> CF Database 유형을 선택하세요.</option>";
-        option += "<option value='mySql'> MySQL </option>";
-        option += "<option value='postgres'> Postgres </option>";
-        $("select[name=cfDbType]").html(option);
+    
+    $("input[name='paastaMonitoring']").attr("checked", false);
+    $("select[name=paastaMonitoringRelease]").html("<option value='' >PaaS-TA 모니터링 릴리즈를 선택하세요.</option>");
+    $("select[name=paastaMonitoringRelease]").attr("disabled", "disabled");
+    
+    $("input[name=metricUrl]").val("");
+    $("input[name=metricUrl]").attr("disabled", "disabled");
+    $("input[name=syslogAddress]").val("");
+    $("input[name=syslogAddress]").attr("disabled", "disabled");
+    $("input[name=syslogPort]").val("");
+    $("input[name=syslogPort]").attr("disabled", "disabled");
+    $("input[name=syslogCustomRule]").val("");
+    $("input[name=syslogCustomRule]").attr("disabled", "disabled");
+    $("input[name=syslogFallbackServers]").val("");
+    $("input[name=syslogFallbackServers]").attr("disabled", "disabled");
+    var option ="";
+    $("select[name=cfDeploymentVersion]").html("<option value=''> CF Deployment 버전을 선택하세요.</option>");
+    option += "<option value=''> CF Database 유형을 선택하세요.</option>";
+    option += "<option value='mySql'> MySQL </option>";
+    option += "<option value='postgres'> Postgres </option>";
+    $("select[name=cfDbType]").html(option);
     if(status=="reset"){
         w2ui['default_Grid'].clear();
         doSearch();
@@ -455,7 +534,49 @@ function resetForm(status){
                     <div class="w2ui-field">
                         <label style="width:40%;text-align: left;padding-left: 20px;">Portal 도메인(Optional)</label>
                         <div>
-                            <input class="form-control" name="portalDomain" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="Portal 도메인 주소를 입력하세요 예)13.25.210.15.xip.io"/>
+                            <input class="form-control" name="portalDomain" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="Portal 도메인 주소를 입력하세요."/>
+                        </div>
+                    </div>
+                    
+                    <div class="w2ui-field">
+                        <label style="width:40%;text-align: left;padding-left: 20px;">PaaS-TA 모니터링
+                        <span class="glyphicon glyphicon glyphicon-question-sign paastaMonitoring-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="click" data-html="true"></span>
+                        </label>
+                        <div style="width: 60%">
+                            <input style="margin-left: 20px;" name="paastaMonitoring" type="checkbox" id="paastaMonitoring" onclick="checkPaasTAMonitoringUseYn(this.value);"/>사용
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Metric URL</label>
+                        <div>
+                            <input class="form-control" name = "metricUrl" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)10.0.15.11:8059"/>
+                        </div>
+                    </div>
+                    
+                    <div class="w2ui-field">
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Syslog Address</label>
+                        <div>
+                            <input class="form-control" name = "syslogAddress" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)10.0.0.0"/>
+                        </div>
+                    </div>
+                    <div class="w2ui-field">
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Syslog Custom Rule</label>
+                        <div>
+                            <input class="form-control" name = "syslogCustomRule" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)if ($msg contains 'DEBUG') then stop"/>
+                        </div>
+                    </div>
+                    
+                    <div class="w2ui-field">
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Syslog Fallback Servers</label>
+                        <div>
+                            <input class="form-control" name = "syslogFallbackServers" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)[]"/>
+                        </div>
+                    </div>
+                    
+                    <div class="w2ui-field">
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Syslog Port</label>
+                        <div>
+                            <input class="form-control" name = "syslogPort" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)2514"/>
                         </div>
                     </div>
                </div>
@@ -516,6 +637,52 @@ $(function() {
                 required: function(){
                     return checkEmpty( $(".w2ui-msg-body input[name='cfAdminPassword']").val() ); 
                 }
+            }, metricUrl : {
+                required: function(){
+                    if( $("#paastaMonitoring:checked").val() == "on"){
+                         return checkEmpty( $("input[name='metricUrl']").val() );
+                    }else{
+                         return false;
+                    }
+               }
+            }, syslogPort : {
+                required: function(){
+                    if( $("#paastaMonitoring:checked").val() == "on"){
+                         return checkEmpty( $("input[name='syslogPort']").val() );
+                    }else{
+                         return false;
+                    }
+               }
+            }, syslogCustomRule : {
+                required: function(){
+                    if( $("#paastaMonitoring:checked").val() == "on"){
+                         return checkEmpty( $("input[name='syslogCustomRule']").val() );
+                    }else{
+                         return false;
+                    }
+               }
+            }, syslogFallbackServers : {
+                required: function(){
+                    if( $("#paastaMonitoring:checked").val() == "on"){
+                         return checkEmpty( $("input[name='syslogFallbackServers']").val() );
+                    }else{
+                         return false;
+                    }
+               }
+            }, syslogAddress : {
+                required: function(){
+                    if( $("#paastaMonitoring:checked").val() == "on"){
+                         return checkEmpty( $("input[name='syslogAddress']").val() );
+                    }else{
+                         return false;
+                    }
+               },ipv4 : function(){
+                    if( $(" #paastaMonitoring:checked").val() == "on"){
+                         return $("input[name='syslogAddress']").val()
+                    }else{
+                         return "0.0.0.0";
+                    }
+               }
             }
         }, messages: {
             defaultConfigName: { 
@@ -534,6 +701,16 @@ $(function() {
                 required: "Inception User Name"+text_required_msg
             }, cfAdminPassword     : {
                 required: "CF Admin Password"+text_required_msg
+            }, metricUrl: {
+                required: "metricUrl"+text_required_msg
+            }, syslogAddress: {
+                required: "syslogAddress"+text_required_msg
+            }, syslogPort: {
+                required: "syslogPort"+text_required_msg
+            }, syslogCustomRule: {
+                required: "syslogCustomRule"+text_required_msg
+            }, syslogFallbackServers: {
+                required: "syslogFallbackServers"+text_required_msg
             }
         }, unhighlight: function(element) {
             setHybridSuccessStyle(element);

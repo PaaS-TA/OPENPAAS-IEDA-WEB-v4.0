@@ -70,7 +70,6 @@ public class HbCfDeploymentDeployAsyncService {
                     message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
         }
         String cloudConfigFile = DEPLOYMENT_DIR + SEPARATOR + deploymentFileName; 
-        String errorMessage = message.getMessage("common.internalServerError.message", null, Locale.KOREA);
         String status = "";
         cfDeploymentService.commonCreateCloudConfig(vo, result);
         try {
@@ -125,6 +124,12 @@ public class HbCfDeploymentDeployAsyncService {
                 postgresDbUse(cmd, result);
             }
             setJobSetting(cmd, vo, result);
+            if("true".equalsIgnoreCase(vo.getHbCfDeploymentDefaultConfigVO().getPaastaMonitoringUse())){
+                if(!"4.0".equalsIgnoreCase(result.getTemplateVersion()) && !"paasta".equalsIgnoreCase(result.getReleaseType())){
+                    HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("PaaS-TA 모니터링은 paasta-4.0에서 사용 가능 합니다."));
+                }
+                settingPaasTaMonitoringInfo(vo, cmd, result);
+            }
             cmd.add("--tty");
             cmd.add("-n");
             cmd.add("--no-redact");
@@ -269,7 +274,7 @@ public class HbCfDeploymentDeployAsyncService {
                 }
                 
                 if(info.contains("Succeeded")){
-                	HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Bosh Runtime Config Succeeded:::"+info));
+                    HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "started", Arrays.asList("Bosh Runtime Config Succeeded:::"+info));
                 }
             }
             if( accumulatedBuffer != null ) {
@@ -395,6 +400,30 @@ public class HbCfDeploymentDeployAsyncService {
             }
         }
     }
+    
+    /****************************************************************
+     * @project : 이종 Paas 플랫폼 설치 자동화
+     * @description : CF-Deploymnt PaaS-TA 4.0 이상 PaaS-TA 모니터링 사용
+     * @title : settingPaasTaMonitoringInfo
+     * @return : void
+    *****************************************************************/
+    private void settingPaasTaMonitoringInfo(HbCfDeploymentVO vo, List<String> cmd, ManifestTemplateVO result) {
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/enable-component-syslog.yml");
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getMinReleaseVersion()+"/common/paasta-monitoring.yml");
+        cmd.add("-v");
+        cmd.add("metric_url="+vo.getHbCfDeploymentDefaultConfigVO().getMetricUrl()+"");
+        cmd.add("-v");
+        cmd.add("syslog_address="+vo.getHbCfDeploymentDefaultConfigVO().getSyslogAddress()+"");
+        cmd.add("-v");
+        cmd.add("syslog_port="+vo.getHbCfDeploymentDefaultConfigVO().getSyslogPort()+"");
+        cmd.add("-v");
+        cmd.add("syslog_custom_rule="+vo.getHbCfDeploymentDefaultConfigVO().getSyslogCustomRule()+"");
+        cmd.add("-v");
+        cmd.add("syslog_fallback_servers="+vo.getHbCfDeploymentDefaultConfigVO().getSyslogFallbackServers()+"");
+    }
+    
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
      * @description : postgres DB 사용 시 옵션 값 추가

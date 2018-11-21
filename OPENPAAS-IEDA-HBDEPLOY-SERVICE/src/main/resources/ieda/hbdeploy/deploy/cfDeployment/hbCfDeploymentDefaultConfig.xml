@@ -15,6 +15,12 @@
         <result property="inceptionOsUserName" column="INCEPTION_OS_USER_NAME"/>
         <result property="cfAdminPassword" column="CF_ADMIN_PASSWORD"/>
         <result property="portalDomain" column="PORTAL_DOMAIN"/>
+        <result property="paastaMonitoringUse" column="PAASTA_MONITORING_USE"/>
+        <result property="metricUrl" column="METRIC_URL"/>
+        <result property="syslogAddress" column="SYSLOG_ADDRESS"/>
+        <result property="syslogPort" column="SYSLOG_PORT"/>
+        <result property="syslogCustomRule" column="SYSLOG_CUSTOM_RULE"/>
+        <result property="syslogFallbackServers" column="SYSLOG_FALLBACK_SERVERS"/>
         <result property="createUserId" column="CREATE_USER_ID"/>
         <result property="createDate" column="CREATE_DATE" />
         <result property="updateUserId" column="UPDATE_USER_ID"/>
@@ -33,6 +39,12 @@
             ,inception_os_user_name as inception_os_user_name
             ,cf_admin_password as cf_admin_password
             ,portal_domain as portal_domain
+            ,paasta_monitoring_use as paasta_monitoring_use
+            ,metric_url as metric_url
+            ,syslog_address as syslog_address
+            ,syslog_port as syslog_port
+            ,syslog_custom_rule as syslog_custom_rule
+            ,syslog_fallback_servers as syslog_fallback_servers
             ,create_user_id as create_user_id
             ,create_date as create_date
             ,update_user_id as update_user_id
@@ -52,6 +64,12 @@
             ,inception_os_user_name
             ,cf_admin_password
             ,portal_domain
+            ,paasta_monitoring_use 
+            ,metric_url
+            ,syslog_address
+            ,syslog_port
+            ,syslog_custom_rule
+            ,syslog_fallback_servers
             ,create_user_id
             ,create_date
             ,update_user_id
@@ -66,6 +84,12 @@
             ,#{default.inceptionOsUserName}
             ,#{default.cfAdminPassword}
             ,#{default.portalDomain}
+            ,#{default.paastaMonitoringUse}
+            ,#{default.metricUrl}
+            ,#{default.syslogAddress}
+            ,#{default.syslogPort}
+            ,#{default.syslogCustomRule}
+            ,#{default.syslogFallbackServers}
             ,#{default.createUserId}
             ,now()
             ,#{default.updateUserId}
@@ -84,6 +108,12 @@
             ,inception_os_user_name = #{default.inceptionOsUserName}
             ,cf_admin_password = #{default.cfAdminPassword}
             ,portal_domain = #{default.portalDomain}
+            ,metric_url = #{default.metricUrl}
+            ,syslog_address = #{default.syslogAddress}
+            ,syslog_port = #{default.syslogPort}
+            ,syslog_custom_rule = #{default.syslogCustomRule}
+            ,syslog_fallback_servers  = #{default.syslogFallbackServers}
+            ,paasta_monitoring_use = #{default.paastaMonitoringUse}
             ,update_user_id = #{default.updateUserId}
             ,update_date = now()
         WHERE id = #{default.id}
@@ -100,6 +130,12 @@
             ,cf_db_type as cf_db_type
             ,inception_os_user_name as inception_os_user_name
             ,cf_admin_password as cf_admin_password
+            ,paasta_monitoring_use as paasta_monitoring_use
+            ,metric_url as metric_url
+            ,syslog_address as syslog_address
+            ,syslog_port as syslog_port
+            ,syslog_custom_rule as syslog_custom_rule
+            ,syslog_fallback_servers as syslog_fallback_servers
             ,portal_domain as portal_domain
             ,create_user_id as create_user_id
             ,create_date as create_date

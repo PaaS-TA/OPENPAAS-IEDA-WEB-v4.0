@@ -94,7 +94,7 @@ public class HbBootstrapDeployAsyncService {
                 
                 if("true".equalsIgnoreCase(bootstrapInfo.getDefaultConfigVo().getPaastaMonitoringUse())){
                     if(!"268.2".equalsIgnoreCase(result.getTemplateVersion())){
-                        HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "error", Arrays.asList("PaaS-TA 모니터링은 paasta-4.0(bosh-release v268.2)에서 사용가능합니다."));
+                        HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "error", Arrays.asList("PaaS-TA 모니터링은 paasta-4.0(bosh-release v268.2)에서 사용 가능 합니다."));
                     }
                     settingPaasTaMonitoringInfo(bootstrapInfo, cmd, result);
                 }
