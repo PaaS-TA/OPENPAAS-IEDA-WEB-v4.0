@@ -71,12 +71,15 @@ public class HbBootstrapDefaultConfigService {
             vo.setSnapshotSchedule(dto.getSnapshotSchedule());
             vo.setUpdateUserId(principal.getName());
             vo.setPaastaMonitoringUse(dto.getPaastaMonitoringUse());
-            vo.setPaastaMonitoringIp(dto.getPaastaMonitoringIp());
-            vo.setInfluxdbIp(dto.getInfluxdbIp());
             vo.setPaastaMonitoringRelease(dto.getPaastaMonitoringRelease());
             vo.setUaaRelease(dto.getUaaRelease());
             vo.setCredhubRelease(dto.getCredhubRelease());
             vo.setOsConfRelease(dto.getOsConfRelease());
+            vo.setSyslogRelease(dto.getSyslogRelease());
+            vo.setSyslogAddress(dto.getSyslogAddress());
+            vo.setSyslogPort(dto.getSyslogPort());
+            vo.setSyslogTransport(dto.getSyslogTransport());
+            vo.setMetricUrl(dto.getMetrscUrl());
         }
         if( StringUtils.isEmpty(dto.getId()) ){
             bootstrapDefaultDao.insertBootstrapDefaultConfigInfo(vo);

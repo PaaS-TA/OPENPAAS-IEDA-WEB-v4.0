@@ -31,6 +31,8 @@ INSERT INTO ieda_common_code VALUES ( '325', 'RELEASE_TYPE', '2000', '릴리즈 
 INSERT INTO ieda_common_code VALUES ( '326', 'BOSH', '2001', 'bosh 릴리즈' , 'bosh 릴리즈', '0', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '327', 'BOSH_CPI', '2002', 'bosh-cpi 릴리즈' , 'bosh-cpi 릴리즈', '1', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '328', 'OS-CONF', '2003', 'of-config 릴리즈' , 'of-config 릴리즈', '10', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
+INSERT INTO ieda_common_code VALUES ( '329', 'SYSLOG', '2004', 'syslog 릴리즈' , 'syslog 릴리즈', '11', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
+INSERT INTO ieda_common_code VALUES ( '330', 'PAASTA-MONITORING', '2005', 'monitoring 릴리즈' , 'monitoring 릴리즈', '10', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '337', 'BPM', '2012', 'bpm 릴리즈' , 'bpm 릴리즈', '12', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '338', 'ETC', '2013', '기타 릴리즈' , '기타 릴리즈', '13', null, null, 2000, 'SYSTEM', now(), 'SYSTEM', now() );
 INSERT INTO ieda_common_code VALUES ( '339', 'ROLE', '100000', '메뉴 별 권한' , '메뉴 별 권한', '0', null, null, null, 'SYSTEM', now(), 'SYSTEM', now() );

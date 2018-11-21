@@ -216,10 +216,8 @@ function lock(msg) {
  * 기능 : setstemcellFilePath
  *********************************************************/
 function setstemcellFilePath(fileInput){
-    console.log(fileInput);
     var file = fileInput.files;
     var files = $('.w2ui-msg-body #stemcellPathFile')[0].files;
-    console.log(files);
     
     $(".w2ui-msg-body input[name='stemcellSize']").val(files[0].size);
     $(".w2ui-msg-body input[name=stemcellPath]").val(files[0].name);
@@ -432,7 +430,6 @@ function setRegistType(value){
      var openstackSelected = w2ui['config_openstackStemcellsGrid'].getSelection();
      if (awsSelected == ""){
          record.push(w2ui['config_openstackStemcellsGrid'].get(openstackSelected));
-         console.log(record);
      }else if (openstackSelected == "") {
          record.push(w2ui['config_awsStemcellsGrid'].get(awsSelected));
      }else{
@@ -488,8 +485,6 @@ function setRegistType(value){
              light            : $(".w2ui-msg-body :checkbox[name='light']").is(':checked'),
              downloadStatus   : ""
      }
-     console.log("stemcellInfo");
-     console.log(stemcellInfo);
      if(stemcellInfo.fileType == "file"){
          if($(".w2ui-msg-body input[name='stemcellSize']").val() == 0){
               w2alert("스템셀 파일을 찾을 수 없습니다. 확인해주세요.", "스템셀 파일 업로드");
@@ -605,15 +600,9 @@ function setRegistType(value){
   **************************************************************/
  var fail_count = 0;
  function stemcellFileDownload(stemcellInfo){
-	 
-	 console.log("stemcellInfo2");
-	 console.log(stemcellInfo);
-	 
-	 
      lock( '다운로드 중입니다.', true);
      var socket = new SockJS("<c:url value='/config/hbstemcell/regist/stemcellDownloading'/>");
      downloadClient = Stomp.over(socket);
-     console.log(downloadClient);
      var status = 0;
      
      var downloadPercentage = 0;
@@ -691,7 +680,6 @@ function setRegistType(value){
          data : JSON.stringify(record),
          success : function(data, status) {
              if( downloadClient != ""){
-                 console.log(downloadClient);
                  downloadClient.disconnect();
                  downloadClient = "";
              }

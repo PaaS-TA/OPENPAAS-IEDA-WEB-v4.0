@@ -133,10 +133,13 @@ $(function(){
  * 기능 : initView
  *********************************************************/
 function initView(){
-     $("input[name='ingestorIp']").attr("disabled", true);
-     $("input[name='influxdbIp']").attr("disabled", true);
+     $("input[name='metricUrl']").attr("disabled", true);
+     $("input[name='syslogAddress']").attr("disabled", true);
+     $("input[name='syslogPort']").attr("disabled", true);
+     $("input[name='syslogTransport']").attr("disabled", true);
+     
      $('[data-toggle="popover"]').popover();
-     $(".paastaMonitoring-info").attr('data-content', "paasta-controller v3.0 이상에서 지원")
+     $(".paastaMonitoring-info").attr('data-content', "paasta  v4.0 이상에서 지원")
      $('input:radio[name=enableSnapshots]:input[value=false]').attr("checked", true);
      enableSnapshotsFn("false");
      checkPaasTAMonitoringUseYn();
@@ -185,25 +188,17 @@ function getLocalBoshList(type){
                     
                 }
                 $("select[name='osConfRelease']").html(options);
-            } else if(type == "uaa"){
-                var options = "<option value=''>UAA 릴리즈를 선택하세요.</option>";
+            
+            } else if(type == "syslog"){
+                var options = "<option value=''>SYSLOG 릴리즈를 선택하세요.</option>";
                 for( var i=0; i<data.length; i++ ){
-                    if( data[i] == boshInfo.uaaRelease ){
+                    if( data[i] == boshInfo.syslogRelease ){
                         options += "<option value='"+data[i]+"' selected >"+data[i]+"</option>";
                     }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
                     
                 }
-                $("select[name='uaaRelease']").html(options);
+                $("select[name='syslogRelease']").html(options);
                 
-            } else if(type == "credhub"){
-                var options = "<option value=''>CREDHUB 릴리즈를 선택하세요.</option>";
-                for( var i=0; i<data.length; i++ ){
-                    if( data[i] == boshInfo.credhubRelease ){
-                        options += "<option value='"+data[i]+"' selected >"+data[i]+"</option>";
-                    }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
-                    
-                }
-                $("select[name='credHubRelease']").html(options);
             }
         },
         error : function( e, status ) {
@@ -270,35 +265,6 @@ function getLocalBoshCpiList(type, iaas){
    });
 }
 
-/******************************************************************
- * 기능 : getLocalPaasTAMonitoringReleaseList
- * 설명 : Paas-TA 모니터링 릴리즈 정보
- ***************************************************************** */
-function getLocalPaasTAMonitoringReleaseList(type){
-    $.ajax({
-        type: "GET",
-        url: "/common/deploy/systemRelease/list/"+type+"/''",
-        contentType: "application/json",
-        async: true,
-        success: function(data, status){
-            if( data.length == 0 ){
-                return;
-            }
-            if(type == 'BOSH_MONITORING_AGENT'){
-                var options = '<option value="">PaaS-TA 모니터링 릴리즈를 선택하세요.</option>';
-                for( var i=0; i<data.length; i++ ){
-                    if( data[i] == boshInfo.paastaMonitoringRelease){
-                        options += "<option value='"+data[i]+"' selected >"+data[i]+"</option>";
-                    }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
-                }
-                $("select[name='paastaMonitoringRelease']").html(options);
-            }
-        },
-        error: function(e, status){
-            w2alert("Bosh 릴리즈 "+search_data_fail_msg, "BOOTSTRAP 설치");
-        }
-    });
- }
 
 /********************************************************
  * 설명 : 디렉터 인증서 목록 조회
@@ -352,19 +318,26 @@ function enableSnapshotsFn(value){
 function checkPaasTAMonitoringUseYn(type){
     var value = $("#paastaMonitoring:checked").val();
     if( value == "on"){
-        $("input[name=ingestorIp]").attr("disabled", false);
-        $("input[name=influxdbIp]").attr("disabled", false);
+        $("input[name='metricUrl']").attr("disabled", false);
+        $("input[name='syslogAddress']").attr("disabled", false);
+        $("input[name='syslogPort']").attr("disabled", false);
+        $("input[name='syslogTransport']").attr("disabled", false);
         $("select[name=paastaMonitoringRelease]").prop("disabled", false);
-        //ETC 릴리즈 정보 가져오기(PaaS-TA Monitoring 릴리즈)
-        getLocalPaasTAMonitoringReleaseList('BOSH_MONITORING_AGENT');
+        $("select[name=syslogRelease]").prop("disabled", false);
+        getLocalPaasTAMonitoringReleaseList('PAASTA-MONITORING');
     }else{
-        $("input[name=ingestorIp]").val("");
-        $("select[name=paastaMonitoringRelease]").val("");
-        $("input[name=ingestorIp]").attr("disabled", true);
+        $("input[name='metricUrl']").attr("disabled", true);
+        $("input[name='syslogAddress']").attr("disabled", true);
+        $("input[name='syslogPort']").attr("disabled", true);
+        $("input[name='syslogTransport']").attr("disabled", true);
         
-        $("input[name=influxdbIp]").attr("disabled", true);
-        $("input[name=influxdbIp]").val("");
+        $("input[name='metricUrl']").val('');
+        $("input[name='syslogAddress']").val('');
+        $("input[name='syslogPort']").val('');
+        $("input[name='syslogTransport']").val('');
+        
         $("select[name=paastaMonitoringRelease]").attr("disabled", true);
+        $("select[name=syslogRelease]").prop("disabled", true);
         $('input:checkbox[id="paastaMonitoring"]').removeAttr('checked');
     }
 }
@@ -383,7 +356,7 @@ function getLocalPaasTAMonitoringReleaseList(type){
             if( data.length == 0 ){
                 return;
             }
-            if(type == 'BOSH_MONITORING_AGENT'){
+            if(type == 'PAASTA-MONITORING'){
                 var options = '<option value="">PaaS-TA 모니터링 릴리즈를 선택하세요.</option>';
                 for( var i=0; i<data.length; i++ ){
                     if( data[i] == boshInfo.paastaMonitoringRelease){
@@ -433,8 +406,8 @@ function getInitBoshReleaseList(iaasType){
     $('[data-toggle="popover"]').popover();
     //BOSH 릴리즈 사용 가능한 버전 가져오기
     getReleaseVersionList();
-    //PaaS-TA 모니터링 릴리즈 정보 가져오기
-    getLocalPaasTAMonitoringReleaseList('BOSH_MONITORING_AGENT');
+    //PaaS-TA 모니터링 릴리즈 정보 가져오기PAASTA-MONITORING
+    
     //BOSH 릴리즈 정보 가져오기
     getLocalBoshList('bosh');
     //BPM 릴리즈 정보 가져오기
@@ -442,9 +415,12 @@ function getInitBoshReleaseList(iaasType){
     //OS Conf 릴리즈 정보 가져오기
     getLocalBoshList('os-conf');
     //UAA 릴리즈 정보 가져오기
-    getLocalBoshList('uaa');
+    //getLocalBoshList('uaa');
     //Credhub 릴리즈 정보 가져오기
-    getLocalBoshList('credhub');
+    //getLocalBoshList('credhub');
+    getLocalPaasTAMonitoringReleaseList('PAASTA-MONITORING');
+    //syslog 릴리즈 정보 가져오기
+    getLocalBoshList('syslog');
     
     
     
@@ -482,14 +458,20 @@ function doButtonStyle() {
 function registBootstrapDefaultConfigInfo(){
     if( $("#paastaMonitoring:checked").val() == "on"){
         var monitoringUse = "true";
-        var ingrestorIp = $("input[name=ingestorIp]").val();
+        var metricUrl = $("input[name=metricUrl]").val();
+        var syslogAddress = $("input[name='syslogAddress']").val();
+        var syslogPort = $("input[name='syslogPort']").val();
+        var syslogTransport = $("input[name='syslogTransport']").val();
         var monitoringRelease = $("select[name=paastaMonitoringRelease]").val();
-        var influxdbIp = $("input[name='influxdbIp']").val();
+        var syslogRelease = $("select[name=syslogRelease]").val();
     }else{
         var monitoringUse = "false";
-        var influxdbIp =  "";
-        var ingrestorIp = "";
+        var metricUrl =  "";
+        var syslogAddress = "";
+        var syslogPort = "";
+        var syslogTransport = "";
         var monitoringRelease = "";
+        var syslogRelease = "";
     }
     boshInfo = {
             iaasType            : $("select[name=iaasType]").val(),
@@ -507,10 +489,13 @@ function registBootstrapDefaultConfigInfo(){
             boshBpmRelease      : $("select[name=boshBpmRelease]").val(),
             enableSnapshots     : $("input:radio[name=enableSnapshots]:checked").val(),
             snapshotSchedule    : $("input[name=snapshotSchedule]").val(),
-            influxdbIp : influxdbIp,
+            metricUrl : metricUrl,
             paastaMonitoringUse : monitoringUse,
-            paastaMonitoringIp  : ingrestorIp,
-            paastaMonitoringRelease : monitoringRelease
+            syslogAddress  : syslogAddress,
+            syslogPort  : syslogPort,
+            syslogTransport  : syslogTransport,
+            paastaMonitoringRelease : monitoringRelease,
+            syslogRelease : syslogRelease
     }
     $.ajax({
         type : "PUT",
@@ -562,14 +547,24 @@ function settingDefaultInfo(){
         if( record.paastaMonitoringUse == "true"){
             
             $("input[name='paastaMonitoring']").attr("checked", true);
-            $("input[name='ingestorIp']").removeAttr("disabled");
-            $("input[name='ingestorIp']").val(record.paastaMonitoringIp);
+            $("input[name='metricUrl']").removeAttr("disabled");
+            $("input[name='metricUrl']").val(record.metricUrl);
             
-            $("input[name='influxdbIp']").removeAttr("disabled");
-            $("input[name='influxdbIp']").val(record.influxdbIp);
+            $("input[name='syslogAddress']").removeAttr("syslogAddress");
+            $("input[name='syslogAddress']").val(record.syslogAddress);
+            
+            $("input[name='syslogPort']").removeAttr("syslogPort");
+            $("input[name='syslogPort']").val(record.syslogPort);
+            
+            $("input[name='syslogTransport']").removeAttr("syslogTransport");
+            $("input[name='syslogTransport']").val(record.syslogTransport);
             
             $("select[name='paastaMonitoringRelease']").removeAttr("disabled");
             $("select[name='paastaMonitoringRelease']").val(record.paastaMonitoringRelease);
+            
+            $("select[name='syslogRelease']").removeAttr("disabled");
+            $("select[name='syslogRelease']").val(record.syslogRelease);
+            
         }else{
             $("input[name='paastaMonitoring']").attr("checked", false);
         }
@@ -643,8 +638,7 @@ function resetForm(status){
     $("input[name=deploymentName]").val("");
     $("input[name=directorName]").val("");
     $("input[name=snapshotSchedule]").val("");
-    $("input[name=ingestorIp]").val("");
-    $("input[name=influxdbIp]").val("");
+
     $("input[name=defaultId]").val("");
     
     $("select[name=iaasType]").val("");
@@ -669,8 +663,17 @@ function resetForm(status){
     $("select[name=paastaMonitoringRelease]").html("<option value='' >PaaS-TA 모니터링 릴리즈를 선택하세요.</option>");
     $("select[name=paastaMonitoringRelease]").attr("disabled", "disabled");
     
-    $("input[name=influxdbIp]").attr("disabled", "disabled");
-    $("input[name=ingestorIp]").attr("disabled", "disabled");
+    $("select[name=syslogRelease]").html("<option value='' >SYSLOG 릴리즈를 선택하세요.</option>");
+    $("select[name=syslogRelease]").attr("disabled", "disabled");
+    
+    $("input[name=metricUrl]").val("");
+    $("input[name=metricUrl]").attr("disabled", "disabled");
+    $("input[name=syslogAddress]").val("");
+    $("input[name=syslogAddress]").attr("disabled", "disabled");
+    $("input[name=syslogPort]").val("");
+    $("input[name=syslogPort]").attr("disabled", "disabled");
+    $("input[name=syslogTransport]").val("");
+    $("input[name=syslogTransport]").attr("disabled", "disabled");
     
     $(".snapshotScheduleDiv").hide();
     
@@ -826,23 +829,47 @@ function resetForm(status){
                         </div>
                     </div>
                     <div class="w2ui-field">
-                        <label style="width:40%;text-align: left;padding-left: 20px;">Ingestor 서버 IP</label>
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Metric URL</label>
                         <div>
-                            <input class="form-control" name = "ingestorIp" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)10.0.0.0"/>
+                            <input class="form-control" name = "metricUrl" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)10.0.15.11:8059"/>
                         </div>
                     </div>
                     
                     <div class="w2ui-field">
-                        <label style="width:40%;text-align: left;padding-left: 20px;">Influxdb 서버 IP</label>
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Syslog Address</label>
                         <div>
-                            <input class="form-control" name = "influxdbIp" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)10.0.0.0"/>
+                            <input class="form-control" name = "syslogAddress" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)10.0.0.0"/>
                         </div>
                     </div>
+                    
+                    <div class="w2ui-field">
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Syslog Port</label>
+                        <div>
+                            <input class="form-control" name = "syslogPort" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)2514"/>
+                        </div>
+                    </div>
+                    
+                    <div class="w2ui-field">
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Syslog Transport</label>
+                        <div>
+                            <input class="form-control" name = "syslogTransport" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)relp"/>
+                        </div>
+                    </div>
+                    
+                    
                     <div class="w2ui-field"> 
                         <label style="width:40%;text-align: left;padding-left: 20px;">모니터링 릴리즈</label>
                         <div>
                             <select name="paastaMonitoringRelease" class="form-control" style="width: 320px; margin-left: 20px;">
                                 <option value="">PaaS-TA 모니터링 릴리즈를 선택하세요.</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="w2ui-field"> 
+                        <label style="width:40%;text-align: left;padding-left: 20px;">SYSLOG 릴리즈</label>
+                        <div>
+                            <select name="syslogRelease" class="form-control" style="width: 320px; margin-left: 20px;">
+                                <option value="">SYSLOG 릴리즈를 선택하세요.</option>
                             </select>
                         </div>
                     </div>
@@ -916,35 +943,45 @@ $(function() {
                         return false;
                     }
                 }
-            }, ingestorIp : {
+            }, syslogAddress : {
                   required: function(){
                       if( $("#paastaMonitoring:checked").val() == "on"){
-                           return checkEmpty( $("input[name='ingestorIp']").val() );
+                           return checkEmpty( $("input[name='syslogAddress']").val() );
                       }else{
                            return false;
                       }
                  },ipv4 : function(){
                       if( $(" #paastaMonitoring:checked").val() == "on"){
-                           return $("input[name='ingestorIp']").val()
+                           return $("input[name='syslogAddress']").val()
                       }else{
                            return "0.0.0.0";
                       }
                  }
-            }, influxdbIp : {
+            }, metricUrl : {
                 required: function(){
                     if( $("#paastaMonitoring:checked").val() == "on"){
-                         return checkEmpty( $("input[name='influxdbIp']").val() );
+                         return checkEmpty( $("input[name='metricUrl']").val() );
                     }else{
                          return false;
                     }
-               },ipv4 : function(){
-                    if( $(" #paastaMonitoring:checked").val() == "on"){
-                         return $("input[name='influxdbIp']").val()
+               }
+            }, syslogPort : {
+                required: function(){
+                    if( $("#paastaMonitoring:checked").val() == "on"){
+                         return checkEmpty( $("input[name='syslogPort']").val() );
                     }else{
-                         return "0.0.0.0";
+                         return false;
                     }
                }
-          }, paastaMonitoringRelease : {
+            }, syslogTransport : {
+                required: function(){
+                    if( $("#paastaMonitoring:checked").val() == "on"){
+                         return checkEmpty( $("input[name='syslogTransport']").val() );
+                    }else{
+                         return false;
+                    }
+               }
+            }, paastaMonitoringRelease : {
                   required: function(){
                       if( $("#paastaMonitoring:checked").val() == "on"){
                            return checkEmpty( $("select[name='paastaMonitoringRelease']").val() );
@@ -952,7 +989,15 @@ $(function() {
                            return false;
                       }
                   }
-          },  iaasType: { 
+          }, syslogRelease : {
+              required: function(){
+                  if( $("#paastaMonitoring:checked").val() == "on"){
+                       return checkEmpty( $("select[name='syslogRelease']").val() );
+                  }else{
+                       return false;
+                  }
+              }
+      },  iaasType: { 
                 required: function(){
                     return checkEmpty( $("select[name='iaasType']").val() );
                 }
@@ -984,10 +1029,16 @@ $(function() {
                 required:  "BOSH BPM 릴리즈"+select_required_msg
             }, snapshotSchedule: { 
                 required:  "스냅샷 스케쥴"+text_required_msg
-            }, ingestorIp: {
-                required: "모니터링 Ip"+text_required_msg
-            }, influxdbIp: {
-                required: "모니터링 Ip"+text_required_msg
+            }, metricUrl: {
+                required: "metricUrl"+text_required_msg
+            }, syslogAddress: {
+                required: "syslogAddress"+text_required_msg
+            }, syslogPort: {
+                required: "syslogPort"+text_required_msg
+            }, syslogTransport: {
+                required: "syslogTransport"+text_required_msg
+            }, syslogRelease: {
+                required: "SYSLOG 릴리즈"+select_required_msg
             }, paastaMonitoringRelease: {
                 required: "모니터링 릴리즈"+select_required_msg
             }, iaasType: {

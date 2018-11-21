@@ -315,10 +315,8 @@ function doSearch(){
  * 기능 : setstemcellFilePath
  *********************************************************/
 function setstemcellFilePath(fileInput){
-	console.log(fileInput);
     var file = fileInput.files;
     var files = $('.w2ui-msg-body #stemcellPathFile')[0].files;
-    console.log(files);
     
     $(".w2ui-msg-body input[name='stemcellSize']").val(files[0].size);
     $(".w2ui-msg-body input[name=stemcellPath]").val(files[0].name);
@@ -547,7 +545,6 @@ function deletePop(record){
         data : JSON.stringify(requestParameter),
         success : function(data, status) {
             if( downloadClient != ""){
-            	console.log(downloadClient);
                 downloadClient.disconnect();
                 downloadClient = "";
             }
