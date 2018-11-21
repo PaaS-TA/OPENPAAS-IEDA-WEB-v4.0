@@ -56,6 +56,9 @@ var defaultLayout = {
                    { field: 'boshCpiRelease', caption: 'BOSH CPI 릴리즈', size:'180px', style:'text-align:center;'},
                    { field: 'boshBpmRelease', caption: 'BOSH BPM 릴리즈', size:'180px', style:'text-align:center;'},
                    { field: 'osConfRelease', caption: 'OS-CONF 릴리즈', size:'180px', style:'text-align:center;'},
+                   { field: 'paastaMonitoringUse', caption: 'PaaS-TA 모니터링 사용', size:'180px', style:'text-align:center;'},
+                   { field: 'paastaMonitoringRelease', caption: 'PaaS-TA 모니터링 릴리즈', size:'180px', style:'text-align:center;'},
+                   { field: 'syslogRelease', caption: 'SYSLOG 릴리즈', size:'180px', style:'text-align:center;'},
 /*                    { field: 'uaaRelease', caption: 'UAA 릴리즈', size:'180px', style:'text-align:center;'},
                    { field: 'credhubRelease', caption: 'CREDHUB 릴리즈', size:'180px', style:'text-align:center;'}, */
                    { field: 'ntp', caption: 'NTP 서버', size:'120px', style:'text-align:center;'}
@@ -157,7 +160,6 @@ function getLocalBoshList(type){
         contentType : "application/json",
         async : true,
         success : function(data, status) {
-        	console.log(data);
             if( data.length == 0 ){
                 return;
             }
@@ -325,6 +327,7 @@ function checkPaasTAMonitoringUseYn(type){
         $("select[name=paastaMonitoringRelease]").prop("disabled", false);
         $("select[name=syslogRelease]").prop("disabled", false);
         getLocalPaasTAMonitoringReleaseList('PAASTA-MONITORING');
+        getLocalBoshList('syslog');
     }else{
         $("input[name='metricUrl']").attr("disabled", true);
         $("input[name='syslogAddress']").attr("disabled", true);
@@ -434,9 +437,7 @@ function getInitBoshReleaseList(iaasType){
 function doSearch() {
     boshInfo="";//인프라 환경 설정 정ㅈ보
     iaas = "";
-    
     resetForm();
-    
     w2ui['default_GroupGrid'].clear();
     //w2ui['regPopupDiv'].clear();
     w2ui['default_GroupGrid'].load('/deploy/hbBootstrap/default/list');
@@ -550,13 +551,13 @@ function settingDefaultInfo(){
             $("input[name='metricUrl']").removeAttr("disabled");
             $("input[name='metricUrl']").val(record.metricUrl);
             
-            $("input[name='syslogAddress']").removeAttr("syslogAddress");
+            $("input[name='syslogAddress']").removeAttr("disabled");
             $("input[name='syslogAddress']").val(record.syslogAddress);
             
-            $("input[name='syslogPort']").removeAttr("syslogPort");
+            $("input[name='syslogPort']").removeAttr("disabled");
             $("input[name='syslogPort']").val(record.syslogPort);
             
-            $("input[name='syslogTransport']").removeAttr("syslogTransport");
+            $("input[name='syslogTransport']").removeAttr("disabled");
             $("input[name='syslogTransport']").val(record.syslogTransport);
             
             $("select[name='paastaMonitoringRelease']").removeAttr("disabled");

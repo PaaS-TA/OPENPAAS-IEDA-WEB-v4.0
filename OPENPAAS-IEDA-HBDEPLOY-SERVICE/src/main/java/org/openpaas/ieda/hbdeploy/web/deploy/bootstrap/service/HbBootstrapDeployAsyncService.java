@@ -90,9 +90,14 @@ public class HbBootstrapDeployAsyncService {
                 
                 settingBoshInfo(bootstrapInfo, cmd);
                 settingIaasCpiInfo(bootstrapInfo, cmd, result);
-                //settingUaaInfo(bootstrapInfo, cmd, result);
-                //settingCredhubInfo(bootstrapInfo, cmd, result);
                 settingJumpBoxInfo(bootstrapInfo, cmd, result);
+                
+                if("true".equalsIgnoreCase(bootstrapInfo.getDefaultConfigVo().getPaastaMonitoringUse())){
+                    if(!"268.2".equalsIgnoreCase(result.getTemplateVersion())){
+                        HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "error", Arrays.asList("PaaS-TA 모니터링은 paasta-4.0(bosh-release v268.2)에서 사용가능합니다."));
+                    }
+                    settingPaasTaMonitoringInfo(bootstrapInfo, cmd, result);
+                }
                 
                 if(!StringUtils.isEmpty(bootstrapInfo.getNetworkConfigVo().getPublicStaticIp()) && bootstrapInfo.getNetworkConfigVo().getPublicStaticIp() != null){
                     settingPublicIpInfo(bootstrapInfo, cmd, result);
@@ -169,7 +174,7 @@ public class HbBootstrapDeployAsyncService {
                 bootstrapInfo.setDeployStatus( deployStatus );
             }
             saveDeployStatus(bootstrapInfo, principal);
-        }catch ( Exception e) {    
+        }catch ( Exception e) {
             status = "error";
             e.printStackTrace();
             HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "error", Arrays.asList("배포 중 Exception이 발생하였습니다."));
@@ -203,6 +208,25 @@ public class HbBootstrapDeployAsyncService {
         }
     }
     
+    private void settingPaasTaMonitoringInfo(HbBootstrapVO vo, List<String> cmd, ManifestTemplateVO result) {
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + "paasta-monitoring-agent.yml");
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + "syslog.yml");
+        cmd.add("-v");
+        cmd.add("paastaMoniteringRelease="+ RELEASE_DIR + SEPARATOR + vo.getDefaultConfigVo().getPaastaMonitoringRelease()+ "");
+        cmd.add("-v");
+        cmd.add("syslogRelease="+ RELEASE_DIR + SEPARATOR + vo.getDefaultConfigVo().getSyslogRelease()+ "");
+        cmd.add("-v");
+        cmd.add("metric_url="+ vo.getDefaultConfigVo().getMetricUrl()+ "");
+        cmd.add("-v");
+        cmd.add("syslog_address="+ vo.getDefaultConfigVo().getSyslogAddress()+ "");
+        cmd.add("-v");
+        cmd.add("syslog_port="+ vo.getDefaultConfigVo().getSyslogPort()+ "");
+        cmd.add("-v");
+        cmd.add("syslog_transport="+ vo.getDefaultConfigVo().getSyslogTransport()+ "");
+    }
+
     /****************************************************************
      * @project : 이종 Paas 플랫폼 설치 자동화
      * @description : BOSH Release 관련 CMD 정의

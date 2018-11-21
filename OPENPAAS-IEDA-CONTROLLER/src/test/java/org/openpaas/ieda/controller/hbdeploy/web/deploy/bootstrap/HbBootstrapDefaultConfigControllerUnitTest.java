@@ -95,11 +95,9 @@ public class HbBootstrapDefaultConfigControllerUnitTest extends BaseControllerUn
         .andExpect(jsonPath("$.records[0].directorName").value(expectList.get(0).getDirectorName()))
         .andExpect(jsonPath("$.records[0].enableSnapshots").value(expectList.get(0).getEnableSnapshots()))
         .andExpect(jsonPath("$.records[0].iaasType").value(expectList.get(0).getIaasType()))
-        .andExpect(jsonPath("$.records[0].influxdbIp").value(expectList.get(0).getInfluxdbIp()))
         .andExpect(jsonPath("$.records[0].snapshotSchedule").value(expectList.get(0).getSnapshotSchedule()))
         .andExpect(jsonPath("$.records[0].paastaMonitoringUse").value(expectList.get(0).getPaastaMonitoringUse()))
         .andExpect(jsonPath("$.records[0].paastaMonitoringRelease").value(expectList.get(0).getPaastaMonitoringRelease()))
-        .andExpect(jsonPath("$.records[0].paastaMonitoringIp").value(expectList.get(0).getPaastaMonitoringIp()))
         .andExpect(jsonPath("$.records[0].ntp").value(expectList.get(0).getNtp()))
         .andExpect(jsonPath("$.records[0].createUserId").value(expectList.get(0).getCreateUserId()))
         .andExpect(jsonPath("$.records[0].updateUserId").value(expectList.get(0).getUpdateUserId()));
@@ -151,9 +149,7 @@ public class HbBootstrapDefaultConfigControllerUnitTest extends BaseControllerUn
         dto.setBoshRelease("bosh-relesae");
         dto.setEnableSnapshots("true");
         dto.setSnapshotSchedule("snapshot");
-        dto.setPaastaMonitoringIp("10.0.0.1");
         dto.setPaastaMonitoringUse("true");
-        dto.setInfluxdbIp("10.0.0.1");
         dto.setPaastaMonitoringRelease("monitering-release");
         dto.setDefaultConfigName("defaultConfigName");
         
@@ -167,9 +163,7 @@ public class HbBootstrapDefaultConfigControllerUnitTest extends BaseControllerUn
         dto.getBoshRelease();
         dto.getEnableSnapshots();
         dto.getSnapshotSchedule();
-        dto.getPaastaMonitoringIp();
         dto.getPaastaMonitoringUse();
-        dto.getInfluxdbIp();
         dto.getPaastaMonitoringRelease();
         dto.getDefaultConfigName();
         return dto;
@@ -197,8 +191,6 @@ public class HbBootstrapDefaultConfigControllerUnitTest extends BaseControllerUn
         vo.setSnapshotSchedule("007***UFC");
         vo.setUpdateUserId("admin");
         vo.setPaastaMonitoringUse("true");
-        vo.setPaastaMonitoringIp("10.0.0.1");
-        vo.setInfluxdbIp("10.0.0.1");
         vo.setPaastaMonitoringRelease("monitering-release");
         
         vo.getIaasType();
@@ -214,8 +206,6 @@ public class HbBootstrapDefaultConfigControllerUnitTest extends BaseControllerUn
         vo.getSnapshotSchedule();
         vo.getUpdateUserId();
         vo.getPaastaMonitoringUse();
-        vo.getPaastaMonitoringIp();
-        vo.getInfluxdbIp();
         vo.getPaastaMonitoringRelease();
         list.add(vo);
         return list;

@@ -22,11 +22,11 @@ public class HbBootstrapDefaultConfigVO {
     private String ntp; // NTP
     private String paastaMonitoringUse; //PaaS-TA 모니터링 사용 유무
     private String paastaMonitoringRelease; //PaaS-TA 모니터링 사용시 릴리즈
-    private String metricUrl;
+    private String syslogRelease;
     private String syslogAddress;
     private String syslogPort;
     private String syslogTransport;
-    private String syslogRelease;
+    private String metricUrl;
     
     
     private String createUserId;//등록자 아이디

@@ -37,18 +37,19 @@
         <result property="credentialKeyName" column="credential_key_name"/>
         <result property="boshRelease" column="boshRelease"/>
         <result property="boshCpiRelease" column="bosh_cpi_release"/>
-        
         <result property="boshBpmRelease" column="bosh_bpm_release"/>
         <result property="uaaRelease" column="uaa_release"/>
         <result property="osConfRelease" column="os_conf_release"/>
         <result property="credhubRelease" column="cred_hub_release"/>
-        
         <result property="snapshotSchedule" column="snapshot_schedule"/>
         <result property="enableSnapshots" column="enable_snapshots"/>
         <result property="ntp" column="ntp"/>
         <result property="paastaMonitoringUse" column="paasta_monitoring_use"/>
-        <result property="paastaMonitoringIp" column="paasta_monitoring_ip"/>
-        <result property="influxdbIp" column="influxdb_ip"/>
+        <result property="syslogRelease" column="syslog_release"/>
+        <result property="syslogAddress" column="syslog_address"/>
+        <result property="syslogPort" column="syslog_port"/>
+        <result property="syslogTransport" column="syslog_transport"/>
+        <result property="metricUrl" column="metric_url"/>
         <result property="paastaMonitoringRelease" column="paasta_monitoring_release"/>
     </collection>
     <collection property="iaasConfig"  ofType="org.openpaas.ieda.deploy.web.information.iassConfig.dao.IaasConfigMgntVO" javaType="String" >
@@ -112,8 +113,11 @@
         ,defaultInfo.enable_snapshots
         ,defaultInfo.snapshot_schedule
         ,defaultInfo.paasta_monitoring_use
-        ,defaultInfo.paasta_monitoring_ip
-        ,defaultInfo.influxdb_ip
+        ,defaultInfo.syslog_release
+        ,defaultInfo.syslog_address
+        ,defaultInfo.syslog_port
+        ,defaultInfo.syslog_transport
+        ,defaultInfo.metric_url
         ,defaultInfo.paasta_monitoring_release
         ,config.iaas_config_alias as iaas_config_alias
         ,config.id as iaas_config_id
@@ -193,8 +197,11 @@
         ,defaultInfo.enable_snapshots
         ,defaultInfo.snapshot_schedule
         ,defaultInfo.paasta_monitoring_use
-        ,defaultInfo.paasta_monitoring_ip
-        ,defaultInfo.influxdb_ip
+        ,defaultInfo.syslog_release
+        ,defaultInfo.syslog_address
+        ,defaultInfo.syslog_port
+        ,defaultInfo.syslog_transport
+        ,defaultInfo.metric_url
         ,defaultInfo.paasta_monitoring_release
         ,config.iaas_config_alias as iaas_config_alias
         ,config.id as iaas_config_id
