@@ -99,7 +99,7 @@ public class BootstrapDeployAsyncService {
                     settingPublicIpInfo(cmd, bootstrapInfo, result);
                 }
                 
-                if(bootstrapInfo.getPaastaMonitoringUse().equals("on")){
+                if(bootstrapInfo.getPaastaMonitoringUse().equals("true")){
                     settingPaastaMonitoring(cmd, bootstrapInfo, result);
                 }
                 

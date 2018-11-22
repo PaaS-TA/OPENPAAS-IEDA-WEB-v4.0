@@ -28,6 +28,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class BootstrapDeleteDeployAsyncService{
@@ -84,7 +85,7 @@ public class BootstrapDeleteDeployAsyncService{
                     status = "error";
                     DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList("BOOTSTRAP 디렉터 인증서가 존재 하지 않습니다."));
                 }
-                String deployFile = DEPLOYMENT_DIR + vo.getDeploymentFile();
+                String deployFile = MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getTemplateVersion()  + SEPARATOR  + "common" + SEPARATOR  + result.getCommonBaseTemplate();
                 File file = new File(deployFile);
                 if( file.exists() ){
                     List<String> cmd = new ArrayList<String>();
@@ -99,6 +100,14 @@ public class BootstrapDeleteDeployAsyncService{
                     //settingUaaInfo(cmd, bootstrapInfo, result);
                     //settingCredhubInfo(cmd, bootstrapInfo, result);
                     settingJumpBoxInfo(cmd, vo, result);
+                    
+                    if(!StringUtils.isEmpty(vo.getPublicStaticIp()) && vo.getPublicStaticIp() != null){
+                        settingPublicIpInfo(cmd, vo, result);
+                    }
+                    
+                    if(vo.getPaastaMonitoringUse().equals("true")){
+                        settingPaastaMonitoring(cmd, vo, result);
+                    }
                     
                     cmd.add("--tty");
                     
@@ -274,6 +283,27 @@ public class BootstrapDeleteDeployAsyncService{
         cmd.add("-v");
         cmd.add("private_key=" + PRIVATE_KEY_PATH + vo.getIaasConfig().getCommonKeypairPath());
         
+    }
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : 모니터링 CMD 정의
+     * @title : settingPaastaMonitoring
+     * @return : void
+    *****************************************************************/
+    private void settingPaastaMonitoring(List<String> cmd, BootstrapVO vo, ManifestTemplateVO result){
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + "syslog.yml");
+        cmd.add("-o");
+        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + "paasta-monitoring-agent.yml");
+        cmd.add("-v");
+        cmd.add("metric_url="+ RELEASE_DIR + SEPARATOR + "");
+        cmd.add("-v");
+        cmd.add("syslog_address="+ RELEASE_DIR + SEPARATOR +  "");
+        cmd.add("-v");
+        cmd.add("syslog_port="+ RELEASE_DIR + SEPARATOR +  "");
+        cmd.add("-v");
+        cmd.add("syslog_transport="+ RELEASE_DIR + SEPARATOR + "");
     }
     
     /****************************************************************

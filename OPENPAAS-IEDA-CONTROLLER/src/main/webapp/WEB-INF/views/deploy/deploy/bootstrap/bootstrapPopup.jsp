@@ -608,7 +608,9 @@ function checkBoshVersion(selected){
         if(versionInfo >= 268.2){
             $(".w2ui-msg-body input:checkbox[name=paastaMonitoring]").removeAttr("disabled");
         }else{
-        	$(".w2ui-msg-body input:checkbox[name=paastaMonitoring]").attr("disabled", true);
+            $(".w2ui-msg-body input:checkbox[name=paastaMonitoring]").attr("checked", false);
+            $(".w2ui-msg-body input:checkbox[name=paastaMonitoring]").attr("disabled", true);
+            checkPaasTAMonitoringUseYn();
         }
     }
 }
