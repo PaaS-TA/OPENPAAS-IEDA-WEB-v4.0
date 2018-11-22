@@ -348,6 +348,9 @@ function setDisabledMonitoring(val){
             $('.w2ui-msg-body #paastaMonitoring').attr('disabled',false);
         }else{
             $('.w2ui-msg-body #paastaMonitoring').attr('disabled',true);
+            $('.w2ui-msg-body #paastaMonitoring').attr("checked", false);
+            
+            checkPaasTAMonitoringUseYn();
         }
     }
 }

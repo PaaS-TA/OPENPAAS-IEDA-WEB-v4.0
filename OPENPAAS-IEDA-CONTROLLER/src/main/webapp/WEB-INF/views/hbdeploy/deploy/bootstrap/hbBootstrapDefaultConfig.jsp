@@ -158,6 +158,8 @@ function settingMonitoringView(value){
         $("#paastaMonitoring").attr("disabled", false);
     } else {
         $("#paastaMonitoring").attr("disabled", true);
+        $('#paastaMonitoring').attr("checked", false);
+        checkPaasTAMonitoringUseYn();
     }
 }
 

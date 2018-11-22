@@ -381,6 +381,9 @@ function deleteHbCfDeploymentDefaultConfigInfo(id, defaultConfigName){
               $("#inceptionOsUserNameConfDiv").hide();
               $("input[name=inceptionOsUserName]").val("");
               $("#paastaMonitoring").attr("disabled", true);
+              $('#paastaMonitoring').attr("checked", false);
+              checkPaasTAMonitoringUseYn();
+              
           }
       }
      
