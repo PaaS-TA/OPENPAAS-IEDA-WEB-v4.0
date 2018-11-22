@@ -54,6 +54,7 @@ function getBootstrapData(record){
         success : function(data, status) {
             initSetting();
             setBootstrapData(data);
+            console.log(data);
         },
         error : function(request, status, error) {
             var errorResult = JSON.parse(request.responseText);
@@ -367,6 +368,7 @@ function saveIaasConfigInfo(){
         iaasType     : iaas,
         iaasConfigId : $(".w2ui-msg-body select[name=iaasConfigId]").val()
     }
+     console.log(iaasConfigInfo);
     $.ajax({
         type : "PUT",
         url : "/deploy/bootstrap/install/setIaasConfigInfo",

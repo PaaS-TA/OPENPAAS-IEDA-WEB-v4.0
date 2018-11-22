@@ -73,9 +73,9 @@
     client_secret: ((client_secret))
     resource_group_name: ((resource_group_name))
     storage_account_name: ((storage_account_name))
-    default_security_group: ((default_security_group))
+    default_security_group: ((default_security_groups))
     ssh_user: vcap
-    ssh_public_key: ((ssh.public_key))
+    ssh_public_key: ((public_key))
 
 - type: replace
   path: /cloud_provider/ssh_tunnel?
@@ -83,7 +83,7 @@
     host: ((internal_ip))
     port: 22
     user: vcap
-    private_key: ((ssh.private_key))
+    private_key: ((private_key))
 
 - type: replace
   path: /cloud_provider/properties/azure?

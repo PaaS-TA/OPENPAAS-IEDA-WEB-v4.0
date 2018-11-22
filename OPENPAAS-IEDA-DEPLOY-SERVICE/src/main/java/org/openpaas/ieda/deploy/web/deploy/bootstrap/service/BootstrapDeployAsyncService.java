@@ -49,6 +49,7 @@ public class BootstrapDeployAsyncService {
     final private static String STEMCELL_DIR = LocalDirectoryConfiguration.getStemcellDir();
     final private static String MANIFEST_TEMPLATE_PATH = LocalDirectoryConfiguration.getManifastTemplateDir() + SEPARATOR +"bootstrap";
     final private static String PRIVATE_KEY_PATH = LocalDirectoryConfiguration.getSshDir()+SEPARATOR;
+    final private static String JSON_KEY_DIR = LocalDirectoryConfiguration.getKeyDir()+SEPARATOR;
     private final static Logger LOGGER = LoggerFactory.getLogger(BootstrapDeployAsyncService.class);
     
     
@@ -242,8 +243,6 @@ public class BootstrapDeployAsyncService {
     private void settingPublicIpInfo(List<String> cmd, BootstrapVO vo, ManifestTemplateVO result){
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + result.getInputTemplateSecond());
-        cmd.add("-o");
-        cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/"  + result.getInputTemplateThird());
         cmd.add("-v");
         cmd.add("external_ip="+ vo.getPublicStaticIp() + "");
     }
@@ -307,7 +306,7 @@ public class BootstrapDeployAsyncService {
             cmd.add("access_key_id=" + vo.getIaasAccount().get("commonAccessUser").toString());
             cmd.add("-v");
             cmd.add("secret_access_key=" + vo.getIaasAccount().get("commonAccessSecret").toString());
-        }else {
+        }else if("openstack".equalsIgnoreCase(vo.getIaasType())){
             cmd.add("-v");
             cmd.add("net_id=" + vo.getSubnetId());
             cmd.add("-v");
@@ -329,6 +328,63 @@ public class BootstrapDeployAsyncService {
                 cmd.add("-v");
                 cmd.add("openstack_tenant=" + vo.getIaasAccount().get("commonTenant").toString());
             }
+        }else if("azure".equalsIgnoreCase(vo.getIaasType())){
+            cmd.add("-v");
+            cmd.add("vnet_name=" + vo.getNetworkName());
+            cmd.add("-v");
+            cmd.add("subnet_name=" + vo.getSubnetId());
+            cmd.add("-v");
+            cmd.add("subscription_id=" + vo.getIaasAccount().get("azureSubscriptionId").toString());
+            cmd.add("-v");
+            cmd.add("tenant_id=" + vo.getIaasAccount().get("commonTenant").toString());
+            cmd.add("-v");
+            cmd.add("client_id=" + vo.getIaasAccount().get("commonAccessUser").toString());
+            cmd.add("-v");
+            cmd.add("client_secret=" + vo.getIaasAccount().get("commonAccessSecret").toString());
+            cmd.add("-v");
+            cmd.add("resource_group_name=" + vo.getIaasConfig().getAzureResourceGroup());
+            cmd.add("-v");
+            cmd.add("storage_account_name=" + vo.getIaasConfig().getAzureStorageAccountName());
+            cmd.add("-v");
+            cmd.add("public_key=" + vo.getIaasConfig().getAzureSshPublicKey());
+        }else if("google".equalsIgnoreCase(vo.getIaasType())){
+            cmd.add("-v");
+            cmd.add("network=" + vo.getNetworkName());
+            cmd.add("-v");
+            cmd.add("subnetwork=" + vo.getSubnetId());
+            cmd.add("-v");
+            cmd.add("tags=" + vo.getIaasConfig().getCommonSecurityGroup());
+            cmd.add("-v");
+            cmd.add("project_id=" + vo.getIaasAccount().get("commonProject").toString());
+            cmd.add("-v");
+            cmd.add("zone=" + vo.getIaasConfig().getCommonAvailabilityZone());
+            cmd.add("--var-file");
+            cmd.add("gcp_credentials_json=" + JSON_KEY_DIR + vo.getIaasAccount().get("googleJsonKey").toString());
+        }else if("vsphere".equalsIgnoreCase(vo.getIaasType())){
+            cmd.add("-o");
+            cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + vo.getIaasType().toLowerCase() + SEPARATOR  + result.getOptionResourceTemplate());
+            cmd.add("-v");
+            cmd.add("network_name=" + vo.getNetworkName());
+            cmd.add("-v");
+            cmd.add("vcenter_dc=" + vo.getIaasConfig().getVsphereVcentDataCenterName());
+            cmd.add("-v");
+            cmd.add("vcenter_ds=" + vo.getIaasConfig().getVsphereVcenterDatastore());
+            cmd.add("-v");
+            cmd.add("vcenter_ip=" + vo.getIaasConfig());//
+            cmd.add("-v");
+            cmd.add("vcenter_user=" + vo.getIaasAccount().get("commonAccessUser").toString());//
+            cmd.add("-v");
+            cmd.add("vcenter_password=" + vo.getIaasAccount().get("commonAccessSecret").toString());//
+            cmd.add("-v");
+            cmd.add("vcenter_templates=" + vo.getIaasConfig().getVsphereVcenterTemplateFolder());
+            cmd.add("-v");
+            cmd.add("vcenter_vms=" + vo.getIaasConfig().getVsphereVcenterVmFolder());
+            cmd.add("-v");
+            cmd.add("vcenter_disks=" + vo.getIaasConfig().getVsphereVcenterDiskPath());
+            cmd.add("-v");
+            cmd.add("vcenter_cluster=" + vo.getIaasConfig().getVsphereVcenterCluster());
+            cmd.add("-v");
+            cmd.add("vcenter_rp=" + vo.getIaasConfig());//
         }
         cmd.add("-v");
         cmd.add("boshCpiRelease=" + RELEASE_DIR + SEPARATOR + vo.getBoshCpiRelease() + "");
