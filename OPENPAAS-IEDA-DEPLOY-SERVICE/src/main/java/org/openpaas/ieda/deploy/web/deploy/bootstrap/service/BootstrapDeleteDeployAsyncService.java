@@ -299,8 +299,8 @@ public class BootstrapDeleteDeployAsyncService{
             cmd.add("--var-file");
             cmd.add("gcp_credentials_json=" + JSON_KEY_DIR + vo.getIaasAccount().get("googleJsonKey").toString());
         }else if("vsphere".equalsIgnoreCase(vo.getIaasType())){
-            cmd.add("-o");
-            cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + vo.getIaasType().toLowerCase() + SEPARATOR  + result.getOptionResourceTemplate());
+//            cmd.add("-o");
+//            cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + vo.getIaasType().toLowerCase() + SEPARATOR  + result.getOptionResourceTemplate());
             cmd.add("-v");
             cmd.add("network_name=" + vo.getNetworkName());
             cmd.add("-v");
@@ -308,7 +308,7 @@ public class BootstrapDeleteDeployAsyncService{
             cmd.add("-v");
             cmd.add("vcenter_ds=" + vo.getIaasConfig().getVsphereVcenterDatastore());
             cmd.add("-v");
-            cmd.add("vcenter_ip=" + vo.getIaasConfig());//
+            cmd.add("vcenter_ip=" + vo.getIaasAccount().get("commonAccessEndpoint").toString());//
             cmd.add("-v");
             cmd.add("vcenter_user=" + vo.getIaasAccount().get("commonAccessUser").toString());//
             cmd.add("-v");
@@ -321,8 +321,14 @@ public class BootstrapDeleteDeployAsyncService{
             cmd.add("vcenter_disks=" + vo.getIaasConfig().getVsphereVcenterDiskPath());
             cmd.add("-v");
             cmd.add("vcenter_cluster=" + vo.getIaasConfig().getVsphereVcenterCluster());
+//            cmd.add("-v");
+//            cmd.add("vcenter_rp=" + vo.getIaasConfig());//
             cmd.add("-v");
-            cmd.add("vcenter_rp=" + vo.getIaasConfig());//
+            cmd.add("resourcePoolCPU=" + vo.getResourcePoolCpu());
+            cmd.add("-v");
+            cmd.add("resourcePoolRAM=" + vo.getResourcePoolRam());
+            cmd.add("-v");
+            cmd.add("resourcePoolDisk=" + vo.getResourcePoolDisk());
         }
         cmd.add("-v");
         cmd.add("boshCpiRelease=" + RELEASE_DIR + SEPARATOR + vo.getBoshCpiRelease() + "");
