@@ -198,6 +198,7 @@
             ,inception_os_user_name
             ,enable_windows_stemcell
             ,cf_admin_password
+            ,portal_domain
             ,windows_stemcell_name
             ,windows_stemcell_version
             ,enable_windows_stemcell
