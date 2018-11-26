@@ -231,7 +231,7 @@ public class BootstrapDeleteDeployAsyncService{
      * @return : void
     *****************************************************************/
     private void settingIaasCpiInfo(List<String> cmd, BootstrapVO vo, ManifestTemplateVO result){
-        cmd.add("-o");
+    	cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + vo.getIaasType().toLowerCase() + SEPARATOR + result.getIaasPropertyTemplate());
         if("aws".equalsIgnoreCase(vo.getIaasType())){
             cmd.add("-v");
@@ -299,8 +299,8 @@ public class BootstrapDeleteDeployAsyncService{
             cmd.add("--var-file");
             cmd.add("gcp_credentials_json=" + JSON_KEY_DIR + vo.getIaasAccount().get("googleJsonKey").toString());
         }else if("vsphere".equalsIgnoreCase(vo.getIaasType())){
-//            cmd.add("-o");
-//            cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + vo.getIaasType().toLowerCase() + SEPARATOR  + result.getOptionResourceTemplate());
+//          cmd.add("-o");
+//          cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + vo.getIaasType().toLowerCase() + SEPARATOR  + result.getOptionResourceTemplate());
             cmd.add("-v");
             cmd.add("network_name=" + vo.getNetworkName());
             cmd.add("-v");
@@ -321,8 +321,8 @@ public class BootstrapDeleteDeployAsyncService{
             cmd.add("vcenter_disks=" + vo.getIaasConfig().getVsphereVcenterDiskPath());
             cmd.add("-v");
             cmd.add("vcenter_cluster=" + vo.getIaasConfig().getVsphereVcenterCluster());
-//            cmd.add("-v");
-//            cmd.add("vcenter_rp=" + vo.getIaasConfig());//
+//          cmd.add("-v");
+//          cmd.add("vcenter_rp=" + vo.getIaasConfig());//
             cmd.add("-v");
             cmd.add("resourcePoolCPU=" + vo.getResourcePoolCpu());
             cmd.add("-v");
@@ -334,8 +334,10 @@ public class BootstrapDeleteDeployAsyncService{
         cmd.add("boshCpiRelease=" + RELEASE_DIR + SEPARATOR + vo.getBoshCpiRelease() + "");
         cmd.add("-v");
         cmd.add("stemcell=" + STEMCELL_DIR + SEPARATOR + vo.getStemcell() + "");
-        cmd.add("-v");
-        cmd.add("cloudInstanceType=" + vo.getCloudInstanceType());
+        if(!(vo.getCloudInstanceType().equals("") || vo.getCloudInstanceType() == null)){
+            cmd.add("-v");
+            cmd.add("cloudInstanceType=" + vo.getCloudInstanceType());
+        }
         cmd.add("-v");
         cmd.add("internal_ip=" + vo.getPrivateStaticIp());
         cmd.add("-v");
