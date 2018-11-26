@@ -1614,6 +1614,8 @@ variables:
   type: password
 - name: uaa_default_encryption_passphrase
   type: password
+- name: jumpbox_ssh
+  type: ssh
 - name: silk_ca
   type: certificate
   options:
@@ -2008,7 +2010,7 @@ variables:
     alternative_names:
     - credhub.service.cf.internal
     - credhub.((system_domain))
-
+  
 releases:
 - name: binary-buildpack
   url: https://bosh.io/d/github.com/cloudfoundry/binary-buildpack-release?v=1.0.27

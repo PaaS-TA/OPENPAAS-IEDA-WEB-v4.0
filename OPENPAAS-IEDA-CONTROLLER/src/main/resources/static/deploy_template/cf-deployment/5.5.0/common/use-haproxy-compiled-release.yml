@@ -35,3 +35,23 @@
       - ((haproxy_private_ip))
     stemcell: default
     vm_type: minimal
+- type: replace
+  path: /variables/-
+  value:
+    name: haproxy_ca
+    options:
+      common_name: haproxyCA
+      is_ca: true
+    type: certificate
+- type: replace
+  path: /variables/-
+  value:
+    name: haproxy_ssl
+    options:
+      alternative_names:
+      - ((system_domain))
+      - '*.((system_domain))'
+      ca: haproxy_ca
+      common_name: haproxySSL
+      duration: 3650
+    type: certificate

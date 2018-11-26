@@ -10,9 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import org.hsqldb.lib.StringUtil;
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
-import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.deploy.api.director.dto.DirectorInfoDTO;
 import org.openpaas.ieda.deploy.api.director.utility.DirectorRestHelper;
 import org.openpaas.ieda.deploy.web.common.dao.CommonDeployDAO;
@@ -25,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
