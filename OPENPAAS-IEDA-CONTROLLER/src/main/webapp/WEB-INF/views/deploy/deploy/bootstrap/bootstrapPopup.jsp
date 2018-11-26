@@ -404,8 +404,15 @@ function defaultInfoPop(iaas){
         buttons : $("#DefaultInfoButtonDiv").html(),
         onOpen:function(event){
             event.onComplete = function(){
+                $(".w2ui-msg-body input[name='paastaMonitoring']").attr("checked", false);
+                $(".w2ui-msg-body select[name=paastaMonitoringAgentRelease]").attr("disabled", true);
+                $(".w2ui-msg-body select[name=paastaMonitoringSyslogRelease]").attr("disabled", true);
+                $(".w2ui-msg-body input[name='metricUrl']").attr("disabled", true);
+                $(".w2ui-msg-body input[name='syslogAddress']").attr("disabled", true);
+                $(".w2ui-msg-body input[name='syslogPort']").attr("disabled", true);
+                $(".w2ui-msg-body input[name='syslogTransport']").attr("disabled", true);
                 $('[data-toggle="popover"]').popover();
-                $(".paastaMonitoring-info").attr('data-content', "paasta v4.0 이상에서 지원")
+                $(".paastaMonitoring-info").attr('data-content', "paasta v4.0 이상에서 지원");
                 if( !checkEmpty(boshInfo) && boshInfo != "" ){
                     $(".w2ui-msg-body input[name='deploymentName']").val(boshInfo.deploymentName);
                     $(".w2ui-msg-body input[name='directorName']").val(boshInfo.directorName);
@@ -421,6 +428,7 @@ function defaultInfoPop(iaas){
                     }
                     if( !checkEmpty(boshInfo.paastaMonitoringUse) ){
                         if( boshInfo.paastaMonitoringUse == "true"){
+                        	$(".w2ui-msg-body input:checkbox[name=paastaMonitoring]").removeAttr("disabled");
                             $(".w2ui-msg-body input[name='paastaMonitoring']").attr("checked", true);
                             $(".w2ui-msg-body select[name=paastaMonitoringAgentRelease]").removeAttr("disabled");
                             $(".w2ui-msg-body select[name=paastaMonitoringSyslogRelease]").removeAttr("disabled");
@@ -446,6 +454,7 @@ function defaultInfoPop(iaas){
                         }
                     }
                 }else{
+                	alert("1");
                     $('input:radio[name=enableSnapshots]:input[value=false]').attr("checked", true);
                     enableSnapshotsFn("false");
                     checkPaasTAMonitoringUseYn();

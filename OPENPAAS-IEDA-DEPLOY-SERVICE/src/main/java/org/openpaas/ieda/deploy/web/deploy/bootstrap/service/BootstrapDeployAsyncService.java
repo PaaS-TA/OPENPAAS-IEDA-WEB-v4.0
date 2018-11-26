@@ -92,7 +92,6 @@ public class BootstrapDeployAsyncService {
                 //settingUaaInfo(cmd, bootstrapInfo, result);
                 //settingCredhubInfo(cmd, bootstrapInfo, result);
                 settingJumpBoxInfo(cmd, bootstrapInfo, result);
-                
                 if(!StringUtils.isEmpty(bootstrapInfo.getPublicStaticIp()) && bootstrapInfo.getPublicStaticIp() != null){
                     settingPublicIpInfo(cmd, bootstrapInfo, result);
                 }
@@ -138,14 +137,14 @@ public class BootstrapDeployAsyncService {
                 }    else {
                     // 타겟 테스트
                     DirectorInfoDTO directorInfo = null;
-                    if(bootstrapInfo.getPrivateStaticIp().isEmpty() || bootstrapInfo.getPrivateStaticIp() == null){
-                        DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("","BOOTSTRAP 디렉터 정보 : https://" + bootstrapInfo.getPublicStaticIp() + ":25555"));
-                        DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("BOOTSTRAP 디렉터 타겟 접속 테스트..."));
-                        directorInfo = directorConfigService.getDirectorInfo(bootstrapInfo.getPublicStaticIp(), 25555, "admin", "admin");
-                    }else{
+                    if(bootstrapInfo.getPublicStaticIp().isEmpty() || bootstrapInfo.getPublicStaticIp() == null){
                         DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("","BOOTSTRAP 디렉터 정보 : https://" + bootstrapInfo.getPrivateStaticIp() + ":25555"));
                         DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("BOOTSTRAP 디렉터 타겟 접속 테스트..."));
                         directorInfo = directorConfigService.getDirectorInfo(bootstrapInfo.getPrivateStaticIp(), 25555, "admin", "admin");
+                    }else{
+                        DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("","BOOTSTRAP 디렉터 정보 : https://" + bootstrapInfo.getPublicStaticIp() + ":25555"));
+                        DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "started", Arrays.asList("BOOTSTRAP 디렉터 타겟 접속 테스트..."));
+                        directorInfo = directorConfigService.getDirectorInfo(bootstrapInfo.getPublicStaticIp(), 25555, "admin", "admin");
                     }
                     
                     if ( directorInfo == null ) {
@@ -277,7 +276,7 @@ public class BootstrapDeployAsyncService {
      * @return : void
     *****************************************************************//*
     private void settingUaaInfo(List<String> cmd, BootstrapVO vo, ManifestTemplateVO result){
-    	cmd.add("-o");
+        cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + result.getCommonOptionTemplate());
         cmd.add("-v");
         cmd.add("uaaRelease="+ RELEASE_DIR + SEPARATOR + vo.getBoshUaaRelease()+ "");
