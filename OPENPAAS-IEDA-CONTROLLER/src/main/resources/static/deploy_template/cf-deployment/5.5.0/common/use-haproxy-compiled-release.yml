@@ -15,7 +15,7 @@
   path: /instance_groups/name=smoke-tests:before
   value:
     azs:
-    - z7
+    - z1
     instances: 1
     jobs:
     - name: haproxy
@@ -35,23 +35,3 @@
       - ((haproxy_private_ip))
     stemcell: default
     vm_type: minimal
-- type: replace
-  path: /variables/-
-  value:
-    name: haproxy_ca
-    options:
-      common_name: haproxyCA
-      is_ca: true
-    type: certificate
-- type: replace
-  path: /variables/-
-  value:
-    name: haproxy_ssl
-    options:
-      alternative_names:
-      - ((system_domain))
-      - '*.((system_domain))'
-      ca: haproxy_ca
-      common_name: haproxySSL
-      duration: ((cert_days))
-    type: certificate
