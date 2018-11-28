@@ -23,7 +23,7 @@ var resourceLayout = {
             name: 'layout2',
             padding: 4,
             panels: [
-                { type: 'left', size: '57%', resizable: true, minSize: 300 },
+                { type: 'left', size: '65%', resizable: true, minSize: 300 },
                 { type: 'main', minSize: 300 }
             ]
         },
