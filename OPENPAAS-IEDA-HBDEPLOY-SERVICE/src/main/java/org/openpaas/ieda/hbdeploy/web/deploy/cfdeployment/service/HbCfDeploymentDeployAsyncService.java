@@ -411,10 +411,10 @@ public class HbCfDeploymentDeployAsyncService {
                 cmd.add("-o");
                 cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getCommonOptionTemplate());
             }
-            if(vo.getHbCfDeploymentNetworkConfigVO().getSubnetId2() != null && !"".equals(vo.getHbCfDeploymentNetworkConfigVO().getSubnetId2())){
-                cmd.add("-o");
-                cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getOptionNetworkTemplate());
-            }
+//            if(vo.getHbCfDeploymentNetworkConfigVO().getSubnetId2() != null && !"".equals(vo.getHbCfDeploymentNetworkConfigVO().getSubnetId2())){
+//                cmd.add("-o");
+//                cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getOptionNetworkTemplate());
+//            }
         }
     }
     

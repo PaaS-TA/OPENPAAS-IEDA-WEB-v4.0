@@ -249,11 +249,18 @@ public class StemcellManagementService {
                  accumulatedBuffer.append(info).append("\n");
                  if(dto.getFileType().toLowerCase().equalsIgnoreCase("url") && dto.getStemcellUrl().contains("bosh.io")){
                      contains = "Location:";
+                 }else if((dto.getFileType().equalsIgnoreCase("version") && dto.getLight().equalsIgnoreCase("true")) ||
+                         (dto.getFileType().equalsIgnoreCase("url") && dto.getDownloadLink().contains("light"))){
+                    contains = "https:";
                  }else{
                      contains ="filename";
                  }
                  if(info.contains(contains) && !flag){
-                     search = info.split("=");
+                     if(contains.contains("filename") || contains.contains("Location:")){
+                         search = info.split("=");
+                     }else{
+                         search = info.split("/");
+                     }
                      dto.setStemcellFileName(search[search.length-1]);
                      dto.setStemcellVersion(setStemcellVersionWithWget(dto));
                      flag = true;
@@ -367,7 +374,7 @@ public class StemcellManagementService {
             if(dto.getLight().toLowerCase().equalsIgnoreCase("true")) {
                 iaasHypervisor = iaas+"-xen-hvm";
             }else {
-                if( Float.parseFloat(dto.getStemcellVersion()) >= 3363 ) {
+                if( Float.parseFloat(dto.getStemcellVersion()) >= 3363 || dto.getOsVersion().equalsIgnoreCase("xenial")) {
                     iaasHypervisor = iaas+"-xen-hvm";
                 }else {
                     iaasHypervisor = iaas+"-xen";

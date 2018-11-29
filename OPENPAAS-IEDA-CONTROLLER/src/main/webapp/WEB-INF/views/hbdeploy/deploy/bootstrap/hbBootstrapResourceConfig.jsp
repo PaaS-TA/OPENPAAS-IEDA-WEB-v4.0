@@ -51,7 +51,7 @@ var resourceLayout = {
                    }},
                    { field: 'stemcellName', caption: '스템셀 명', size:'50%', style:'text-align:center;'},
                    { field: 'instanceType', caption: '인스턴스 유형', size:'60%', style:'text-align:center;'},
-                   { field: 'vmPassword', caption: 'VM 비밀번호', size:'50%', style:'text-align:center;'}
+                   { field: 'vmPassword', caption: 'VM 비밀번호', size:'50%', style:'text-align:center;', hidden: true}
                   ],
             onSelect : function(event) {
                 event.onComplete = function() {

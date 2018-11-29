@@ -11,6 +11,8 @@ import javax.transaction.Transactional;
 
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.common.exception.CommonException;
+import org.openpaas.ieda.deploy.web.common.dao.CommonDeployDAO;
+import org.openpaas.ieda.deploy.web.common.dao.ManifestTemplateVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentCredentialConfigDAO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentCredentialConfigVO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dto.HbCfDeploymentCredentialConfigDTO;
@@ -25,6 +27,7 @@ public class HbCfDeploymentCredentialService {
     
     @Autowired private MessageSource message;
     @Autowired private  HbCfDeploymentCredentialConfigDAO hbCfDeploymentCredentialConfigDao;
+    @Autowired private CommonDeployDAO commonDao;
     
     final private static String HYBIRD_CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateHybridCfCredentialDir();
     final private static String MANIFEST_TEMPLATE_DIR = LocalDirectoryConfiguration.getManifastTemplateDir();
@@ -66,6 +69,10 @@ public class HbCfDeploymentCredentialService {
                         message.getMessage("hybrid.configMgnt.alias.conflict.message.exception", null, Locale.KOREA), HttpStatus.CONFLICT);
             }
         }
+        ManifestTemplateVO mvo = null;
+        if(dto != null){
+            mvo = commonDao.selectManifetTemplate(dto.getIaasType(), dto.getReleaseVersion(), "CFDEPLOYMENT", dto.getReleaseName());
+        }
         if( vo != null ){
             vo.setCredentialConfigName(dto.getCredentialConfigName());
             vo.setIaasType(dto.getIaasType());
@@ -76,7 +83,11 @@ public class HbCfDeploymentCredentialService {
             vo.setEmailAddress(dto.getEmailAddress());
             vo.setJobTitle(dto.getJobTitle());
             vo.setUpdateUserId(principal.getName());
-            vo.setReleaseVersion(dto.getReleaseVersion());
+            if(dto.getReleaseName().equalsIgnoreCase("paasta")){
+                vo.setReleaseVersion(mvo.getTemplateVersion());
+            }else{
+                vo.setReleaseVersion(dto.getReleaseVersion());
+            }
             vo.setReleaseName(dto.getReleaseName());
         }
         createKeyInfo(vo);

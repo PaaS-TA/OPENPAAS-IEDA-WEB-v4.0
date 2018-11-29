@@ -370,6 +370,7 @@
             ,default_config_name = #{vo.defaultConfigInfo}
             ,resource_config_name = #{vo.resourceConfigInfo}
             ,instance_config_name = #{vo.instanceConfigInfo}
+            ,credential_config_name = #{vo.credentialConfigInfo}
             ,cloud_config_file = #{vo.cloudConfigFile}
             ,deploy_status = #{vo.deployStatus}
             ,task_id = #{vo.taskId}
