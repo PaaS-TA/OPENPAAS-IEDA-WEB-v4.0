@@ -270,6 +270,8 @@ public class CfDeployAsyncService {
             cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/runtime-config-dns.yml");
             cmd.add("--vars-store");
             cmd.add(CF_CREDENTIAL_DIR+ SEPARATOR +vo.getDeploymentName()+"-runtime-cred.yml");
+            cmd.add("-v");
+            cmd.add("deployment_name="+vo.getDeploymentName()+"");
             cmd.add("--tty");
             cmd.add("-n");
             ProcessBuilder builder = new ProcessBuilder(cmd);

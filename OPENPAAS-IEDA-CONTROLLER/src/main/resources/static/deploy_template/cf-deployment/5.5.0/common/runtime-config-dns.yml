@@ -25,6 +25,8 @@ addons:
           tls: ((/dns_api_client_tls))
 
   include:
+    deployments: 
+    - ((deployment_name))
     stemcell:
     - os: ubuntu-trusty
     - os: ubuntu-xenial
@@ -47,6 +49,8 @@ addons:
         client:
           tls: ((/dns_api_client_tls))
   include:
+    deployments: 
+    - ((deployment_name))
     stemcell:
     - os: windows2012R2
     - os: windows2016

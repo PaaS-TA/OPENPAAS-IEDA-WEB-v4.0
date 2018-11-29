@@ -259,6 +259,8 @@ public class HbCfDeploymentDeployAsyncService {
             cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/runtime-config-dns.yml");
             cmd.add("--vars-store");
             cmd.add(HYBRID_CF_CREDENTIAL_DIR+ SEPARATOR +vo.getHbCfDeploymentDefaultConfigVO().getDefaultConfigName()+"-runtime-cred.yml");
+            cmd.add("-v");
+            cmd.add("deployment_name="+vo.getHbCfDeploymentDefaultConfigVO().getDefaultConfigName()+"");
             cmd.add("--tty");
             cmd.add("-n");
             ProcessBuilder builder = new ProcessBuilder(cmd);
