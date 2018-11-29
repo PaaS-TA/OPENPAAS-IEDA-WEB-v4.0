@@ -86,7 +86,7 @@ public class HbCfDeploymentDeployAsyncService {
                 }
             }
             // CF-Deployment 5.0.0 버전 이상 bosh runtime config required
-            if("5.0.0".equals(cfDeploymentVersion) || "5.0.0".equals(cfDeploymentVersion) || "4.0".equals(cfDeploymentVersion)){
+            if("5.0.0".equals(cfDeploymentVersion) || "5.5.0".equals(cfDeploymentVersion) || "4.0".equals(cfDeploymentVersion)){
                 status = settingRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
             } else {
                 deleteRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
@@ -117,7 +117,13 @@ public class HbCfDeploymentDeployAsyncService {
             cmd.add("-d");
             cmd.add(vo.getHbCfDeploymentDefaultConfigVO().getDefaultConfigName());
             cmd.add("deploy");
-            cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getCommonBaseTemplate()+"");
+            if(vo.getHbCfDeploymentNetworkConfigVO() != null){
+                if(!vo.getHbCfDeploymentNetworkConfigVO().getSubnetId1().equals("")){
+                    cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/cf-deployment-multi-az.yml");
+                }
+            } else {
+                cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getCommonBaseTemplate()+"");
+            }
             setDefualtInfo(cmd, vo, result);
             setPublicNetworkIpUse(cmd, vo, result);
             if("postgres".equals(vo.getHbCfDeploymentDefaultConfigVO().getCfDbType())){

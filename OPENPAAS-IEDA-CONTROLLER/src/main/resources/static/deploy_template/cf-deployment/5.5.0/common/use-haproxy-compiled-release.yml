@@ -53,5 +53,4 @@
       - '*.((system_domain))'
       ca: haproxy_ca
       common_name: haproxySSL
-      duration: 3650
     type: certificate
