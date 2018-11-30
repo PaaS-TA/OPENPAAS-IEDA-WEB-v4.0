@@ -1,7 +1,6 @@
 <%
 /* =================================================================
  * 작성일 : 2017.05.02
- * 작성자 : Ji,Hyangeun
  * 상세설명 : 대시보드 화면(리소스 사용량 정보)
  * =================================================================
  */ 
@@ -189,7 +188,7 @@ $( window ).resize(function() {
                     <li class="resource-li"><span class="resource-li-span1">인스턴스 : </span><span class="resource-li-span2 azure-instance">0 VM(s)</span></li>
                     <li class="resource-li network-li"><span class="resource-li-span1">네트워크 : </span><span class="resource-li-span2 azure-network">0 개</span><span class="resource-li-span3"></span></li>
                     <li class="resource-li"><span class="resource-li-span1">볼륨 : </span><span class="resource-li-span2 azure-volume">0 Byte</span></li>
-                    <li class="resource-li"><span class="resource-li-span1">세금 전 과금 : </span><span class="resource-li-span2 azure-billing">0 KRW</span></li>
+                    <li class="resource-li"><span class="resource-li-span1">세금 전 과금(전월) : </span><span class="resource-li-span2 azure-billing">0 KRW</span></li>
                 </ul>
             </div>
         

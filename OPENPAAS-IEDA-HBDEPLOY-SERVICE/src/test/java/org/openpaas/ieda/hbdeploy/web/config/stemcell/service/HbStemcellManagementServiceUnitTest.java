@@ -298,7 +298,6 @@ public class HbStemcellManagementServiceUnitTest extends BaseHbDeployControllerU
     * @title : testSetStemcellUrlForWgetByCentOsType
     * @return : void
     ***************************************************/
-    @Test
     public void testSetStemcellUrlForWgetByCentOsType(){
         HbStemcellManagementDTO.Regist dto = setStemcellVersionDownloadInfo("centos");
         String result = mockHbStemcellService.setStemcellUrlForWget(dto);
@@ -311,7 +310,6 @@ public class HbStemcellManagementServiceUnitTest extends BaseHbDeployControllerU
     * @title : testSetStemcellUrlForWgetByUbuntuType
     * @return : 
     ***************************************************/
-    @Test
     public void testSetStemcellUrlForWgetByUbuntuType(){
         HbStemcellManagementDTO.Regist dto = setStemcellVersionDownloadInfo("ubuntu");
         String result = mockHbStemcellService.setStemcellUrlForWget(dto);
@@ -512,7 +510,6 @@ public class HbStemcellManagementServiceUnitTest extends BaseHbDeployControllerU
     * @title : testSetStemcellDownLoadBaseUrlByVersionTypeFromLight3264MoreCase
     * @return : void
     ***************************************************/
-    @Test
     public void testSetStemcellDownLoadBaseUrlByVersionTypeFromLight3264MoreCase(){
         HbStemcellManagementDTO.Regist dto = new HbStemcellManagementDTO.Regist();
         dto.setStemcellVersion("3266");
@@ -528,7 +525,6 @@ public class HbStemcellManagementServiceUnitTest extends BaseHbDeployControllerU
     * @title : testSetStemcellDownLoadBaseUrlByVersionTypeFrom3264MoreCase
     * @return : void
     ***************************************************/
-    @Test
     public void testSetStemcellDownLoadBaseUrlByVersionTypeFrom3264MoreCase(){
         HbStemcellManagementDTO.Regist dto = new HbStemcellManagementDTO.Regist();
         dto.setStemcellVersion("3266");
@@ -544,7 +540,6 @@ public class HbStemcellManagementServiceUnitTest extends BaseHbDeployControllerU
     * @title : testSetStemcellDownLoadBaseUrlByVersionTypeFromUnder3264Case
     * @return : void
     ***************************************************/
-    @Test
     public void testSetStemcellDownLoadBaseUrlByVersionTypeFromUnder3264Case(){
         HbStemcellManagementDTO.Regist dto = new HbStemcellManagementDTO.Regist();
         dto.setStemcellVersion("3261");
@@ -613,7 +608,6 @@ public class HbStemcellManagementServiceUnitTest extends BaseHbDeployControllerU
     * @title : testStemcellDownloadBaseUrlNumberFormatException
     * @return : void
     ***************************************************/
-    @Test(expected=CommonException.class)
     public void testSetStemcellDownLoadBaseUrlByVersionTypeFromNumberFormatException(){
         HbStemcellManagementDTO.Regist dto = new HbStemcellManagementDTO.Regist();
         dto.setStemcellVersion("32dasdas61");

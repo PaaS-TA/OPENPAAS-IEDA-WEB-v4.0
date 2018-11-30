@@ -1,7 +1,6 @@
 <%
 /* =================================================================
  * 작성일 : 2018.03.09
- * 작성자 : 
  * 상세설명 : Azure 리소스 사용량 조회 화면
  * =================================================================
  */ 
@@ -218,7 +217,7 @@ $( window ).resize(function() {
         </div>
     </div>
     <div class="pdt20">
-        <div class="title fl">Azure 세금전 과금 정보</div>
+        <div class="title fl">Azure 세금전 과금 정보(전월)</div>
         <div id="billingUsageWrap" style="float:left; width:100%">
              <div class="panel-group">
                 <div class="panel panel-default">
