@@ -28,10 +28,6 @@
   value: ((doppler_instance))
   
 - type: replace
-  path: /instance_groups/name=haproxy/instances
-  value: ((haproxy_instance))
-  
-- type: replace
   path: /instance_groups/name=log-api/instances
   value: ((log-api_instance))
   

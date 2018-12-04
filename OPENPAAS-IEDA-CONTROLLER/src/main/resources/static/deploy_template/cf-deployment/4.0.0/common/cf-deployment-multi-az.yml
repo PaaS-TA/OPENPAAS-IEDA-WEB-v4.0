@@ -1,5 +1,5 @@
 ---
-name: cf
+name: ((deployment_name))
 manifest_version: v4.0.0
 update:
   canaries: 1

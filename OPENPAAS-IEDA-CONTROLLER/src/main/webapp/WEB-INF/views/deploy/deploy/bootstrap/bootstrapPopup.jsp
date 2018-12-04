@@ -448,7 +448,6 @@ function defaultInfoPop(iaas){
                         }
                     }
                 }else{
-                	alert("1");
                     $('input:radio[name=enableSnapshots]:input[value=false]').attr("checked", true);
                     enableSnapshotsFn("false");
                     checkPaasTAMonitoringUseYn();

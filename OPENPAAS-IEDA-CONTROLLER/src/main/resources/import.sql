@@ -977,14 +977,6 @@ INSERT INTO ieda_manifest_template VALUES (39, 'CFDEPLOYMENT','google','cf-deplo
 INSERT INTO ieda_manifest_template VALUES (40, 'CFDEPLOYMENT','azure','cf-deployment','5.5.0','5.5.0','cf-deployment.yml','use-haproxy.yml', 'use-haproxy-public-network.yml', 'cloud-config.yml','','instance-setting.yml','use-postgres.yml','jumpbox-user.yml','','windows2016-cell.yml','','SYSTEM',now(),'SYSTEM',now());
 
 
-
-
-
-
-
-
-
-
 #ieda_cf_job_template
 INSERT INTO ieda_cf_job_template VALUES ( '1000', '0', 'DEPLOY_TYPE_CF', 'adapter', '2.7.0', '5.5.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
 INSERT INTO ieda_cf_job_template VALUES ( '1001', '1', 'DEPLOY_TYPE_CF', 'api', '2.7.0', '5.5.0', 'true', 'true',  'true', 'SYSTEM', now(), 'SYSTEM', now());
