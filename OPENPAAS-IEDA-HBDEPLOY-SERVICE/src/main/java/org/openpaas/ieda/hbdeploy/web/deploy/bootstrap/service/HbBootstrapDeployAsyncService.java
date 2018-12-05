@@ -71,7 +71,7 @@ public class HbBootstrapDeployAsyncService {
             String releaseVersion = boshRelease.replaceAll("[^0-9]", "");
             String releaseName = boshRelease.replaceAll("[^A-Za-z]", "");
             
-            //해당 Bosh 릴리즈 버전의 Manifest Template 파일 조회
+              //해당 Bosh 릴리즈 버전의 Manifest Template 파일 조회
             ManifestTemplateVO result = commonDeployDao.selectManifetTemplate(bootstrapInfo.getIaasType(), releaseVersion, "BOOTSTRAP", releaseName );
             String deployFile = MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getTemplateVersion()  + SEPARATOR  + "common" + SEPARATOR  + result.getCommonBaseTemplate();
             File deploymentFile = new File(deployFile);

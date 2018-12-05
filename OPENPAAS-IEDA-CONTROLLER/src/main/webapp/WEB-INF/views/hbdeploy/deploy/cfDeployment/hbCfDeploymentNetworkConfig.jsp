@@ -626,7 +626,7 @@ function delInternalNetwork(preDiv, index){
                     <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;">클라우드 인프라 환경 </label> 
                        <div>
-                           <select class="form-control" onchange="iaasTypeChangeInput(this.value)" name="iaasType" style="width: 250px; margin-left: 20px;">
+                           <select class="form-control" onchange="iaasTypeChangeInput(this.value)" name="iaasType" style="width: 320px; margin-left: 20px;">
                                <option value="">인프라 환경을 선택하세요.</option>
                                <option value="aws">AWS</option>
                                <option value="openstack">Openstack</option>
@@ -636,7 +636,7 @@ function delInternalNetwork(preDiv, index){
                     <div class="w2ui-field">
                         <label style="width:40%;text-align: left;padding-left: 20px;">Network 별칭</label> 
                         <div>
-                            <input class="form-control" name="networkName" type="text" style="width: 250px; margin-left: 20px;" placeholder="예) net 1"/>
+                            <input class="form-control" name="networkName" type="text" style="width: 320px; margin-left: 20px;" placeholder="예) net 1"/>
                         </div>
                     </div> 
                   </div>
@@ -651,8 +651,8 @@ function delInternalNetwork(preDiv, index){
                 <div class="panel-body">
                     <div class="w2ui-field">
                         <label style="width:40%;text-align: left;padding-left: 20px;">CF API TARGET IP</label> 
-                        <div style=" width: 60%;">
-                            <input class="form-control" name="publicStaticIp" type="text" style="width: 250px; margin-left: 20px;" placeholder="예) 10.0.0.20"/>
+                        <div>
+                            <input class="form-control" name="publicStaticIp" type="text" style="width: 320px; margin-left: 20px;" placeholder="예) 10.0.0.20"/>
                         </div>
                     </div>
                 </div>
@@ -668,53 +668,53 @@ function delInternalNetwork(preDiv, index){
                     <div class="w2ui-field">
                         <label style="width:40%;text-align: left;padding-left: 20px;">서브넷 아이디</label>
                         <div>
-                            <input class="form-control" name="subnetId1" type="text"  style="width: 250px; margin-left: 20px;" placeholder="서브넷 아이디를 입력하세요."/>
+                            <input class="form-control" name="subnetId1" type="text"  style="width: 320px; margin-left: 20px;" placeholder="서브넷 아이디를 입력하세요."/>
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="width:40%;text-align: left;padding-left: 20px;">보안 그룹</label>
                         <div>
-                            <input class="form-control" name="securityGroup1" type="text"  style="width: 250px; margin-left: 20px;" placeholder="예) bosh-security, cf-security"/>
+                            <input class="form-control" name="securityGroup1" type="text"  style="width: 320px; margin-left: 20px;" placeholder="예) bosh-security, cf-security"/>
                         </div>
                     </div>
                     <div class="w2ui-field" id="availabilityZoneDiv">
                         <label style="width:40%;text-align: left;padding-left: 20px;">가용 영역</label>
                         <div>
-                            <input class="form-control" name="availabilityZone1" type="text"  style="width: 250px; margin-left: 20px;" placeholder="예) us-west-2"/>
+                            <input class="form-control" name="availabilityZone1" type="text"  style="width: 320px; margin-left: 20px;" placeholder="예) us-west-2"/>
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="width:40%;text-align: left;padding-left: 20px;">서브넷 범위</label>
                         <div>
-                            <input class="form-control" name="subnetRange1" type="text"  style="width: 250px; margin-left: 20px;" placeholder="예) 10.0.0.0/24"/>
+                            <input class="form-control" name="subnetRange1" type="text"  style="width: 320px; margin-left: 20px;" placeholder="예) 10.0.0.0/24"/>
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="width:40%;text-align: left;padding-left: 20px;">게이트웨이</label>
                         <div>
-                            <input class="form-control" name="subnetGateway1" type="text"  style="width: 250px; margin-left: 20px;" placeholder="예) 10.0.0.1"/>
+                            <input class="form-control" name="subnetGateway1" type="text"  style="width: 320px; margin-left: 20px;" placeholder="예) 10.0.0.1"/>
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="width:40%;text-align: left;padding-left: 20px;">DNS</label>
                         <div>
-                            <input class="form-control" name="subnetDns1" type="text"  style="width: 250px; margin-left: 20px;" placeholder="예) 8.8.8.8"/>
+                            <input class="form-control" name="subnetDns1" type="text"  style="width: 320px; margin-left: 20px;" placeholder="예) 8.8.8.8"/>
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="width:40%;text-align: left;padding-left: 20px;">IP할당 제외 대역</label>
                         <div>
-                            <input class="form-control" name="subnetReservedFrom1" type="text" style="display:inline-block; width: 110px; margin-left: 20px;" placeholder="예) 10.0.0.100" />
+                            <input class="form-control" name="subnetReservedFrom1" type="text" style="display:inline-block; width: 147px; margin-left: 20px;" placeholder="예) 10.0.0.100" />
                             <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
-                            <input class="form-control" name="subnetReservedTo1"  type="text" style="display:inline-block; width: 110px;" placeholder="예) 10.0.0.106" />
+                            <input class="form-control" name="subnetReservedTo1"  type="text" style="display:inline-block; width: 147px;" placeholder="예) 10.0.0.106" />
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="width:40%;text-align: left;padding-left: 20px;">IP할당 대역(최소 20개)</label>
                         <div>
-                            <input class="form-control" name="subnetStaticFrom1"  type="text" style="display:inline-block; width: 110px; margin-left: 20px;"  placeholder="예) 10.0.0.100" />
+                            <input class="form-control" name="subnetStaticFrom1"  type="text" style="display:inline-block; width: 147px; margin-left: 20px;"  placeholder="예) 10.0.0.100" />
                             <span style="width: 4%; text-align: center;">&nbsp;&ndash; &nbsp;</span>
-                            <input class="form-control" name="subnetStaticTo1" type="text" style="display:inline-block; width: 110px;" placeholder="예) 10.0.0.106" />
+                            <input class="form-control" name="subnetStaticTo1" type="text" style="display:inline-block; width: 147px;" placeholder="예) 10.0.0.106" />
                         </div>
                     </div>
                 </div>

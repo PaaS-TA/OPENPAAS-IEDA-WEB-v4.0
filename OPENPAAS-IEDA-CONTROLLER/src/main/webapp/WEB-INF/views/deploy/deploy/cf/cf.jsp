@@ -270,7 +270,7 @@ function selectIaas() {
  *********************************************************/
 function doButtonStyle() {
     if ( !bDefaultDirector ) {
-        $('#installBtn').attr('disabled', false);
+        $('#installBtn').attr('disabled', true);
         $('#modifyBtn').attr('disabled', true);
         $('#deleteBtn').attr('disabled', true);
     } 

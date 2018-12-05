@@ -171,7 +171,6 @@ public class HbCfDeploymentDeployAsyncService {
                     HttpClient httpClient = HbDirectorRestHelper.getHttpClient(directorInfo.getDirectorPort());
                     status = HbDirectorRestHelper.trackToTask(directorInfo, messagingTemplate, messageEndpoint, httpClient, taskId, "event", principal.getName());
                 }
-
             }
         }catch (RuntimeException e) {
             status = "error";
