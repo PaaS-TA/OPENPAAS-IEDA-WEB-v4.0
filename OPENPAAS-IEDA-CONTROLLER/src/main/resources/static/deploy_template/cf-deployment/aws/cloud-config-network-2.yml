@@ -57,6 +57,7 @@ networks:
       subnet: [net_id2]
       default_security_groups: [[security_group2]]
     az: z2
+
 - name: vip
   type: vip
 

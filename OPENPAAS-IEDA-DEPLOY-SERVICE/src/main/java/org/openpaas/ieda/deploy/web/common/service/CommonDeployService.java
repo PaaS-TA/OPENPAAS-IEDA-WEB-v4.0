@@ -259,6 +259,9 @@ public class CommonDeployService{
     *****************************************************************/
     public String createKeyInfo( KeyInfoDTO dto, Principal principal){
         String keyFileName = "";
+        if(dto.getVersion().equals("4.0")){
+            dto.setVersion("5.5.0");
+        }
         String commonCredentialManifestPath = MANIFEST_TEMPLATE_DIR + "/cf-deployment/"+dto.getVersion()+"/common/cf-credential.yml";
         File cfCredentialFile = new File(CF_CREDENTIAL_DIR + SEPARATOR + dto.getDomain()+ "-cred.yml");
         if(cfCredentialFile.exists()){
