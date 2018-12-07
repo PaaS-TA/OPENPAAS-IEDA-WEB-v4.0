@@ -20,12 +20,12 @@
                 <span class="icon-bar"></span>
             </button>
             <a href="/iaasMgnt" class="navbar-brand" id="header"></a>
-            <a class="navbar-brand" href="/"> PaaS-TA <span style="color: #ffffff;">플랫폼 설치 자동화</span></a>
+            <a class="navbar-brand" href="/"> PaaS-TA <span style="color: #ffffff;">인프라 관리 대시보드</span></a>
         </div>
  
  <!-- Top Menu Items -->
  <ul class="nav navbar-right top-nav">
- 	<li style="padding-top:17px; font-size:14px; color:#ffffff">Welcome to Platform Management Dashboard.</li>
+ 	<li style="padding-top:17px; font-size:14px; color:#ffffff">Welcome to infra Management Dashboard.</li>
      <li class="dropdown" style="display:none">
          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cloud"></i> AWS-c1 <b class="caret"></b></a>
          <ul class="dropdown-menu alert-dropdown">

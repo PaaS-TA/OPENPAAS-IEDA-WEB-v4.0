@@ -34,7 +34,7 @@
 <div id="left">
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav side-nav">
-           <li class="active"><a href="javascript:goPage('<c:url value="/main/hbDashboard"/>', 'Dashboard');" style="font-weight:600; font-size:20px;"><i class="fa fa-fw fa-home"></i> PaaS-TA 설치 자동화</a></li>
+           <li class="active"><a href="javascript:goPage('<c:url value="/main/hbDashboard"/>', 'Dashboard');" style="font-weight:600; font-size:20px;"><i class="fa fa-fw fa-home"></i> 이종 플랫폼 설치 자동화</a></li>
            <li>
               <a href="javascript:;" data-toggle="collapse" data-target="#configMenu" ><i class="fa fa-fw fa fa-cog"></i> 환경설정 및 관리 <i class="fa fa-fw fa-caret-down"></i></a>
               <ul id="configMenu" class="collapse">
