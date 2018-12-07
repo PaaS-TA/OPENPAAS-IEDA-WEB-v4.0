@@ -9,15 +9,23 @@
     <result property="iaasType" column="IAAS_TYPE"/>
     <result property="defaultConfigName" column="DEFAULT_CONFIG_NAME"/>
     <result property="paastaMonitoringUse" column="PAASTA_MONITORING_USE" />
-    <result property="paastaMonitoringIp" column="PAASTA_MONITORING_IP" />
-    <result property="influxdbIp" column="INFLUXDB_IP" />
+    <result property="syslogAddress" column="SYSLOG_ADDRESS" />
+    <result property="syslogRelease" column="SYSLOG_RELEASE" />
+    
+    <result property="syslogPort" column="SYSLOG_PORT" />
+    <result property="syslogTransport" column="SYSLOG_TRANSPORT" />
+    <result property="metricUrl" column="METRIC_URL" />
+    
     <result property="paastaMonitoringRelease" column="PAASTA_MONITORING_RELEASE" />
     <result property="deploymentName" column ="DEPLOYMENT_NAME"/>
     <result property="directorName" column ="DIRECTOR_NAME"/>
     <result property="credentialKeyName" column ="CREDENTIAL_KEY_NAME"/>
     <result property="boshRelease" column ="BOSH_RELEASE"/>
     <result property="boshCpiRelease" column ="BOSH_CPI_RELEASE"/>
+    <result property="boshBpmRelease" column = "BOSH_BPM_RELEASE"/>
     <result property="osConfRelease" column ="OS_CONF_RELEASE"/>
+    <result property="uaaRelease" column ="UAA_RELEASE"/>
+    <result property="credhubRelease" column ="CRED_HUB_RELEASE"/>
     <result property="snapshotSchedule" column ="SNAPSHOT_SCHEDULE"/>
     <result property="enableSnapshots" column ="ENABLE_SNAPSHOTS"/>
     <result property="createUserId" column ="CREATE_USER_ID"/>
@@ -37,11 +45,18 @@
         ,credential_key_name
         ,boshRelease
         ,bosh_cpi_release
+        ,bosh_bpm_release
+        ,os_conf_release
+        ,uaa_release
+        ,cred_hub_release
         ,enable_snapshots
         ,snapshot_schedule
         ,paasta_monitoring_use
-        ,paasta_monitoring_ip
-        ,influxdb_ip
+        ,syslog_release
+        ,syslog_address
+        ,syslog_port
+        ,syslog_transport
+        ,metric_url
         ,paasta_monitoring_release
     from ieda_bootstrap_default_config
     ORDER BY id;
@@ -57,11 +72,18 @@
         ,credential_key_name
         ,boshRelease
         ,bosh_cpi_release
+        ,bosh_bpm_release
+        ,uaa_release
+        ,os_conf_release
+        ,cred_hub_release
         ,enable_snapshots
         ,snapshot_schedule
         ,paasta_monitoring_use
-        ,paasta_monitoring_ip
-        ,influxdb_ip
+        ,syslog_release
+        ,syslog_address
+        ,syslog_port
+        ,syslog_transport
+        ,metric_url
         ,paasta_monitoring_release
         ,create_user_id
         ,create_date
@@ -76,11 +98,18 @@
         ,#{default.credentialKeyName}
         ,#{default.boshRelease}
         ,#{default.boshCpiRelease}
+        ,#{default.boshBpmRelease}
+        ,#{default.uaaRelease}
+        ,#{default.osConfRelease}
+        ,#{default.credhubRelease}
         ,#{default.enableSnapshots}
         ,#{default.snapshotSchedule}
         ,#{default.paastaMonitoringUse}
-        ,#{default.paastaMonitoringIp}
-        ,#{default.influxdbIp}
+        ,#{default.syslogRelease}
+        ,#{default.syslogAddress}
+        ,#{default.syslogPort}
+        ,#{default.syslogTransport}
+        ,#{default.metricUrl}
         ,#{default.paastaMonitoringRelease}
         ,#{default.createUserId}
         ,now()
@@ -99,11 +128,18 @@
         ,boshRelease = #{default.boshRelease}
         ,ntp = #{default.ntp}
         ,bosh_cpi_release = #{default.boshCpiRelease}
+        ,bosh_bpm_release = #{default.boshBpmRelease}
+        ,uaa_release = #{default.uaaRelease}
+        ,cred_hub_release = #{default.credhubRelease}
+        ,os_conf_release = #{default.osConfRelease}
         ,enable_snapshots = #{default.enableSnapshots}
         ,snapshot_schedule = #{default.snapshotSchedule}
         ,paasta_monitoring_use = #{default.paastaMonitoringUse}
-        ,paasta_monitoring_ip = #{default.paastaMonitoringIp}
-        ,influxdb_ip = #{default.influxdbIp}
+        ,syslog_release = #{default.syslogRelease}
+        ,syslog_address = #{default.syslogAddress}
+        ,syslog_port = #{default.syslogPort}
+        ,syslog_transport = #{default.syslogTransport}
+        ,metric_url = #{default.metricUrl}
         ,paasta_monitoring_release = #{default.paastaMonitoringRelease}
         ,iaas_type = #{default.iaasType}
         ,update_user_id = #{default.updateUserId}
@@ -122,11 +158,18 @@
         ,credential_key_name
         ,boshRelease
         ,bosh_cpi_release
+        ,bosh_bpm_release
+        ,os_conf_release
+        ,uaa_release
+        ,cred_hub_release
         ,enable_snapshots
         ,snapshot_schedule
         ,paasta_monitoring_use
-        ,paasta_monitoring_ip
-        ,influxdb_ip
+        ,syslog_release
+        ,syslog_address
+        ,syslog_port
+        ,syslog_transport
+        ,metric_url
         ,paasta_monitoring_release
         ,create_user_id 
         ,create_date 

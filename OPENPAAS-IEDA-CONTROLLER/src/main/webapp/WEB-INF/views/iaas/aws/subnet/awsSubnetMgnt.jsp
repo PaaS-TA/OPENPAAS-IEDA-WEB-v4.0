@@ -2,7 +2,6 @@
 <%
    /* =================================================================
  * 작성일 : 2017.7.05 
- * 작성자 : 이정윤
  * 상세설명 : AWS 서브넷 관리 화면
  * =================================================================
  */
@@ -403,6 +402,7 @@ function showVpcDetails(vpcId){
              w2popup.unlock();
              w2popup.close();
              accountId = subnetInfo.accountId;
+             w2ui['aws_subnetGrid'].clear();
              doSearch();
          }, error : function(request, status, error) {
              w2popup.unlock();

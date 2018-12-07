@@ -1,7 +1,6 @@
 <%
 /* =================================================================
  * 작성일 : 2017.05.02
- * 작성자 : Ji,Hyangeun
  * 상세설명 : Top 화면
  * =================================================================
  */ 
@@ -21,7 +20,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a href="/iaasMgnt" class="navbar-brand" id="header"></a>
-            <a class="navbar-brand" href="/platform"> 이기종 PaaS-TA <span style="color: #ffffff;">플랫폼 설치 자동화</span></a>
+            <a class="navbar-brand" href="/platform"> 이종 PaaS-TA <span style="color: #ffffff;">플랫폼 설치 자동화</span></a>
         </div>
  
  <!-- Top Menu Items -->

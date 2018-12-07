@@ -1,7 +1,6 @@
 <%
 /* =================================================================
  * 작성일 : 2018.05.17
- * 작성자 : 이정윤 
  * 상세설명 : Azure Keypair 관리 화면
  * =================================================================
  */ 
@@ -121,8 +120,10 @@ function saveAzureKeypairInfo(){
         async : true,
         data : JSON.stringify(rgInfo),
         success : function(status) {
-            w2popup.unlock();
-            w2popup.close();
+            w2alert(rgInfo.keypairName+' 생성이 완료되었습니다.','',function(){
+                w2popup.unlock();
+                w2popup.close();
+            });
             accountId = rgInfo.accountId;
             doSearch();
         }, error : function(request, status, error) {

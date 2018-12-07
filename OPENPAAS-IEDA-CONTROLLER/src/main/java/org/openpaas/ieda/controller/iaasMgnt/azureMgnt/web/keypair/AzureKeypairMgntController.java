@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import org.openpaas.ieda.azureMgnt.web.keypair.dao.AzureKeypairMgntVO;
-import org.openpaas.ieda.azureMgnt.web.keypair.dto.AzureKeypairMgntDTO;
-import org.openpaas.ieda.azureMgnt.web.keypair.service.AzureKeypairMgntService;
 import org.openpaas.ieda.common.exception.CommonException;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.keypair.dao.AzureKeypairMgntVO;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.keypair.dto.AzureKeypairMgntDTO;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.keypair.service.AzureKeypairMgntService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class AzureKeypairMgntController {
-	@Autowired 
-	private AzureKeypairMgntService azureAzureKeypairMgntService;
-	
-	@Autowired
+    @Autowired 
+    private AzureKeypairMgntService azureAzureKeypairMgntService;
+    @Autowired
     private MessageSource message;
     private final static Logger LOG = LoggerFactory.getLogger(AzureKeypairMgntController.class);
     /***************************************************
@@ -71,7 +70,7 @@ public class AzureKeypairMgntController {
             LOG.info("================================================> Azure Keypair 생성");
      }
      try {
-    	 azureAzureKeypairMgntService.createKeypair(dto);
+         azureAzureKeypairMgntService.createKeypair(dto);
     } catch (Exception e) {
         String detailMessage = e.getMessage();
         if(!detailMessage.equals("") && detailMessage != "null"){

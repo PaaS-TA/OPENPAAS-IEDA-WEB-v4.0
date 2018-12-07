@@ -1,7 +1,6 @@
 <%
 /* =================================================================
  * 작성일 : 2018.07
- * 작성자 : 이정윤
  * 상세설명 : 리소스 정보 관리 화면
  * =================================================================
  */ 
@@ -15,7 +14,7 @@
 var text_required_msg = '<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
 var select_required_msg='<spring:message code="common.select.vaildate.required.message"/>';//을(를) 선택하세요.
 var search_data_fail_msg ='클라우드 인프라 환경을 선택하세요.';
-var resourceConfigInfo = "";//리소스 정보
+var resourceConfigInfo = [];//리소스 정보
 var iaas = "";
 var resourceLayout = {
         layout2: {
@@ -51,7 +50,7 @@ var resourceLayout = {
                    }},
                    { field: 'stemcellName', caption: '스템셀 명', size:'50%', style:'text-align:center;'},
                    { field: 'instanceType', caption: '인스턴스 유형', size:'60%', style:'text-align:center;'},
-                   { field: 'vmPassword', caption: 'VM 비밀번호', size:'50%', style:'text-align:center;'}
+                   { field: 'vmPassword', caption: 'VM 비밀번호', size:'50%', style:'text-align:center;', hidden: true}
                   ],
             onSelect : function(event) {
                 event.onComplete = function() {
@@ -153,7 +152,7 @@ function settingResourceInfo(){
     $("input[name=resourceConfigName]").val(record.resourceConfigName);
     $("select[name=iaasType]").val(record.iaasType);
     //$("select[name=iaasConfigId]").val(record.iaasConfigAlias);
-    $("select[name=stemcellName]").html("<option value='"+record.stemcellName+"' selected >"+record.stemcellName+"</option>");
+    getStemcellList(iaas);
     $("input[name=instanceType]").val(record.instanceType);
     $("input[name=vmPassword]").val(record.vmPassword);
 }
@@ -163,7 +162,7 @@ function settingResourceInfo(){
  * 기능 : doSearch
  *********************************************************/
 function doSearch() {
-    resourceConfigInfo="";//리소스 정보
+    resourceConfigInfo = [];//리소스 정보
     iaas = "";
     resetForm();
     
@@ -187,7 +186,7 @@ function doButtonStyle() {
 function registBootstrapResourceConfigInfo(){
     w2popup.lock("등록 중입니다.", true);
     resourceConfigInfo = {
-    		id                     : $("input[name=resourceInfoId]").val(),
+            id                     : $("input[name=resourceInfoId]").val(),
             iaasType               : $("select[name=iaasType]").val(),
             resourceConfigName     : $("input[name=resourceConfigName]").val(),
             stemcellName           : $("select[name=stemcellName]").val(),
@@ -246,7 +245,7 @@ function deleteBootstrapResourceConfigInfo(id, resourceConfigName){
  * 설명 : 스템셀 목록 조회
  ***************************************************************** */
 function getStemcellList(iaas){
-	
+    
     var url = "/common/deploy/stemcell/list/bootstrap/" + iaas;
     $.ajax({
         type : "GET",
@@ -262,7 +261,7 @@ function getStemcellList(iaas){
                     option += "<option "+ obj.stemcellFileName +">"+obj.stemcellFileName+"</option>";
                 });
             }else if (data.records.length == 0){
-            	if (iaas == 'nothing'){
+                if (iaas == 'nothing'){
                     option = "<option value=''>인프라 환경을 먼저 선택하세요.</option>";
                 }else{
                     option = "<option value=''>스템셀이 없습니다.</option>";
@@ -313,6 +312,7 @@ function resetForm(status){
     $("input[name=instanceType]").val("");
     $("input[name=vmPassword]").val("");
     $("input[name=resourceInfoId]").val("");
+    resourceConfigInfo = [];
     if(status=="reset"){
         w2ui['resource_GroupGrid'].clear();
         $("select[name=stemcellName]").html("<option value=''>인프라 환경을 먼저 선택하세요.</option>");
@@ -329,7 +329,6 @@ function resetForm(status){
         <div class="title fl"> 리소스 정보 목록</div>
     </div>
     <div id="resource_GroupGrid" style="width:100%;  height:700px;"></div>
-
 </div>
 
 
@@ -346,7 +345,6 @@ function resetForm(status){
                            <input class="form-control" name = "resourceConfigName" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="리소스 별칭을 입력 하세요."/>
                        </div>
                    </div>
-                   
                    <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;">클라우드 인프라 환경</label>
                        <div>
@@ -362,7 +360,7 @@ function resetForm(status){
                        <div>
                            <select class="form-control" name="stemcellName" id="stemcellName" style="width: 320px; margin-left: 20px;">
                                <option value="">스템셀을 선택하세요.</option>
-                           </select>                           
+                           </select>
                        </div>
                    </div>
                    <div class="w2ui-field">
@@ -371,27 +369,22 @@ function resetForm(status){
                            <input class="form-control"  name="instanceType" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="인스턴스 유형 입력하세요."/>
                        </div>
                    </div>
-                   <div class="w2ui-field">
-                       <label style="width:40%;text-align: left;padding-left: 20px;">VM 비밀번호 </label>
-                       <div>
-                           <input class="form-control" name="vmPassword" type="text" maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="VM 비밀번호를 입력하세요."/>
-                       </div>
-                   </div>
-                   
                </div>
            </div>
         </div>
     </form>
     <div id="regPopupBtnDiv" style="text-align: center; margin-top: 5px;">
-        <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_RESOURCE_ADD')">
+            <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+        </sec:authorize>
         <span id="resetBtn" onclick="resetForm('reset');" class="btn btn-info">취소</span>
-        <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_RESOURCE_DELETE')">
+            <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        </sec:authorize>
     </div>
 </div>
 <script>
 $(function() {
-    
-    
     $("#settingForm").validate({
         ignore : [],
         //onfocusout: function(element) {$(element).valid()},
@@ -412,10 +405,6 @@ $(function() {
                 required: function(){
                     return checkEmpty( $("input[name='instanceType']").val() );
                 }
-            }, vmPassword: { 
-                required: function(){
-                    return checkEmpty( $("input[name='vmPassword']").val() );
-                }
             }
         }, messages: {
             resourceConfigName: { 
@@ -426,8 +415,6 @@ $(function() {
                 required:  "Stemcell Name"+select_required_msg,
             }, instanceType: { 
                 required:  "Instance Type"+text_required_msg,
-            }, vmPassword: { 
-                required:  "VM Password"+text_required_msg,
             }
         }, unhighlight: function(element) {
             setHybridSuccessStyle(element);
@@ -439,7 +426,7 @@ $(function() {
                 setHybridInvalidHandlerStyle(errors, validator);
             }
         }, submitHandler: function (form) {
-        	registBootstrapResourceConfigInfo();
+            registBootstrapResourceConfigInfo();
         }
     });
 });

@@ -34,6 +34,7 @@ public class HbReleaseManagementService {
     @Autowired private MessageSource message;
     
     final private static String CLOUDFOUNDRYURL = "https://bosh.io/d/github.com/cloudfoundry/";
+    final private static String PIVOTALURL = "https://bosh.io/d/github.com/pivotal-cf/";
     final private static String CLOUDFOUNDRYINCUBATORURL = "https://bosh.io/d/github.com/cloudfoundry-incubator/";
     final private static String SEPARATOR = System.getProperty("file.separator");
     final private static String TMPDIRECTORY = LocalDirectoryConfiguration.getTmpDir();
@@ -327,7 +328,12 @@ public class HbReleaseManagementService {
             dto.setDownloadLink(CLOUDFOUNDRYURL + dto.getReleaseType().toLowerCase() + "?v=" + dto.getReleasePathVersion());
         } else if( dto.getReleaseType().equalsIgnoreCase("os-conf")){
             dto.setDownloadLink(CLOUDFOUNDRYURL + "os-conf-release?v=" + dto.getReleasePathVersion());
-        }else{
+        } else if( dto.getReleaseType().equalsIgnoreCase("credhub") ){
+            dto.setDownloadLink(PIVOTALURL + "credhub-release?v=" + dto.getReleasePathVersion());
+        } else if( dto.getReleaseType().equalsIgnoreCase("bpm") ){
+        	 dto.setDownloadLink(CLOUDFOUNDRYINCUBATORURL + "bpm-release?v=" + dto.getReleasePathVersion());
+        }
+        else{
             dto.setDownloadLink(CLOUDFOUNDRYURL + dto.getReleaseType().toLowerCase()+"-release?v=" + dto.getReleasePathVersion());
         }
         return dto.getDownloadLink();

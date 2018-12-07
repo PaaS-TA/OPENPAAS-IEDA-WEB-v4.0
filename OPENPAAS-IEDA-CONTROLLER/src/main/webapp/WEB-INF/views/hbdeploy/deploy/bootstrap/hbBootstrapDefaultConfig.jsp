@@ -1,7 +1,6 @@
 <%
 /* =================================================================
  * 작성일 : 2018.06
- * 작성자 : 이동현
  * 상세설명 : 기본 인증서 관리 화면
  * =================================================================
  */ 
@@ -54,6 +53,13 @@ var defaultLayout = {
                    { field: 'credentialKeyName', caption: '디렉터 인증서', size:'180px', style:'text-align:center;'},
                    { field: 'boshRelease', caption: 'BOSH 릴리즈', size:'130px', style:'text-align:center;'},
                    { field: 'boshCpiRelease', caption: 'BOSH CPI 릴리즈', size:'180px', style:'text-align:center;'},
+                   { field: 'boshBpmRelease', caption: 'BOSH BPM 릴리즈', size:'180px', style:'text-align:center;'},
+                   { field: 'osConfRelease', caption: 'OS-CONF 릴리즈', size:'180px', style:'text-align:center;'},
+                   { field: 'paastaMonitoringUse', caption: 'PaaS-TA 모니터링 사용', size:'180px', style:'text-align:center;'},
+                   { field: 'paastaMonitoringRelease', caption: 'PaaS-TA 모니터링 릴리즈', size:'180px', style:'text-align:center;'},
+                   { field: 'syslogRelease', caption: 'SYSLOG 릴리즈', size:'180px', style:'text-align:center;'},
+/*                    { field: 'uaaRelease', caption: 'UAA 릴리즈', size:'180px', style:'text-align:center;'},
+                   { field: 'credhubRelease', caption: 'CREDHUB 릴리즈', size:'180px', style:'text-align:center;'}, */
                    { field: 'ntp', caption: 'NTP 서버', size:'120px', style:'text-align:center;'}
                   ],
             onSelect : function(event) {
@@ -129,14 +135,31 @@ $(function(){
  * 기능 : initView
  *********************************************************/
 function initView(){
-     $("input[name='ingestorIp']").attr("disabled", true);
-     $("input[name='influxdbIp']").attr("disabled", true);
+     $("input[name='metricUrl']").attr("disabled", true);
+     $("input[name='syslogAddress']").attr("disabled", true);
+     $("input[name='syslogPort']").attr("disabled", true);
+     $("input[name='syslogTransport']").attr("disabled", true);
+     
      $('[data-toggle="popover"]').popover();
-     $(".paastaMonitoring-info").attr('data-content', "paasta-controller v3.0 이상에서 지원")
+     $(".paastaMonitoring-info").attr('data-content', "paasta  v4.0 이상에서 지원");
      $('input:radio[name=enableSnapshots]:input[value=false]').attr("checked", true);
      enableSnapshotsFn("false");
      checkPaasTAMonitoringUseYn();
      getCredentialList();
+}
+
+/******************************************************************
+ * 기능 : getLocalBoshList
+ * 설명 : BOSH 릴리즈 정보
+ ***************************************************************** */
+function settingMonitoringView(value){
+    if(value == "bosh-268.2.0.tgz"){
+        $("#paastaMonitoring").attr("disabled", false);
+    } else {
+        $("#paastaMonitoring").attr("disabled", true);
+        $('#paastaMonitoring').attr("checked", false);
+        checkPaasTAMonitoringUseYn();
+    }
 }
 
 /******************************************************************
@@ -162,6 +185,35 @@ function getLocalBoshList(type){
                     
                 }
                 $("select[name='boshRelease']").html(options);
+            }else if(type == "bpm"){
+                var options = "<option value=''>BPM 릴리즈를 선택하세요.</option>";
+                for( var i=0; i<data.length; i++ ){
+                    if( data[i] == boshInfo.boshBpmRelease ){
+                        options += "<option value='"+data[i]+"' selected >"+data[i]+"</option>";
+                    }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
+                    
+                }
+                $("select[name='boshBpmRelease']").html(options);
+            } else if(type == "os-conf"){
+                var options = "<option value=''>OS-CONF 릴리즈를 선택하세요.</option>";
+                for( var i=0; i<data.length; i++ ){
+                    if( data[i] == boshInfo.osConfRelease ){
+                        options += "<option value='"+data[i]+"' selected >"+data[i]+"</option>";
+                    }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
+                    
+                }
+                $("select[name='osConfRelease']").html(options);
+            
+            } else if(type == "syslog"){
+                var options = "<option value=''>SYSLOG 릴리즈를 선택하세요.</option>";
+                for( var i=0; i<data.length; i++ ){
+                    if( data[i] == boshInfo.syslogRelease ){
+                        options += "<option value='"+data[i]+"' selected >"+data[i]+"</option>";
+                    }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
+                    
+                }
+                $("select[name='syslogRelease']").html(options);
+                
             }
         },
         error : function( e, status ) {
@@ -169,6 +221,7 @@ function getLocalBoshList(type){
         }
     });
 }
+
 
 /********************************************************
  * 설명 : Bosh 릴리즈 버전 목록 정보 조회
@@ -227,35 +280,6 @@ function getLocalBoshCpiList(type, iaas){
    });
 }
 
-/******************************************************************
- * 기능 : getLocalPaasTAMonitoringReleaseList
- * 설명 : Paas-TA 모니터링 릴리즈 정보
- ***************************************************************** */
-function getLocalPaasTAMonitoringReleaseList(type){
-    $.ajax({
-        type: "GET",
-        url: "/common/deploy/systemRelease/list/"+type+"/''",
-        contentType: "application/json",
-        async: true,
-        success: function(data, status){
-            if( data.length == 0 ){
-                return;
-            }
-            if(type == 'BOSH_MONITORING_AGENT'){
-                var options = '<option value="">PaaS-TA 모니터링 릴리즈를 선택하세요.</option>';
-                for( var i=0; i<data.length; i++ ){
-                    if( data[i] == boshInfo.paastaMonitoringRelease){
-                        options += "<option value='"+data[i]+"' selected >"+data[i]+"</option>";
-                    }else options += "<option value='"+data[i]+"'>"+data[i]+"</option>";
-                }
-                $("select[name='paastaMonitoringRelease']").html(options);
-            }
-        },
-        error: function(e, status){
-            w2alert("Bosh 릴리즈 "+search_data_fail_msg, "BOOTSTRAP 설치");
-        }
-    });
- }
 
 /********************************************************
  * 설명 : 디렉터 인증서 목록 조회
@@ -309,19 +333,27 @@ function enableSnapshotsFn(value){
 function checkPaasTAMonitoringUseYn(type){
     var value = $("#paastaMonitoring:checked").val();
     if( value == "on"){
-        $("input[name=ingestorIp]").attr("disabled", false);
-        $("input[name=influxdbIp]").attr("disabled", false);
+        $("input[name='metricUrl']").attr("disabled", false);
+        $("input[name='syslogAddress']").attr("disabled", false);
+        $("input[name='syslogPort']").attr("disabled", false);
+        $("input[name='syslogTransport']").attr("disabled", false);
         $("select[name=paastaMonitoringRelease]").prop("disabled", false);
-        //ETC 릴리즈 정보 가져오기(PaaS-TA Monitoring 릴리즈)
-        getLocalPaasTAMonitoringReleaseList('BOSH_MONITORING_AGENT');
+        $("select[name=syslogRelease]").prop("disabled", false);
+        getLocalPaasTAMonitoringReleaseList('PAASTA-MONITORING');
+        getLocalBoshList('syslog');
     }else{
-        $("input[name=ingestorIp]").val("");
-        $("select[name=paastaMonitoringRelease]").val("");
-        $("input[name=ingestorIp]").attr("disabled", true);
+        $("input[name='metricUrl']").attr("disabled", true);
+        $("input[name='syslogAddress']").attr("disabled", true);
+        $("input[name='syslogPort']").attr("disabled", true);
+        $("input[name='syslogTransport']").attr("disabled", true);
         
-        $("input[name=influxdbIp]").attr("disabled", true);
-        $("input[name=influxdbIp]").val("");
+        $("input[name='metricUrl']").val('');
+        $("input[name='syslogAddress']").val('');
+        $("input[name='syslogPort']").val('');
+        $("input[name='syslogTransport']").val('');
+        
         $("select[name=paastaMonitoringRelease]").attr("disabled", true);
+        $("select[name=syslogRelease]").prop("disabled", true);
         $('input:checkbox[id="paastaMonitoring"]').removeAttr('checked');
     }
 }
@@ -340,7 +372,7 @@ function getLocalPaasTAMonitoringReleaseList(type){
             if( data.length == 0 ){
                 return;
             }
-            if(type == 'BOSH_MONITORING_AGENT'){
+            if(type == 'PAASTA-MONITORING'){
                 var options = '<option value="">PaaS-TA 모니터링 릴리즈를 선택하세요.</option>';
                 for( var i=0; i<data.length; i++ ){
                     if( data[i] == boshInfo.paastaMonitoringRelease){
@@ -365,12 +397,24 @@ function getInitBoshReleaseList(iaasType){
         w2alert("클라우드 인프라 환경을 선택하세요.");
         $("select[name=boshRelease]").html("<option value='' >BOSH 릴리즈를 선택하세요.</option>");
         $("select[name=boshCpiRelease]").html("<option value='' >BOSH CPI 릴리즈를 선택하세요.</option>");
+        $("select[name=osConfRelease]").html("<option value='' >OS-CONF 릴리즈를 선택하세요.</option>");
+/*         $("select[name=uaaRelease]").html("<option value='' >UAA 릴리즈를 선택하세요.</option>");
+        $("select[name=credHubRelease]").html("<option value='' >CREDHUB 릴리즈를 선택하세요.</option>"); */
+        $("select[name=boshBpmRelease]").html("<option value='' >BPM 릴리즈를 선택하세요.</option>");
+        $("select[name=boshBpmRelease]").attr("disabled", "disabled");
+        $("select[name=credHubRelease]").attr("disabled", "disabled");
+        $("select[name=uaaRelease]").attr("disabled", "disabled");
         $("select[name=boshRelease]").attr("disabled", "disabled");
         $("select[name=boshCpiRelease]").attr("disabled", "disabled");
+        $("select[name=osConfRelease]").attr("disabled", "disabled");
         return;
     }
     $("select[name=boshRelease]").removeAttr("disabled");
     $("select[name=boshCpiRelease]").removeAttr("disabled");
+    $("select[name=osConfRelease]").removeAttr("disabled");
+    //$("select[name=credHubRelease]").removeAttr("disabled");
+    $("select[name=boshBpmRelease]").removeAttr("disabled");
+    //$("select[name=uaaRelease]").removeAttr("disabled");
     iaas = iaasType;
     //BOSH CPI 릴리즈 정보 가져오기
     getLocalBoshCpiList('bosh_cpi', iaas);
@@ -378,10 +422,23 @@ function getInitBoshReleaseList(iaasType){
     $('[data-toggle="popover"]').popover();
     //BOSH 릴리즈 사용 가능한 버전 가져오기
     getReleaseVersionList();
-    //PaaS-TA 모니터링 릴리즈 정보 가져오기
-    getLocalPaasTAMonitoringReleaseList('BOSH_MONITORING_AGENT');
+    //PaaS-TA 모니터링 릴리즈 정보 가져오기PAASTA-MONITORING
+    
     //BOSH 릴리즈 정보 가져오기
     getLocalBoshList('bosh');
+    //BPM 릴리즈 정보 가져오기
+    getLocalBoshList('bpm');
+    //OS Conf 릴리즈 정보 가져오기
+    getLocalBoshList('os-conf');
+    //UAA 릴리즈 정보 가져오기
+    //getLocalBoshList('uaa');
+    //Credhub 릴리즈 정보 가져오기
+    //getLocalBoshList('credhub');
+    getLocalPaasTAMonitoringReleaseList('PAASTA-MONITORING');
+    //syslog 릴리즈 정보 가져오기
+    getLocalBoshList('syslog');
+    
+    
     
 
 }
@@ -393,9 +450,7 @@ function getInitBoshReleaseList(iaasType){
 function doSearch() {
     boshInfo="";//인프라 환경 설정 정ㅈ보
     iaas = "";
-    
     resetForm();
-    
     w2ui['default_GroupGrid'].clear();
     //w2ui['regPopupDiv'].clear();
     w2ui['default_GroupGrid'].load('/deploy/hbBootstrap/default/list');
@@ -417,14 +472,20 @@ function doButtonStyle() {
 function registBootstrapDefaultConfigInfo(){
     if( $("#paastaMonitoring:checked").val() == "on"){
         var monitoringUse = "true";
-        var ingrestorIp = $("input[name=ingestorIp]").val();
+        var metricUrl = $("input[name=metricUrl]").val();
+        var syslogAddress = $("input[name='syslogAddress']").val();
+        var syslogPort = $("input[name='syslogPort']").val();
+        var syslogTransport = $("input[name='syslogTransport']").val();
         var monitoringRelease = $("select[name=paastaMonitoringRelease]").val();
-        var influxdbIp = $("input[name='influxdbIp']").val();
+        var syslogRelease = $("select[name=syslogRelease]").val();
     }else{
         var monitoringUse = "false";
-        var influxdbIp =  "";
-        var ingrestorIp = "";
+        var metricUrl =  "";
+        var syslogAddress = "";
+        var syslogPort = "";
+        var syslogTransport = "";
         var monitoringRelease = "";
+        var syslogRelease = "";
     }
     boshInfo = {
             iaasType            : $("select[name=iaasType]").val(),
@@ -435,14 +496,20 @@ function registBootstrapDefaultConfigInfo(){
             credentialKeyName   : $("select[name=credentialKeyName]").val(),
             ntp                 : $("input[name=ntp]").val(),
             boshRelease         : $("select[name=boshRelease]").val(),
+            credhubRelease      : $("select[name=credHubRelease]").val(),
+            uaaRelease          : $("select[name=uaaRelease]").val(),
             osConfRelease       : $("select[name=osConfRelease]").val(),
             boshCpiRelease      : $("select[name=boshCpiRelease]").val(),
+            boshBpmRelease      : $("select[name=boshBpmRelease]").val(),
             enableSnapshots     : $("input:radio[name=enableSnapshots]:checked").val(),
             snapshotSchedule    : $("input[name=snapshotSchedule]").val(),
-            influxdbIp : influxdbIp,
+            metricUrl : metricUrl,
             paastaMonitoringUse : monitoringUse,
-            paastaMonitoringIp  : ingrestorIp,
-            paastaMonitoringRelease : monitoringRelease
+            syslogAddress  : syslogAddress,
+            syslogPort  : syslogPort,
+            syslogTransport  : syslogTransport,
+            paastaMonitoringRelease : monitoringRelease,
+            syslogRelease : syslogRelease
     }
     $.ajax({
         type : "PUT",
@@ -492,20 +559,32 @@ function settingDefaultInfo(){
     }
     if( !checkEmpty(record.paastaMonitoringUse) ){
         if( record.paastaMonitoringUse == "true"){
-        	
-            $("input[name='paastaMonitoring']").attr("checked", true);
-            $("input[name='ingestorIp']").removeAttr("disabled");
-            $("input[name='ingestorIp']").val(record.paastaMonitoringIp);
             
-            $("input[name='influxdbIp']").removeAttr("disabled");
-            $("input[name='influxdbIp']").val(record.influxdbIp);
+            $("input[name='paastaMonitoring']").attr("checked", true);
+            $("input[name='metricUrl']").removeAttr("disabled");
+            $("input[name='metricUrl']").val(record.metricUrl);
+            
+            $("input[name='syslogAddress']").removeAttr("disabled");
+            $("input[name='syslogAddress']").val(record.syslogAddress);
+            
+            $("input[name='syslogPort']").removeAttr("disabled");
+            $("input[name='syslogPort']").val(record.syslogPort);
+            
+            $("input[name='syslogTransport']").removeAttr("disabled");
+            $("input[name='syslogTransport']").val(record.syslogTransport);
             
             $("select[name='paastaMonitoringRelease']").removeAttr("disabled");
             $("select[name='paastaMonitoringRelease']").val(record.paastaMonitoringRelease);
+            
+            $("select[name='syslogRelease']").removeAttr("disabled");
+            $("select[name='syslogRelease']").val(record.syslogRelease);
+            
         }else{
             $("input[name='paastaMonitoring']").attr("checked", false);
-            //$("select[name=paastaMonitoringRelease]").attr("disabled", true);
         }
+    }
+    if( !checkEmpty(record.boshBpmRelease) ){
+        $("#bpmConfDiv").show();
     }
     getInitBoshReleaseList(iaas);
     
@@ -573,8 +652,7 @@ function resetForm(status){
     $("input[name=deploymentName]").val("");
     $("input[name=directorName]").val("");
     $("input[name=snapshotSchedule]").val("");
-    $("input[name=ingestorIp]").val("");
-    $("input[name=influxdbIp]").val("");
+
     $("input[name=defaultId]").val("");
     
     $("select[name=iaasType]").val("");
@@ -583,12 +661,33 @@ function resetForm(status){
     
     $("select[name=boshCpiRelease]").html("<option value='' >BOSH CPI 릴리즈를 선택하세요.</option>");
     $("select[name=boshCpiRelease]").attr("disabled", "disabled");
+    $("select[name=boshBpmRelease]").html("<option value='' >BOSH BPM 릴리즈를 선택하세요.</option>");
     
+    $("select[name=boshBpmRelease]").attr("disabled", "disabled");
+    $("select[name=osConfRelease]").attr("disabled", "disabled");
+    $("select[name=osConfRelease]").html("<option value='' >OS-CONF 릴리즈를 선택하세요.</option>");
+    
+    $("select[name=credHubRelease]").attr("disabled", "disabled");
+    $("select[name=credHubRelease]").html("<option value='' >CREDHUB 릴리즈를 선택하세요.</option>");
+    
+    $("select[name=uaaRelease]").attr("disabled", "disabled");
+    $("select[name=uaaRelease]").html("<option value='' >UAA 릴리즈를 선택하세요.</option>");
+    
+    $("input[name='paastaMonitoring']").attr("checked", false);
     $("select[name=paastaMonitoringRelease]").html("<option value='' >PaaS-TA 모니터링 릴리즈를 선택하세요.</option>");
     $("select[name=paastaMonitoringRelease]").attr("disabled", "disabled");
     
-    $("input[name=influxdbIp]").attr("disabled", "disabled");
-    $("input[name=ingestorIp]").attr("disabled", "disabled");
+    $("select[name=syslogRelease]").html("<option value='' >SYSLOG 릴리즈를 선택하세요.</option>");
+    $("select[name=syslogRelease]").attr("disabled", "disabled");
+    
+    $("input[name=metricUrl]").val("");
+    $("input[name=metricUrl]").attr("disabled", "disabled");
+    $("input[name=syslogAddress]").val("");
+    $("input[name=syslogAddress]").attr("disabled", "disabled");
+    $("input[name=syslogPort]").val("");
+    $("input[name=syslogPort]").attr("disabled", "disabled");
+    $("input[name=syslogTransport]").val("");
+    $("input[name=syslogTransport]").attr("disabled", "disabled");
     
     $(".snapshotScheduleDiv").hide();
     
@@ -668,7 +767,7 @@ function resetForm(status){
                            <span class="glyphicon glyphicon glyphicon-question-sign boshRelase-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="hover" data-html="true" title="설치 지원 버전 목록"></span>
                        </label>
                        <div>
-                           <select class="form-control" disabled name="boshRelease" style="width: 320px; margin-left: 20px;">
+                           <select class="form-control" onchange="settingMonitoringView(this.value);"  disabled name="boshRelease" style="width: 320px; margin-left: 20px;">
                                <option value="" >BOSH 릴리즈를 선택하세요.</option>
                            </select>
                        </div>
@@ -683,7 +782,16 @@ function resetForm(status){
                        </div>
                    </div>
                    
-                    <div class="w2ui-field" id="osConfDiv" hidden="true"> 
+                   <div class="w2ui-field" id="bpmConfDiv">
+                       <label style="width:40%;text-align: left;padding-left: 20px;">BOSH BPM 릴리즈</label>
+                       <div>
+                           <select class="form-control" name="boshBpmRelease" style="width: 320px; margin-left: 20px;">
+                               <option value="" >BOSH BPM 릴리즈를 선택하세요.</option>
+                           </select>
+                       </div>
+                   </div>
+                   
+                    <div class="w2ui-field" id="osConfDiv"> 
                         <label style="width:40%;text-align: left;padding-left: 20px;">OS-CONF 릴리즈</label>
                         <div>
                             <select name="osConfRelease" class="form-control" style="width: 320px; margin-left: 20px;">
@@ -692,8 +800,26 @@ function resetForm(status){
                         </div>
                     </div>
                     
+<!--                     <div class="w2ui-field"> 
+                        <label style="width:40%;text-align: left;padding-left: 20px;">UAA 릴리즈</label>
+                        <div>
+                            <select name="uaaRelease" class="form-control" style="width: 320px; margin-left: 20px;">
+                                <option value="">UAA 릴리즈를 선택하세요.</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="w2ui-field"> 
+                        <label style="width:40%;text-align: left;padding-left: 20px;">CREDHUB 릴리즈</label>
+                        <div>
+                            <select name="credHubRelease" class="form-control" style="width: 320px; margin-left: 20px;">
+                                <option value="">CREDHUB 릴리즈를 선택하세요.</option>
+                            </select>
+                        </div>
+                    </div> -->
+                    
                     <div class="w2ui-field">
-                        <label style="width:40%;text-align: left;padding-left: 20px;">스냅샷기능 사용여부</label>
+                        <label style="width:43%;text-align: left;padding-left: 20px;">스냅샷기능 사용여부</label>
                         <div>
                             <span onclick="enableSnapshotsFn('true');" style="width:30%;"><label><input type="radio" name="enableSnapshots" value="true" />&nbsp;사용</label></span>
                             &nbsp;&nbsp;
@@ -713,27 +839,51 @@ function resetForm(status){
                         <span class="glyphicon glyphicon glyphicon-question-sign paastaMonitoring-info" style="cursor:pointer;font-size: 14px;color: #157ad0;" data-toggle="popover"  data-trigger="click" data-html="true"></span>
                         </label>
                         <div style="width: 60%">
-                            <input name="paastaMonitoring" type="checkbox" id="paastaMonitoring" onclick="checkPaasTAMonitoringUseYn(this.value);"/>사용
+                            <input style="margin-left: 20px;" disabled name="paastaMonitoring" type="checkbox" id="paastaMonitoring" onclick="checkPaasTAMonitoringUseYn(this.value);"/>사용
                         </div>
                     </div>
                     <div class="w2ui-field">
-                        <label style="width:60%;text-align: left;padding-left: 20px;">PaaS-TA 모니터링 Ingestor 서버 IP</label>
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Metric URL</label>
                         <div>
-                            <input class="form-control" name = "ingestorIp" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)10.0.0.0"/>
+                            <input class="form-control" name = "metricUrl" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)10.0.15.11:8059"/>
                         </div>
                     </div>
                     
                     <div class="w2ui-field">
-                        <label style="width:60%;text-align: left;padding-left: 20px;">PaaS-TA 모니터링 Influxdb 서버 IP</label>
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Syslog Address</label>
                         <div>
-                            <input class="form-control" name = "influxdbIp" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)10.0.0.0"/>
+                            <input class="form-control" name = "syslogAddress" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)10.0.0.0"/>
                         </div>
                     </div>
+                    
+                    <div class="w2ui-field">
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Syslog Port</label>
+                        <div>
+                            <input class="form-control" name = "syslogPort" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)2514"/>
+                        </div>
+                    </div>
+                    
+                    <div class="w2ui-field">
+                        <label style="width:40%;text-align: left;padding-left: 20px;">Syslog Transport</label>
+                        <div>
+                            <input class="form-control" name = "syslogTransport" type="text"  maxlength="100" style="width: 320px; margin-left: 20px;" placeholder="예)relp"/>
+                        </div>
+                    </div>
+                    
+                    
                     <div class="w2ui-field"> 
-                        <label style="width:40%;text-align: left;padding-left: 20px;">PaaS-TA 모니터링 릴리즈</label>
+                        <label style="width:40%;text-align: left;padding-left: 20px;">모니터링 릴리즈</label>
                         <div>
                             <select name="paastaMonitoringRelease" class="form-control" style="width: 320px; margin-left: 20px;">
                                 <option value="">PaaS-TA 모니터링 릴리즈를 선택하세요.</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="w2ui-field"> 
+                        <label style="width:40%;text-align: left;padding-left: 20px;">SYSLOG 릴리즈</label>
+                        <div>
+                            <select name="syslogRelease" class="form-control" style="width: 320px; margin-left: 20px;">
+                                <option value="">SYSLOG 릴리즈를 선택하세요.</option>
                             </select>
                         </div>
                     </div>
@@ -742,9 +892,14 @@ function resetForm(status){
         </div>
     </form>
     <div id="regPopupBtnDiv" style="text-align: center; margin-top: 5px;">
-        <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_DEFAULT_ADD')">
+            <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+        </sec:authorize>
         <span id="resetBtn" onclick="resetForm('reset');" class="btn btn-info">취소</span>
-        <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_DEFAULT_DELETE')">
+            <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        </sec:authorize>
+        
     </div>
 </div>
 
@@ -778,6 +933,22 @@ $(function() {
                 required: function(){
                     return checkEmpty( $("select[name='boshCpiRelease']").val() );
                 }
+            }, osConfigRelease: { 
+                required: function(){
+                    return checkEmpty( $("select[name='osConfRelease']").val() );
+                }
+            }, credHubRelease: { 
+                required: function(){
+                    return checkEmpty( $("select[name='credHubRelease']").val() );
+                }
+            }, uaaRelease: { 
+                required: function(){
+                    return checkEmpty( $("select[name='uaaRelease']").val() );
+                }
+            }, boshBpmRelease: { 
+                required: function(){
+                    return checkEmpty( $("select[name='boshBpmRelease']").val() );
+                }
             }, snapshotSchedule: { 
                 required: function(){
                     if( $("input:radio[name=enableSnapshots]:checked").val() == "true"){
@@ -786,35 +957,45 @@ $(function() {
                         return false;
                     }
                 }
-            }, ingestorIp : {
+            }, syslogAddress : {
                   required: function(){
                       if( $("#paastaMonitoring:checked").val() == "on"){
-                           return checkEmpty( $("input[name='ingestorIp']").val() );
+                           return checkEmpty( $("input[name='syslogAddress']").val() );
                       }else{
                            return false;
                       }
                  },ipv4 : function(){
                       if( $(" #paastaMonitoring:checked").val() == "on"){
-                           return $("input[name='ingestorIp']").val()
+                           return $("input[name='syslogAddress']").val()
                       }else{
                            return "0.0.0.0";
                       }
                  }
-            }, influxdbIp : {
+            }, metricUrl : {
                 required: function(){
                     if( $("#paastaMonitoring:checked").val() == "on"){
-                         return checkEmpty( $("input[name='influxdbIp']").val() );
+                         return checkEmpty( $("input[name='metricUrl']").val() );
                     }else{
                          return false;
                     }
-               },ipv4 : function(){
-                    if( $(" #paastaMonitoring:checked").val() == "on"){
-                         return $("input[name='influxdbIp']").val()
+               }
+            }, syslogPort : {
+                required: function(){
+                    if( $("#paastaMonitoring:checked").val() == "on"){
+                         return checkEmpty( $("input[name='syslogPort']").val() );
                     }else{
-                         return "0.0.0.0";
+                         return false;
                     }
                }
-          }, paastaMonitoringRelease : {
+            }, syslogTransport : {
+                required: function(){
+                    if( $("#paastaMonitoring:checked").val() == "on"){
+                         return checkEmpty( $("input[name='syslogTransport']").val() );
+                    }else{
+                         return false;
+                    }
+               }
+            }, paastaMonitoringRelease : {
                   required: function(){
                       if( $("#paastaMonitoring:checked").val() == "on"){
                            return checkEmpty( $("select[name='paastaMonitoringRelease']").val() );
@@ -822,7 +1003,15 @@ $(function() {
                            return false;
                       }
                   }
-          },  iaasType: { 
+          }, syslogRelease : {
+              required: function(){
+                  if( $("#paastaMonitoring:checked").val() == "on"){
+                       return checkEmpty( $("select[name='syslogRelease']").val() );
+                  }else{
+                       return false;
+                  }
+              }
+      },  iaasType: { 
                 required: function(){
                     return checkEmpty( $("select[name='iaasType']").val() );
                 }
@@ -830,7 +1019,7 @@ $(function() {
                 required: function(){
                     return checkEmpty( $("input[name='defaultConfigName']").val() );
                 }
-            }
+          }
         }, messages: {
             deploymentName: { 
                  required:  "배포명" + text_required_msg
@@ -844,12 +1033,26 @@ $(function() {
                 required:  "BOSH 릴리즈" + select_required_msg
             }, boshCpiRelease: { 
                 required:  "BOSH CPI 릴리즈"+select_required_msg
+            }, credHubRelease: { 
+                required:  "CREDHUB 릴리즈"+select_required_msg
+            }, uaaRelease: { 
+                required:  "UAA 릴리즈"+select_required_msg
+            }, osConfigRelease: { 
+                required:  "OS-CONF 릴리즈"+select_required_msg
+            }, boshBpmRelease: { 
+                required:  "BOSH BPM 릴리즈"+select_required_msg
             }, snapshotSchedule: { 
                 required:  "스냅샷 스케쥴"+text_required_msg
-            }, ingestorIp: {
-                required: "모니터링 Ip"+text_required_msg
-            }, influxdbIp: {
-                required: "모니터링 Ip"+text_required_msg
+            }, metricUrl: {
+                required: "metricUrl"+text_required_msg
+            }, syslogAddress: {
+                required: "syslogAddress"+text_required_msg
+            }, syslogPort: {
+                required: "syslogPort"+text_required_msg
+            }, syslogTransport: {
+                required: "syslogTransport"+text_required_msg
+            }, syslogRelease: {
+                required: "SYSLOG 릴리즈"+select_required_msg
             }, paastaMonitoringRelease: {
                 required: "모니터링 릴리즈"+select_required_msg
             }, iaasType: {

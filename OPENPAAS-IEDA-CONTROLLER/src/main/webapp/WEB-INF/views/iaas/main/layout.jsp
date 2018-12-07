@@ -1,7 +1,6 @@
 <%
 /* =================================================================
  * 작성일 : 2017.05.02
- * 작성자 : 지향은
  * 상세설명 : layout 화면(top/menu/main)
  * =================================================================
  */ 
@@ -18,7 +17,7 @@
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>플랫폼 설치 대시보드</title>
+<title>인프라 관리 대시보드</title>
 
 <!-- Bootstrap & w2ui css  -->
 <link rel="stylesheet" type="text/css" href="<c:url value='/webjars/bootstrap/3.3.5/css/bootstrap.min.css'/>"/>
@@ -46,7 +45,7 @@
 <script type="text/javascript" src="<c:url value='/webjars/w2ui/1.4.2/w2ui.min.js'/>"></script>
 
 <!-- Common -->
-<script type="text/javascript" src="<c:url value='/js/common.js?ver=3'/>"></script>
+<script type="text/javascript" src="<c:url value='/js/common.js?ver=4'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/common-iaas.js'/>"></script>
 
 <!-- RSA 암호화 js -->
@@ -54,6 +53,8 @@
 <script type="text/javascript" src="<c:url value='/js/rsa.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/prng4.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/rng.js'/>"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 
 <script type="text/javascript">
 (function($) {
@@ -102,7 +103,7 @@ function setLayoutContainerHeight(login){
 
 </script>
 <style>
-    .w2ui-popup .w2ui-popup-message{ z-index:1500; }
+.w2ui-popup .w2ui-popup-message{ z-index:1500; }
 </style>
 </head>
 <body>

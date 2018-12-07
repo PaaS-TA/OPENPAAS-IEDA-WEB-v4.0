@@ -54,6 +54,7 @@ public class CommonApiService {
     public AWSStaticCredentialsProvider getAwsStaticCredentialsProvider(String accessKey, String secret){
         BasicAWSCredentials credential = new BasicAWSCredentials(accessKey, secret);
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(credential);
+        
         return provider;
     }
     
@@ -170,7 +171,7 @@ public class CommonApiService {
             }
         } catch (Exception ex) {
                     if( LOGGER.isErrorEnabled() ){ LOGGER.error(ex.getMessage()); }
-    }
+        }
         return credentials;
     }
     

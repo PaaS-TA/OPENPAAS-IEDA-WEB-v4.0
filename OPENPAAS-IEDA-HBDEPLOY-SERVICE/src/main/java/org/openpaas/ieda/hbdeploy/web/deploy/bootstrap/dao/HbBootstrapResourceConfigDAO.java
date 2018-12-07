@@ -8,7 +8,7 @@ import org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.dto.HbBootstrapResourceCo
 public interface HbBootstrapResourceConfigDAO {
     /****************************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : 리스소 목록 조회
+     * @description : 리소스 목록 조회
      * @title : selectBootstrapResourceConfigInfoList
      * @return : List<HbBootstrapResourceConfigVO>
     *****************************************************************/

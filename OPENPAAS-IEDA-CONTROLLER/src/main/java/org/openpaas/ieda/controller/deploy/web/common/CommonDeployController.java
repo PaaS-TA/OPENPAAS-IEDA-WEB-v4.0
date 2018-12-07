@@ -19,7 +19,7 @@ import org.openpaas.ieda.deploy.web.config.setting.service.DirectorConfigService
 import org.openpaas.ieda.deploy.web.config.stemcell.dao.StemcellManagementVO;
 import org.openpaas.ieda.deploy.web.config.stemcell.service.StemcellManagementService;
 import org.openpaas.ieda.deploy.web.config.systemRelease.service.ReleaseManagementService;
-import org.openpaas.ieda.deploy.web.information.deploy.service.DeploymentService;
+import org.openpaas.ieda.deploy.web.information.deployment.service.DeploymentService;
 import org.openpaas.ieda.deploy.web.information.iassConfig.dao.IaasConfigMgntVO;
 import org.openpaas.ieda.deploy.web.information.iassConfig.service.IaasConfigMgntService;
 import org.openpaas.ieda.deploy.web.information.release.service.ReleaseService;
@@ -178,6 +178,19 @@ public class CommonDeployController {
         commonService.downloadDeploymentFile(fileName, response);
     }
     
+    
+    /****************************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : 배포파일 브라우저 다운로드
+     * @title : downloadDeploymentFile
+     * @return : void
+    *****************************************************************/
+    @RequestMapping(value = "/common/deploy/download/credential/{fileName}", method = RequestMethod.GET)
+    public void downloadCredentialFile( @PathVariable("fileName") String fileName, HttpServletResponse response){
+        if(LOGGER.isInfoEnabled()){ LOGGER.debug("====================================> 배포파일 브라우저 다운로드 요청"); }
+        commonService.downloadCredentialFile(fileName, response);
+    }
+    
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description : 로컬 릴리즈 목록 조회
@@ -295,10 +308,6 @@ public class CommonDeployController {
         if(LOGGER.isInfoEnabled()){ LOGGER.info("==================================> Key 생성 요청"); }
         String keyFile = commonService.createKeyInfo(dto, principal);
         HashMap<String, Object> map = new HashMap<String, Object>();
-        if( dto.getPlatform().toLowerCase().equalsIgnoreCase("diego") ){
-            String fingerprint = commonService.getFingerprint(keyFile);
-            map.put("fingerprint", fingerprint);
-        }
         map.put("keyFile", keyFile);
         return new ResponseEntity<HashMap<String, Object>>(map,HttpStatus.OK);
     }

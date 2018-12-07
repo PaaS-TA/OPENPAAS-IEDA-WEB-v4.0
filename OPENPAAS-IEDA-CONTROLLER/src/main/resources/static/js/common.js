@@ -377,6 +377,12 @@ function gbConverter(value){
                  $('#attachBtn').attr('disabled', true);
                  $('#detachBtn').attr('disabled', true);
                  $('#subnetBtn').attr('disabled', true);
+                 $('#addSubnetBtn').attr('disabled', true);
+                 $('#deleteSubnetBtn').attr('disabled', true);
+                 $('#addBlobBtn').attr('disabled', true);
+                 $('#deleteBlobBtn').attr('disabled', true);
+                 $('#addTableBtn').attr('disabled', true);
+                 $('#deleteTableBtn').attr('disabled', true);
                  $('#regionList').attr('disabled', true);
                  $('#regionList').html("<option>지역을 선택하세요.</option>")
              }else{

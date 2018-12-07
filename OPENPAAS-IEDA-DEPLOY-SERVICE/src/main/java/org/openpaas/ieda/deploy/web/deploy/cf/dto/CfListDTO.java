@@ -42,6 +42,8 @@ public class CfListDTO {
     private String stemcellVersion; //스템셀 버전
     private String boshPassword; //VM 비밀번호
     private String keyFile;
+    private String windowsStemcellName; // Azure IaaS Windows Stemcell 명
+    private String windwosStemcellVersion; // Azure Iaas Windows Stemcell 버전
     // Deploy 정보
     private String deploymentFile; //배포파일명
     private String deployStatus; //배포상태
@@ -274,6 +276,18 @@ public class CfListDTO {
     }
     public void setOsConfReleaseVersion(String osConfReleaseVersion) {
         this.osConfReleaseVersion = osConfReleaseVersion;
+    }
+    public String getWindowsStemcellName() {
+        return windowsStemcellName;
+    }
+    public void setWindowsStemcellName(String windowsStemcellName) {
+        this.windowsStemcellName = windowsStemcellName;
+    }
+    public String getWindwosStemcellVersion() {
+        return windwosStemcellVersion;
+    }
+    public void setWindwosStemcellVersion(String windwosStemcellVersion) {
+        this.windwosStemcellVersion = windwosStemcellVersion;
     }
     
 }

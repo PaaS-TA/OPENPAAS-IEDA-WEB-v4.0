@@ -1,7 +1,6 @@
 <%
 /* =================================================================
  * 작성일 : 2018.05.21
- * 작성자 : 이정윤 
  * 상세설명 : Azure Security Group 관리 화면
  * =================================================================
  */ 
@@ -300,7 +299,6 @@ function saveAzureInboundRules(rgName, sgName){
     	resourceGroupName: rgName,
     	securityGroupName: sgName,
                     }
-    console.log(info.accountId+"AAA BBB CCC "+infosecurityGroupName);
     $.ajax({
         type : "POST",
         url : "/azureMgnt/inbound/save",
@@ -309,9 +307,7 @@ function saveAzureInboundRules(rgName, sgName){
         data : JSON.stringify(info),
         success : function(status) {
             w2popup.unlock();
-            w2popup.close();
-            accountId = accountId;
-            doSearch();
+
         }, error : function(request, status, error) {
             w2popup.unlock();
             var errorResult = JSON.parse(request.responseText);
@@ -540,14 +536,14 @@ td {
                     <div class="w2ui-field">
                         <label style="width:36%;text-align: left; padding-left: 20px;">Resource Group</label>
                          <div id="resourceGroupInfoDiv">
-                            <select id="resourceGroupInfo" name="resourceGroupName" onClick = "azureResourceGroupOnchange(this.value, 'selected')" class="select" style="width:300px; font-size: 15px; height: 32px;"></select>
+                            <select id="resourceGroupInfo" name="resourceGroupName" onClick = "azureResourceGroupOnchange(this.value, 'selected')" class="select" style="width:300px; "></select>
                         </div>
                     </div>
                     <div class="w2ui-field">
                         <label style="width:36%;text-align: left; padding-left: 20px;">Location</label>
                          <div id="locationInfoDiv">
-                         <div id="locationInfo" style="width:300px; font-size: 15px; height: 26px; border: 1px solid #ccc; border-radius:2px; padding-left:5px; line-height:26px; background-color: #eee; color:#777 !important;" >리소스 그룹의 리전 명</div>
-                                <input id ="locationVal" name="location" hidden="true" readonly='readonly'  style="width:300px; font-size: 15px; height: 32px;"/> 
+                         <div id="locationInfo" style="width:300px; border: 1px solid #ccc; border-radius:2px; padding-left:5px; line-height:26px; background-color: #eee; color:#777 !important;" >리소스 그룹의 리전 명</div>
+                                <input id ="locationVal" name="location" hidden="true" readonly='readonly'  style="width:300px; "/> 
                         </div>
                     </div>
                     <div class="w2ui-field">

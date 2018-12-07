@@ -1,7 +1,6 @@
 <%
 /* =================================================================
  * 작성일 : 2017.05.08
- * 작성자 : Ji,Hyangeun
  * 상세설명 : Openstack 계정 관리 화면(Openstack 계정 정보 조회/등록/수정/삭제 등)
  * =================================================================
  */ 
@@ -318,6 +317,9 @@ $( window ).resize(function() {
                     </sec:authorize>
                     <sec:authorize access="hasAuthority('IAAS_ACCOUNT_VSPHERE_MENU')">
                         <li><a href="javascript:goPage('<c:url value="/iaasMgnt/account/vSphere"/>', 'vSphere 관리');">vSphere</a></li>
+                    </sec:authorize>
+                    <sec:authorize access="hasAuthority('IAAS_ACCOUNT_AZURE_MENU')">
+                        <li><a href="javascript:goPage('<c:url value="/iaasMgnt/account/azure"/>', 'vSphere 관리');">Azure</a></li>
                     </sec:authorize>
                 </ul>
             </div>

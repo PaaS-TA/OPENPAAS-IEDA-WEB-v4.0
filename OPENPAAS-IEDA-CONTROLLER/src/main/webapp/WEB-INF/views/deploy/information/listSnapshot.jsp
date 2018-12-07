@@ -1,12 +1,10 @@
 <%
 /* =================================================================
  * 작성일 : 2016.09
- * 작성자 : 지향은
  * 상세설명 : 스냅샷 관리
  * =================================================================
  * 수정일         작성자             내용     
  * ------------------------------------------------------------------
- * 2016.12       이동현        목록 화면 개선 및 코드 버그 수정
  * =================================================================
  */ 
 %>
@@ -222,8 +220,8 @@ $( window ).resize(function() {
     <div id="isDefaultDirector"></div>
     
     <div class="pdt20"> 
-        <div class="search_box" align="left" style="padding-left:10px;">
-            <label  style="font-size:11px">배포명</label>
+        <div class="search_box" align="left" style="padding-left:10px; width:100%;">
+            <label  style="font-size:11px; color:white;">배포명</label>
             &nbsp;&nbsp;&nbsp;
             <select name="select" id="deployments"  class="select" style="width:300px">
             </select>

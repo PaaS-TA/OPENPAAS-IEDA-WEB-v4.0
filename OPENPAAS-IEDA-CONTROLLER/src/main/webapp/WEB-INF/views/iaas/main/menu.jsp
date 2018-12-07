@@ -1,7 +1,6 @@
 <%
 /* =================================================================
  * 작성일 : 2017.05.02
- * 작성자 : Ji,Hyangeun
  * 상세설명 : 메뉴 화면
  * =================================================================
  */ 
@@ -10,6 +9,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>  
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+
 <script type="text/javascript">
 
  function goPage(page, title) {
@@ -27,7 +27,7 @@
 }     
  function goWindow(page, title) {
      window.open(page, title);
- }     
+ }
  
 </script>
 
@@ -35,7 +35,7 @@
 <div id="left">
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav side-nav">
-           <li class="active"><a href="javascript:goPage('<c:url value="/iaasMgnt/main/dashboard"/>', 'Dashboard');" style="font-weight:600; font-size:20px;"><i class="fa fa-fw fa-home"></i> 플랫폼 설치 관리</a></li>
+           <li class="active"><a href="javascript:goPage('<c:url value="/iaasMgnt/main/dashboard"/>', 'Dashboard');" style="font-weight:600; font-size:20px;"><i class="fa fa-fw fa-home"></i>인프라 관리 대시보드</a></li>
            <li>
               <a href="javascript:;" data-toggle="collapse" data-target="#adminMgnt" ><i class="fa fa-fw fa fa-user"></i> 플랫폼 관리자 관리 <i class="fa fa-fw fa-caret-down"></i></a>
               <ul id="adminMgnt" class="collapse">

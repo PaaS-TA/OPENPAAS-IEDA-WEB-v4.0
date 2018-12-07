@@ -70,7 +70,6 @@ public class HbBootstrapCredentialConfigService {
         int count = bootstrapCredentialConfigDao.selectBootstrapCredentialConfigByName(dto.getCredentialConfigName());
         if( StringUtils.isEmpty(dto.getId())){
             vo = new HbBootstrapCredentialConfigVO();
-            vo.setIaasType(dto.getIaasType());
             vo.setCreateUserId(principal.getName());
             if(count > 0){
                 throw new CommonException(message.getMessage("common.conflict.exception.code", null, Locale.KOREA),
@@ -86,6 +85,7 @@ public class HbBootstrapCredentialConfigService {
         if( vo != null ){
             String credentialKeyName = dto.getCredentialConfigName() + "-cred.yml";
             makeCredentialFile(dto, credentialKeyName);
+            vo.setIaasType(dto.getIaasType());
             vo.setNetworkConfigName(dto.getNetworkConfigName());
             vo.setUpdateUserId(principal.getName());
             vo.setDirectorPrivateIp(dto.getDirectorPrivateIp());
@@ -108,7 +108,10 @@ public class HbBootstrapCredentialConfigService {
      * @return : void
     ***************************************************/
     public void makeCredentialFile(HbBootstrapCredentialConfigDTO dto, String credentialKeyName) {
-        String commonCredentialManifestPath = MANIFEST_TEMPLATE_DIR + "/bootstrap/264.7/common/DirectorCredential.yml";
+        String commonCredentialManifestPath = MANIFEST_TEMPLATE_DIR + "/bootstrap/credential/director-credential.yml";
+        if(StringUtils.isEmpty(dto.getDirectorPublicIp()) || dto.getDirectorPublicIp() == null){
+            dto.setDirectorPublicIp(dto.getDirectorPrivateIp());
+        }
         try {
             List<String> cmd = new ArrayList<String>(); //bosh 명령어 실행 줄
             cmd.add("bosh");

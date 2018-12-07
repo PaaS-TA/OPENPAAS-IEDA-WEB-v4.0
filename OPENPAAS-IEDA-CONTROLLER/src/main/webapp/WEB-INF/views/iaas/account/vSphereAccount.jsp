@@ -1,7 +1,6 @@
 <%
 /* =================================================================
  * 작성일 : 2017.05.10
- * 작성자 : 이정윤
  * 상세설명 : 계정 관리 화면( vSphere 인프라 계정 조회)
  * =================================================================
  */ 
@@ -270,6 +269,9 @@ $( window ).resize(function() {
                      <sec:authorize access="hasAuthority('IAAS_ACCOUNT_GOOGLE_MENU')">
                         <li><a href="javascript:goPage('<c:url value="/iaasMgnt/account/google"/>', 'Google 관리');">Google</a></li>
                      </sec:authorize>
+                    <sec:authorize access="hasAuthority('IAAS_ACCOUNT_AZURE_MENU')">
+                        <li><a href="javascript:goPage('<c:url value="/iaasMgnt/account/azure"/>', 'vSphere 관리');">Azure</a></li>
+                    </sec:authorize>
                 </ul>
             </div>
         </div> 

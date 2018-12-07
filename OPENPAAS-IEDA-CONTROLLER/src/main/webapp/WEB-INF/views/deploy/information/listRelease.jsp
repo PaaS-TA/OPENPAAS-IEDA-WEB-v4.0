@@ -2,7 +2,6 @@
 /* =================================================================
  * 수정일         작성자             내용     
  * ------------------------------------------------------------------
- * 2016.12       이동현        목록 화면 개선 및 코드 버그 수정
  * =================================================================
  */ 
 %>
@@ -424,7 +423,7 @@ $( window ).resize(function() {
     <div class="pdt20"> 
         <div class="title fl">업로드된 릴리즈 목록</div>
         <div class="fr">
-        <sec:authorize access="hasAuthority('INFO_RELEASE_UPLOAD')">
+        <sec:authorize access="hasAuthority('INFO_HBRELEASE_DELETE')">
             <span class="btn btn-danger" style="width:120px" id="doDeleteRelease">릴리즈 삭제</span>
         </sec:authorize>
         </div>
@@ -433,7 +432,7 @@ $( window ).resize(function() {
     <div class="pdt20"> 
         <div class="title fl">다운로드된 릴리즈 목록</div>
         <div class="fr">
-        <sec:authorize access="hasAuthority('INFO_RELEASE_DELETE')">
+        <sec:authorize access="hasAuthority('INFO_HBRELEASE_UPLOAD')">
             <span class="btn btn-primary" style="width:120px" id="doUploadRelease">릴리즈 업로드</span> 
         </sec:authorize>
         </div>

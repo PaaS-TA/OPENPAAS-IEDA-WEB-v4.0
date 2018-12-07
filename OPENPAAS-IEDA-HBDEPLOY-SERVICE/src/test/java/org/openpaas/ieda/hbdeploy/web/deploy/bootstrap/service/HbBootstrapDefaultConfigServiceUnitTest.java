@@ -71,9 +71,7 @@ public class HbBootstrapDefaultConfigServiceUnitTest extends BaseHbDeployControl
         assertEquals(expectList.get(0).getDirectorName(), resultList.get(0).getDirectorName());
         assertEquals(expectList.get(0).getEnableSnapshots(), resultList.get(0).getEnableSnapshots());
         assertEquals(expectList.get(0).getIaasType(), resultList.get(0).getIaasType());
-        assertEquals(expectList.get(0).getInfluxdbIp(), resultList.get(0).getInfluxdbIp());
         assertEquals(expectList.get(0).getNtp(), resultList.get(0).getNtp());
-        assertEquals(expectList.get(0).getPaastaMonitoringIp(), resultList.get(0).getPaastaMonitoringIp());
         assertEquals(expectList.get(0).getPaastaMonitoringRelease(), resultList.get(0).getPaastaMonitoringRelease());
         assertEquals(expectList.get(0).getPaastaMonitoringUse(), resultList.get(0).getPaastaMonitoringUse());
     }
@@ -158,8 +156,6 @@ public class HbBootstrapDefaultConfigServiceUnitTest extends BaseHbDeployControl
         vo.setSnapshotSchedule("007***UFC");
         vo.setUpdateUserId("admin");
         vo.setPaastaMonitoringUse("true");
-        vo.setPaastaMonitoringIp("10.0.0.1");
-        vo.setInfluxdbIp("10.0.0.1");
         vo.setPaastaMonitoringRelease("monitering-release");
         
         vo.getIaasType();
@@ -175,8 +171,6 @@ public class HbBootstrapDefaultConfigServiceUnitTest extends BaseHbDeployControl
         vo.getSnapshotSchedule();
         vo.getUpdateUserId();
         vo.getPaastaMonitoringUse();
-        vo.getPaastaMonitoringIp();
-        vo.getInfluxdbIp();
         vo.getPaastaMonitoringRelease();
         return vo;
     }
@@ -227,8 +221,6 @@ public class HbBootstrapDefaultConfigServiceUnitTest extends BaseHbDeployControl
         vo.setSnapshotSchedule("007***UFC");
         vo.setUpdateUserId("admin");
         vo.setPaastaMonitoringUse("true");
-        vo.setPaastaMonitoringIp("10.0.0.1");
-        vo.setInfluxdbIp("10.0.0.1");
         vo.setPaastaMonitoringRelease("monitering-release");
         
         vo.getIaasType();
@@ -244,8 +236,6 @@ public class HbBootstrapDefaultConfigServiceUnitTest extends BaseHbDeployControl
         vo.getSnapshotSchedule();
         vo.getUpdateUserId();
         vo.getPaastaMonitoringUse();
-        vo.getPaastaMonitoringIp();
-        vo.getInfluxdbIp();
         vo.getPaastaMonitoringRelease();
         list.add(vo);
         return list;
@@ -268,9 +258,7 @@ public class HbBootstrapDefaultConfigServiceUnitTest extends BaseHbDeployControl
         dto.setBoshRelease("bosh-relesae");
         dto.setEnableSnapshots("true");
         dto.setSnapshotSchedule("snapshot");
-        dto.setPaastaMonitoringIp("10.0.0.1");
         dto.setPaastaMonitoringUse("true");
-        dto.setInfluxdbIp("10.0.0.1");
         dto.setPaastaMonitoringRelease("monitering-release");
         dto.setDefaultConfigName("defaultConfigName");
         if("update".equals(type)){
@@ -286,9 +274,7 @@ public class HbBootstrapDefaultConfigServiceUnitTest extends BaseHbDeployControl
         dto.getBoshRelease();
         dto.getEnableSnapshots();
         dto.getSnapshotSchedule();
-        dto.getPaastaMonitoringIp();
         dto.getPaastaMonitoringUse();
-        dto.getInfluxdbIp();
         dto.getPaastaMonitoringRelease();
         dto.getDefaultConfigName();
         return dto;

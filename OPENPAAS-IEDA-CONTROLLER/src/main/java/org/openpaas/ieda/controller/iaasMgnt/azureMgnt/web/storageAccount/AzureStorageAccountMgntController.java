@@ -6,10 +6,10 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 
-import org.openpaas.ieda.azureMgnt.web.storageAccount.dao.AzureStorageAccountMgntVO;
-import org.openpaas.ieda.azureMgnt.web.storageAccount.dto.AzureStorageAccountMgntDTO;
-import org.openpaas.ieda.azureMgnt.web.storageAccount.service.AzureStorageAccountMgntService;
 import org.openpaas.ieda.common.exception.CommonException;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.storageAccount.dao.AzureStorageAccountMgntVO;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.storageAccount.dto.AzureStorageAccountMgntDTO;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.storageAccount.service.AzureStorageAccountMgntService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

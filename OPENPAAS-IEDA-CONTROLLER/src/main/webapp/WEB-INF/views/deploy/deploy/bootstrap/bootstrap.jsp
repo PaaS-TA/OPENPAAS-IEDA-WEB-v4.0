@@ -4,9 +4,6 @@
  * =================================================================
  * 수정일      작성자    내용     
  * ------------------------------------------------------------------
- * 2016.07    지향은    화면 수정 및 vSphere 클라우드 기능 추가
- * 2016.12    지향은    Bootstrap 목록과 팝업 화면 .jsp 분리 및 설치 버그 수정 
- * 2017.08    지향은    화면 수정 및 Google 클라우드 기능 추가
  * =================================================================
  */ 
 %>
@@ -75,6 +72,7 @@ $(function() {
             }
             , {field: 'boshRelease', caption: 'BOSH 릴리즈', size: '100px'}
             , {field: 'boshCpiRelease', caption: 'BOSH CPI 릴리즈', size: '200px'}
+            , {field: 'boshBpmRelease', caption: 'BOSH BPM 릴리즈', size: '200px'}
             , {field: 'subnetId', caption: '네트워크 ID', size: '200px'}
             , {field: 'subnetRange', caption: '서브넷 범위', size: '100px'}
             , {field: 'publicStaticIp', caption: '디렉터 공인 IP', size: '100px'}

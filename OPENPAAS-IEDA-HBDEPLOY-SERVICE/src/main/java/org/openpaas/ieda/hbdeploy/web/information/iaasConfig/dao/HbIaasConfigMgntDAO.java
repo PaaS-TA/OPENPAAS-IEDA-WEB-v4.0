@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.openpaas.ieda.hbdeploy.web.information.iaasConfig.dto.HbIaasConfigMgntDTO;
 
 public interface HbIaasConfigMgntDAO {
 
@@ -46,7 +47,7 @@ public interface HbIaasConfigMgntDAO {
      * @title : selectIaasAccountDuplicationByConfigName
      * @return : int
     ***************************************************/
-    int selectIaasConfigDuplicationByConfigName(@Param("config") HbIaasConfigMgntVO vo);
+    int selectIaasConfigDuplicationByConfigName(@Param("config") HbIaasConfigMgntDTO dto);
 
     /***************************************************
      * @project : 인프라 관리 대시보드

@@ -1,6 +1,5 @@
 package org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.service;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -54,7 +53,7 @@ public class HbBootstrapDeleteDeployAsyncServiceUnitTest extends BaseHbDeployCon
      * @title : testSaveDeployStatus
      * @return : void
     ***************************************************/
-    @Test
+/*    @Test
     public void testSaveDeployStatus(){
         HbBootstrapVO vo = new HbBootstrapVO();
         vo.setDeployStatus("DONE");
@@ -62,7 +61,7 @@ public class HbBootstrapDeleteDeployAsyncServiceUnitTest extends BaseHbDeployCon
         vo.setDeployLog("deploy Log...");
         when(mockHbBootstrapDAO.updateBootStrapInfo(any())).thenReturn(1);
         mockHbBootstrapDeleteDeployAsyncService.saveDeployStatus(vo, principal);
-    }
+    }*/
     
     /***************************************************
      * @project : Paas 이종 플랫폼 설치 자동화

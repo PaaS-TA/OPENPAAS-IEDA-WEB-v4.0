@@ -38,8 +38,12 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
                                 , "/deploy/cfDiego/delete/logs"
                                 , "/info/stemcell/upload/logs"
                                 , "/info/stemcell/delete/logs"
+                                , "/info/hbstemcell/upload/logs"
+                                , "/info/hbstemcell/delete/logs"
                                 , "/info/release/upload/socket/logs"
                                 , "/info/release/delete/socket/logs"
+                                , "/info/hbRelease/upload/socket/logs"
+                                , "/info/hbRelease/delete/socket/logs"
                                 , "/info/task/list/eventLog/socket"
                                 , "/info/vms/vmLogs/socket"
                                 , "/info/vms/snapshotLog/socket"
@@ -48,6 +52,8 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
                                 , "/deploy/servicePack/delete/logs"
                                 , "/deploy/hbBootstrap/install/logs"
                                 , "/deploy/hbBootstrap/delete/logs"
+                                , "/deploy/hbCfDeployment/install/logs"
+                                , "/deploy/hbCfDeployment/delete/logs"
                                 ); 
         config.setApplicationDestinationPrefixes("/app", "/send");
         config.setUserDestinationPrefix("/user");
@@ -73,8 +79,12 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
                             , "/deploy/cfDiego/delete/instance"
                             , "/info/stemcell/upload/stemcellUploading"
                             , "/info/stemcell/delete/stemcellDelete"
+                            , "/info/hbstemcell/upload/stemcellUploading"
+                            , "/info/hbstemcell/delete/stemcellDelete"
                             , "/info/release/upload/releaseUploading"
                             , "/info/release/delete/releaseDelete"
+                            , "/info/hbRelease/upload/releaseUploading"
+                            , "/info/hbRelease/delete/releaseDelete"
                             , "/info/task/list/eventLog/task"
                             , "/info/vms/vmLogs/job"
                             , "/info/vms/snapshotLog/snapshotTaking"
@@ -83,6 +93,8 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
                             , "/deploy/servicePack/delete/instance"
                             , "/deploy/hbBootstrap/install/bootstrapInstall"
                             , "/deploy/hbBootstrap/delete/instance"
+                            , "/deploy/hbCfDeployment/install/cfDeploymentInstall"
+                            , "/deploy/hbCfDeployment/delete/instance"
                             ).withSockJS().setInterceptors(httpSessionIdHandshakeInterceptor());
 
     }

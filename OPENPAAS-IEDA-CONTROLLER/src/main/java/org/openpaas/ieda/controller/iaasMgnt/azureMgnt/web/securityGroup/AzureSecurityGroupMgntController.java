@@ -4,9 +4,9 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 
-import org.openpaas.ieda.azureMgnt.web.securityGroup.dao.AzureSecurityGroupMgntVO;
-import org.openpaas.ieda.azureMgnt.web.securityGroup.dto.AzureSecurityGroupMgntDTO;
-import org.openpaas.ieda.azureMgnt.web.securityGroup.service.AzureSecurityGroupMgntService;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.securityGroup.dao.AzureSecurityGroupMgntVO;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.securityGroup.dto.AzureSecurityGroupMgntDTO;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.securityGroup.service.AzureSecurityGroupMgntService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,12 +1,9 @@
 <%
 /* =================================================================
  * 작성일 : 2016.08
- * 작성자 : 지향은
- * 상세설명 : VM 관리
  * =================================================================
  * 수정일         작성자             내용     
  * ------------------------------------------------------------------
- * 2016.12       이동현        코드 버그 수정 및 목록 화면 개선
  * =================================================================
  */ 
 %>
@@ -433,7 +430,7 @@ $( window ).resize(function() {
     
     <div class="pdt20"> 
         <div class="search_box" align="left" style="padding-left:10px; width:100%">
-            <label  style="font-size:11px">배포명</label>
+            <label  style="font-size:11px; color:white; ">배포명</label>
             &nbsp;&nbsp;&nbsp;
             <select name="select" id="deployments" class="select" style="width:300px">
             </select>

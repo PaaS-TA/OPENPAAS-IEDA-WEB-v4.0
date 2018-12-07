@@ -13,13 +13,22 @@ public class HbBootstrapDefaultConfigVO {
     private String credentialKeyName;
     private String boshRelease; // BOSH 릴리즈
     private String boshCpiRelease; // BOSH API 릴리즈
+    private String boshBpmRelease; // BOSH BPM 릴리즈
+    private String uaaRelease; 
+    private String osConfRelease; 
+    private String credhubRelease; 
     private String snapshotSchedule;//스냅샷 스케줄
     private String enableSnapshots;//스냅샷 사용 유무
     private String ntp; // NTP
     private String paastaMonitoringUse; //PaaS-TA 모니터링 사용 유무
-    private String paastaMonitoringIp; //PaaS-TA 모니터링 사용시 ingrestorIP
-    private String influxdbIp;
     private String paastaMonitoringRelease; //PaaS-TA 모니터링 사용시 릴리즈
+    private String syslogRelease;
+    private String syslogAddress;
+    private String syslogPort;
+    private String syslogTransport;
+    private String metricUrl;
+    
+    
     private String createUserId;//등록자 아이디
     private String updateUserId;//수정자 아이디
     private Date createDate;//등록일
@@ -103,23 +112,41 @@ public class HbBootstrapDefaultConfigVO {
     public void setPaastaMonitoringUse(String paastaMonitoringUse) {
         this.paastaMonitoringUse = paastaMonitoringUse;
     }
-    public String getPaastaMonitoringIp() {
-        return paastaMonitoringIp;
-    }
-    public void setPaastaMonitoringIp(String paastaMonitoringIp) {
-        this.paastaMonitoringIp = paastaMonitoringIp;
-    }
-    public String getInfluxdbIp() {
-        return influxdbIp;
-    }
-    public void setInfluxdbIp(String influxdbIp) {
-        this.influxdbIp = influxdbIp;
-    }
     public String getPaastaMonitoringRelease() {
         return paastaMonitoringRelease;
     }
     public void setPaastaMonitoringRelease(String paastaMonitoringRelease) {
         this.paastaMonitoringRelease = paastaMonitoringRelease;
+    }
+    public String getMetricUrl() {
+        return metricUrl;
+    }
+    public void setMetricUrl(String metricUrl) {
+        this.metricUrl = metricUrl;
+    }
+    public String getSyslogAddress() {
+        return syslogAddress;
+    }
+    public void setSyslogAddress(String syslogAddress) {
+        this.syslogAddress = syslogAddress;
+    }
+    public String getSyslogPort() {
+        return syslogPort;
+    }
+    public void setSyslogPort(String syslogPort) {
+        this.syslogPort = syslogPort;
+    }
+    public String getSyslogTransport() {
+        return syslogTransport;
+    }
+    public void setSyslogTransport(String syslogTransport) {
+        this.syslogTransport = syslogTransport;
+    }
+    public String getSyslogRelease() {
+        return syslogRelease;
+    }
+    public void setSyslogRelease(String syslogRelease) {
+        this.syslogRelease = syslogRelease;
     }
     public String getCreateUserId() {
         return createUserId;
@@ -145,5 +172,28 @@ public class HbBootstrapDefaultConfigVO {
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
-    
+    public String getBoshBpmRelease() {
+        return boshBpmRelease;
+    }
+    public void setBoshBpmRelease(String boshBpmRelease) {
+        this.boshBpmRelease = boshBpmRelease;
+    }
+    public String getOsConfRelease() {
+        return osConfRelease;
+    }
+    public void setOsConfRelease(String osConfRelease) {
+        this.osConfRelease = osConfRelease;
+    }
+    public String getUaaRelease() {
+        return uaaRelease;
+    }
+    public void setUaaRelease(String uaaRelease) {
+        this.uaaRelease = uaaRelease;
+    }
+    public String getCredhubRelease() {
+        return credhubRelease;
+    }
+    public void setCredhubRelease(String credhubRelease) {
+        this.credhubRelease = credhubRelease;
+    }
 }

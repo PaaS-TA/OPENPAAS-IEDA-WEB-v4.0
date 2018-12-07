@@ -1,7 +1,6 @@
 <%
 /* =================================================================
  * 작성일 : 2018.06.16
- * 작성자 : 이정윤 
  * 상세설명 : Azure Route Table 관리 화면
  * =================================================================
  */ 
@@ -436,7 +435,6 @@ function addNewSubnet(){
                        }else{
                            result = "<option value=''>연결 가능 한 Subnet이 없습니다.</option>"
                        }
-                  
                   $("#subnetNameInfoDiv #subnetNameInfo").html(result);
                   w2popup.unlock();
               },
@@ -520,16 +518,13 @@ function setAzureSubscription(){
          async : true,
          data : JSON.stringify(rgInfo),
          success : function(status) {
-             w2popup.unlock();
              accountId = rgInfo.accountId;
              w2ui['azure_routeTableGrid'].clear();
              w2ui['azure_rtSubnetsGrid'].clear();
              doSearch();
-             w2popup.close();
              w2utils.unlock($("#layout_layout_panel_main"));
          }, error : function(request, status, error) {
-             w2popup.unlock();
-             w2ui['azure_routeTableGrid'].clear();
+        	 w2utils.unlock($("#layout_layout_panel_main"));
              var errorResult = JSON.parse(request.responseText);
              w2alert(errorResult.message);
          }

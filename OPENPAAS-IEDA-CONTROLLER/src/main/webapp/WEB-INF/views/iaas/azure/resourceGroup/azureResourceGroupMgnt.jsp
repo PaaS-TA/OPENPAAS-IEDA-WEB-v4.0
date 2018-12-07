@@ -1,7 +1,6 @@
 <%
 /* =================================================================
  * 작성일 : 2018.04.00
- * 작성자 : 이정윤 
  * 상세설명 : Azure Resource Group 관리 화면
  * =================================================================
  */ 
@@ -500,7 +499,7 @@ td {
      <button class="btn" id="popClose"  onclick="w2popup.close();">취소</button>
 </div>
     <div class="pdt20" >
-        <div class="title fl">azure Resource Group 상세 목록</div>
+        <div class="title fl">Azure Resource Group 상세 목록</div>
     </div>
     <div id="azure_rgDetailGrid" style="width:100%; height:128px; margin-top:50px; border-top: 2px solid #c5c5c5; ">
     <table id= "rgDetailTable" class="table table-condensed table-hover">

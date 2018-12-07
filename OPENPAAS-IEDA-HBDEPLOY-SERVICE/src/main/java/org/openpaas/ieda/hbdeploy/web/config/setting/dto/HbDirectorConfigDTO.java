@@ -5,6 +5,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class HbDirectorConfigDTO {
     
     Integer iedaDirectorConfigSeq;

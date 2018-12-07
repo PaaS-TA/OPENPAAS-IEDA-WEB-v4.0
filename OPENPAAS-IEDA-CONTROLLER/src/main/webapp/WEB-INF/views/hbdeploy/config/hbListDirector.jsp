@@ -352,7 +352,7 @@ function setCredentialKeyPathList(fileList){
 function getCredsKeyPathFileList(){
     $.ajax({
         type : "GET",
-        url : "/common/deploy/creds/list",
+        url : "/common/deploy/hybridCreds/list",
         contentType : "application/json",
         async : true,
         success : function(data, status) {
@@ -428,8 +428,14 @@ function credsChangeKeyPathStyle( showDiv, hideDiv ){
      $(".w2ui-msg-body "+ hideDiv +" p").remove();
      $(".w2ui-msg-body "+ showDiv).show();
 }
+/******************************************************************
+ * Function : openBrowse
+ * 설명 : 공통 File upload Browse Button
+ ***************************************************************** */
+function openBrowse(){
+    $(".w2ui-msg-body input[name='keyPathFile']").click();
+}
 </script>
-
 <div id="main">
     <div class="page_site">환경설정 및 관리 > <strong>디렉터 설정</strong></div>
     
@@ -438,7 +444,7 @@ function credsChangeKeyPathStyle( showDiv, hideDiv ){
     
     <!-- 디렉터 목록-->
     <div class="pdt20">
-        <div class="title fl">Public Cloud 디렉터 목록</div>
+        <div class="title fl">AWS Cloud 디렉터 목록</div>
         <div class="fr"> 
         <!-- Btn -->
             <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_ADD')">
@@ -454,7 +460,7 @@ function credsChangeKeyPathStyle( showDiv, hideDiv ){
     <div id="config_directorGrid" style="width:100%; height:270px"></div>
     
     <div class="pdt20">
-        <div class="title fl">Private Cloud 디렉터 정보</div>
+        <div class="title fl">OPENSTACK Cloud 디렉터 정보</div>
         <div class="fr"> 
             <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_ADD')">
             <span id="addSetting2" class="btn btn-primary" style="width:130px" >설정 추가</span>
@@ -508,12 +514,13 @@ function credsChangeKeyPathStyle( showDiv, hideDiv ){
                         </div>
                     </div>
                     <div class="w2ui-field">
-                        <!-- <label style="width:36%; text-align: left; padding-left: 20px;" class="control-label"></label> -->
                         <div id="credsKeyPathDiv" style="padding-left: 30%">
                             <div id="credsKeyPathFileDiv" hidden="true">
-                                <input type="text" id="credsKeyFileName" name="credsKeyFileName" style="width: 250px;" readonly onclick="openBrowse();" placeholder="Credential File을 선택하세요"/>
-                                <a href="#" id="browse" onclick="openBrowse();"><span id="BrowseBtn">Browse</span></a>
-                                <input type="file" name="keyPathFile" onchange="setCredentialKeyPath(this);" style="display:none"/>
+                                <span>
+                                    <input type="text" id="credsKeyFileName" name="credsKeyFileName" style="width: 250px;" readonly onclick="openBrowse();" placeholder="Credential File을 선택하세요"/>
+                                    <input type="file" name="keyPathFile" onchange="setCredentialKeyPath(this);" style="display:none"/>
+                                    <span id="BrowseBtn"><a href="#" id="browse" onclick="openBrowse();">Browse</a></span>
+                                </span>
                             </div>
                             <div id="credsKeyPathListDiv">
                                 <select name="credsKeyPathList" id="credsKeyPathList" style="width: 250px;" onchange="setCredentialKeyPathList(this)"></select>

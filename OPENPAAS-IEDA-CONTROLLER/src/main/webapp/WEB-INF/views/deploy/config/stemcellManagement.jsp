@@ -2,9 +2,6 @@
 /* =================================================================
  * 수정일         작성자             내용     
  * ------------------------------------------------------------------
- * 2017.05       이동현        화면 개선 및 코드 버그 수정
- * 2017.08       지향은        인프라 환경 추가(Google)
- * 2018.02       배병욱        인프라 환경 추가(Azure)
  * =================================================================
  */ 
 %>
@@ -315,11 +312,8 @@ function doSearch(){
  * 기능 : setstemcellFilePath
  *********************************************************/
 function setstemcellFilePath(fileInput){
-	console.log(fileInput);
     var file = fileInput.files;
-    alert("1");
     var files = $('.w2ui-msg-body #stemcellPathFile')[0].files;
-    console.log(files);
     
     $(".w2ui-msg-body input[name='stemcellSize']").val(files[0].size);
     $(".w2ui-msg-body input[name=stemcellPath]").val(files[0].name);
@@ -331,7 +325,7 @@ function setstemcellFilePath(fileInput){
  * 기능 : openBrowse
  *********************************************************/
 function openBrowse(){
-    if($('.w2ui-msg-body #browser').attr('disabled') == "disabled") return;    
+    if($('.w2ui-msg-body #browser').attr('disabled') == "disabled") return;
     $(".w2ui-msg-body input[name='stemcellPathFile[]']").click();
 }
 
@@ -548,7 +542,6 @@ function deletePop(record){
         data : JSON.stringify(requestParameter),
         success : function(data, status) {
             if( downloadClient != ""){
-            	console.log(downloadClient);
                 downloadClient.disconnect();
                 downloadClient = "";
             }

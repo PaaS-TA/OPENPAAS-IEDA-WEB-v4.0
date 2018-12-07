@@ -1,7 +1,6 @@
 package org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.service;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
+import java.security.Principal;
 
 import javax.ws.rs.core.Application;
 
@@ -26,6 +25,8 @@ public class HbBootstrapDeployAsyncServiceUnitTest extends BaseHbDeployControlle
     @InjectMocks private HbBootstrapDeployAsyncService mockHbBootstrapDeployAsyncService;
     @Mock private HbBootstrapDAO mockHbBootstrapDAO;
     
+    Principal principal = null;
+    
     /***************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
      * @description : 유닛 테스트가 실행되기 전 호출
@@ -35,24 +36,9 @@ public class HbBootstrapDeployAsyncServiceUnitTest extends BaseHbDeployControlle
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        getLoggined();
+        principal = getLoggined();
     }
     
-    /***************************************************
-     * @project : Paas 이종 플랫폼 설치 자동화
-     * @description : Bootstrap 설치 중 상태 정보 저장
-     * @title : testSaveDeployStatus
-     * @return : void
-    ***************************************************/
-    @Test
-    public void testSaveDeployStatus(){
-        HbBootstrapVO vo = new HbBootstrapVO();
-        vo.setDeployStatus("DONE");
-        vo.setId(1);
-        vo.setDeployLog("deploy Log...");
-        when(mockHbBootstrapDAO.updateBootStrapInfo(any())).thenReturn(1);
-        mockHbBootstrapDeployAsyncService.saveDeployStatus(vo);
-    }
     
     /***************************************************
      * @project : Paas 이종 플랫폼 설치 자동화
@@ -63,7 +49,7 @@ public class HbBootstrapDeployAsyncServiceUnitTest extends BaseHbDeployControlle
     @Test
     public void testSaveDeployStatusBootStrapInfoNull(){
         HbBootstrapVO vo = null;
-        mockHbBootstrapDeployAsyncService.saveDeployStatus(vo);
+        mockHbBootstrapDeployAsyncService.saveDeployStatus(vo, principal);
     }
     
 }

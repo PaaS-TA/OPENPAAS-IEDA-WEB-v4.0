@@ -25,6 +25,7 @@ import org.openpaas.ieda.deploy.api.task.TaskListDTO;
 import org.openpaas.ieda.deploy.web.information.task.dto.TaskDTO;
 import org.openpaas.ieda.deploy.web.information.task.service.TaskAsyncService;
 import org.openpaas.ieda.deploy.web.information.task.service.TaskService;
+import org.openpaas.ieda.hbdeploy.api.task.HbTaskListDTO;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;

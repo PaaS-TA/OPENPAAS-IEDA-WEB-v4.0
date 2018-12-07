@@ -1,7 +1,6 @@
 <%
 /* =================================================================
  * 작성일 : 2017.06.26
- * 작성자 : 지향은
  * 상세설명 : AWS 관리 화면
  * =================================================================
  */ 
@@ -138,24 +137,24 @@ function unhover(event, val){
                     </li>
                 </sec:authorize>
                 <sec:authorize access="hasAuthority('AWS_NAT_GATEWAY_MENU')">
-                    <li class="awsMgntDiv" onmouseover="hover(this,'elasticIP_c2');" onmouseout="unhover(this,'elasticIP_c1');" onclick="javascript:goPage('<c:url value="/awsMgnt/natGateway"/>', 'NAT Gateway');">
+                    <li class="awsMgntDiv" onmouseover="hover(this,'aws_nat_2');" onmouseout="unhover(this,'aws_nat_1');" onclick="javascript:goPage('<c:url value="/awsMgnt/natGateway"/>', 'NAT Gateway');">
                         <ul>
                             <li class="aws-li"><span class="aws-li-span1">NAT Gateway</span></li>
                             <li>
                                 <ul style="margin-top:59px">
-                                    <li style="margin-bottom:22px;"><img src='<c:url value="images/awsMgnt/elasticIP_c1.png"/>'  class="aws-icon" alt="AWS"><span></span></li>
+                                    <li style="margin-bottom:22px;"><img src='<c:url value="images/awsMgnt/aws_nat_1.png"/>'  class="aws-icon" alt="AWS"><span></span></li>
                                 </ul>
                             </li>
                         </ul>
                     </li>
                 </sec:authorize>
                  <sec:authorize access="hasAuthority('AWS_ROUTE_TABLE_MENU')">
-                    <li class="awsMgntDiv" onmouseover="hover(this,'elasticIP_c2');" onmouseout="unhover(this,'elasticIP_c1');" onclick="javascript:goPage('<c:url value="/awsMgnt/routeTable"/>', 'Route Tables');">
+                    <li class="awsMgntDiv" onmouseover="hover(this,'aws_rTable_2');" onmouseout="unhover(this,'aws_rTable_1');" onclick="javascript:goPage('<c:url value="/awsMgnt/routeTable"/>', 'Route Tables');">
                         <ul>
                             <li class="aws-li"><span class="aws-li-span1">Route Tables</span></li>
                             <li>
                                 <ul style="margin-top:59px">
-                                    <li style="margin-bottom:22px;"><img src='<c:url value="images/awsMgnt/elasticIP_c1.png"/>'  class="aws-icon" alt="AWS"><span></span></li>
+                                    <li style="margin-bottom:22px;"><img src='<c:url value="images/awsMgnt/aws_rTable_1.png"/>'  class="aws-icon" alt="AWS"><span></span></li>
                                 </ul>
                             </li>
                         </ul>

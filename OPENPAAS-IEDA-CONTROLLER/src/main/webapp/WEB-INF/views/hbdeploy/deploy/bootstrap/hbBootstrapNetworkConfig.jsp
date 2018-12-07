@@ -1,7 +1,6 @@
 <%
 /* =================================================================
  * 작성일 : 2018.06
- * 작성자 : 이동현
  * 상세설명 : CPI 인증서 관리 화면
  * =================================================================
  */ 
@@ -301,7 +300,7 @@ function resetForm(status){
     <div class="pdt20">
         <div class="title fl"> 네트워크 정보 목록</div>
     </div>
-    <div id="network_GroupGrid" style="width:100%;  height:700px;"></div>
+    <div id="network_GroupGrid" style="width:100%;  height:750px;"></div>
 
 </div>
 
@@ -311,8 +310,8 @@ function resetForm(status){
     <input type="hidden" name="networkInfoId" />
         <div class="w2ui-page page-0" style="">
            <div class="panel panel-default">
-               <div class="panel-heading"><b>네트워크 정보</b></div>
-               <div class="panel-body" style="height:615px; overflow-y:auto;">
+               <div class="panel-heading"><b>네트워크 정보</b><p style="color:red;">BOOTSTRAP 설치 시 Public IP를 사용할 경우만 Public IP 값을 입력하세요.</p></div>
+               <div class="panel-body" style="height:630px; overflow-y:auto;">
                    <div class="w2ui-field">
                        <label style="width:40%;text-align: left;padding-left: 20px;">네트워크 정보 별칭</label>
                        <div>
@@ -372,9 +371,13 @@ function resetForm(status){
         </div>
     </form>
     <div id="regPopupBtnDiv" style="text-align: center; margin-top: 5px;">
-        <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_NETWORK_ADD')">
+            <span id="installBtn" onclick="$('#settingForm').submit();" class="btn btn-primary">등록</span>
+        </sec:authorize>
         <span id="resetBtn" onclick="resetForm('reset');" class="btn btn-info">취소</span>
-        <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        <sec:authorize access="hasAuthority('DEPLOY_HBBOOTSTRAP_NETWORK_DELETE')">
+            <span id="deleteBtn" class="btn btn-danger">삭제</span>
+        </sec:authorize>
     </div>
 </div>
 <script>
@@ -409,12 +412,6 @@ $(function() {
                     return checkEmpty( $("input[name='privateStaticIp']").val() );
                 },ipv4 : function(){
                     return $("input[name='privateStaticIp']").val()
-                }
-            }, publicStaticIp: { 
-                required: function(){
-                    return checkEmpty( $("input[name='publicStaticIp']").val() );
-                },ipv4 : function(){
-                    return $("input[name='publicStaticIp']").val()
                 }
             }, subnetRange: { 
                 required: function(){
@@ -454,9 +451,6 @@ $(function() {
             }, privateStaticIp: { 
                 required:  "디렉터 Private IP"+text_required_msg
                 ,ipv4 : text_ip_msg
-            }, publicStaticIp: { 
-                required:  "디렉터 Public IP" + text_required_msg
-                ,ipv4 : text_ip_msg
             }, subnetRange: { 
                 required:  "서브넷 범위"+select_required_msg
                 ,ipv4 : text_cidr_msg
@@ -479,7 +473,7 @@ $(function() {
                 setHybridInvalidHandlerStyle(errors, validator);
             }
         }, submitHandler: function (form) {
-        	registBootstrapNetworkConfigInfo();
+            registBootstrapNetworkConfigInfo();
         }
     });
 });

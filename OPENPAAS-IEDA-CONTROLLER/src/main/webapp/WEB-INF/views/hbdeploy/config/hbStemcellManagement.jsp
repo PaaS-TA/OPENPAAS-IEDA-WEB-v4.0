@@ -2,7 +2,6 @@
 /* =================================================================
  * 수정일         작성자             내용     
  * ------------------------------------------------------------------
- * 2018.06       배병욱             작성      
  * =================================================================
  */ 
 %>
@@ -216,10 +215,8 @@ function lock(msg) {
  * 기능 : setstemcellFilePath
  *********************************************************/
 function setstemcellFilePath(fileInput){
-    console.log(fileInput);
     var file = fileInput.files;
     var files = $('.w2ui-msg-body #stemcellPathFile')[0].files;
-    console.log(files);
     
     $(".w2ui-msg-body input[name='stemcellSize']").val(files[0].size);
     $(".w2ui-msg-body input[name=stemcellPath]").val(files[0].name);
@@ -432,7 +429,6 @@ function setRegistType(value){
      var openstackSelected = w2ui['config_openstackStemcellsGrid'].getSelection();
      if (awsSelected == ""){
          record.push(w2ui['config_openstackStemcellsGrid'].get(openstackSelected));
-         console.log(record);
      }else if (openstackSelected == "") {
          record.push(w2ui['config_awsStemcellsGrid'].get(awsSelected));
      }else{
@@ -472,6 +468,7 @@ function setRegistType(value){
   * 기능 : stemcellRegist
   **************************************************************/
  function stemcellRegist(){
+	  
      var stemcellInfo = {
              id               : $(".w2ui-msg-body input[name='id']").val(),
              stemcellName     : $(".w2ui-msg-body input[name='stemcellName']").val(),
@@ -487,7 +484,6 @@ function setRegistType(value){
              light            : $(".w2ui-msg-body :checkbox[name='light']").is(':checked'),
              downloadStatus   : ""
      }
-     
      if(stemcellInfo.fileType == "file"){
          if($(".w2ui-msg-body input[name='stemcellSize']").val() == 0){
               w2alert("스템셀 파일을 찾을 수 없습니다. 확인해주세요.", "스템셀 파일 업로드");
@@ -606,7 +602,6 @@ function setRegistType(value){
      lock( '다운로드 중입니다.', true);
      var socket = new SockJS("<c:url value='/config/hbstemcell/regist/stemcellDownloading'/>");
      downloadClient = Stomp.over(socket);
-     console.log(downloadClient);
      var status = 0;
      
      var downloadPercentage = 0;
@@ -684,7 +679,6 @@ function setRegistType(value){
          data : JSON.stringify(record),
          success : function(data, status) {
              if( downloadClient != ""){
-                 console.log(downloadClient);
                  downloadClient.disconnect();
                  downloadClient = "";
              }
@@ -712,10 +706,10 @@ function setRegistType(value){
         <div class="title fl">AWS 스템셀 목록</div>
         <div class="fr"> 
             <!-- Btn -->
-            <sec:authorize access="hasAuthority('CONFIG_STEMCELL_REGIST')">
+            <sec:authorize access="hasAuthority('CONFIG_HBSTEMCELL_ADD')">
             <span id="doRegist" class="btn btn-primary" style="width:120px" >등록</span>
             </sec:authorize>
-            <sec:authorize access="hasAuthority('CONFIG_STEMCELL_DELETE')">
+            <sec:authorize access="hasAuthority('CONFIG_HBSTEMCELL_DELETE')">
             <span id="doDelete" class="btn btn-danger" style="width:120px" >삭제</span>
             </sec:authorize>
             <!-- //Btn -->
@@ -915,7 +909,7 @@ $(function() {
                     stemcellInfo.stemcellFileName = data.stemcellFileName;
                     initView();//재조회
                     if(stemcellInfo.fileType == "file"){
-                        stemcellFileUpload(stemcellInfo);        
+                        stemcellFileUpload(stemcellInfo);
                     }else if(stemcellInfo.fileType == "url"){
                         stemcellFileDownload(stemcellInfo);
                     }else if (stemcellInfo.fileType == "version"){
