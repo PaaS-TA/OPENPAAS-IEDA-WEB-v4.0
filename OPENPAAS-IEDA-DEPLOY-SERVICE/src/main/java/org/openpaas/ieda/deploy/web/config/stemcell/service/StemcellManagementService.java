@@ -251,7 +251,7 @@ public class StemcellManagementService {
                      contains = "Location:";
                  }else if((dto.getFileType().equalsIgnoreCase("version") && dto.getLight().equalsIgnoreCase("true")) ||
                          (dto.getFileType().equalsIgnoreCase("url") && dto.getDownloadLink().contains("light"))){
-                    contains = "https:";
+                    contains = "--  https";
                  }else{
                      contains ="filename";
                  }

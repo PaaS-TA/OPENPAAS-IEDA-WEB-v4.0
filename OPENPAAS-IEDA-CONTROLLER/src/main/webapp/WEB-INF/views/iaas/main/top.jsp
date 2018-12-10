@@ -19,8 +19,8 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/iaasMgnt" class="navbar-brand" id="header"></a>
-            <a class="navbar-brand" href="/"> PaaS-TA <span style="color: #ffffff;">인프라 관리 대시보드</span></a>
+            <a href="/" class="navbar-brand" id="header"></a>
+            <a class="navbar-brand" href="/"> <span style="color: #ffffff;">PaaS-TA 인프라 관리 대시보드</span></a>
         </div>
  
  <!-- Top Menu Items -->

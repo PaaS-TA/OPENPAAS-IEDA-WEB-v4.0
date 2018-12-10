@@ -286,7 +286,7 @@ function registHbCfDeploymentNetworkConfigInfo(){
             networkName            : $("input[name='networkName']").val(),
             networkInfoList        : networkInfoList
     }
-    
+    console.log(networkConfigInfo);
     $.ajax({
         type : "PUT",
         url : "/deploy/hbCfDeployment/networkConfig/save",
@@ -357,7 +357,7 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
      
      var body_div= "<div class='panel-body'>";
      var field_div_label="<div class='w2ui-field'>"+"<label style='width:40%;text-align: left;padding-left: 20px;'>";
-     var text_style="type='text' style='width: 250px; margin-left: 20px;'";
+     var text_style="type='text' style='width: 320px; margin-left: 20px;'";
      var html= "<div class='panel' style='margin-top:2%;'>";
          html+= "<div  style='position:relative; margin-left:15px; margin-top:10px;'>";
          html+=    "<b>Internal 네트워크</b>";
@@ -385,15 +385,15 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
         
          html+= field_div_label + "IP할당 제외 대역" + "</label>"; 
          html+=     "<div>";
-         html+=         "<input class='form-control' name='subnetReservedFrom_"+index+"' type='text' style='display:inline-block; width: 110px; margin-left: 20px;' placeholder='예) 10.0.0.10' />";
+         html+=         "<input class='form-control' name='subnetReservedFrom_"+index+"' type='text' style='display:inline-block; width: 147px; margin-left: 20px;' placeholder='예) 10.0.0.10' />";
          html+=         "<span style='width: 4%; text-align: center;'>&nbsp;&ndash; &nbsp;</span>";
-         html+=         "<input class='form-control' name='subnetReservedTo_"+index+"' type='text' style='display:inline-block; width: 110px;' placeholder='예) 10.0.0.20' />";
+         html+=         "<input class='form-control' name='subnetReservedTo_"+index+"' type='text' style='display:inline-block; width: 147px;' placeholder='예) 10.0.0.20' />";
          html+=     "</div></div>";
          
          html+= field_div_label + "IP할당 대역(최소 20개)" + "</label>"; 
-         html+=     "<div>"+"<input class='form-control' name='subnetStaticFrom_"+index+"' type='text' style='display:inline-block; width: 110px; margin-left: 20px;' placeholder='예) 10.0.0.10' />";
+         html+=     "<div>"+"<input class='form-control' name='subnetStaticFrom_"+index+"' type='text' style='display:inline-block; width: 147px; margin-left: 20px;' placeholder='예) 10.0.0.10' />";
          html+=         "<span style='width: 4%; text-align: center;'>&nbsp;&ndash; &nbsp;</span>";
-         html+=         "<input class='form-control' name='subnetStaticTo_"+index+"' type='text' style='display:inline-block; width: 110px;' placeholder='예) 10.0.0.20'/>";
+         html+=         "<input class='form-control' name='subnetStaticTo_"+index+"' type='text' style='display:inline-block; width: 147px;' placeholder='예) 10.0.0.20'/>";
          html+=     "</div>";
          html+= "</div></div></div>";
          $(".w2ui-msg-body "+ div).show();

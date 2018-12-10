@@ -171,7 +171,7 @@ function loginFn() {
         
         <div class="panel panel-default" >
             <div class="panel-heading" style="background: #296573;">
-                <div class="panel-title text-center" style="background: #296573;"><img src="../images/penne_login.png" style="width:272px; margin-left:-64px;"></div>
+                <div class="panel-title text-center" style="background: #296573;"><img src="../images/rotelle_login.png" style="width:272px; margin-left:-64px;"></div>
             </div>
             
         <div class="panel-body2" >

@@ -248,11 +248,12 @@ public class HbStemcellManagementService {
              String contains = "";
              while ((info = bufferedReader.readLine()) != null){ 
                  accumulatedBuffer.append(info).append("\n");
+                 System.out.println(info);
                  if(dto.getFileType().toLowerCase().equalsIgnoreCase("url") && dto.getStemcellUrl().contains("bosh.io")){
                      contains = "Location:";
                  }else if((dto.getFileType().equalsIgnoreCase("version") && dto.getLight().equalsIgnoreCase("true")) ||
                           (dto.getFileType().equalsIgnoreCase("url") && dto.getDownloadLink().contains("light"))){
-                     contains = "https:";
+                     contains = "--  https";
                  }else{
                      contains ="filename";
                  }

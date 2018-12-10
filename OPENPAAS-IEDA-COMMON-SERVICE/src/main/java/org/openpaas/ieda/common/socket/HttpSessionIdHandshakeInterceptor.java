@@ -39,7 +39,7 @@ public class HttpSessionIdHandshakeInterceptor implements HandshakeInterceptor {
                 //platform 설치 requestMapping value값은  deploy/{platform}/으로 규칙
                 String uri= request.getURI().getPath();
                 String menu = uri.split("/")[2];
-                int maxInactiveInterval= 30*60;
+                int maxInactiveInterval= 30*600;
                 
                 if( uri.indexOf("/install") > -1 ){
                     if( menu.equalsIgnoreCase("bootstrap") || menu.equalsIgnoreCase("hbbootstrap") ){

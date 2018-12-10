@@ -212,7 +212,6 @@ instance_groups:
   lifecycle: errand
   azs:
   - z1
-  - z2
   instances: 1
   vm_type: minimal
   stemcell: default

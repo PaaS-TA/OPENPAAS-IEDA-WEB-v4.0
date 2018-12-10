@@ -85,7 +85,7 @@ public class HbCfDeploymentNetworkConfigService {
                     if(dto.getNetworkInfoList().size() == 2){
                         vo.setSubnetId1(productitem.get("subnetId1").toString());
                         vo.setSecurityGroup1(productitem.get("securityGroup1").toString());
-                        if("aws".equalsIgnoreCase(vo.getIaasType())) vo.setAvailabilityZone1(productitem.get("availabilityZone1").toString());
+                        vo.setAvailabilityZone1(productitem.get("availabilityZone1").toString());
                         vo.setSubnetDns1(productitem.get("subnetDns1").toString());
                         vo.setSubnetRange1(productitem.get("subnetRange1").toString());
                         vo.setSubnetReservedFrom1(productitem.get("subnetReservedFrom1").toString());

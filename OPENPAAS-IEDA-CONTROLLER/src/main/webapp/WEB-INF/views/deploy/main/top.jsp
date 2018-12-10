@@ -19,8 +19,8 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/iaasMgnt" class="navbar-brand" id="header"></a>
-            <a class="navbar-brand" href="/platform"> PaaS-TA <span style="color: #ffffff;">플랫폼 설치 자동화</span></a>
+            <a href="/platform" class="navbar-brand" id="header"></a>
+            <a class="navbar-brand" href="/platform"> <span style="color: #ffffff;"> PaaS-TA 플랫폼 설치 자동화</span></a>
         </div>
  
  <!-- Top Menu Items -->
