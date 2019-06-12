@@ -10,21 +10,18 @@ vm_types:
       size: 10240
       type: gp2
     instance_type: [small_instance_type]
-    availability_zone: [availabilityzone]
   name: minimal
 - cloud_properties:
     ephemeral_disk:
       size: 30000
       type: gp2
     instance_type: [medium_instance_type]
-    availability_zone: [availabilityzone]
   name: small
 - cloud_properties:
     ephemeral_disk:
       size: 50000
       type: gp2
     instance_type: [large_instance_type]
-    availability_zone: [availabilityzone2]
   name: small-highmem
 
 disk_types:
