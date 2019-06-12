@@ -1,15 +1,5 @@
 package org.openpaas.ieda.deploy.web.deploy.bootstrap.service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.deploy.api.director.dto.DirectorInfoDTO;
 import org.openpaas.ieda.deploy.api.director.utility.DirectorRestHelper;
@@ -27,6 +17,16 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 @Service
 public class BootstrapDeployAsyncService {
@@ -392,8 +392,10 @@ public class BootstrapDeployAsyncService {
         cmd.add("boshCpiRelease=" + RELEASE_DIR + SEPARATOR + vo.getBoshCpiRelease() + "");
         cmd.add("-v");
         cmd.add("stemcell=" + STEMCELL_DIR + SEPARATOR + vo.getStemcell() + "");
+        if(!"vsphere".equalsIgnoreCase(vo.getIaasType())){
         cmd.add("-v");
         cmd.add("cloudInstanceType=" + vo.getCloudInstanceType());
+        }
         cmd.add("-v");
         cmd.add("internal_ip=" + vo.getPrivateStaticIp());
         cmd.add("-v");
