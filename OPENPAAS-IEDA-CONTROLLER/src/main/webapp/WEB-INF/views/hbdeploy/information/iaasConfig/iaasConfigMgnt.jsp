@@ -130,6 +130,13 @@ $( window ).resize(function() {
                     <li class="openstack-config-cnt"><span style="font-size: 14px;color:#000;">설정 정보 : </span></li>
                 </ul>
             </sec:authorize>
+            <sec:authorize access="hasAuthority('INFO_IAASCONFIG_AZURE_MENU')">
+                <ul class="vSphere-box col-md-3 well" onmouseover="hover(this);" onmouseout="unhover(this);" onclick="javascript:goPage('<c:url value="/info/hbIaasConfig/azure"/>','Azure 조회');">
+                    <li class="config-go-style">| Azure 환경 설정 관리 화면 이동</li>
+                    <li><img src='images/iaasMgnt/azure-icon.png' class="azure-icon" alt="Azure 조회"></li>
+                    <li class="azure-config-cnt"><span style="font-size: 14px;color:#000;">설정 정보 : </span></li>
+                </ul>
+            </sec:authorize>
         </div>
         <div id="iaas_config_mgnt_nowrap" class="panel panel-danger" style="display:none">
             <div class="panel-heading"></div>

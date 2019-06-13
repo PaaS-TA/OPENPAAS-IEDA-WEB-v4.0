@@ -1,12 +1,5 @@
 package org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.service;
 
-import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
-import javax.transaction.Transactional;
-
 import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentInstanceConfigDAO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentInstanceConfigVO;
@@ -15,6 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 @Service
 public class HbCfDeploymentInstanceConfigService {
@@ -89,6 +88,23 @@ public class HbCfDeploymentInstanceConfigService {
             vo.setUaa(dto.getUaa());
             vo.setCreateDate(vo.getCreateDate());
             vo.setUpdateUserId(principal.getName());
+
+            vo.setAzsAdapter(dto.getAzsAdapter());
+            vo.setAzsApi(dto.getAzsApi());
+            vo.setAzsCcWorker(dto.getAzsCcWorker());
+            vo.setAzsConsul(dto.getAzsConsul());
+            vo.setAzsTheDatabase(dto.getAzsTheDatabase());
+            vo.setAzsDiegoApi(dto.getAzsDiegoApi());
+            vo.setAzsDiegoCell(dto.getAzsDiegoCell());
+            vo.setAzsDoppler(dto.getAzsDoppler());
+            vo.setAzsHaproxy(dto.getAzsHaproxy());
+            vo.setAzsLogApi(dto.getAzsLogApi());
+            vo.setAzsNats(dto.getAzsNats());
+            vo.setAzsScheduler(dto.getAzsScheduler());
+            vo.setAzsRouter(dto.getAzsRouter());
+            vo.setAzsSingletonBlobstore(dto.getAzsSingletonBlobstore());
+            vo.setAzsTcpRouter(dto.getAzsTcpRouter());
+            vo.setAzsUaa(dto.getAzsUaa());
         }
         if( dto.getId() == null ){
         //if( StringUtils.isEmpty(dto.getId().toString())){

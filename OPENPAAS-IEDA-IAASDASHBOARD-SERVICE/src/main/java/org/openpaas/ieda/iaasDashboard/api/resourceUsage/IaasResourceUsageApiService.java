@@ -1,35 +1,6 @@
 package org.openpaas.ieda.iaasDashboard.api.resourceUsage;
 
 
-import java.net.URISyntaxException;
-import java.security.InvalidKeyException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethodBase;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.lang3.StringUtils;
-import org.openpaas.ieda.common.web.common.service.CommonApiService;
-import org.openpaas.ieda.deploy.api.director.utility.DirectorRestHelper;
-import org.openstack4j.api.OSClient.OSClientV2;
-import org.openstack4j.api.OSClient.OSClientV3;
-import org.openstack4j.model.compute.Server;
-import org.openstack4j.model.network.Network;
-import org.openstack4j.model.network.Subnet;
-import org.openstack4j.model.storage.block.Volume;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
@@ -41,7 +12,6 @@ import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.DescribeVolumesResult;
-import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.Reservation;
 import com.amazonaws.services.ec2.model.Vpc;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,6 +30,28 @@ import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.ListBlobItem;
 import com.microsoft.rest.LogLevel;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethodBase;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.lang3.StringUtils;
+import org.openpaas.ieda.common.web.common.service.CommonApiService;
+import org.openpaas.ieda.deploy.api.director.utility.DirectorRestHelper;
+import org.openstack4j.api.OSClient.OSClientV2;
+import org.openstack4j.api.OSClient.OSClientV3;
+import org.openstack4j.model.compute.Server;
+import org.openstack4j.model.network.Network;
+import org.openstack4j.model.network.Subnet;
+import org.openstack4j.model.storage.block.Volume;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /*import com.microsoft.azure.management.Azure;
 import com.microsoft.azure.management.compute.VirtualMachine;
@@ -95,8 +87,8 @@ public class IaasResourceUsageApiService {
         DescribeInstancesResult instanceReq =  ec2.describeInstances();
         List<Reservation> resList = instanceReq.getReservations();
         if( resList.size() > 0  ){
-            List<Instance> instances = resList.get(0).getInstances();
-            map.put("instance", instances.size());
+            //List<Instance> instances = resList.get(0).getInstances();
+            map.put("instance", resList.size());
         }else{
             map.put("instance", 0);
         }
@@ -191,8 +183,11 @@ public class IaasResourceUsageApiService {
             OSClientV3 os  = new CommonApiService().getOSClientFromOpenstackV3(endpoint, domain, project, user, secret);
             List<? extends Server> servers = os.compute().servers().list();
             map.put("instance", servers.size());
-            
-            List<? extends Network> networks = os.networking().network().list();
+
+            Map<String, String> params = new HashMap<>();
+            params.put("project_id", os.getToken().getProject().getId());
+
+            List<? extends Network> networks = os.networking().network().list(params);
             map.put("network", networks.size());
 
             List<? extends Volume> volumes = os.blockStorage().volumes().list();
@@ -269,15 +264,21 @@ public class IaasResourceUsageApiService {
         int vmtoatalcost = 0;
         int netcost =0;
         int storagetoatalcost = 0;
+           String region = "koreasouth"; //centralus
         //int resourcecost = 0;
-        int vmSize = azure.virtualMachines().manager().usages().listByRegion("centralus").size();
+           List machineList = azure.virtualMachines().manager().usages().listByRegion(region);
+//           for (com.microsoft.azure.management.compute.implementation.ComputeManager machine : machineList) {
+//               System.out.print("[sunny]machine : "+ machine.currentValue());
+//               break;
+//           }
+        int vmSize = azure.virtualMachines().manager().usages().listByRegion(region).size(); //listByRegion("centralus")
             for (int i=0;i<vmSize; i++){
                 
-                 vmtoatalcost =+ azure.virtualMachines().manager().usages().listByRegion("centralus").get(i).currentValue();
+                 vmtoatalcost =+ azure.virtualMachines().manager().usages().listByRegion(region).get(i).currentValue();//listByRegion("centralus")
             }
-        int netSize = azure.networks().manager().usages().listByRegion("centralus").size();
+        int netSize = azure.networks().manager().usages().listByRegion(region).size();//listByRegion("centralus")
             for (int i=0;i<netSize; i++){
-                Long networktoatalcost =+ azure.networks().manager().usages().listByRegion("centralus").get(i).currentValue();
+                Long networktoatalcost =+ azure.networks().manager().usages().listByRegion(region).get(i).currentValue();//listByRegion("centralus")
                 netcost = networktoatalcost.intValue();
             }
         int volumeSize = azure.storageAccounts().manager().usages().list().size();

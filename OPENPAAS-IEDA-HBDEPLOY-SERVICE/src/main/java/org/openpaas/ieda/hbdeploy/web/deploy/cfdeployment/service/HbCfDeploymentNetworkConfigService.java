@@ -1,14 +1,5 @@
 package org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.service;
 
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-
-import javax.transaction.Transactional;
-
 import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentNetworkConfigDAO;
 import org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao.HbCfDeploymentNetworkConfigVO;
@@ -18,6 +9,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import javax.transaction.Transactional;
+import java.security.Principal;
+import java.util.*;
 
 
 @Service
@@ -83,9 +78,12 @@ public class HbCfDeploymentNetworkConfigService {
                     vo.setPublicStaticIp(productitem.get("publicStaticIp").toString());
                 } else {
                     if(dto.getNetworkInfoList().size() == 2){
+                        vo.setAzureNetworkName1(productitem.get("azureNetworkName1").toString());
                         vo.setSubnetId1(productitem.get("subnetId1").toString());
                         vo.setSecurityGroup1(productitem.get("securityGroup1").toString());
-                        vo.setAvailabilityZone1(productitem.get("availabilityZone1").toString());
+                        if("aws".equalsIgnoreCase(vo.getIaasType())) vo.setAvailabilityZone1(productitem.get("availabilityZone1").toString());
+                        else if("azure".equalsIgnoreCase(vo.getIaasType())) vo.setAvailabilityZone1(productitem.get("azureNetworkName1").toString());
+                        else vo.setAvailabilityZone1("");
                         vo.setSubnetDns1(productitem.get("subnetDns1").toString());
                         vo.setSubnetRange1(productitem.get("subnetRange1").toString());
                         vo.setSubnetReservedFrom1(productitem.get("subnetReservedFrom1").toString());
@@ -93,22 +91,27 @@ public class HbCfDeploymentNetworkConfigService {
                         vo.setSubnetStaticFrom1(productitem.get("subnetStaticFrom1").toString());
                         vo.setSubnetStaticTo1(productitem.get("subnetStaticTo1").toString());
                         vo.setSubnetGateway1(productitem.get("subnetGateway1").toString());
+                        vo.setAzureNetworkName2("");
                         vo.setSubnetId2("");
                         vo.setSecurityGroup2("");
                         vo.setSubnetDns2("");
                         vo.setSubnetRange2("");
+                        vo.setAvailabilityZone2("");
                         vo.setSubnetReservedFrom2("");
                         vo.setSubnetReservedTo2("");
                         vo.setSubnetStaticFrom2("");
                         vo.setSubnetStaticTo2("");
                         vo.setSubnetGateway2("");
                     } else {
+                        vo.setAzureNetworkName1(productitem.get("azureNetworkName1").toString());
                         vo.setSubnetId1(productitem.get("subnetId1").toString());
                         vo.setSecurityGroup1(productitem.get("securityGroup1").toString());
                         vo.setSubnetDns1(productitem.get("subnetDns1").toString());
                         vo.setSubnetRange1(productitem.get("subnetRange1").toString());
                         vo.setSubnetReservedFrom1(productitem.get("subnetReservedFrom1").toString());
-                        vo.setAvailabilityZone1(productitem.get("availabilityZone1").toString());
+                        if("aws".equalsIgnoreCase(vo.getIaasType())) vo.setAvailabilityZone1(productitem.get("availabilityZone1").toString());
+                        else if("azure".equalsIgnoreCase(vo.getIaasType())) vo.setAvailabilityZone1(productitem.get("azureNetworkName1").toString());
+                        else vo.setAvailabilityZone1("");
                         vo.setSubnetReservedTo1(productitem.get("subnetReservedTo1").toString());
                         vo.setSubnetStaticFrom1(productitem.get("subnetStaticFrom1").toString());
                         vo.setSubnetStaticTo1(productitem.get("subnetStaticTo1").toString());
@@ -119,6 +122,8 @@ public class HbCfDeploymentNetworkConfigService {
                         vo.setSubnetDns2(productitem.get("subnetDns2").toString());
                         vo.setSubnetRange2(productitem.get("subnetRange2").toString());
                         if("aws".equalsIgnoreCase(vo.getIaasType())) vo.setAvailabilityZone2(productitem.get("availabilityZone2").toString());
+                        else if("azure".equalsIgnoreCase(vo.getIaasType())) vo.setAvailabilityZone2(productitem.get("azureNetworkName2").toString());
+                        else vo.setAvailabilityZone2("");
                         vo.setSubnetReservedFrom2(productitem.get("subnetReservedFrom2").toString());
                         vo.setSubnetReservedTo2(productitem.get("subnetReservedTo2").toString());
                         vo.setSubnetStaticFrom2(productitem.get("subnetStaticFrom2").toString());
@@ -160,6 +165,14 @@ public class HbCfDeploymentNetworkConfigService {
         if(vo.getSubnetDns2() != null ) vo.setSubnetDns(vo.getSubnetDns1() + "</br>" + vo.getSubnetDns2());
         if(vo.getSubnetReservedFrom2() != null && vo.getSubnetReservedTo2() != null) vo.setSubnetReservedIp(vo.getSubnetReservedFrom1() + "-" + vo.getSubnetReservedTo1() + "</br>" + vo.getSubnetReservedFrom2() +"-"+ vo.getSubnetReservedTo2());
         if(vo.getSubnetStaticFrom2() != null && vo.getSubnetStaticTo2() != null) vo.setSubnetStaticIp(vo.getSubnetStaticFrom1() + "-" + vo.getSubnetStaticTo1() + "</br>" + vo.getSubnetStaticFrom2() +"-"+ vo.getSubnetStaticTo2());
+
+        if("azure".equals(vo.getIaasType())){
+            vo.setAzureNetworkName(vo.getAzureNetworkName1());
+            if(vo.getAzureNetworkName2() != null ) vo.setAzureNetworkName(vo.getAzureNetworkName1() + "</br>" + vo.getAzureNetworkName2());
+
+//            vo.setAzureNetworkName1(vo.getAzureNetworkName1());
+//            if(vo.getAzureNetworkName2() != null ) vo.setAzureNetworkName2(vo.getAzureNetworkName1() + "</br>" + vo.getAzureNetworkName2());
+        }
         return vo;
     }
     

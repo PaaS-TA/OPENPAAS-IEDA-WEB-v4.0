@@ -65,57 +65,57 @@ $(function() {
 });
 
 
-  /********************************************************
-   * 설명 : Private 디렉터 목록 조회
-   *********************************************************/
+    /********************************************************
+     * 설명 : Private 디렉터 목록 조회
+     *********************************************************/
     $('#config_directorGrid2').w2grid({
-      name: 'config_directorGrid2',
-      header: '<b>디렉터 목록</b>',
-       method: 'GET',
-       multiSelect: false,
-      show: {
-              selectColumn: true,
-              footer: true},
-      style: 'text-align: center',
-      columns:[
-               {field: 'recid', caption: 'recid', hidden: true},
-               {field: 'iedaDirectorConfigSeq', caption: '레코드키', hidden: true},
-               {field: 'iaasType',caption: '인프라 환경', size: '10%'},
-               {field: 'directorType' ,caption: '디렉터 유형'      , size: '10%'},
-               {field: 'directorCpi' ,caption: 'CPI'      , size: '10%'},
-               {field: 'directorName',caption: '디렉터 이름', size: '10%'},
-               {field: 'userId'      ,caption: '계정'      , size: '10%'},
-               {field: 'directorUrl' ,caption: 'URL'      , size: '30%',
-                   render: function(record) {
-                       return 'https://' + record.directorUrl + ':' + record.directorPort;
-                       } 
-               },
-               {field: 'directorUuid', caption: '디렉터 UUID', size: '30%'}
-               ],
-      onSelect : function(event) {
-          var grid = this;
-          event.onComplete = function() {
-              var sel = grid.getSelection();
-              var record = grid.get(sel);
-              $('#deleteSetting2').attr('disabled', false);
-          }
-      },
-      onUnselect : function(event) {
-          event.onComplete = function() {
-              $('#deleteSetting2').attr('disabled', true);
-          }
-      }, 
-      onLoad:function(event){
-          if(event.xhr.status == 403){
-              location.href = "/abuse";
-              event.preventDefault();
-          }
-          getCredsKeyPathFileList();
-      },
-      onError: function(event) {
-          
-      }
-  });
+        name: 'config_directorGrid2',
+        header: '<b>디렉터 목록</b>',
+        method: 'GET',
+        multiSelect: false,
+        show: {
+            selectColumn: true,
+            footer: true},
+        style: 'text-align: center',
+        columns:[
+            {field: 'recid', caption: 'recid', hidden: true},
+            {field: 'iedaDirectorConfigSeq', caption: '레코드키', hidden: true},
+            {field: 'iaasType',caption: '인프라 환경', size: '10%'},
+            {field: 'directorType' ,caption: '디렉터 유형'      , size: '10%'},
+            {field: 'directorCpi' ,caption: 'CPI'      , size: '10%'},
+            {field: 'directorName',caption: '디렉터 이름', size: '10%'},
+            {field: 'userId'      ,caption: '계정'      , size: '10%'},
+            {field: 'directorUrl' ,caption: 'URL'      , size: '30%',
+                render: function(record) {
+                    return 'https://' + record.directorUrl + ':' + record.directorPort;
+                }
+            },
+            {field: 'directorUuid', caption: '디렉터 UUID', size: '30%'}
+        ],
+        onSelect : function(event) {
+            var grid = this;
+            event.onComplete = function() {
+                var sel = grid.getSelection();
+                var record = grid.get(sel);
+                $('#deleteSetting2').attr('disabled', false);
+            }
+        },
+        onUnselect : function(event) {
+            event.onComplete = function() {
+                $('#deleteSetting2').attr('disabled', true);
+            }
+        },
+        onLoad:function(event){
+            if(event.xhr.status == 403){
+                location.href = "/abuse";
+                event.preventDefault();
+            }
+            getCredsKeyPathFileList();
+        },
+        onError: function(event) {
+
+        }
+    });
       
  initView();
 
@@ -140,7 +140,7 @@ $("#addSetting").click(function(){
         }
     });
 });
- 
+
 /********************************************************
  * 설명 :  디렉터 추가 버튼
  *********************************************************/
@@ -161,6 +161,7 @@ $("#addSetting2").click(function(){
        }
    });
 });
+
 /********************************************************
  * 설명 :  디렉터 삭제 버튼
  *********************************************************/
@@ -200,7 +201,7 @@ $("#deleteSetting").click(function(){
 $("#deleteSetting2").click(function(){
     if($("#deleteSetting2").attr('disabled') == "disabled") return;
     var selected = w2ui['config_directorGrid2'].getSelection();
-    
+
     if( selected.length == 0 ){
         w2alert("선택된 정보가 없습니다.", "디렉터 삭제");
         return;
@@ -225,6 +226,7 @@ $("#deleteSetting2").click(function(){
         });
     }
 });
+
 /********************************************************
  * 설명 : 목록 재조회
  * 기능 : initView
@@ -243,6 +245,7 @@ function doSearch() {
     directortype = "";
     w2ui['config_directorGrid'].clear();
     w2ui['config_directorGrid2'].clear();
+
     w2ui['config_directorGrid'].load("<c:url value='/config/hbDirector/list/public'/>", doButtonStyle);
     w2ui['config_directorGrid2'].load("<c:url value='/config/hbDirector/list/private'/>", doButtonStyle);
 }
@@ -251,7 +254,7 @@ function doSearch() {
  * 기능 : doButtonStyle
  *********************************************************/
 function doButtonStyle(){
-    var girdTotal = w2ui['config_directorGrid'].records.length;
+    //var girdTotal = w2ui['config_directorGrid'].records.length;
     $('#deleteSetting').attr('disabled', true);
     $('#deleteSetting2').attr('disabled', true);
 }
@@ -444,7 +447,7 @@ function openBrowse(){
     
     <!-- 디렉터 목록-->
     <div class="pdt20">
-        <div class="title fl">AWS Cloud 디렉터 목록</div>
+        <div class="title fl">AWS/Azure Cloud 디렉터 목록</div>
         <div class="fr"> 
         <!-- Btn -->
             <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_ADD')">
@@ -458,16 +461,16 @@ function openBrowse(){
     </div>
     <!-- 디렉터 목록 조회-->
     <div id="config_directorGrid" style="width:100%; height:270px"></div>
-    
+
     <div class="pdt20">
-        <div class="title fl">OPENSTACK Cloud 디렉터 정보</div>
-        <div class="fr"> 
+        <div class="title fl">OPENSTACK Cloud 디렉터 목록</div>
+        <div class="fr">
             <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_ADD')">
-            <span id="addSetting2" class="btn btn-primary" style="width:130px" >설정 추가</span>
+                <span id="addSetting2" class="btn btn-primary" style="width:130px" >설정 추가</span>
             </sec:authorize>
             <sec:authorize access="hasAuthority('CONFIG_HBDIRECTOR_DELETE')">
-            <span id="deleteSetting2" class="btn btn-danger" style="width:130px" >설정 삭제</span>
-        </sec:authorize>
+                <span id="deleteSetting2" class="btn btn-danger" style="width:130px" >설정 삭제</span>
+            </sec:authorize>
         </div>
         <div id="config_directorGrid2" style="width:100%; height:270px"></div>
     </div>

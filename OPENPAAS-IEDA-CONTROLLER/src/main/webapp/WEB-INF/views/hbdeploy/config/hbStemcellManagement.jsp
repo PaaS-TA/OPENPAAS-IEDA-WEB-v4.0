@@ -68,7 +68,11 @@ $(function() {
             event.onComplete = function() {
                 var selected = w2ui['config_openstackStemcellsGrid'].getSelection();
                 var record = w2ui['config_openstackStemcellsGrid'].get(selected);
-                if(record != null){
+
+                selected = w2ui['config_azureStemcellsGrid'].getSelection();
+                var recordAzure = w2ui['config_azureStemcellsGrid'].get(selected);
+
+                if(record != null || recordAzure != null){
                     $('#doDelete').attr('disabled', false);
                 }else {
                     $('#doDelete').attr('disabled', false);
@@ -80,7 +84,11 @@ $(function() {
             event.onComplete = function() {
                 var selected = w2ui['config_openstackStemcellsGrid'].getSelection();
                 var record = w2ui['config_openstackStemcellsGrid'].get(selected);
-                if(record != null){
+
+                selected = w2ui['config_azureStemcellsGrid'].getSelection();
+                var recordAzure = w2ui['config_azureStemcellsGrid'].get(selected);
+
+                if(record != null || recordAzure != null){
                     $('#doDelete').attr('disabled', false);
                 }else{
                     $('#doDelete').attr('disabled', true);
@@ -111,10 +119,10 @@ $(function() {
         style: 'text-align:center',
         columns: [
             {field: 'recid', caption: 'recid', hidden: true}
-            ,{field: 'id', caption: '아이디', hidden: true} 
+            ,{field: 'id', caption: '아이디', hidden: true}
             ,{field: 'downloadStatus', caption: '다운로드 여부', hidden:true}
             ,{field: 'stemcellName', caption: '스템셀 명', size: '15%'}
-            ,{field: 'os', caption: 'Os 유형', size: '10%'}            
+            ,{field: 'os', caption: 'Os 유형', size: '10%'}
             ,{field: 'osVersion', caption: 'Os 버전', size: '10%'}
             ,{field: 'iaas', caption: 'IaaS', size: '10%', sortable: true}
             ,{field: 'stemcellFileName', caption: '스템셀 파일명', size: '45%', style: 'text-align:left'}
@@ -136,7 +144,11 @@ $(function() {
             event.onComplete = function() {
                 var selected = w2ui['config_awsStemcellsGrid'].getSelection();
                 var record = w2ui['config_awsStemcellsGrid'].get(selected);
-                if(record != null){
+
+                selected = w2ui['config_azureStemcellsGrid'].getSelection();
+                var recordAzure = w2ui['config_azureStemcellsGrid'].get(selected);
+
+                if(record != null || recordAzure != null){
                     $('#doDelete').attr('disabled', false);
                 }else {
                     $('#doDelete').attr('disabled', false);
@@ -148,22 +160,102 @@ $(function() {
             event.onComplete = function() {
                 var selected = w2ui['config_awsStemcellsGrid'].getSelection();
                 var record = w2ui['config_awsStemcellsGrid'].get(selected);
-                if(record != null){
+
+                selected = w2ui['config_azureStemcellsGrid'].getSelection();
+                var recordAzure = w2ui['config_azureStemcellsGrid'].get(selected);
+
+                if(record != null || recordAzure != null){
                     $('#doDelete').attr('disabled', false);
                 }else{
                     $('#doDelete').attr('disabled', true);
                 }
                 $('#doRegist').attr('disabled', false);
-                
+
             }
         }, onLoad:function(event){
             if(event.xhr.status == 403){
                 location.href = "/abuse";
                 event.preventDefault();
             }
-            
+
         }, onError:function(event){
-        
+
+        }
+    });
+
+    $('#config_azureStemcellsGrid').w2grid({
+        name: 'config_azureStemcellsGrid',
+        show: {
+            selectColumn: true,
+            footer: true
+        },
+        multiSelect: false,
+        msgAJAXerror: '스템셀 조회 실패',
+        method: 'GET',
+        style: 'text-align:center',
+        columns: [
+            {field: 'recid', caption: 'recid', hidden: true}
+            ,{field: 'id', caption: '아이디', hidden: true}
+            ,{field: 'downloadStatus', caption: '다운로드 여부', hidden:true}
+            ,{field: 'stemcellName', caption: '스템셀 명', size: '15%'}
+            ,{field: 'os', caption: 'Os 유형', size: '10%'}
+            ,{field: 'osVersion', caption: 'Os 버전', size: '10%'}
+            ,{field: 'iaas', caption: 'IaaS', size: '10%', sortable: true}
+            ,{field: 'stemcellFileName', caption: '스템셀 파일명', size: '45%', style: 'text-align:left'}
+            ,{field: 'stemcellVersion', caption: '스템셀 버전', size: '10%'}
+            ,{field: 'size', caption: '파일 크기', size: '10%'}
+            ,{field: 'isExisted', caption: '다운로드 여부', size: '20%',
+                render: function(record) {
+                    if ( record.downloadStatus == 'DOWNLOADED'  ){
+                        return '<div class="btn btn-success btn-xs" id= "downloaded_'+record.id+'" style="width:100px;">Downloaded</div>';
+                    }else if(record.downloadStatus == 'DOWNLOADING'){ //다른 사용자가다운로드 중일 경우
+                        return '<div class="btn btn-info btn-xs" id= "downloading_'+record.id+'" style="width:100px;">Downloading</div>';
+                    } else{
+                        return '<div class="btn" id="isExisted_'+record.id+'" style="position: relative;width:100px;"></div>';
+                    }
+                }
+            }
+        ],
+        onSelect: function(event) {
+            event.onComplete = function() {
+                var selected = w2ui['config_awsStemcellsGrid'].getSelection();
+                var record = w2ui['config_awsStemcellsGrid'].get(selected);
+
+                selected = w2ui['config_openstackStemcellsGrid'].getSelection();
+                var recordOpenstack = w2ui['config_openstackStemcellsGrid'].get(selected);
+
+                if(record != null || recordOpenstack != null){
+                    $('#doDelete').attr('disabled', false);
+                }else {
+                    $('#doDelete').attr('disabled', false);
+                }
+                $('#doregist').attr('disabled', false);
+            }
+        },
+        onUnselect: function(event) {
+            event.onComplete = function() {
+                var selected = w2ui['config_awsStemcellsGrid'].getSelection();
+                var record = w2ui['config_awsStemcellsGrid'].get(selected);
+
+                selected = w2ui['config_openstackStemcellsGrid'].getSelection();
+                var recordOpenstack = w2ui['config_openstackStemcellsGrid'].get(selected);
+
+                if(record != null || recordOpenstack != null){
+                    $('#doDelete').attr('disabled', false);
+                }else{
+                    $('#doDelete').attr('disabled', true);
+                }
+                $('#doRegist').attr('disabled', false);
+
+            }
+        }, onLoad:function(event){
+            if(event.xhr.status == 403){
+                location.href = "/abuse";
+                event.preventDefault();
+            }
+
+        }, onError:function(event){
+
         }
     });
 
@@ -177,6 +269,7 @@ $(function() {
 function doSearch(){
     w2ui['config_awsStemcellsGrid'].load('/config/hbstemcell/list/aws');
     w2ui['config_openstackStemcellsGrid'].load('/config/hbstemcell/list/openstack');
+    w2ui['config_azureStemcellsGrid'].load('/config/hbstemcell/list/azure');
 }
 /********************************************************
  * 설명 : 정보 조회
@@ -193,6 +286,7 @@ function initView(){
 function gridReload() {
     w2ui['config_awsStemcellsGrid'].reset();
     w2ui['config_openstackStemcellsGrid'].reset();
+    w2ui['config_azureStemcellsGrid'].reset();
     doSearch();
 }
 /********************************************************
@@ -202,6 +296,7 @@ function gridReload() {
 function clearMainPage() {
     $().w2destroy('config_awsStemcellsGrid');
     $().w2destroy('config_openstackStemcellsGrid');
+    $().w2destroy('config_azureStemcellsGrid');
 }
  /********************************************************
  * 설명 : Lock 실행
@@ -249,6 +344,7 @@ $("#doRegist").click(function(){
         onClose : function(event){
             w2ui['config_awsStemcellsGrid'].clear();
             w2ui['config_openstackStemcellsGrid'].clear();
+            w2ui['config_azureStemcellsGrid'].clear();
             initView();
         }
     });
@@ -302,7 +398,7 @@ function setCommonCode(url, id) {
                 });
                 iaasListSelect="<select style='width:60%' name ='iaasList' onchange='setLightCheckbox(this.value);'>";
                  for(var i=0; i<stemcellArray.length; i++){
-                     if(stemcellArray[i] == 'OPENSTACK' || stemcellArray[i] == 'AWS'){
+                     if(stemcellArray[i] == 'OPENSTACK' || stemcellArray[i] == 'AWS' || stemcellArray[i] == 'AZURE'){
                          iaasListSelect+="<option value="+stemcellArray[i]+">"+stemcellArray[i]+"</option>";
                      }
                  }
@@ -427,13 +523,18 @@ function setRegistType(value){
      var record = new Array();
      var awsSelected = w2ui['config_awsStemcellsGrid'].getSelection();
      var openstackSelected = w2ui['config_openstackStemcellsGrid'].getSelection();
-     if (awsSelected == ""){
+     var azureSelected = w2ui['config_azureStemcellsGrid'].getSelection(); alert("awsSelected="+awsSelected+"=openstackSelected="+openstackSelected+"=azureSelected="+azureSelected);
+
+     if (openstackSelected != ""){
          record.push(w2ui['config_openstackStemcellsGrid'].get(openstackSelected));
-     }else if (openstackSelected == "") {
+     }else if (awsSelected != "") {
          record.push(w2ui['config_awsStemcellsGrid'].get(awsSelected));
+     }else if (azureSelected != "") {
+         record.push(w2ui['config_azureStemcellsGrid'].get(azureSelected));
      }else{
          record.push(w2ui['config_awsStemcellsGrid'].get(awsSelected));
          record.push(w2ui['config_openstackStemcellsGrid'].get(openstackSelected));
+         record.push(w2ui['config_azureStemcellsGrid'].get(azureSelected));
      }
      var message = "";
      var recordName = "";
@@ -459,6 +560,7 @@ function setRegistType(value){
          no_callBack    : function(){
              w2ui['config_awsStemcellsGrid'].clear();
              w2ui['config_openstackStemcellsGrid'].clear();
+             w2ui['config_azureStemcellsGrid'].clear();
              initView();
          }
      });
@@ -635,13 +737,19 @@ function setRegistType(value){
                          if( id != obj.id && obj.downloadStatus.toUpperCase() == "DOWNLOADING" ){
                              flag= false;
                          }
-                 });
-                 }else{
+                    });
+                 }else if(stemcellInfo.iaasType == "openstack"){
                      w2ui['config_openstackStemcellsGrid'].records.map(function(obj) {
                          if( id != obj.id && obj.downloadStatus.toUpperCase() == "DOWNLOADING" ){
                              flag= false;
                          }
-                 });
+                     });
+                 }else{
+                     w2ui['config_azureStemcellsGrid'].records.map(function(obj) {
+                         if( id != obj.id && obj.downloadStatus.toUpperCase() == "DOWNLOADING" ){
+                             flag= false;
+                         }
+                     });
                  }
                  if(downloadClient != "" && flag ){
                      downloadClient.disconnect();
@@ -684,13 +792,15 @@ function setRegistType(value){
              }
              w2ui['config_awsStemcellsGrid'].clear();
              w2ui['config_openstackStemcellsGrid'].clear();
+             w2ui['config_azureStemcellsGrid'].clear();
              initView();
          }, error : function(request, status, error) {
              w2popup.unlock();
              var errorResult = JSON.parse(request.responseText);
              w2alert(errorResult.message);
              w2ui['config_awsStemcellsGrid'].clear();
-             w2ui['config_opestackStemcellsGrid'].clear();
+             w2ui['config_openstackStemcellsGrid'].clear();
+             w2ui['config_azureStemcellsGrid'].clear();
              doSearch();
          }
      });
@@ -724,6 +834,13 @@ function setRegistType(value){
     </div>
     <!-- 그리드 영역 -->
     <div id="config_openstackStemcellsGrid" style="width:100%; height:309px"></div>
+
+    <!-- OpenPaaS AZURE 스템셀 목록-->
+    <div class="pdt20">
+        <div class="title fl">AZURE 스템셀 목록</div>
+    </div>
+    <!-- 그리드 영역 -->
+    <div id="config_azureStemcellsGrid" style="width:100%; height:309px"></div>
 </div>
 
 <!-- 스템셀 등록 팝업 -->

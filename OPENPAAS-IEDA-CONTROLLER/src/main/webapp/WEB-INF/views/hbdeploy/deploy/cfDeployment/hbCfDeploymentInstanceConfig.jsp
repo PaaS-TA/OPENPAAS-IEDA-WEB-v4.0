@@ -49,6 +49,8 @@ var resourceLayout = {
                            return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
                        }else if (record.iaasType.toLowerCase() == "openstack"){
                            return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
+                       }else if (record.iaasType.toLowerCase() == "azure"){
+                           return "<img src='images/iaasMgnt/azure-icon.png' width='90' height='35' />";
                        }
                    }},
                    { field: 'adapter', caption: 'Adapter', size:'90px', style:'text-align:center;'},
@@ -232,7 +234,8 @@ function settingCfJobs(value, type, record){
                     html += '<div class="panel-body">';
                     html += '<div id="cfJobListDiv">';
                     html += '<p style="color:red;">- 고급 설정 값을 변경하지 않을 경우 아래에 입력 된 기본 값으로 자동 설정됩니다.</p>';
-                    html += '<p style="color:red;">- 해당 Job의 인스턴스 수는 0-100까지 입력하실 수 있습니다.</p>';
+                  //html += '<p style="color:red;">- 해당 Job의 azs(가용 영역)는 "z1", "z2", "z1,z2" 중 하나를 입력합니다.</p>';
+                    html += '<p style="color:red;">- 해당 Job의 인스턴스 수는 0-100까지 입력합니다.</p>';
                     
                     for( var i=0; i<data.length; i++ ){
                         html += setJobSettingHtml(data[i]);
@@ -275,11 +278,22 @@ function setJobSettingHtml(data){
     var html = "";
         html += '<ul class="w2ui-field" style="border: 1px solid #c5e3f3;padding: 10px;">';
         html +=     '<li style="display:inline-block; width:35%;">';
+      //html +=     '<li style="display:inline-block; width:15%;">';
         html +=         '<label style="text-align: left;font-size:11px;">'+data.job_name+'</label>';
         html +=     '</li>';
         html +=     '<li style="display:inline-block; width:60%;vertical-align:middle; line-height:3; text-align:right;">';
+      //html +=     '<li style="display:inline-block; width:80%;vertical-align:middle; line-height:3; text-align:right;">';
         html +=         '<ul>';
         html +=             '<li>';
+      //html +=                 '<label style="display:inline-block;">azs : </label>&nbsp;';
+      //html +=                 '<select class="form-control" onchange="iaasTypeChangeInput(this.value)" name="iaasType" style="width: 20%; margin-left: 5px;">';
+      //html +=                     '<option value="">가용 영역을 선택하세요.</option>';
+      //html +=                     '<option value="z1">z1</option>';
+      //html +=                     '<option value="z2">z2</option>';
+      //html +=                     '<option value="z1,z2">z1,z2</option>';
+      //html +=                 '</select>';
+      //html +=                 '<input class="form-control" style="width:16%; display:inline-block;" onblur="azsControl(this);" onfocusin="azsControl(this);" onfocusout="azsControl(this);" maxlength="5" type="text" min="0" max="5" value="z1" id="azs-'+data.id+'" name="azs-'+data.job_name+'" placeholder="예) z1 | z1,z2"/>';
+      //html +=                 '&nbsp';
         html +=                 '<label style="display:inline-block;">인스턴스 수 : </label>&nbsp;';
         html +=                 '<input class="form-control" style="width:30%; display:inline-block;" onblur="instanceControl(this);" onfocusin="instanceControl(this);" onfocusout="instanceControl(this);" maxlength="100" type="number" min="0" max="100" value="1" id="'+data.id+'" name="'+data.job_name+'"/>';
         html +=              '</li>';
@@ -287,6 +301,32 @@ function setJobSettingHtml(data){
         html +=     '</li>';
         html += '</ul>';
     return html;
+}
+
+/********************************************************
+ * 설명 : CF Jobs 유효성 추가
+ * 기능 : azsControl
+ *********************************************************/
+function azsControl(e){
+//    if ( e.value != "" && e.value.length >= 0 && e.value.length <= 5) {
+//        if( $(e).parent().find("p").length > 0 ){
+//            $(e).parent().find("p").remove();
+//        }
+//    }else{
+//        if( $(e).parent().find("p").length == 0 ){
+//            $(e).parent().append("<p>'@if1@z1', 'z2', 'z1,z2' 중 하나를 입력 합니다.</p>");
+//        }
+//    }
+
+    if (e.value == "z1" || e.value == "z2" || e.value == "z1,z2"){
+        if( $(e).parent().find("p").length > 0 ){
+            $(e).parent().find("p").remove();
+        }
+    }else{
+        if( $(e).parent().find("p").length == 0 ) {
+            $(e).parent().append("<p>'@if2@z1', 'z2', 'z1,z2' 중 하나를 입력 합니다.</p>");
+        }
+    }
 }
 
 /********************************************************
@@ -310,7 +350,7 @@ function instanceControl(e){
 //              $(e).val("1");
          }
          if( $(e).parent().find("p").length == 0 ){
-             $(e).parent().append("<p>100까지 숫자만 입력 가능 합니다.</p>"); 
+             $(e).parent().append("<p>100까지 숫자만 입력 가능 합니다.</p>");
          }
      }
 }
@@ -361,6 +401,23 @@ function registHbCfDeploymnetInstanceConfigInfo() {
             singletonBlobstore : $("input[name=singleton-blobstore]").val(),
             tcpRouter          : $("input[name=tcp-router]").val(),
             uaa                : $("input[name=uaa]").val()
+
+//           ,azsAdapter            : $("input[name=azs-adapter]").val(),
+//            azsApi                : $("input[name=azs-api]").val(),
+//            azsCcWorker           : $("input[name=azs-cc-worker]").val(),
+//            azsConsul             : $("input[name=azs-consul]").val(),
+//            azsTheDatabase        : $("input[name=azs-database]").val(),
+//            azsScheduler          : $("input[name=azs-scheduler]").val(),
+//            azsDiegoApi           : $("input[name=azs-diego-api]").val(),
+//            azsDiegoCell          : $("input[name=azs-diego-cell]").val(),
+//            azsDoppler            : $("input[name=azs-doppler]").val(),
+//            azsHaproxy            : $("input[name=azs-haproxy]").val(),
+//            azsLogApi             : $("input[name=azs-log-api]").val(),
+//            azsNats               : $("input[name=azs-nats]").val(),
+//            azsRouter             : $("input[name=azs-router]").val(),
+//            azsSingletonBlobstore : $("input[name=azs-singleton-blobstore]").val(),
+//            azsTcpRouter          : $("input[name=azs-tcp-router]").val(),
+//            azsUaa                : $("input[name=azs-uaa]").val()
     }
         //Server send Cf Info
         $.ajax({
@@ -486,6 +543,7 @@ function resetForm(status){
                                <option value="">인프라 환경을 선택하세요.</option>
                                <option value="aws">AWS</option>
                                <option value="openstack">Openstack</option>
+                               <option value="azure">Azure</option>
                            </select>
                        </div>
                    </div>
@@ -538,7 +596,7 @@ $(function() {
                 }
             }, ccWorker: {
                 required: function(){
-                    return checkEmpty( $("input[name=cc_worker]").val() );
+                    return checkEmpty( $("input[name=cc-worker]").val() );
                 }
             }, consul: {
                 required: function(){
@@ -546,11 +604,11 @@ $(function() {
                 }
             }, theDatabase: {
                 required: function(){
-                    return checkEmpty( $("input[name=theDatabase]").val() );
+                    return checkEmpty( $("input[name=database]").val() );
                 }
             }, diegoApi: {
                 required: function(){
-                    return checkEmpty( $("input[name=diego_api]").val() );
+                    return checkEmpty( $("input[name=diego-api]").val() );
                 }
             }, diegoCell: {
                 required: function(){
@@ -562,11 +620,11 @@ $(function() {
                 }
             }, haproxy: {
                 required: function(){
-                    return checkEmpty( $("input[name=ha_proxy]").val() );
+                    return checkEmpty( $("input[name=ha-proxy]").val() );
                 }
             }, logApi: {
                 required: function(){
-                    return checkEmpty( $("input[name=log_api]").val() );
+                    return checkEmpty( $("input[name=log-api]").val() );
                 }
             }, nats: {
                 required: function(){
@@ -578,11 +636,11 @@ $(function() {
                 }
             }, singletonBlobstore: {
                 required: function(){
-                    return checkEmpty( $("input[name=singleton_blobstore]").val() );
+                    return checkEmpty( $("input[name=singleton-blobstore]").val() );
                 }
             }, tcpRouter: {
                 required: function(){
-                    return checkEmpty( $("input[name=tcp_router]").val() );
+                    return checkEmpty( $("input[name=tcp-router]").val() );
                 }
             }, uaa: {
                 required: function(){
@@ -593,45 +651,133 @@ $(function() {
                     return checkEmpty( $("select[name='cfDeploymentVersion']").val() );
                 }
             }
+//          }, azsAdapter: {
+//                required: function(){
+//                    return checkEmpty( $("input[name=azs-adapter]").val() );
+//                }
+//            }, azsCcWorker: {
+//                required: function(){
+//                    return checkEmpty( $("input[name=azs-cc-worker]").val() );
+//                }
+//            }, azsConsul: {
+//                required: function(){ alert("[659]");
+//                    return checkEmpty( $("input[name=azs-consul]").val() );
+//                }
+//            }, azsTheDatabase: {
+//                required: function(){
+//                    return checkEmpty( $("input[name=azs-database]").val() );
+//                }
+//            }, azsDiegoApi: {
+//                required: function(){
+//                    return checkEmpty( $("input[name=azs-diego-api]").val() );
+//                }
+//            }, azsDiegoCell: {
+//                required: function(){
+//                    return checkEmpty( $("input[name=azs-diego-cell]").val() );
+//                }
+//            }, azsDoppler: {
+//                required: function(){
+//                    return checkEmpty( $("input[name=azs-doppler]").val() );
+//                }
+//            }, azsHaproxy: {
+//                required: function(){
+//                    return checkEmpty( $("input[name=azs-ha-proxy]").val() );
+//                }
+//            }, azsLogApi: {
+//                required: function(){
+//                    return checkEmpty( $("input[name=azs-log-api]").val() );
+//                }
+//            }, azsNats: {
+//                required: function(){
+//                    return checkEmpty( $("input[name=azs-nats]").val() );
+//                }
+//            }, azsRouter: {
+//                required: function(){
+//                    return checkEmpty( $("input[name=azs-router]").val() );
+//                }
+//            }, azsSingletonBlobstore: {
+//                required: function(){
+//                    return checkEmpty( $("input[name=azs-singleton-blobstore]").val() );
+//                }
+//            }, azsTcpRouter: {
+//                required: function(){
+//                    return checkEmpty( $("input[name=azs-tcp-router]").val() );
+//                }
+//            }, azsUaa: {
+//                required: function(){
+//                    return checkEmpty( $("input[name=azs-uaa]").val() );
+//                }
+//            }
             
         }, messages: {
-            instanceConfigName: { 
-                required:  "인스턴스 별칭"+text_required_msg
-            }, iaasType: { 
-                required:  "클라우드 인프라 환경 타입"+text_required_msg,
-            }, adapter: { 
-                required:  "adapter"+text_required_msg,
-            }, api: { 
-                required:  "api"+text_required_msg,
-            }, ccWorker: { 
-                required:  "ccWorker"+text_required_msg,
-            }, consul: { 
-                required:  "consul"+text_required_msg,
-            }, theDatabase: { 
-                required:  "theDatabase"+text_required_msg,
-            }, diegoApi: { 
-                required:  "diegoApi"+text_required_msg,
-            }, diegoCell: { 
-                required:  "diegoCell"+text_required_msg,
-            }, doppler: { 
-                required:  "doppler"+text_required_msg,
-            }, haproxy: { 
-                required:  "haproxy"+text_required_msg,
-            }, logApi: { 
-                required:  "logApi"+text_required_msg,
-            }, nats: { 
-                required:  "nats"+text_required_msg,
-            }, router: { 
-                required:  "router"+text_required_msg,
-            }, singletonBlobstore: { 
-                required:  "singletonBlobstore"+text_required_msg,
-            }, tcpRouter: { 
-                required:  "tcpRouter"+text_required_msg,
-            }, uaa: { 
-                required:  "uaa"+text_required_msg,
-            }, cfDeploymentVersion: { 
-                required:  "CF Deployment 버전"+select_required_msg,
+            instanceConfigName: {
+                required: "인스턴스 별칭" + text_required_msg
+            }, iaasType: {
+                required: "클라우드 인프라 환경 타입" + text_required_msg,
+            }, adapter: {
+                required: "adapter" + text_required_msg,
+            }, api: {
+                required: "api" + text_required_msg,
+            }, ccWorker: {
+                required: "cc-worker" + text_required_msg,
+            }, consul: {
+                required: "consul" + text_required_msg,
+            }, theDatabase: {
+                required: "database" + text_required_msg,
+            }, diegoApi: {
+                required: "diego-api" + text_required_msg,
+            }, diegoCell: {
+                required: "diego-cell" + text_required_msg,
+            }, doppler: {
+                required: "doppler" + text_required_msg,
+            }, haproxy: {
+                required: "haproxy" + text_required_msg,
+            }, logApi: {
+                required: "log-api" + text_required_msg,
+            }, nats: {
+                required: "nats" + text_required_msg,
+            }, router: {
+                required: "router" + text_required_msg,
+            }, singletonBlobstore: {
+                required: "singleton-blobstore" + text_required_msg,
+            }, tcpRouter: {
+                required: "tcp-router" + text_required_msg,
+            }, uaa: {
+                required: "uaa" + text_required_msg,
+            }, cfDeploymentVersion: {
+                required: "CF Deployment 버전" + select_required_msg,
             }
+//            }, azsAdapter: {
+//                required:  "adapter azs"+text_required_msg,
+//            }, azsApi: {
+//                required:  "api azs"+text_required_msg,
+//            }, azsCcWorker: {
+//                required:  "cc-worker azs"+text_required_msg,
+//            }, azsConsul: {
+//                required:  "consul azs"+text_required_msg,
+//            }, azsTheDatabase: {
+//                required:  "database azs"+text_required_msg,
+//            }, azsDiegoApi: {
+//                required:  "diego-api azs"+text_required_msg,
+//            }, azsDiegoCell: {
+//                required:  "diego-cell"+text_required_msg,
+//            }, azsDoppler: {
+//                required:  "doppler"+text_required_msg,
+//            }, azsHaproxy: {
+//                required:  "ha-proxy"+text_required_msg,
+//            }, azsLogApi: {
+//                required:  "log-api azs"+text_required_msg,
+//            }, azsNats: {
+//                required:  "nats azs"+text_required_msg,
+//            }, azsRouter: {
+//                required:  "router azs"+text_required_msg,
+//            }, azsSingletonBlobstore: {
+//                required:  "singleton-blobstore azs"+text_required_msg,
+//            }, azsTcpRouter: {
+//                required:  "tcp-router azs"+text_required_msg,
+//            }, azsUaa: {
+//                required:  "uaa azs"+text_required_msg,
+//            }
         }, unhighlight: function(element) {
             setHybridSuccessStyle(element);
         },errorPlacement: function(error, element) {

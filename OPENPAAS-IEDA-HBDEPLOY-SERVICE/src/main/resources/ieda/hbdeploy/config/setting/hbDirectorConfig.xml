@@ -189,5 +189,8 @@
             <if test="iaasType == 'openstack'">
                 where director_cpi = 'openstack_cpi'
             </if>
+            <if test="iaasType == 'azure'">
+                where director_cpi = 'azure_cpi'
+            </if>
     </select>
 </mapper>

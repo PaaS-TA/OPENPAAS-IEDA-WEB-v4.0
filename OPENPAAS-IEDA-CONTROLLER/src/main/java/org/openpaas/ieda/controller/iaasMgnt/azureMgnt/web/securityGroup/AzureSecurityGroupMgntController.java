@@ -1,9 +1,5 @@
 package org.openpaas.ieda.controller.iaasMgnt.azureMgnt.web.securityGroup;
 
-import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-
 import org.openpaas.ieda.iaasDashboard.azureMgnt.web.securityGroup.dao.AzureSecurityGroupMgntVO;
 import org.openpaas.ieda.iaasDashboard.azureMgnt.web.securityGroup.dto.AzureSecurityGroupMgntDTO;
 import org.openpaas.ieda.iaasDashboard.azureMgnt.web.securityGroup.service.AzureSecurityGroupMgntService;
@@ -17,6 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
 
 @Controller
 public class AzureSecurityGroupMgntController {
@@ -51,9 +51,22 @@ public class AzureSecurityGroupMgntController {
             map.put("records", list);
         }
         return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
-    }    
-    
-    
+    }
+
+    /***************************************************
+     * @project : AZURE 관리 대시보드
+     * @description : AZURE SecurityGroup 목록 조회
+     * @title : getAzureSecurityGroupInfoList
+     * @return : ResponseEntity<?>
+     ***************************************************/
+    @RequestMapping(value="/azureMgnt/securityGroup/list/{accountId}/resourceGroup/{resourceGroupName}", method=RequestMethod.GET)
+    public ResponseEntity<List<String>> getAzureSecurityGroupnfoListByResourceGroup(Principal principal, @PathVariable("accountId") int accountId, @PathVariable("resourceGroupName") String resourceGroupName){
+        List<String> list = azureSecurityGroupMgntService.getAzureSecurityGroupInfoListByResourceGroup(principal, accountId, resourceGroupName);
+
+        return new ResponseEntity<List<String>>(list, HttpStatus.OK);
+    }
+
+
     /***************************************************
      * @project : AZURE 관리 대시보드
      * @description : AZURE Security Group Inbounds 목록 조회

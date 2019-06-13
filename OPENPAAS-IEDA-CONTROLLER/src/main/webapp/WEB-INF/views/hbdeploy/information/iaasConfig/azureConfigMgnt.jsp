@@ -1,7 +1,7 @@
 <%
 /* =================================================================
- * 작성일 : 2017.06.05
- * 상세설명 : 환경 설정 관리 화면(AWS 인프라 환경 설정 조회)
+ * 작성일 : 2018.03.05
+ * 상세설명 : 환경 설정 관리 화면(azure 인프라 환경 설정 조회)
  * =================================================================
  */ 
 %>
@@ -27,9 +27,9 @@ var select_required_msg='<spring:message code="common.select.vaildate.required.m
 var text_injection_msg='<spring:message code="common.text.validate.sqlInjection.message"/>';//입력하신 값은 입력하실 수 없습니다.
 
 $(function() {
-    // AWS 클라우드 인프라 환경 설정 정보 조회
-    $('#aws_configGrid').w2grid({
-        name: 'aws_configGrid',
+    // azure 클라우드 인프라 환경 설정 정보 조회
+    $('#azure_configGrid').w2grid({
+        name: 'azure_configGrid',
         style   : 'text-align:center',
         method  : 'GET',
         multiSelect: false,
@@ -43,14 +43,14 @@ $(function() {
            , {field: 'iaasConfigAlias', caption: '환경 설정 별칭', size: '7%', style: 'text-align:left'}
            , {field: 'deployStatus', caption: '플랫폼 배포 사용 여부', size: '7%', style: 'text-align:center'}
            , {field: 'accountName', caption: '계정 별칭', size: '10%', style: 'text-align:left'}
-           , {field: 'commonSecurityGroup', caption: 'Security Group', size: '10%', style: 'text-align:left'}
-           , {field: 'commonRegion', caption: 'Region', size: '10%', style: 'text-align:center'}  
-           , {field: 'commonAvailabilityZone', caption: 'Avaliablity Zone', size: '10%', style: 'text-align:center'}  
+           , {field: 'commonSecurityGroup', caption: '보안 그룹', size: '10%', style: 'text-align:center'}  
+           , {field: 'azureResourceGroup', caption: '리소스 그룹', size: '10%', style: 'text-align:center'}
+           , {field: 'azureStorageAccountName', caption: '스토리지 계정 명', size: '10%', style: 'text-align:center'}  
            , {field: 'createUserId', caption: '생성자', hidden:true}
            , {field: 'createDate', caption: '생성 일자', size: '5%', style: 'text-align:right'}
            , {field: 'updateDate', caption: '수정 일자', size: '5%', style: 'text-align:right'}
          ],onError: function(event){
-             w2alert(search_grid_fail_msg, "AWS 환경 설정 목록");
+             w2alert(search_grid_fail_msg, "Azure 환경 설정 목록");
          },onLoad : function(event){
              
          },onSelect : function(event){
@@ -67,24 +67,24 @@ $(function() {
     });
      doSearch(); 
 
-/*************************** *****************************
- * 설명 :  AWS 등록 팝업 화면
+/*********************************************************
+ * 설명 :  azure 등록 팝업 화면
  *********************************************************/
 $("#registConfigBtn").click(function(){
     w2popup.open({
-        title   : "<b>AWS 환경 설정 등록</b>",
-        width   : 650,
-        height  : 485,
+        title   : "<b>Azure 환경 설정 등록</b>",
+        width   : 680,
+        height  : 550,
         modal   : true,
         body    : $("#registPopupDiv").html(),
         buttons : $("#registPopupBtnDiv").html(),
         onOpen : function(event){
             event.onComplete = function(){
-                 //AWS 계정 목록
-                 getAWSAccountName();
+                 //azure 계정 목록
+                 getAzureAccountName();
             }                   
         },onClose:function(event){
-            w2ui['aws_configGrid'].reset();
+            w2ui['azure_configGrid'].reset();
             initsetting();
             doSearch();
         }
@@ -92,30 +92,30 @@ $("#registConfigBtn").click(function(){
 });     
 
 /*************************** *****************************
- * 설명 :  AWS 수정 팝업 화면
+ * 설명 :  azure 수정 팝업 화면
  *********************************************************/
 $("#updateConfigBtn").click(function(){
     if( $("#updateConfigBtn").attr("disabled") == "disabled" ) return;
     w2popup.open({
-        title   : "<b>AWS 환경 설정 수정</b>",
-        width   : 650,
-        height  : 485,
+        title   : "<b>Azure 환경 설정 수정</b>",
+        width   : 680,
+        height  : 550,
         modal   : true,
         body    : $("#registPopupDiv").html(),
         buttons : $("#registPopupBtnDiv").html(),
         onOpen : function(event){
             event.onComplete = function(){
                 //grid record
-                var selected = w2ui['aws_configGrid'].getSelection();
+                var selected = w2ui['azure_configGrid'].getSelection();
                 if( selected.length == 0 ){
-                    w2alert(select_fail_msg, "AWS 환경 설정 정보 수정");
+                    w2alert(select_fail_msg, "Azure 환경 설정 정보 수정");
                     return;
                 }
-                var record = w2ui['aws_configGrid'].get(selected);
-                 settingAwsConfigInfo(record.id);
+                var record = w2ui['azure_configGrid'].get(selected);
+                 settingAzureConfigInfo(record.id);
             }                   
         },onClose:function(event){
-            w2ui['aws_configGrid'].reset();
+            w2ui['azure_configGrid'].reset();
             initsetting();
             doSearch();
         }
@@ -123,35 +123,35 @@ $("#updateConfigBtn").click(function(){
 });  
      
 /*************************** *****************************
- * 설명 :  AWS 삭제 팝업 화면
+ * 설명 :  azure 삭제 팝업 화면
  *********************************************************/
 $("#deleteConfigBtn").click(function(){
     if( $("#deleteConfigBtn").attr("disabled") == "disabled" ) return;
     
     //grid record
-    var selected = w2ui['aws_configGrid'].getSelection();
+    var selected = w2ui['azure_configGrid'].getSelection();
     if( selected.length == 0 ){
         w2alert(select_fail_msg);
-        w2ui['aws_configGrid'].reset();
+        w2ui['azure_configGrid'].reset();
         doSearch();
         return;
     }
-    var record = w2ui['aws_configGrid'].get(selected);
+    var record = w2ui['azure_configGrid'].get(selected);
     var msg = "환경 설정 정보(" + record.iaasConfigAlias + ")"+ popup_delete_msg;
     if( record.deployStatus == '사용중' ){
-        msg = "<span style='color:red'>현재 AWS 플랫폼 설치에서 <br/>해당 환경 설정 정보("+record.iaasConfigAlias+")를 사용하고 있습니다. </span><br/><span style='color:red; font-weight:bolder'>그래도 삭제 하시겠습니까?</span>";
+        msg = "<span style='color:red'>현재 azure 플랫폼 설치에서 <br/>해당 환경 설정 정보("+record.iaasConfigAlias+")를 사용하고 있습니다. </span><br/><span style='color:red; font-weight:bolder'>그래도 삭제 하시겠습니까?</span>";
     }
     w2confirm({
-        title        : "<b>AWS 환경 설정 정보 삭제</b>",
+        title        : "<b>Azure 환경 설정 정보 삭제</b>",
         msg          : msg,
         yes_text     : "확인",
         no_text      : "취소",
         yes_callBack : function(event){
             //delete function 호출
-            deleteAwsConfigInfo(record);
-            w2ui['aws_configGrid'].reset();
+            deleteazureConfigInfo(record);
+            w2ui['azure_configGrid'].reset();
         },no_callBack  : function(event){
-            w2ui['aws_configGrid'].reset();
+            w2ui['azure_configGrid'].reset();
             doSearch();
         }
     });
@@ -167,34 +167,41 @@ function doSearch() {
     $("#deleteConfigBtn").attr('disabled', true);
     $("#updateConfigBtn").attr('disabled', true);
     //목록 조회
-    w2ui['aws_configGrid'].load("<c:url value='/info/hbIaasConfig/aws/list'/>","",function(event){});  
+    w2ui['azure_configGrid'].load("<c:url value='/info/hbIaasConfig/azure/list'/>","",function(event){});  
 }
 
 /****************************************************
- * 기능 : settingAwsConfigInfo
- * 설명 : AWS 환경 설정 정보 설정
+ * 기능 : settingAzureConfigInfo
+ * 설명 : azure 환경 설정 정보 설정
 *****************************************************/
-function settingAwsConfigInfo(id){
+function settingAzureConfigInfo(id){
     w2popup.lock( search_lock_msg, true);
     $.ajax({
         type : "GET",
-        url : "/info/hbIaasConfig/aws/save/detail/"+id,
+        url : "/info/hbIaasConfig/azure/save/detail/"+id,
         contentType : "application/json",
         dataType : "json",
         success : function(data, status) {
             $(".w2ui-msg-body input[name='configId']").val(data.id);
             $(".w2ui-msg-body input[name='iaasConfigAlias']").val(data.iaasConfigAlias);
-            $(".w2ui-msg-body input[name='commonKeypairName']").val(data.commonKeypairName);
             $(".w2ui-msg-body input[name='commonSecurityGroup']").val(data.commonSecurityGroup);
+            $(".w2ui-msg-body input[name='azureResourceGroup']").val(data.azureResourceGroup);
+            $(".w2ui-msg-body input[name='azureStorageAccountName']").val(data.azureStorageAccountName);
+            $(".w2ui-msg-body input[name='azureSshPublicKey']").val(data.azureSshPublicKey);
+            //$(".w2ui-msg-body input[name='azurePrivateKey']").val(data.azurePrivateKey);
+            $(".w2ui-msg-body input[name='commonKeypairPath']").val(data.commonKeypairPath);
             configInfo = {
                     accountId: data.accountId,
                     accountName : data.accountName,
-                    commonAvaliabilityZone : data.commonAvailabilityZone,
-                    commonRegion : data.commonRegion,
+                    commonSecurityGroup : data.commonSecurityGroup,
+                    azureResourceGroup : data.azureResourceGroup,
+                    azureStorageAccountName : data.azureStorageAccountName,
+                    azureSshPublicKey : data.azureSshPublicKey,
+                    //azurePrivateKey : data.azurePrivateKey,
                     commonKeypairPath : data.commonKeypairPath
             }
             w2popup.unlock();
-            getAWSAccountName();
+            getAzureAccountName();
         },
         error : function(request, status, error) {
             w2popup.unlock();
@@ -206,41 +213,20 @@ function settingAwsConfigInfo(id){
 }
 
 /****************************************************
- * 기능 : getAWSAccountName
+ * 기능 : getAzureAccountName
  * 설명 : 해당 유저의 인프라에 대한 계정 별칭 목록 조회 요청
 *****************************************************/
-function getAWSAccountName(){
+function getAzureAccountName(){
     w2popup.lock(search_lock_msg,true);
     $.ajax({
         type : "GET",
-        url : "/common/deploy/accountList/aws",
+        url : "/common/deploy/accountList/azure",
         contentType : "application/json",
         success : function(data, status) {
             setupIaasAccountName(data);
             w2popup.unlock();
-             //AWS Region 목록
-            getAwsRegionList();
-        },
-        error : function(request, status, error) {
-            var errorResult = JSON.parse(request.responseText);
-            w2alert(errorResult.message, "해당 계정 별칭 목록 조회");
-        }
-    });
-}
-
-/****************************************************
- * 기능 : getAwsRegionList
- * 설명 : AWS 리전 목록 조회
-*****************************************************/
-function getAwsRegionList(){
-    w2popup.lock(search_lock_msg,true);
-    $.ajax({
-        type : "GET",
-        url : "/common/aws/region/list",
-        contentType : "application/json",
-        success : function(data, status) {
-            setAwsRegionList(data);
-            //키파일정보 리스트
+             //azure SecurityGroup 목록
+            //getAzureSecurityGroupList();
             getKeyPathFileList();
         },
         error : function(request, status, error) {
@@ -251,13 +237,112 @@ function getAwsRegionList(){
 }
 
 /****************************************************
+ * 기능 : getAzureSecurityGroupList
+ * 설명 : azure SecurityGroup 목록 조회
+*****************************************************/
+function getAzureSecurityGroupList(){
+    w2popup.lock(search_lock_msg,true);
+    $.ajax({
+        type : "GET",
+        url : "/common/azure/SecurityGroup/list",
+        contentType : "application/json",
+        success : function(data, status) {
+            setAzureSecurityGroupList(data);
+           
+        },
+        error : function(request, status, error) {
+            var errorResult = JSON.parse(request.responseText);
+            w2alert(errorResult.message, "해당 계정 별칭 목록 조회");
+        }
+    });
+}
+
+
+/****************************************************
+ * 기능 : setupIaasAccountName
+ * 설명 : 해당 유저의 인프라에 대한 계정 별칭 목록 설정
+*****************************************************/
+function setupIaasAccountName(data){
+     var iaasAccountName = "<select class='form-control select-control' style='width: 300px' name='accountName'>";
+     if( data.length == 0 ){
+         iaasAccountName +="<option value=''>계정을 등록하세요.</option>";
+     }else{
+         for (var i=0; i<data.length; i++){
+             if( configInfo.accountName == data[i].accountName ){
+                 iaasAccountName +="<option value='"+data[i].id+"' selected>" + data[i].accountName + "</option>";   
+             }else{
+                 iaasAccountName +="<option value='"+data[i].id+"'>" + data[i].accountName + "</option>";   
+             }
+         } 
+     }
+     iaasAccountName+="</select>";
+     $(".w2ui-msg-body .accountNameDiv").append(iaasAccountName);
+ }    
+
+/********************************************************
+ * 기능 : setAzureSecurityGroupList
+ * 설명 : azure SecurityGroup 목록 조회
+ *********************************************************/
+function setAzureSecurityGroupList(data){
+     $(".w2ui-msg-body select[name='commonSecurityGroup']").attr("disabled", false);
+     var securityGroupHtml = "";
+    if( data.length ==0 ){
+        securityGroupHtml +="<option value=''>존재하지 않습니다.</option>";
+    }else{
+        for (var i=0; i<data.length; i++){
+            if( data[i].name != "us-gov-west-1" && data[i].name != "cn-north-1" ){ 
+                if( configInfo.commonSecurityGroup == data[i].name ){
+                    securityGroupHtml +="<option value='"+data[i].name+"' selected>" + data[i].name + "</option>";  
+                }else{
+                    securityGroupHtml +="<option value='"+data[i].name+"'>" + data[i].name + "</option>";  
+                }
+            }
+        }   
+    }
+  
+    $(".w2ui-msg-body select[name='commonSecurityGroup']").html(securityGroupHtml);
+    w2popup.unlock();
+  
+}
+
+/****************************************************
+ * 기능 : uploadPrivateKey
+ * 설명 : Azure Private key 업로드
+*****************************************************/
+function uploadPrivateKey(){
+    var form = $(".w2ui-msg-body #azureConfigForm")[0];
+    var formData = new FormData(form);
+    
+    var files = document.getElementsByName('keyPathFile')[0].files;
+    formData.append("file", files[0]);
+    
+    $.ajax({
+        type : "POST",
+        url : "/common/deploy/key/upload",
+        enctype : 'multipart/form-data',
+        dataType: "text",
+        async : true,
+        processData: false, 
+        contentType:false,
+        data : formData,  
+        success : function(data, status) {
+            saveAzureConfigInfo();
+        },
+        error : function( e, status ) {
+            w2alert( "Private Key 업로드에 실패 하였습니다.", "Azure 환경 설정 등록");
+        }
+    });
+    
+}
+
+/****************************************************
  * 기능 : getKeyPathFileList
  * 설명 : 키 파일 정보 조회
  *****************************************************/
 function getKeyPathFileList(){
     $.ajax({
         type : "GET",
-        url : "/common/deploy/key/list/aws",
+        url : "/common/deploy/key/list/azure",
         contentType : "application/json",
         async : true,
         success : function(data, status) {
@@ -310,155 +395,35 @@ function changeKeyPathStyle( showDiv, hideDiv ){
      $(".w2ui-msg-body "+ showDiv).show();
 }
 
-/****************************************************
- * 기능 : setupIaasAccountName
- * 설명 : 해당 유저의 인프라에 대한 계정 별칭 목록 설정
-*****************************************************/
-function setupIaasAccountName(data){
-     var iaasAccountName = "<select class='form-control select-control' style='width: 300px' name='accountName'>";
-     if( data.length == 0 ){
-         iaasAccountName +="<option value=''>계정을 등록하세요.</option>";
-     }else{
-         for (var i=0; i<data.length; i++){
-             if( configInfo.accountName == data[i].accountName ){
-                 iaasAccountName +="<option value='"+data[i].id+"' selected>" + data[i].accountName + "</option>";   
-             }else{
-                 iaasAccountName +="<option value='"+data[i].id+"'>" + data[i].accountName + "</option>";   
-             }
-         } 
-     }
-     iaasAccountName+="</select>";
-     $(".w2ui-msg-body .accountNameDiv").append(iaasAccountName);
- }    
-
-/********************************************************
- * 기능 : setAwsRegionList
- * 설명 : AWS region 목록 조회
- *********************************************************/
-function setAwsRegionList(data){
-     $(".w2ui-msg-body select[name='commonRegion']").attr("disabled", false);
-     var regionHtml = "";
-    if( data.length ==0 ){
-        regionHtml +="<option value=''>존재하지 않습니다.</option>";
-    }else{
-        for (var i=0; i<data.length; i++){
-            if( data[i].name != "us-gov-west-1" && data[i].name != "cn-north-1" ){ 
-                if( configInfo.commonRegion == data[i].name ){
-                    regionHtml +="<option value='"+data[i].name+"' selected>" + data[i].name + "</option>";  
-                }else{
-                    regionHtml +="<option value='"+data[i].name+"'>" + data[i].name + "</option>";  
-                }
-            }
-        }   
-    }
-  
-    $(".w2ui-msg-body select[name='commonRegion']").html(regionHtml);
-    w2popup.unlock();
-    getAwsAvaliabilityZoneInfoList();
+/******************************************************************
+ * Function : openBrowse
+ * 설명 : 공통 File upload Browse Button
+ ***************************************************************** */
+function openBrowse(){
+    $(".w2ui-msg-body input[name='keyPathFile']").click();
 }
 
 /********************************************************
- * 기능 : getAwsAvaliabilityZoneInfoList
- * 설명 : AWS 가용영역 목록 조회
+ * 기능 : saveAzureConfigInfo
+ * 설명 : azure 환경 설정 정보 등록
  *********************************************************/
-function getAwsAvaliabilityZoneInfoList( event ){
-    w2popup.lock(search_lock_msg,true);
-    var region = "";
-    if( checkEmpty(event)){
-        region =  $(".w2ui-msg-body select[name='commonRegion']").val();
-    }else{
-        region = event.value;
-    }
-    var accountId = $(".w2ui-msg-body select[name='accountName']").val();
-    if( checkEmpty(accountId) ){
-        w2alert("인프라 관리 대시보드에서 계정을 등록하세요.");
-    }else{
-        $.ajax({
-            type : "GET",
-            url : "/common/aws/avaliabilityzone/list/"+accountId + "/" + region,
-            contentType : "application/json",
-            success : function(data, status) {
-                setAwsAvaliabilityZoneInfoList(data);
-                w2popup.unlock();
-            },
-            error : function(request, status, error) {
-                var errorResult = JSON.parse(request.responseText);
-                w2alert(errorResult.message, "해당 계정 별칭 목록 조회");
-            }
-        });
-    }
-}
-
-/********************************************************
- * 기능 : setAwsAvaliabilityZoneInfoList
- * 설명 : AWS 가용영역 목록 설정
- *********************************************************/
-function setAwsAvaliabilityZoneInfoList(data){
-    var avaliabilityZoneHtml = "";
-    if( data.length !=0 ){
-        for (var i=0; i<data.length; i++){
-            if( configInfo.commonAvaliabilityZone == data[i] ){
-                avaliabilityZoneHtml +="<option value='"+data[i]+"' selected>" + data[i] + "</option>";   
-            }else{
-                avaliabilityZoneHtml +="<option value='"+data[i]+"'>" + data[i] + "</option>";   
-            }
-        }   
-    }
-    $(".w2ui-msg-body select[name='awsAvaliabilityZone']").attr("disabled", false);
-    $(".w2ui-msg-body select[name='awsAvaliabilityZone']").html(avaliabilityZoneHtml);
-}
-
-/****************************************************
- * 기능 : uploadPrivateKey
- * 설명 : AWS Private key 업로드
-*****************************************************/
-function uploadPrivateKey(){
-    var form = $(".w2ui-msg-body #awsConfigForm")[0];
-    var formData = new FormData(form);
-    
-    var files = document.getElementsByName('keyPathFile')[0].files;
-    formData.append("file", files[0]);
-    
-    $.ajax({
-        type : "POST",
-        url : "/common/deploy/key/upload",
-        enctype : 'multipart/form-data',
-        dataType: "text",
-        async : true,
-        processData: false, 
-        contentType:false,
-        data : formData,  
-        success : function(data, status) {
-            saveAwsConfigInfo();
-        },
-        error : function( e, status ) {
-            w2alert( "Private Key 업로드에 실패 하였습니다.", "AWS 환경 설정 등록");
-        }
-    });
-    
-}
-
-/********************************************************
- * 기능 : saveAwsConfigInfo
- * 설명 : AWS 환경 설정 정보 등록
- *********************************************************/
-function saveAwsConfigInfo(){
+function saveAzureConfigInfo(){
     w2popup.lock(save_lock_msg, true);
     configInfo = {
-             iaasType  : "AWS"
+             iaasType  : "AZURE"
             ,id : $(".w2ui-msg-body input[name='configId']").val()
             ,iaasConfigAlias : $(".w2ui-msg-body input[name='iaasConfigAlias']").val()
             ,accountId : $(".w2ui-msg-body select[name='accountName']").val()
-            ,commonRegion : $(".w2ui-msg-body select[name='commonRegion']").val()
-            ,commonAvailabilityZone : $(".w2ui-msg-body select[name='awsAvaliabilityZone']").val()
             ,commonSecurityGroup : $(".w2ui-msg-body input[name='commonSecurityGroup']").val()
-            ,commonKeypairName : $(".w2ui-msg-body input[name='commonKeypairName']").val()
+            ,azureResourceGroup : $(".w2ui-msg-body input[name='azureResourceGroup']").val()
+            ,azureStorageAccountName : $(".w2ui-msg-body input[name='azureStorageAccountName']").val()
+            ,azureSshPublicKey : $(".w2ui-msg-body input[name='azureSshPublicKey']").val()
+            //,azurePrivateKey : $(".w2ui-msg-body input[name='azurePrivateKey']").val()
             ,commonKeypairPath : $(".w2ui-msg-body input[name='commonKeypairPath']").val()
     }
-    
     $.ajax({
         type : "PUT",
-        url : "/info/hbIaasConfig/aws/save",
+        url : "/info/hbIaasConfig/azure/save",
         contentType : "application/json",
         async : true,
         data : JSON.stringify(configInfo),
@@ -466,7 +431,7 @@ function saveAwsConfigInfo(){
             w2popup.unlock();
             w2popup.close();    
             initsetting();
-            w2ui['aws_configGrid'].reset();
+            w2ui['azure_configGrid'].reset();
         },
         error : function(request, status, error) {
             w2popup.unlock();
@@ -478,10 +443,10 @@ function saveAwsConfigInfo(){
 
 
 /********************************************************
- * 기능 : deleteAwsConfigInfo
- * 설명 : AWS 환경 설정 정보 삭제
+ * 기능 : deleteazureConfigInfo
+ * 설명 : azure 환경 설정 정보 삭제
  *********************************************************/
-function deleteAwsConfigInfo(record){
+function deleteazureConfigInfo(record){
      if( $("#deleteConfigBtn").attr("disabled") == "disabled" ) return;
      configInfo ={
             id :  record.id,
@@ -493,7 +458,7 @@ function deleteAwsConfigInfo(record){
      w2popup.lock(delete_lock_msg, true);
      $.ajax({
              type : "DELETE",
-             url : "/info/hbIaasConfig/aws/delete",
+             url : "/info/hbIaasConfig/azure/delete",
              contentType : "application/json",
              dataType: "json",
              async : true,
@@ -520,28 +485,12 @@ function initsetting(){
     configInfo="";
 }
 
-/******************************************************************
- * Function : openBrowse
- * 설명 : 공통 File upload Browse Button
- ***************************************************************** */
-function openBrowse(){
-    $(".w2ui-msg-body input[name='keyPathFile']").click();
-}
-
 /********************************************************
  * 기능 : clearMainPage
  * 설명 : 다른페이지 이동시 호출
  *********************************************************/
 function clearMainPage() {
-    $().w2destroy('aws_configGrid');
-}
-
-/******************************************************************
- * Function : openBrowse
- * 설명 : 공통 File upload Browse Button
- ***************************************************************** */
-function openBrowse(){
-    $(".w2ui-msg-body input[name='keyPathFile']").click();
+    $().w2destroy('azure_configGrid');
 }
 
 /********************************************************
@@ -554,90 +503,98 @@ $( window ).resize(function() {
 
 </script>
 <div id="main">
-    <div class="page_site">정보조회 > 인프라 환경 설정 관리 > <strong>AWS 환경 설정 관리 </strong></div>
+    <div class="page_site">정보조회 > 인프라 환경 설정 관리 > <strong>Azure 환경 설정 관리 </strong></div>
      <div class="pdt20">
          <div class="fl" style="width:100%">
             <div class="dropdown" >
                 <a href="#" class="dropdown-toggle iaas-dropdown" data-toggle="dropdown" aria-expanded="false">
-                    <i class="fa fa-cloud"></i>&nbsp;AWS<b class="caret"></b>
+                    <i class="fa fa-cloud"></i>&nbsp;azure<b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu alert-dropdown">
+                     <sec:authorize access="hasAuthority('INFO_IAASCONFIG_AWS_LIST')">
+                        <li><a href="javascript:goPage('<c:url value="/info/hbIaasConfig/aws"/>', 'AWS 관리');">AWS</a></li>
+                    </sec:authorize>
                     <sec:authorize access="hasAuthority('INFO_IAASCONFIG_OPENSTACK_LIST')">
                         <li><a href="javascript:goPage('<c:url value="/info/hbIaasConfig/openstack"/>', 'OPENSTACK 관리');">Openstack</a></li>
-                    </sec:authorize>
-                    <sec:authorize access="hasAuthority('INFO_IAASCONFIG_AZURE_LIST')">
-                        <li><a href="javascript:goPage('<c:url value="/info/hbIaasConfig/azure"/>', 'AZURE 관리');">Azure</a></li>
                     </sec:authorize>
                 </ul>
             </div>
         </div> 
     </div>
     <div class="pdt20">
-        <div class="title fl">AWS 환경 설정 목록</div>
+        <div class="title fl">Azure 환경 설정 목록</div>
         <div class="fr"> 
             <!-- Button -->
-            <sec:authorize access="hasAuthority('INFO_IAASCONFIG_AWS_CREATE')">
+            <sec:authorize access="hasAuthority('INFO_IAASCONFIG_AZURE_CREATE')">
                <span id="registConfigBtn" class="btn btn-primary" style="width:100px" >등록</span>
             </sec:authorize>
-            <sec:authorize access="hasAuthority('INFO_IAASCONFIG_AWS_UPDATE')">
+            <sec:authorize access="hasAuthority('INFO_IAASCONFIG_AZURE_UPDATE')">
                <span id="updateConfigBtn" class="btn btn-info" style="width:100px" >수정</span>
             </sec:authorize>
-            <sec:authorize access="hasAuthority('INFO_IAASCONFIG_AWS_DELETE')">
+            <sec:authorize access="hasAuthority('INFO_IAASCONFIG_AZURE_DELETE')">
                <span id="deleteConfigBtn" class="btn btn-danger" style="width:100px" >삭제</span>
             </sec:authorize>
             <!-- //Btn -->
         </div>
      
-        <div id="aws_configGrid" style="width: 100%; height: 610px;"></div>
+        <div id="azure_configGrid" style="width: 100%; height: 610px;"></div>
    </div>      
 </div>
 
-<!-- AWS 등록 및 수정 팝업 Div-->
+<!-- azure 등록 및 수정 팝업 Div-->
 <div id="registPopupDiv" hidden="true">
-    <form id="awsConfigForm" action="POST" style="padding:5px 0 5px 0;margin:0;">
+    <form id="azureConfigForm" action="POST" style="padding:5px 0 5px 0;margin:0;">
         <div class="panel panel-info"> 
-            <div class="panel-heading"><b>AWS 환경 설정 정보</b></div>
-            <div class="panel-body" style="padding:20px 10px; height:350px; overflow-y:auto;">
+            <div class="panel-heading"><b>Azure 환경 설정 정보</b></div>
+            <div class="panel-body" style="padding:20px 10px; height:400px; overflow-y:auto;">
                 <input type="hidden" name="configId" />
                 <div class="w2ui-field" style = "padding-down: 20px;" >
-                    <label style="width:36%; text-align: left; padding-left: 20px;">AWS 환경 설정 별칭</label>
+                    <label style="width:36%; text-align: left; padding-left: 20px;">Azure 환경 설정 별칭</label>
                     <div>
                         <input name="iaasConfigAlias" type="text" maxlength="100" style="width: 300px" placeholder="환경 설정 별칭을 입력하세요."/>
                     </div>
                 </div>
                  <div class="w2ui-field">
-                    <label style="width:36%;text-align: left; padding-left: 20px;">AWS 계정 별칭</label>
+                    <label style="width:36%;text-align: left; padding-left: 20px;">Azure 계정 별칭</label>
                     <div class="accountNameDiv"></div>
                 </div>
-                <div class="w2ui-field">
+               
+                 <div class="w2ui-field">
                     <label style="width:36%;text-align: left; padding-left: 20px;">Security Group</label>
                     <div>
-                        <input name="commonSecurityGroup" type="text" maxlength="100" style="width: 300px" placeholder="Security Group을 입력하세요."/>
+                        <input name="commonSecurityGroup" type="text" maxlength="100" style="width: 300px" placeholder="Azure 보안 그룹 명을 입력하세요."/>
                     </div>
-                </div>
-                 <div class="w2ui-field">
-                    <label style="width:36%;text-align: left; padding-left: 20px;">Region</label>
-                    <div class="awsRegionDiv">
-                        <select style='width: 300px' name='commonRegion' onchange='getAwsAvaliabilityZoneInfoList(this);' disabled>
+                    <!-- <div class="azureSecurityGroupDiv">
+                       <select style='width: 300px' name='commonSecurityGroup' onchange='getazureAvaliabilityZoneInfoList(this);' disabled>
                             <option>데이터가 존재하지 않습니다.</option>
-                        </select>
-                    </div>
+                        </select> 
+                    </div> -->
                 </div>
                  <div class="w2ui-field">
-                    <label style="width:36%;text-align: left; padding-left: 20px;">Avaliablilty Zone</label>
-                    <div class="awsAvaliabilityZoneDiv">
-                        <select style='width: 300px' name='awsAvaliabilityZone' disabled>
-                            <option>Region을 선택하세요.</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="w2ui-field">
-                    <label style="width:36%;text-align: left; padding-left: 20px;">Keypair Name</label>
+                    <label style="width:36%;text-align: left; padding-left: 20px;">Azure 리소스 그룹</label>
                     <div>
-                        <input name="commonKeypairName" type="text"   maxlength="100" style="width: 300px" placeholder="ex)bosh"/>
+                        <input name="azureResourceGroup" type="text" maxlength="100" style="width: 300px" placeholder="Azure 리소스 그룹 명을 입력하세요."/>
                     </div>
                 </div>
                 <div class="w2ui-field">
+                    <label style="width:36%;text-align: left; padding-left: 20px;">Azure 스토리지 계정 명</label>
+                    <div>
+                        <input name="azureStorageAccountName" type="text" maxlength="100" style="width: 300px" placeholder="Azure 스토리지 계정 명을 입력하세요."/>
+                    </div>
+                </div>
+                <div class="w2ui-field">
+                    <label style="width:36%;text-align: left; padding-left: 20px;">Azure SSH Public Key</label>
+                    <div>
+                        <input name="azureSshPublicKey" type="text" maxlength="1000" style="width: 300px; height:50px;" placeholder="Azure SSH Public Key를 입력하세요."/>
+                    </div>
+                </div>
+                <!-- <div class="w2ui-field">
+                    <label style="width:36%;text-align: left; padding-left: 20px;">Azure Private Key</label>
+                    <div>
+                        <input name="azurePrivateKey" type="text" maxlength="100" style="width: 300px" placeholder="Azure Private Key를 입력하세요."/>
+                    </div>
+                </div> -->
+                 <div class="w2ui-field">
                     <label style="width:36%;text-align: left; padding-left: 20px;">Private Key File</label>
                     <div>
                         <span onclick="changeKeyPathType('file');" style="width:30%;"><label><input type="radio" name="keyPathType" value="file" />&nbsp;파일업로드</label></span>
@@ -646,13 +603,13 @@ $( window ).resize(function() {
                     </div>
                 </div>
                 <div class="w2ui-field">
-                    <label style="text-align: left;font-size:11px;" class="control-label"></label>
-                    <div id="keyPathDiv" style="position:relative; width: 65%; left:220px;">
+                  <label style="text-align: left;font-size:11px;" class="control-label"></label>
+                  <div id="keyPathDiv" style="position:relative; width: 65%; left:231px;">
                         <div id="keyPathFileDiv" hidden="true">
                             <span>
-                                <input type="text" id="keyPathFileName" name="keyPathFileName" style="width:55%;" readonly  onClick="openBrowse();" placeholder="업로드할 Key 파일을 선택하세요."/>
-                                <input type="file" name="keyPathFile" onchange="setPrivateKeyPathFileName(this);" style="display:none;"/>
-                                <span id="BrowseBtn"><a href="#" id="browse" onClick="openBrowse();">Browse</a></span>
+                            <input type="text" id="keyPathFileName" name="keyPathFileName" style="width:55%;" readonly  onClick="openBrowse();" placeholder="업로드할 Key 파일을 선택하세요."/>
+                            <input type="file" name="keyPathFile" onchange="setPrivateKeyPathFileName(this);" style="display:none;"/>
+                            <span id="BrowseBtn"><a href="#" id="browse" onClick="openBrowse();">Browse</a></span>
                             </span>
                         </div>
                         <div id="keyPathListDiv">
@@ -661,12 +618,15 @@ $( window ).resize(function() {
                     </div>
                     <input name="commonKeypairPath" type="hidden" />
                 </div>
+                 
+                
+                
             </div>
         </div>
     </form> 
 </div>
 <div id="registPopupBtnDiv" hidden="true">
-     <button class="btn" id="registBtn" onclick="$('#awsConfigForm').submit();">확인</button>
+     <button class="btn" id="registBtn" onclick="$('#azureConfigForm').submit();">확인</button>
      <button class="btn" id="popClose"  onclick="w2popup.close();">취소</button>
 </div>
 
@@ -676,7 +636,7 @@ $(function() {
         return checkInjectionBlacklist(params);
       },text_injection_msg);
     
-    $("#awsConfigForm").validate({
+    $("#azureConfigForm").validate({
         ignore : [],
         rules: {
             iaasConfigAlias : {
@@ -691,62 +651,62 @@ $(function() {
                 }, sqlInjection :   function(){
                     return $(".w2ui-msg-body select[name='accountName']").val();
                 }
+            }, azureResourceGroup: { 
+                required: function(){
+                    return checkEmpty( $(".w2ui-msg-body input[name='azureResourceGroup']").val() );
+                }, sqlInjection :   function(){
+                    return $(".w2ui-msg-body input[name='azureResourceGroup']").val();
+                }
             }, commonSecurityGroup: { 
                 required: function(){
                     return checkEmpty( $(".w2ui-msg-body input[name='commonSecurityGroup']").val() );
                 }, sqlInjection :   function(){
                     return $(".w2ui-msg-body input[name='commonSecurityGroup']").val();
                 }
-            }, commonRegion: { 
-                required: function(){
-                    return checkEmpty( $(".w2ui-msg-body select[name='commonRegion']").val() );
-                }, sqlInjection :   function(){
-                    return $(".w2ui-msg-body select[name='commonRegion']").val();
-                }
-             }, awsAvaliabilityZone: { 
-                required: function(){
-                    return checkEmpty( $(".w2ui-msg-body select[name='awsAvaliabilityZone']").val() );
-                }, sqlInjection :   function(){
-                    return $(".w2ui-msg-body input[name='awsAvaliabilityZone']").val();
-                }    
-            }, commonKeypairName: { 
-                required: function(){
-                return checkEmpty( $(".w2ui-msg-body input[name='commonKeypairName']").val() );
-                }, sqlInjection :   function(){
-                    return $(".w2ui-msg-body input[name='commonKeypairName']").val();
-                }
-            }, keyPathList: { 
-                required: function(){
-                    if( $(".w2ui-msg-body input:radio[name='keyPathType']:checked").val() == 'list' ){
-                        return checkEmpty(  $(".w2ui-msg-body select[name='keyPathList']").val() );
-                    }else{
-                         return false;
-                    }
-                }
-            }, keyPathFileName: { 
-                required: function(){
-                    if( $(".w2ui-msg-body input:radio[name='keyPathType']:checked").val() == 'file' ){
-                        return checkEmpty(  $(".w2ui-msg-body input[name='keyPathFileName']").val() );
-                    }else{
-                         return false;
-                    }
-                }
-            }
+             }, azureStorageAccountName: { 
+                 required: function(){
+                     return checkEmpty( $(".w2ui-msg-body input[name='azureStorageAccountName']").val() );
+                 }, sqlInjection :   function(){
+                     return $(".w2ui-msg-body input[name='azureStorageAccountName']").val();
+                 }
+             }, azureSshPublicKey: { 
+                 required: function(){
+                     return checkEmpty( $(".w2ui-msg-body input[name='azureSshPublicKey']").val() );
+                 }, sqlInjection :   function(){
+                     return $(".w2ui-msg-body input[name='azureSshPublicKey']").val();
+                 }
+             }, keyPathList: { 
+                 required: function(){
+                     if( $(".w2ui-msg-body input:radio[name='keyPathType']:checked").val() == 'list' ){
+                         return checkEmpty(  $(".w2ui-msg-body select[name='keyPathList']").val() );
+                     }else{
+                          return false;
+                     }
+                 }
+             }, keyPathFileName: { 
+                 required: function(){
+                     if( $(".w2ui-msg-body input:radio[name='keyPathType']:checked").val() == 'file' ){
+                         return checkEmpty(  $(".w2ui-msg-body input[name='keyPathFileName']").val() );
+                     }else{
+                          return false;
+                     }
+                 }
+             }
         }, messages: {
             iaasConfigAlias: { 
                  required:  "환경 설정 별칭" + text_required_msg
                 , sqlInjection : text_injection_msg
             }, accountId: { 
-                required:  "인프라 계정 별칭"+text_required_msg
+                required:  "인프라 계정 별칭"+select_required_msg
                 ,sqlInjection : text_injection_msg
-            },commonSecurityGroup: { 
-                required:  "Security Group"+text_required_msg
-            }, commonRegion: { 
-                required:  "Region"+select_required_msg
-            }, awsAvaliabilityZone: { 
-                required:  "Avaliability Zone"+select_required_msg
-            }, commonKeypairName: { 
-                required:  "Keypair Name"+text_required_msg
+            }, azureResourceGroup: { 
+                required:  "Azure Resource Group"+text_required_msg
+            }, commonSecurityGroup: { 
+                required:  "Azure Security Group"+text_required_msg
+            }, azureStorageAccountName: { 
+                required:  "Azure Storage Account Name"+text_required_msg
+            }, azureSshPublicKey: { 
+                required:  "Azure SSH Public Key"+text_required_msg
             }, keyPathList: { 
                 required:  "Private 키 파일"+ select_required_msg
             }, keyPathFileName: { 
@@ -762,11 +722,11 @@ $(function() {
                 setInvalidHandlerStyle(errors, validator);
             }
         }, submitHandler: function (form) {
-            if(  $(".w2ui-msg-body input:radio[name='keyPathType']:checked").val() == 'file' ){
-                uploadPrivateKey();
-            }else{
-                saveAwsConfigInfo();
-            }
+             if(  $(".w2ui-msg-body input:radio[name='keyPathType']:checked").val() == 'file' ){
+                 uploadPrivateKey();
+             }else{
+                saveAzureConfigInfo();
+             }
         }
     });
 });

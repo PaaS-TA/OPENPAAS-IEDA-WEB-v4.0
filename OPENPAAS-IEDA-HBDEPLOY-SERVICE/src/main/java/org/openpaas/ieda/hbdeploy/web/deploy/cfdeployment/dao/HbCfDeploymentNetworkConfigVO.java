@@ -1,8 +1,7 @@
 package org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.dao;
 
-import java.util.Date;
-
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 public class HbCfDeploymentNetworkConfigVO {
     @NotNull
@@ -12,6 +11,7 @@ public class HbCfDeploymentNetworkConfigVO {
     private Integer seq;
     private String iaasType;
     private String networkName;
+
     private String publicStaticIp;
     private String subnetReservedIp;
     private String subnetStaticIp;
@@ -21,7 +21,7 @@ public class HbCfDeploymentNetworkConfigVO {
     private String subnetDns;
     private String subnetId;
     private String subnetGateway;
-    
+
     private String subnetId1;
     private String securityGroup1;
     private String subnetRange1;
@@ -32,6 +32,7 @@ public class HbCfDeploymentNetworkConfigVO {
     private String subnetStaticFrom1;
     private String subnetStaticTo1;
     private String availabilityZone1;
+
     private String subnetId2;
     private String securityGroup2;
     private String subnetRange2;
@@ -42,11 +43,16 @@ public class HbCfDeploymentNetworkConfigVO {
     private String subnetStaticFrom2;
     private String subnetStaticTo2;
     private String availabilityZone2;
+
     private String createUserId;//등록자 아이디
     private String updateUserId;//수정자 아이디
     private Date createDate;//등록일
     private Date updateDate;//수정일
-    
+
+    private String azureNetworkName;
+    private String azureNetworkName1;
+    private String azureNetworkName2;
+
     public Integer getId() {
         return id;
     }
@@ -65,12 +71,11 @@ public class HbCfDeploymentNetworkConfigVO {
     public void setIaasType(String iaasType) {
         this.iaasType = iaasType;
     }
-    public String getNetworkName() {
-        return networkName;
-    }
+    public String getNetworkName() { return networkName;    }
     public void setNetworkName(String networkName) {
         this.networkName = networkName;
     }
+
     public String getPublicStaticIp() {
         return publicStaticIp;
     }
@@ -95,12 +100,11 @@ public class HbCfDeploymentNetworkConfigVO {
     public void setAvailabilityZone(String availabilityZone) {
         this.availabilityZone = availabilityZone;
     }
+
     public String getSubnetId1() {
         return subnetId1;
     }
-    public void setSubnetId1(String subnetId1) {
-        this.subnetId1 = subnetId1;
-    }
+    public void setSubnetId1(String subnetId1) { this.subnetId1 = subnetId1; }
     public String getSecurityGroup1() {
         return securityGroup1;
     }
@@ -155,6 +159,7 @@ public class HbCfDeploymentNetworkConfigVO {
     public void setAvailabilityZone1(String availabilityZone1) {
         this.availabilityZone1 = availabilityZone1;
     }
+
     public String getSubnetId2() {
         return subnetId2;
     }
@@ -215,6 +220,7 @@ public class HbCfDeploymentNetworkConfigVO {
     public void setAvailabilityZone2(String availabilityZone2) {
         this.availabilityZone2 = availabilityZone2;
     }
+
     public Integer getSeq() {
         return seq;
     }
@@ -276,4 +282,11 @@ public class HbCfDeploymentNetworkConfigVO {
     public void setSubnetGateway(String subnetGateway) {
         this.subnetGateway = subnetGateway;
     }
+
+    public String getAzureNetworkName() { return azureNetworkName; }
+    public void setAzureNetworkName(String azureNetworkName) { this.azureNetworkName = azureNetworkName; }
+    public String getAzureNetworkName1() { return azureNetworkName1; }
+    public void setAzureNetworkName1(String azureNetworkName1) { this.azureNetworkName1 = azureNetworkName1; }
+    public String getAzureNetworkName2() { return azureNetworkName2; }
+    public void setAzureNetworkName2(String azureNetworkName2) { this.azureNetworkName2 = azureNetworkName2; }
 }

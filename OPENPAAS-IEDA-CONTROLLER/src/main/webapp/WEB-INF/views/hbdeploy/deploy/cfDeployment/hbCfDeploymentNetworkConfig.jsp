@@ -41,15 +41,18 @@ var resourceLayout = {
             columns:[
                    { field: 'recid', hidden: true },
                    { field: 'id', hidden: true },
-                   { field: 'networkName', caption: '네트워크 명', size:'150px', style:'text-align:center;' },
+                   { field: 'networkName', caption: '네트워크 별칭', size:'150px', style:'text-align:center;' },
                    { field: 'iaasType', caption: '인프라 환경 타입', size:'150px', style:'text-align:center;' ,render: function(record){ 
                        if(record.iaasType.toLowerCase() == "aws"){
                            return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
                        }else if (record.iaasType.toLowerCase() == "openstack"){
                            return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
+                       }else if (record.iaasType.toLowerCase() == "azure"){
+                           return "<img src='images/iaasMgnt/azure-icon.png' width='90' height='35' />";
                        }
                    }},
                    { field: 'publicStaticIp', caption: 'Public IP', size:'150px', style:'text-align:center;'},
+                   { field: 'azureNetworkName', caption: '네트워크 명', size:'150px', style:'text-align:center;'},
                    { field: 'subnetId', caption: '서브넷 ID', size:'150px', style:'text-align:center;'},
                    { field: 'securityGroup', caption: '보안그룹', size:'150px', style:'text-align:center;'},
                    { field: 'subnetRange', caption: '서브넷 주소 범위', size:'150px', style:'text-align:center;'},
@@ -57,7 +60,8 @@ var resourceLayout = {
                    { field: 'subnetDns', caption: 'DNS', size:'150px', style:'text-align:center;'},
                    { field: 'subnetReservedIp', caption: '할당 제외 대역', size:'200px', style:'text-align:center;'},
                    { field: 'subnetStaticIp', caption: '할당 대역', size:'200px', style:'text-align:center;'},
-                   
+
+                   { field: 'azureNetworkName1', hidden: true },
                    { field: 'subnetId1', hidden: true },
                    { field: 'securityGroup1', hidden: true },
                    { field: 'subnetRange1', hidden: true },
@@ -68,7 +72,8 @@ var resourceLayout = {
                    { field: 'subnetStaticFrom1', hidden: true },
                    { field: 'subnetStaticTo1', hidden: true },
                    { field: 'availabilityZone1', hidden: true },
-                   
+
+                   { field: 'azureNetworkName2', hidden: true },
                    { field: 'subnetId2', hidden: true },
                    { field: 'securityGroup2', hidden: true },
                    { field: 'subnetRange2', hidden: true },
@@ -98,6 +103,7 @@ var resourceLayout = {
                     location.href = "/abuse";
                     event.preventDefault();
                 }
+                $("#azureNetworkNameDiv").hide();
             },onError : function(event) {
             },
         form: { 
@@ -181,7 +187,9 @@ function settingNetworkInfo(){
     $("input[name=networkName]").val(record.networkName);
     $("select[name=iaasType]").val(record.iaasType);
     $("input[name='publicStaticIp']").val(record.publicStaticIp);
-    
+
+    if (iaas == "azure")
+        $("input[name='azureNetworkName1']").val(record.azureNetworkName1);
     $("input[name='subnetId1']").val(record.subnetId1);
     $("input[name='securityGroup1']").val(record.securityGroup1);
     $("input[name='subnetRange1']").val(record.subnetRange1);
@@ -197,6 +205,8 @@ function settingNetworkInfo(){
         delInternalNetwork('#defaultNetworkInfoDiv_1', 2);
     } else {
         addInternalNetworkInputs('#defaultNetworkInfoDiv_1', '#defaultNetworkInfoForm');
+        if (iaas == "azure")
+            $("input[name='azureNetworkName_2']").val(record.azureNetworkName2);
         $("input[name='subnetId_2']").val(record.subnetId2);
         $("input[name='securityGroup_2']").val(record.securityGroup2);
         $("input[name='subnetRange_2']").val(record.subnetRange2);
@@ -250,13 +260,14 @@ function registHbCfDeploymentNetworkConfigInfo(){
     //Internal
     var internal = {
             direction               : "Internal",
+            azureNetworkName1       : $("input[name='azureNetworkName1']").val(),
             subnetId1               : $("input[name='subnetId1']").val(),
             securityGroup1          : $("input[name='securityGroup1']").val(),
             subnetRange1            : $("input[name='subnetRange1']").val(),
             subnetGateway1          : $("input[name='subnetGateway1']").val(),
             subnetDns1              : $("input[name='subnetDns1']").val(),
             subnetReservedFrom1     : $("input[name='subnetReservedFrom1']").val(),
-            availabilityZone1     : $("input[name='availabilityZone1']").val(),
+            availabilityZone1       : $("input[name='availabilityZone1']").val(),
             subnetReservedTo1       : $("input[name='subnetReservedTo1']").val(),
             subnetStaticFrom1       : $("input[name='subnetStaticFrom1']").val(),
             subnetStaticTo1         : $("input[name='subnetStaticTo1']").val()
@@ -266,6 +277,7 @@ function registHbCfDeploymentNetworkConfigInfo(){
     if($("input[name='subnetId_2']").val() != null && $("input[name='subnetId_2']").val() != ""){
         var internal2 = {
             direction               : "Internal",
+            azureNetworkName2       : $("input[name='azureNetworkName_2']").val(),
             subnetId2               : $("input[name='subnetId_2']").val(),
             securityGroup2          : $("input[name='securityGroup_2']").val(),
             subnetRange2            : $("input[name='subnetRange_2']").val(),
@@ -339,7 +351,7 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
  * 기능 : settingNetwork
  *********************************************************/
  function settingNetwork( index ){
-     if( iaas.toLowerCase() == 'aws' || iaas.toLowerCase() == "openstack" ){
+     if( iaas.toLowerCase() == 'aws' || iaas.toLowerCase() == "openstack" || iaas.toLowerCase() == "azure" ){
          addInternalNetworkInputs('#defaultNetworkInfoDiv_1', "#defaultNetworkInfoForm" );
      }
  }
@@ -366,15 +378,24 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
          html+=    "</div>";
          html+= "</div>";
          html+= body_div;
-         html+= field_div_label + "서브넷 아이디" + "</label>"; 
-         html+="<div>"+"<input class='form-control' name='subnetId_"+index+"'" + text_style +" placeholder='서브넷 아이디를 입력하세요.'/>"+"</div></div>";
-         
-         html+= field_div_label + "보안 그룹" + "</label>"; 
+
+         html+= "<div id='azureNetworkNameDiv2'>";
+         html += field_div_label + "네트워크 명" + "</label>";
+         html += "<div>" + "<input class='form-control' name='azureNetworkName_" + index + "'" + text_style + " placeholder='네트워크명을 입력하세요.'/>" + "</div></div>";
+         html+= "</div>";
+
+         html+= field_div_label + "서브넷 아이디" + "</label>";
+         html+= "<div>"+"<input class='form-control' name='subnetId_"+index+"'" + text_style +" placeholder='서브넷 아이디를 입력하세요.'/>"+"</div></div>";
+
+         html+= field_div_label + "보안 그룹" + "</label>";
          html+= "<div>"+"<input class='form-control' name='securityGroup_"+index+"'" + text_style +" placeholder='예) bosh-security, cf-security'/>"+"</div></div>";
-         
-         html+= field_div_label + "가용 영역" + "</label>"; 
+
+         html+= "<div id='availabilityZoneDiv2'>";
+         html+= field_div_label + "가용 영역" + "</label>";
          html+= "<div>"+"<input class='form-control' name='availabilityZone_"+index+"'" + text_style +" placeholder='예) us-west-2'/>"+"</div></div>";
-         html+= field_div_label + "서브넷 범위" + "</label>"; 
+         html+= "</div>";
+
+         html+= field_div_label + "서브넷 범위" + "</label>";
          html+= "<div>"+"<input class='form-control' name='subnetRange_"+index+"'" + text_style +" placeholder='예) 10.0.0.0/24'/>" + "</div></div>";
          
          html+= field_div_label + "게이트웨이" + "</label>"; 
@@ -399,7 +420,15 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
          $(".w2ui-msg-body "+ div).show();
          $(form + " "+ div).css('display','block');
          $(form + " "+ div).html(html);
-         
+
+         if( $("select[name=iaasType]").val().toLowerCase()  == 'azure' ) {
+             $("#availabilityZoneDiv2").hide();
+             $("#azureNetworkNameDiv2").show();
+         }else{
+             $("#availabilityZoneDiv2").show();
+             $("#azureNetworkNameDiv2").hide();
+         }
+
          createInternalNetworkValidate(index);
  }
  /********************************************************
@@ -407,9 +436,19 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
   * 기능 : createInternalNetworkValidate
   *********************************************************/
  function createInternalNetworkValidate(index){
+    var azureNetworkName_message = "네트워크 명";
     var subnet_message = "서브넷 아이디";
     var zone_message = "가용 영역";
     var security_groups = "보안 그룹"
+
+     if( $("select[name=iaasType]").val().toLowerCase()  == 'azure' ) {
+         $("[name*='azureNetworkName_" + index + "']").rules("add", {
+             required: function () {
+                 return checkEmpty($(".w2ui-msg-body input[name='azureNetworkName_" + index + "']").val());
+             }, messages: {required: azureNetworkName_message + text_required_msg}
+         });
+     }
+
     $("[name*='subnetId_"+index+"']").rules("add", {
         required: function(){
             return checkEmpty($(".w2ui-msg-body input[name='subnetId_"+index+"']").val());
@@ -503,11 +542,14 @@ function deleteHbCfDeploymentNetworkConfigInfo(id, networkName){
     w2popup.unlock();
 }
 function iaasTypeChangeInput(value, record){
-    if( value.toUpperCase() == "AWS" || value.toUpperCase() == "OPENSTACK" ){
+    if( value.toUpperCase() == "AWS" || value.toUpperCase() == "OPENSTACK" || value.toUpperCase() == "AZURE" ){
         $("#availabilityZoneDiv").show();
         $("#availabilityZoneDiv").css("display", "block");
-        if(record.subnetStaticTo2 != null && record.subnetStaticTo2 != ""){
+        if( record != undefined && record != 'undefined' && record.subnetStaticTo2 != null && record.subnetStaticTo2 != ""){
             addInternalNetworkInputs('#defaultNetworkInfoDiv_1', '#defaultNetworkInfoForm');
+            if( value.toUpperCase() == "AZURE") {
+                $("input[name='azureNetWorkName_2']").val(record.azureNetWorkName2);
+            }
             $("input[name='subnetId_2']").val(record.subnetId2);
             $("input[name='securityGroup_2']").val(record.securityGroup2);
             $("input[name='subnetRange_2']").val(record.subnetRange2);
@@ -518,6 +560,18 @@ function iaasTypeChangeInput(value, record){
             $("input[name='subnetStaticFrom_2']").val(record.subnetStaticFrom2);
             $("input[name='subnetStaticTo_2']").val(record.subnetStaticTo2);
             $("input[name='availabilityZone_2']").val(record.availabilityZone2);
+        }
+
+        if( value.toUpperCase() == "AZURE"){
+            $("#availabilityZoneDiv").hide();
+            $("#availabilityZoneDiv2").hide();
+            $("#azureNetworkNameDiv").show();
+            $("#azureNetworkNameDiv2").show();
+        }else{
+            $("#availabilityZoneDiv").show();
+            $("#availabilityZoneDiv2").hide();
+            $("#azureNetworkNameDiv").hide();
+            $("#azureNetworkNameDiv2").hide();
         }
     }
 }
@@ -563,6 +617,7 @@ function resetForm(status){
     $("input[name=networkName]").val("");
     $("select[name=iaasType]").val("");
     $("select[name=publicStaticIp]").val("");
+    $("input[name=azureNetworkName1]").val("");
     $("input[name=subnetId1]").val("");
     $("input[name=securityGroup1]").val("");
     $("input[name=subnetRange1]").val("");
@@ -590,6 +645,7 @@ function delInternalNetwork(preDiv, index){
      var form = preDiv.split("Div")[0]+"Form";
      $(form + " "+ div).html("");
      $(""+preDiv+ " div div a.btn.btn-info.btn-sm.addInternal").css("display","block");
+     $("input[name='azureNetworkName_2']").val("");
      $("input[name='subnetId_2']").val("");
      $("input[name='securityGroup_2']").val("");
      $("input[name='subnetRange_2']").val("");
@@ -630,6 +686,7 @@ function delInternalNetwork(preDiv, index){
                                <option value="">인프라 환경을 선택하세요.</option>
                                <option value="aws">AWS</option>
                                <option value="openstack">Openstack</option>
+                               <option value="azure">Azure</option>
                            </select>
                        </div>
                     </div>
@@ -665,6 +722,14 @@ function delInternalNetwork(preDiv, index){
                     </div>
                 </div>
                 <div class="panel-body">
+
+                    <div class="w2ui-field" id="azureNetworkNameDiv">
+                        <label style="width:40%;text-align: left;padding-left: 20px;">네트워크 명</label>
+                        <div>
+                            <input class="form-control" name="azureNetworkName1" type="text"  style="width: 320px; margin-left: 20px;" placeholder="네트워크명을 입력하세요."/>
+                        </div>
+                    </div>
+
                     <div class="w2ui-field">
                         <label style="width:40%;text-align: left;padding-left: 20px;">서브넷 아이디</label>
                         <div>
@@ -762,7 +827,11 @@ $(function() {
                 ipv4 : function(){
                     return $("input[name='publicStaticIp']").val();
                 }
-            }, subnetId1: { 
+            }, azureNetworkName1: {
+                required: function(){
+                    return checkEmpty( $("input[name='azureNetworkName1']").val() );
+                }
+            }, subnetId1: {
                 required: function(){
                     return checkEmpty( $("input[name='subnetId1']").val() );
                 }
@@ -819,12 +888,14 @@ $(function() {
             }
         }, messages: {
                networkName: { 
-                required:  "네트워크  별칭"+text_required_msg,
+                required:  "네트워크 별칭"+text_required_msg,
             }, iaasType: { 
                 required:  "클라우드 인프라 환경 타입"+select_required_msg,
             }, publicStaticIp: { 
                 required : "CF API Target"+text_ip_msg,
-            }, subnetId1: { 
+            }, azureNetworkName1: {
+                required:  "네트워크 명 "+text_required_msg,
+            }, subnetId1: {
                 required:  "서브넷 아이디 "+text_required_msg,
             }, securityGroup1: { 
                 required:  "보안 그룹 "+text_required_msg,

@@ -62,9 +62,14 @@ $('#config_releaseGrid').w2grid({
         event.onComplete = function() {
             var selected = w2ui['config_AwsReleaseGrid'].getSelection();
             var recordAws = w2ui['config_AwsReleaseGrid'].get(selected);
+
             selected = w2ui['config_OpenstackReleaseGrid'].getSelection();
             var recordOpenstack = w2ui['config_OpenstackReleaseGrid'].get(selected);
-            if(recordAws != null || recordOpenstack != null ){
+
+            selected = w2ui['config_AzureReleaseGrid'].getSelection();
+            var recordAzure = w2ui['config_AzureReleaseGrid'].get(selected);
+
+            if(recordAws != null || recordOpenstack != null || recordAzure != null){
                 $('#doDelete').attr('disabled', false);
             }else {
                 $('#doDelete').attr('disabled', false);
@@ -76,9 +81,14 @@ $('#config_releaseGrid').w2grid({
         event.onComplete = function() {
             var selected = w2ui['config_AwsReleaseGrid'].getSelection();
             var recordAws = w2ui['config_AwsReleaseGrid'].get(selected);
+
             selected = w2ui['config_OpenstackReleaseGrid'].getSelection();
             var recordOpenstack = w2ui['config_OpenstackReleaseGrid'].get(selected);
-            if(recordAws != null || recordOpenstack != null ){
+
+            selected = w2ui['config_AzureReleaseGrid'].getSelection();
+            var recordAzure = w2ui['config_AzureReleaseGrid'].get(selected);
+
+            if(recordAws != null || recordOpenstack != null || recordAzure != null ){
                 $('#doDelete').attr('disabled', false);
             }else{
                 $('#doDelete').attr('disabled', true);
@@ -124,10 +134,15 @@ $('#config_AwsReleaseGrid').w2grid({
     onSelect : function(event) {
         event.onComplete = function() {
             var selected = w2ui['config_releaseGrid'].getSelection();
-            var recordAws = w2ui['config_releaseGrid'].get(selected);
+            var recordCommon = w2ui['config_releaseGrid'].get(selected);
+
             selected = w2ui['config_OpenstackReleaseGrid'].getSelection();
             var recordOpenstack = w2ui['config_OpenstackReleaseGrid'].get(selected);
-            if(recordAws != null || recordOpenstack != null ){
+
+            selected = w2ui['config_AzureReleaseGrid'].getSelection();
+            var recordAzure = w2ui['config_AzureReleaseGrid'].get(selected);
+
+            if(recordCommon != null || recordOpenstack != null || recordAzure != null){
                 $('#doDelete').attr('disabled', false);
             }else {
                 $('#doDelete').attr('disabled', false);
@@ -138,10 +153,15 @@ $('#config_AwsReleaseGrid').w2grid({
     onUnselect: function(event) {
         event.onComplete = function() {
             var selected = w2ui['config_releaseGrid'].getSelection();
-            var recordAws = w2ui['config_releaseGrid'].get(selected);
+            var recordCommon = w2ui['config_releaseGrid'].get(selected);
+
             selected = w2ui['config_OpenstackReleaseGrid'].getSelection();
             var recordOpenstack = w2ui['config_OpenstackReleaseGrid'].get(selected);
-            if(recordAws != null || recordOpenstack != null ){
+
+            selected = w2ui['config_AzureReleaseGrid'].getSelection();
+            var recordAzure = w2ui['config_AzureReleaseGrid'].get(selected);
+
+            if(recordCommon != null || recordOpenstack != null || recordAzure != null){
                 $('#doDelete').attr('disabled', false);
             }else{
                 $('#doDelete').attr('disabled', true);
@@ -158,68 +178,151 @@ $('#config_AwsReleaseGrid').w2grid({
     }
 });
 
-$('#config_OpenstackReleaseGrid').w2grid({
-    name: 'config_OpenstackReleaseGrid',
-    header: '<b>릴리즈 등록</b>',
-    method: 'GET',
-    multiSelect: false,
-    show: {    selectColumn: true, footer: true},
-    style: 'text-align:center',
-    columns:[
-         {field: 'recid', caption: 'recid', hidden: true}
-        ,{field: 'id', caption: 'id', hidden: true}
-        ,{field: 'releaseName', caption: '릴리즈 명', size: '15%', style:'text-align:left; padding-left:10px' }            
-        ,{field: 'releaseType', caption: '릴리즈 유형', size: '10%'}
-        ,{field: 'releaseFileName', caption: '릴리즈 파일명', size: '20%', style:'text-align:left;  padding-left:10px'}
-        ,{field: 'releaseSize', caption: '릴리즈 파일 크기', size: '7%'}
-        ,{field: 'downloadStatus', caption: '다운로드 여부', size: '10%',
-            render: function(record) {
-                if ( record.downloadStatus == 'DOWNLOADED'  ){
-                    return '<div class="btn btn-success btn-xs" id= "downloaded_'+record.id+'" style="width:100px;">Downloaded</div>';
-                }else if(record.downloadStatus == 'DOWNLOADING'){
-                    return '<div class="btn btn-info btn-xs" id= "downloading_'+record.id+'" style="width:100px;">Downloading</div>';
-                } else{
-                    return '<div class="btn" id="isExisted_'+record.id+'" style="position: relative;width:100px;"></div>';
+    $('#config_OpenstackReleaseGrid').w2grid({
+        name: 'config_OpenstackReleaseGrid',
+        header: '<b>릴리즈 등록</b>',
+        method: 'GET',
+        multiSelect: false,
+        show: {    selectColumn: true, footer: true},
+        style: 'text-align:center',
+        columns:[
+            {field: 'recid', caption: 'recid', hidden: true}
+            ,{field: 'id', caption: 'id', hidden: true}
+            ,{field: 'releaseName', caption: '릴리즈 명', size: '15%', style:'text-align:left; padding-left:10px' }
+            ,{field: 'releaseType', caption: '릴리즈 유형', size: '10%'}
+            ,{field: 'releaseFileName', caption: '릴리즈 파일명', size: '20%', style:'text-align:left;  padding-left:10px'}
+            ,{field: 'releaseSize', caption: '릴리즈 파일 크기', size: '7%'}
+            ,{field: 'downloadStatus', caption: '다운로드 여부', size: '10%',
+                render: function(record) {
+                    if ( record.downloadStatus == 'DOWNLOADED'  ){
+                        return '<div class="btn btn-success btn-xs" id= "downloaded_'+record.id+'" style="width:100px;">Downloaded</div>';
+                    }else if(record.downloadStatus == 'DOWNLOADING'){
+                        return '<div class="btn btn-info btn-xs" id= "downloading_'+record.id+'" style="width:100px;">Downloading</div>';
+                    } else{
+                        return '<div class="btn" id="isExisted_'+record.id+'" style="position: relative;width:100px;"></div>';
+                    }
                 }
             }
-        }
-    ],
-    onSelect : function(event) {
-        event.onComplete = function() {
-            var selected = w2ui['config_releaseGrid'].getSelection();
-            var recordAws = w2ui['config_releaseGrid'].get(selected);
-            selected = w2ui['config_AwsReleaseGrid'].getSelection();
-            var recordOpenstack = w2ui['config_AwsReleaseGrid'].get(selected);
-            if(recordAws != null || recordOpenstack != null ){
-                $('#doDelete').attr('disabled', false);
-            }else {
-                $('#doDelete').attr('disabled', false);
+        ],
+        onSelect : function(event) {
+            event.onComplete = function() {
+                var selected = w2ui['config_releaseGrid'].getSelection();
+                var recordCommon = w2ui['config_releaseGrid'].get(selected);
+
+                selected = w2ui['config_AwsReleaseGrid'].getSelection();
+                var recordAws = w2ui['config_AwsReleaseGrid'].get(selected);
+
+                selected = w2ui['config_AzureReleaseGrid'].getSelection();
+                var recordAzure = w2ui['config_AzureReleaseGrid'].get(selected);
+
+                if(recordCommon != null || recordAws != null || recordAzure != null){
+                    $('#doDelete').attr('disabled', false);
+                }else {
+                    $('#doDelete').attr('disabled', false);
+                }
+                $('#doregist').attr('disabled', false);
             }
-            $('#doregist').attr('disabled', false);
-        }
-    },
-    onUnselect: function(event) {
-        event.onComplete = function() {
-            var selected = w2ui['config_releaseGrid'].getSelection();
-            var recordAws = w2ui['config_releaseGrid'].get(selected);
-            selected = w2ui['config_AwsReleaseGrid'].getSelection();
-            var recordOpenstack = w2ui['config_AwsReleaseGrid'].get(selected);
-            if(recordAws != null || recordOpenstack != null ){
-                $('#doDelete').attr('disabled', false);
-            }else{
-                $('#doDelete').attr('disabled', true);
+        },
+        onUnselect: function(event) {
+            event.onComplete = function() {
+                var selected = w2ui['config_releaseGrid'].getSelection();
+                var recordCommon = w2ui['config_releaseGrid'].get(selected);
+
+                selected = w2ui['config_AwsReleaseGrid'].getSelection();
+                var recordAws = w2ui['config_AwsReleaseGrid'].get(selected);
+
+                selected = w2ui['config_AzureReleaseGrid'].getSelection();
+                var recordAzure = w2ui['config_AzureReleaseGrid'].get(selected);
+
+                if(recordCommon != null || recordAws != null || recordAzure != null){
+                    $('#doDelete').attr('disabled', false);
+                }else{
+                    $('#doDelete').attr('disabled', true);
+                }
+                $('#doRegist').attr('disabled', false);
             }
-            $('#doRegist').attr('disabled', false);
+        },onLoad:function(event){
+            if(event.xhr.status == 403){
+                location.href = "/abuse";
+                event.preventDefault();
+            }
+        },
+        onError : function(event) {
         }
-    },onLoad:function(event){
-        if(event.xhr.status == 403){
-            location.href = "/abuse";
-            event.preventDefault();
+    });
+
+    $('#config_AzureReleaseGrid').w2grid({
+        name: 'config_AzureReleaseGrid',
+        header: '<b>릴리즈 등록</b>',
+        method: 'GET',
+        multiSelect: false,
+        show: {    selectColumn: true, footer: true},
+        style: 'text-align:center',
+        columns:[
+            {field: 'recid', caption: 'recid', hidden: true}
+            ,{field: 'id', caption: 'id', hidden: true}
+            ,{field: 'releaseName', caption: '릴리즈 명', size: '15%', style:'text-align:left; padding-left:10px' }
+            ,{field: 'releaseType', caption: '릴리즈 유형', size: '10%'}
+            ,{field: 'releaseFileName', caption: '릴리즈 파일명', size: '20%', style:'text-align:left;  padding-left:10px'}
+            ,{field: 'releaseSize', caption: '릴리즈 파일 크기', size: '7%'}
+            ,{field: 'downloadStatus', caption: '다운로드 여부', size: '10%',
+                render: function(record) {
+                    if ( record.downloadStatus == 'DOWNLOADED'  ){
+                        return '<div class="btn btn-success btn-xs" id= "downloaded_'+record.id+'" style="width:100px;">Downloaded</div>';
+                    }else if(record.downloadStatus == 'DOWNLOADING'){
+                        return '<div class="btn btn-info btn-xs" id= "downloading_'+record.id+'" style="width:100px;">Downloading</div>';
+                    } else{
+                        return '<div class="btn" id="isExisted_'+record.id+'" style="position: relative;width:100px;"></div>';
+                    }
+                }
+            }
+        ],
+        onSelect : function(event) {
+            event.onComplete = function() {
+                var selected = w2ui['config_releaseGrid'].getSelection();
+                var recordCommon = w2ui['config_releaseGrid'].get(selected);
+
+                selected = w2ui['config_AwsReleaseGrid'].getSelection();
+                var recordAws = w2ui['config_AwsReleaseGrid'].get(selected);
+
+                selected = w2ui['config_OpenstackReleaseGrid'].getSelection();
+                var recordOpenstack = w2ui['config_OpenstackReleaseGrid'].get(selected);
+
+                if(recordCommon != null || recordAws != null || recordOpenstack != null){
+                    $('#doDelete').attr('disabled', false);
+                }else {
+                    $('#doDelete').attr('disabled', false);
+                }
+                $('#doregist').attr('disabled', false);
+            }
+        },
+        onUnselect: function(event) {
+            event.onComplete = function() {
+                var selected = w2ui['config_releaseGrid'].getSelection();
+                var recordCommon = w2ui['config_releaseGrid'].get(selected);
+
+                selected = w2ui['config_AwsReleaseGrid'].getSelection();
+                var recordAws = w2ui['config_AwsReleaseGrid'].get(selected);
+
+                selected = w2ui['config_OpenstackReleaseGrid'].getSelection();
+                var recordOpenstack = w2ui['config_OpenstackReleaseGrid'].get(selected);
+
+                if(recordCommon != null || recordAws != null || recordOpenstack != null){
+                    $('#doDelete').attr('disabled', false);
+                }else{
+                    $('#doDelete').attr('disabled', true);
+                }
+                $('#doRegist').attr('disabled', false);
+            }
+        },onLoad:function(event){
+            if(event.xhr.status == 403){
+                location.href = "/abuse";
+                event.preventDefault();
+            }
+        },
+        onError : function(event) {
         }
-    },
-    onError : function(event) {
-    }
-});
+    });
 
 /********************************************************
  * 설명 :  릴리즈 등록 팝업
@@ -267,10 +370,12 @@ $("#doRegist").click(function(){
         var selected = w2ui['config_releaseGrid'].getSelection();
         var awsSelected = w2ui['config_AwsReleaseGrid'].getSelection();
         var openstackSelected = w2ui['config_OpenstackReleaseGrid'].getSelection();
+        var azureSelected = w2ui['config_AzureReleaseGrid'].getSelection();
         
         record.push(w2ui['config_releaseGrid'].get(selected));
         record.push(w2ui['config_AwsReleaseGrid'].get(awsSelected));
         record.push(w2ui['config_OpenstackReleaseGrid'].get(openstackSelected));
+        record.push(w2ui['config_AzureReleaseGrid'].get(azureSelected));
         
         record = record.filter(function (n){
             return n != null;
@@ -442,6 +547,7 @@ function initView() {
     w2ui['config_releaseGrid'].selectNone();
     w2ui['config_AwsReleaseGrid'].selectNone();
     w2ui['config_OpenstackReleaseGrid'].selectNone();
+    w2ui['config_AzureReleaseGrid'].selectNone();
     $('#doDelete').attr('disabled', true);
     
 }
@@ -454,6 +560,7 @@ function doSearch() {
     w2ui['config_releaseGrid'].load('/config/hbRelease/list/common');
     w2ui['config_AwsReleaseGrid'].load('/config/hbRelease/list/aws');
     w2ui['config_OpenstackReleaseGrid'].load('/config/hbRelease/list/openstack');
+    w2ui['config_AzureReleaseGrid'].load('/config/hbRelease/list/azure');
     $("#iaasTypeListDiv").html("<select style = 'width:60%' disabled='disabled' ><option selected='selected' disabled='disabled' value='' style='color:red'>BOSH_CPI 일 경우 선택 가능 합니다.</option></select>");
 }
 
@@ -611,6 +718,12 @@ function socketDownload(releaseInfo){
                             flag= false;
                         }
                     });
+                }else if(releaseInfo.iaasType == "azure"){
+                    w2ui['config_AzureReleaseGrid'].records.map(function(obj) {
+                        if( id != obj.id && obj.downloadStatus.toUpperCase() == "DOWNLOADING" ){
+                            flag= false;
+                        }
+                    });
                 }else{
                     w2ui['config_releaseGrid'].records.map(function(obj) {
                         if( id != obj.id && obj.downloadStatus.toUpperCase() == "DOWNLOADING" ){
@@ -738,6 +851,7 @@ function deleteRelease(requestParameter){
             w2ui['config_releaseGrid'].reset();
             w2ui['config_AwsReleaseGrid'].reset();
             w2ui['config_OpenstackReleaseGrid'].reset();
+            w2ui['config_AzureReleaseGrid'].reset();
         },
         error : function(request, status, error) {
             var errorResult = JSON.parse(request.responseText);
@@ -755,6 +869,7 @@ function gridReload() {
     w2ui['config_releaseGrid'].reset();
     w2ui['config_AwsReleaseGrid'].reset();
     w2ui['config_OpenstackReleaseGrid'].reset();
+    w2ui['config_AzureReleaseGrid'].reset();
     doSearch();
 }
 
@@ -778,6 +893,7 @@ function clearMainPage() {
     $().w2destroy('config_releaseGrid');
     $().w2destroy('config_AwsReleaseGrid');
     $().w2destroy('config_OpenstackReleaseGrid');
+    $().w2destroy('config_AzureReleaseGrid');
 }
     
 /********************************************************
@@ -825,14 +941,22 @@ $(window).resize(function() {
     
     <!-- AWS 릴리즈 grid -->
     <div id="config_AwsReleaseGrid" style="width:100%; height:250px"></div>
-    
+
     <!-- OpenPaaS Openstack CPI 릴리즈 목록-->
     <div class="pdt20">
         <div class="title fl">Openstack CPI 릴리즈 목록</div>
     </div>
-    
+
     <!-- Openstack 릴리즈 grid -->
     <div id="config_OpenstackReleaseGrid" style="width:100%; height:250px"></div>
+
+    <!-- OpenPaaS Azure CPI 릴리즈 목록-->
+    <div class="pdt20">
+        <div class="title fl">Azure CPI 릴리즈 목록</div>
+    </div>
+
+    <!-- Openstack 릴리즈 grid -->
+    <div id="config_AzureReleaseGrid" style="width:100%; height:250px"></div>
 </div>
     <!-- 릴리즈 등록 팝업 -->
     <div id="regPopupDiv" hidden="true">

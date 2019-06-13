@@ -31,6 +31,23 @@ public class HbCfDeploymentInstanceConfigVO {
     private String updateUserId;//수정자 아이디
     private Date createDate;//등록일
     private Date updateDate;//수정일
+
+    private String azsAdapter;
+    private String azsApi;
+    private String azsCcWorker;
+    private String azsConsul;
+    private String azsTheDatabase;
+    private String azsDiegoApi;
+    private String azsDiegoCell;
+    private String azsHaproxy;
+    private String azsDoppler;
+    private String azsLogApi;
+    private String azsNats;
+    private String azsRouter;
+    private String azsSingletonBlobstore;
+    private String azsTcpRouter;
+    private String azsUaa;
+    private String azsScheduler;
     
     public Integer getId() {
         return id;
@@ -188,4 +205,37 @@ public class HbCfDeploymentInstanceConfigVO {
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
+
+    public String getAzsAdapter() { return azsAdapter; }
+    public void setAzsAdapter(String azsAdapter) { this.azsAdapter = azsAdapter; }
+    public String getAzsApi() { return azsApi; }
+    public void setAzsApi(String azsApi) { this.azsApi = azsApi; }
+    public String getAzsCcWorker() { return azsCcWorker; }
+    public void setAzsCcWorker(String azsCcWorker) { this.azsCcWorker = azsCcWorker; }
+    public String getAzsConsul() { return azsConsul; }
+    public void setAzsConsul(String azsConsul) { this.azsConsul = azsConsul; }
+    public String getAzsTheDatabase() { return azsTheDatabase; }
+    public void setAzsTheDatabase(String azsTheDatabase) { this.azsTheDatabase = azsTheDatabase; }
+    public String getAzsDiegoApi() { return azsDiegoApi; }
+    public void setAzsDiegoApi(String azsDiegoApi) { this.azsDiegoApi = azsDiegoApi; }
+    public String getAzsDiegoCell() { return azsDiegoCell; }
+    public void setAzsDiegoCell(String azsDiegoCell) { this.azsDiegoCell = azsDiegoCell; }
+    public String getAzsHaproxy() { return azsHaproxy; }
+    public void setAzsHaproxy(String azsHaproxy) { this.azsHaproxy = azsHaproxy; }
+    public String getAzsDoppler() { return azsDoppler; }
+    public void setAzsDoppler(String azsDoppler) { this.azsDoppler = azsDoppler; }
+    public String getAzsLogApi() { return azsLogApi; }
+    public void setAzsLogApi(String azsLogApi) { this.azsLogApi = azsLogApi; }
+    public String getAzsNats() { return azsNats; }
+    public void setAzsNats(String azsNats) { this.azsNats = azsNats; }
+    public String getAzsRouter() { return azsRouter; }
+    public void setAzsRouter(String azsRouter) { this.azsRouter = azsRouter; }
+    public String getAzsSingletonBlobstore() { return azsSingletonBlobstore; }
+    public void setAzsSingletonBlobstore(String azsSingletonBlobstore) { this.azsSingletonBlobstore = azsSingletonBlobstore; }
+    public String getAzsTcpRouter() { return azsTcpRouter; }
+    public void setAzsTcpRouter(String azsTcpRouter) { this.azsTcpRouter = azsTcpRouter; }
+    public String getAzsUaa() { return azsUaa; }
+    public void setAzsUaa(String azsUaa) { this.azsUaa = azsUaa; }
+    public String getAzsScheduler() { return azsScheduler; }
+    public void setAzsScheduler(String azsScheduler) { this.azsScheduler = azsScheduler; }
 }

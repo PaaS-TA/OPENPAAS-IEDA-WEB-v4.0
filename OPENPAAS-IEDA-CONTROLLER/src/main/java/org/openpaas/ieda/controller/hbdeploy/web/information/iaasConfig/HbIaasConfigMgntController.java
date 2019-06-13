@@ -1,11 +1,5 @@
 package org.openpaas.ieda.controller.hbdeploy.web.information.iaasConfig;
 
-import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.openpaas.ieda.controller.deploy.web.information.iaasConfig.IaasConfigMgntController;
 import org.openpaas.ieda.hbdeploy.web.information.iaasConfig.dao.HbIaasConfigMgntVO;
 import org.openpaas.ieda.hbdeploy.web.information.iaasConfig.dto.HbIaasConfigMgntDTO;
@@ -20,6 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.validation.Valid;
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
 
 @Controller
 public class HbIaasConfigMgntController {
@@ -49,17 +48,29 @@ public class HbIaasConfigMgntController {
         if(LOGGER.isInfoEnabled()){ LOGGER.info("=====================> /info/hbIaasConfig/aws "); }
         return "/hbdeploy/information/iaasConfig/awsConfigMgnt";
     }
-    
+
     /***************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description : openstack 환경 설정 관리 화면 이동
      * @title : goOpenstackConfigInfo
      * @return : String
-    ***************************************************/
+     ***************************************************/
     @RequestMapping(value="/info/hbIaasConfig/openstack", method=RequestMethod.GET)
     public String goOpenstackConfigInfo(){
         if(LOGGER.isInfoEnabled()){ LOGGER.info("=====================> /info/hbIaasConfig/openstack "); }
         return "/hbdeploy/information/iaasConfig/openstackConfigMgnt";
+    }
+
+    /***************************************************
+     * @project : Paas 플랫폼 설치 자동화
+     * @description : azure 환경 설정 관리 화면 이동
+     * @title : goAzureConfigInfo
+     * @return : String
+     ***************************************************/
+    @RequestMapping(value="/info/hbIaasConfig/azure", method=RequestMethod.GET)
+    public String goAzureConfigInfo(){
+        if(LOGGER.isInfoEnabled()){ LOGGER.info("=====================> /info/hbIaasConfig/azure "); }
+        return "/hbdeploy/information/iaasConfig/azureConfigMgnt";
     }
     
     /***************************************************

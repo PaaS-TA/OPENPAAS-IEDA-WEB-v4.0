@@ -1,16 +1,5 @@
 package org.openpaas.ieda.hbdeploy.web.deploy.bootstrap.service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.deploy.web.common.dao.CommonDeployDAO;
 import org.openpaas.ieda.deploy.web.common.dao.ManifestTemplateVO;
@@ -28,6 +17,13 @@ import org.springframework.context.MessageSource;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.io.*;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 @Service
 public class HbBootstrapDeleteDeployAsyncService{
@@ -213,6 +209,25 @@ public class HbBootstrapDeleteDeployAsyncService{
             cmd.add("access_key_id=" + vo.getIaasAccount().get("commonAccessUser").toString());
             cmd.add("-v");
             cmd.add("secret_access_key=" + vo.getIaasAccount().get("commonAccessSecret").toString());
+        }else if("azure".equalsIgnoreCase(vo.getIaasType())){
+            cmd.add("-v");
+            cmd.add("vnet_name=" + vo.getNetworkConfigVo().getNetworkConfigName());
+            cmd.add("-v");
+            cmd.add("subnet_name=" + vo.getNetworkConfigVo().getSubnetId());
+            cmd.add("-v");
+            cmd.add("subscription_id=" + vo.getIaasAccount().get("azureSubscriptionId").toString());
+            cmd.add("-v");
+            cmd.add("tenant_id=" + vo.getIaasAccount().get("commonTenant").toString());
+            cmd.add("-v");
+            cmd.add("client_id=" + vo.getIaasAccount().get("commonAccessUser").toString());
+            cmd.add("-v");
+            cmd.add("client_secret=" + vo.getIaasAccount().get("commonAccessSecret").toString());
+            cmd.add("-v");
+            cmd.add("resource_group_name=" + vo.getIaasConfig().getAzureResourceGroup());
+            cmd.add("-v");
+            cmd.add("storage_account_name=" + vo.getIaasConfig().getAzureStorageAccountName());
+            cmd.add("-v");
+            cmd.add("public_key=" + vo.getIaasConfig().getAzureSshPublicKey());
         }else {
             cmd.add("-v");
             cmd.add("net_id=" + vo.getNetworkConfigVo().getSubnetId());

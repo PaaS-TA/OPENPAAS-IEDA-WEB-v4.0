@@ -43,6 +43,8 @@ $(function() {
                     return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
                 }else if (record.iaasType.toLowerCase() == "openstack"){
                     return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
+                }else if (record.iaasType.toLowerCase() == "azure"){
+                    return "<img src='images/iaasMgnt/azure-icon.png' width='90' height='35' />";
                 }
             }}
             , {field: 'defaultConfigInfo', caption: '기본 정보 별칭', size: '20%'}
@@ -95,6 +97,8 @@ $(function() {
                      return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
                  }else if (record.iaasType.toLowerCase() == "openstack"){
                      return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
+                 }else if (record.iaasType.toLowerCase() == "azure"){
+                     return "<img src='images/iaasMgnt/azure-icon.png' width='90' height='35' />";
                  }
              }}
              , {field: 'defaultConfigInfo', caption: '기본 정보 별칭', size: '20%'}
@@ -150,6 +154,8 @@ $(function() {
                      return "<img src='images/iaasMgnt/aws-icon.png' width='80' height='30' />";
                  }else if (record.iaasType.toLowerCase() == "openstack"){
                      return "<img src='images/iaasMgnt/openstack-icon.png' width='90' height='35' />";
+                 }else if (record.iaasType.toLowerCase() == "azure"){
+                     return "<img src='images/iaasMgnt/azure-icon.png' width='90' height='35' />";
                  }
              }}
              , {field: 'deployStatus', caption: '배포상태', size: '80px', 
@@ -1039,6 +1045,7 @@ function popupComplete(){
                                <option value="">인프라 환경을 선택하세요.</option>
                                <option value="aws">AWS</option>
                                <option value="openstack">Openstack</option>
+                               <option value="azure">Azure</option>
                            </select>
                        </div>
                    </div>

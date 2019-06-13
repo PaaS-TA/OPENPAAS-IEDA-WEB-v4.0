@@ -23,6 +23,7 @@
         Where create_user_id= #{userId}
         And iaas_type = 'AWS'
         Or iaas_type = 'OPENSTACK'
+        Or iaas_type = 'AZURE'
         Order by iaas_type asc, update_date asc
     </select>
 
@@ -33,6 +34,8 @@
         create_user_id= #{userId}) as aws_config_cnt
         ,(select count(*) from ieda_iaas_config where UPPER(iaas_type)='OPENSTACK' And
         create_user_id= #{userId}) as openstack_config_cnt
+        ,(select count(*) from ieda_iaas_config where UPPER(iaas_type)='AZURE' And
+        create_user_id= #{userId}) as azure_config_cnt
         From dual
     </select>
 
@@ -57,6 +60,8 @@
         ,a.update_date as updateDate
         ,b.account_name as accountName
         ,b.id as accountId
+        ,a.azure_resource_group as azureResourceGroup
+        ,a.azure_storage_account_name as azureStorageAccountName
         ,( Select if(count(*) =0, '사용안함', '사용중')
         From ieda_bootstrap as bootstrap, ieda_iaas_config as c
         Where bootstrap.iaas_config_id = c.id
@@ -89,6 +94,10 @@
         ,b.common_project as commonProject
         ,b.openstack_domain as openstackDomain
         ,b.openstack_keystone_version as openstackKeystoneVersion
+        ,a.azure_resource_group as azureResourceGroup
+        ,a.azure_storage_account_name as azureStorageAccountName
+        ,a.azure_private_key as azurePrivateKey
+        ,a.azure_ssh_public_key as azureSshPublicKey
         From ieda_iaas_config a LEFT JOIN ieda_iaas_account b
         On a.account_id = b.id
         Where a.create_user_id= #{userId}

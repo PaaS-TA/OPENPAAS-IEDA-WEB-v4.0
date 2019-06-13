@@ -60,6 +60,10 @@
         <result property="commonKeypairPath" column ="COMMON_KEYPAIR_PATH"/>
         <result property="commonAvailabilityZone" column="COMMON_AVAILABILITY_ZONE"/>
 
+        <result property="azureResourceGroup" column="AZURE_RESOURCE_GROUP"/>
+        <result property="azureStorageAccountName" column="AZURE_STORAGE_ACCOUNT_NAME"/>
+        <result property="azureSshPublicKey" column="AZURE_SSH_PUBLIC_KEY"/>
+
     </collection>
     <collection property="iaasAccount"  ofType="hashMap" javaType="String">
         <result property="accountName" column="ACCOUNT_NAME"/>
@@ -71,6 +75,7 @@
         <result property="commonRegion" column="COMMON_REGION"/>
         <result property="openstackVersion" column="OPENSTACK_KEYSTONE_VERSION"/>
         <result property="openstackDomain" column="OPENSTACK_DOMAIN"/>
+        <result property="azureSubscriptionId" column="AZURE_SUBSCRIPTION_ID"/>
     </collection>
 </resultMap>
 
@@ -219,6 +224,10 @@
         ,ifnull(account.common_project, "") as common_project
         ,ifnull(account.openstack_keystone_version, "") as openstack_keystone_version
         ,ifnull(account.openstack_domain, "") as openstack_domain
+        ,ifnull(account.azure_subscription_id, "") as azure_subscription_id
+        ,config.azure_resource_group as azure_resource_group
+        ,config.azure_storage_account_name as azure_storage_account_name
+        ,config.azure_ssh_public_key as azure_ssh_public_key
     from ieda_bootstrap_config as bootstrap
     Left join ieda_bootstrap_cpi_config as cpi
     on bootstrap.cpi_config_name = cpi.cpi_name

@@ -506,6 +506,9 @@ $(window).resize(function() {
                     <sec:authorize access="hasAuthority('INFO_IAASCONFIG_AWS_LIST')">
                         <li><a href="javascript:goPage('<c:url value="/info/hbIaasConfig/aws"/>', 'AWS 관리');">AWS</a></li>
                     </sec:authorize>
+                    <sec:authorize access="hasAuthority('INFO_IAASCONFIG_AZURE_LIST')">
+                        <li><a href="javascript:goPage('<c:url value="/info/hbIaasConfig/azure"/>', 'AZURE 관리');">AZURE</a></li>
+                    </sec:authorize>
                 </ul>
             </div>
         </div>

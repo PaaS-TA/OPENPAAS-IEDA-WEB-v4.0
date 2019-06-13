@@ -1,12 +1,5 @@
 package org.openpaas.ieda.hbdeploy.web.deploy.cfdeployment.service;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import org.apache.commons.io.IOUtils;
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.common.exception.CommonException;
@@ -18,6 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 @Service
 public class HbCfDeploymentService {
@@ -122,6 +122,20 @@ public class HbCfDeploymentService {
                 items.add(new ReplaceItemDTO("[dns2]", vo.getHbCfDeploymentNetworkConfigVO().getSubnetDns2()));
                 items.add(new ReplaceItemDTO("[availabilityzone2]", vo.getHbCfDeploymentNetworkConfigVO().getAvailabilityZone2()));
             }
+
+            //////////////////////////////////////////////////////////////////////////////////////
+            // [20190425, dummy] iaasType = azure
+            //////////////////////////////////////////////////////////////////////////////////////
+            if ("azure".equals(vo.getIaasType())){
+                items.add(new ReplaceItemDTO("[network_name]", vo.getHbCfDeploymentNetworkConfigVO().getAzureNetworkName1()));
+                items.add(new ReplaceItemDTO("[subnet_name]", vo.getHbCfDeploymentNetworkConfigVO().getSubnetId1()));
+                if(vo.getHbCfDeploymentNetworkConfigVO().getSubnetId2() != null && !"".equals(vo.getHbCfDeploymentNetworkConfigVO().getSubnetId2())){
+                    items.add(new ReplaceItemDTO("[network_name2]", vo.getHbCfDeploymentNetworkConfigVO().getAzureNetworkName2()));
+                    items.add(new ReplaceItemDTO("[subnet_name2]", vo.getHbCfDeploymentNetworkConfigVO().getSubnetId2()));
+
+                }
+            }
+            //////////////////////////////////////////////////////////////////////////////////////
         }
         items.add(new ReplaceItemDTO("[small_instance_type]", vo.getHbCfDeploymentResourceConfigVO().getInstanceTypeS()));
         items.add(new ReplaceItemDTO("[medium_instance_type]", vo.getHbCfDeploymentResourceConfigVO().getInstanceTypeM()));

@@ -1084,11 +1084,11 @@ function deployment(type, div){
         var selected = w2ui['config_hybrid_bootstrapGrid'].getSelection();
         var record = w2ui['config_hybrid_bootstrapGrid'].get(selected);
         if(selected.length == 0 || record.id == null){
-            $("#bootstrapPopupDiv").load("/deploy/hbBootstrap/install/bootstrapPopup",function(event){
+            $("#bootstrapPopupDiv").load("/deploy/hbBootstrap/install/bootstrapPopup",function(event){alert("[1087]<Azure>publicIaas="+publicIaas);
                 if(publicIaas == "AWS"){
                     iaas = "AWS";
                     awsPopup(deployFileName);
-                } else if (publicIaas == "Azure"){
+                } else if (publicIaas == "Azure" || publicIaas == "AZURE"){
                     iaas = "Azure";
                     azurePopup(deployFileName);
                 } else if (publicIaas == "Google"){
