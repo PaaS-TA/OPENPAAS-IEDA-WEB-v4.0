@@ -1,24 +1,10 @@
 package org.openpaas.ieda.deploy.web.config.setting.service;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File
-;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.security.Principal;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 import org.openpaas.ieda.common.api.LocalDirectoryConfiguration;
 import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.common.web.security.SessionInfoDTO;
@@ -32,13 +18,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.yaml.snakeyaml.Yaml;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.*;
+import java.net.UnknownHostException;
+import java.security.Principal;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class DirectorConfigService  {
@@ -56,12 +48,21 @@ public class DirectorConfigService  {
      * @title : getDefaultDirector
      * @return : DirectorConfigVO
     ***************************************************/
+    @Transactional
     public DirectorConfigVO getDefaultDirector() {
         //기본 설치 관리자 존재 여부 조회
         DirectorConfigVO directorConfig = dao.selectDirectorConfigByDefaultYn("Y");
         if( directorConfig != null ){
             boolean flag = checkDirectorConnect(directorConfig.getDirectorUrl(), directorConfig.getDirectorPort(), directorConfig.getUserId(), directorConfig.getUserPassword());
-            directorConfig.setConnect(flag);
+            if(flag)
+                directorConfig.setConnect(flag);
+            else {
+                directorConfig.setDefaultYn("N");
+                SessionInfoDTO session = new SessionInfoDTO();
+                directorConfig.setUpdateUserId(session.getUserId());
+                dao.updateDirector(directorConfig);
+                directorConfig = dao.selectDirectorConfigByDefaultYn("Y");
+            }
         }
         return directorConfig;
     }
@@ -120,9 +121,21 @@ public class DirectorConfigService  {
             HttpClient client = DirectorRestHelper.getHttpClient(port);
             GetMethod get = new GetMethod(DirectorRestHelper.getInfoURI(directorUrl, port)); 
             get = (GetMethod)DirectorRestHelper.setAuthorization(userId, password, (HttpMethodBase)get); 
+            ////////////////////////////////////////////////////////////////////////
+            //[20190508] Director connet Timeout
+            ////////////////////////////////////////////////////////////////////////
+            HttpConnectionManagerParams params = new HttpConnectionManagerParams();
+            params.setConnectionTimeout(30000);
+            params.setSoTimeout(30000);
+            client.getHttpConnectionManager().setParams(params);
+            ////////////////////////////////////////////////////////////////////////
             client.executeMethod(get);
         } catch (RuntimeException e) {
             if( LOGGER.isErrorEnabled() ){ LOGGER.error( e.getMessage() );}
+            return false;
+        } catch (UnknownHostException e) {
+            if( LOGGER.isErrorEnabled() ){ LOGGER.error( e.getMessage() );}
+            return false;
         } catch (Exception e) {
             return false;
         }
