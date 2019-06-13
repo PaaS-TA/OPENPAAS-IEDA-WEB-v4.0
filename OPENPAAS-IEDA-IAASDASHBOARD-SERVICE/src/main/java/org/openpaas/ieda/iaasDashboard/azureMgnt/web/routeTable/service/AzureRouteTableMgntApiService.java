@@ -1,21 +1,21 @@
 package org.openpaas.ieda.iaasDashboard.azureMgnt.web.routeTable.service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import com.microsoft.azure.credentials.AzureTokenCredentials;
+import com.microsoft.azure.management.Azure;
+import com.microsoft.azure.management.network.Network;
+import com.microsoft.azure.management.network.NetworkSecurityGroup;
+import com.microsoft.azure.management.network.RouteTable;
+import com.microsoft.azure.management.network.Subnet;
+import com.microsoft.rest.LogLevel;
 import org.openpaas.ieda.common.web.common.service.CommonApiService;
 import org.openpaas.ieda.iaasDashboard.azureMgnt.web.routeTable.dto.AzureRouteTableMgntDTO;
 import org.openpaas.ieda.iaasDashboard.web.account.dao.IaasAccountMgntVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.microsoft.azure.credentials.AzureTokenCredentials;
-import com.microsoft.azure.management.Azure;
-import com.microsoft.azure.management.network.Network;
-import com.microsoft.azure.management.network.RouteTable;
-import com.microsoft.azure.management.network.Subnet;
-import com.microsoft.rest.LogLevel;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 @Service
 public class AzureRouteTableMgntApiService {
     @Autowired
@@ -99,7 +99,17 @@ public class AzureRouteTableMgntApiService {
         String networkName = dto.getNetworkName();
         String subnetName = dto.getSubnetName();
         String routeTableName = dto.getRouteTableName();
+        String securityGroup = dto.getSecurityGroup();
+        String securityGroupId = null;
         Iterator<Subnet> itr = azure.networks().getByResourceGroup(resourceGroupName, networkName).subnets().values().iterator();
+        NetworkSecurityGroup  sg = azure.networkSecurityGroups().getByResourceGroup(resourceGroupName,securityGroup);
+        if (sg != null)
+            securityGroupId = sg.id();
+//        for(NetworkSecurityGroup sg : sgs){
+//            if(sg.name().equals(securityGroup)){
+//                securityGroupId = sg.id();
+//            }
+//        }
         List<Subnet> subnetList = new ArrayList<Subnet>();
         while(itr.hasNext()){
             subnetList.add(itr.next());
@@ -111,7 +121,8 @@ public class AzureRouteTableMgntApiService {
                 if(subnet != null){
                     RouteTable routeTable = azure.routeTables().getByResourceGroup(resourceGroupName, routeTableName);
                     String cidr = subnet.addressPrefix();
-                    com.microsoft.azure.management.network.Network.Update network = azure.networks().getByResourceGroup(resourceGroupName, networkName).update().defineSubnet(subnetName).withAddressPrefix(cidr).withExistingRouteTable(routeTable).attach();
+                    com.microsoft.azure.management.network.Network.Update network = azure.networks().getByResourceGroup(resourceGroupName, networkName).update().defineSubnet(subnetName).withAddressPrefix(cidr).withExistingRouteTable(routeTable).withExistingNetworkSecurityGroup(securityGroupId).attach();
+                  //com.microsoft.azure.management.network.Network.Update network = azure.networks().getByResourceGroup(resourceGroupName, networkName).update().defineSubnet(subnetName).withAddressPrefix(cidr).withExistingNetworkSecurityGroup(securityGroup).attach();
                     network.apply();
                 }
             }

@@ -1,8 +1,8 @@
 package org.openpaas.ieda.iaasDashboard.azureMgnt.web.routeTable.dto;
 
-import javax.validation.constraints.NotNull;
-
 import org.springframework.stereotype.Repository;
+
+import javax.validation.constraints.NotNull;
 @Repository
 public class AzureRouteTableMgntDTO {
     private Integer accountId; // 계정 아이디
@@ -15,6 +15,7 @@ public class AzureRouteTableMgntDTO {
     private String resourceGroupName;//리소스 그룹 명 
     private String subscriptionName;//그룹 명
     private String azureSubscriptionId;//구독id
+	private String securityGroup;
     
 	public Integer getAccountId() {
 		return accountId;
@@ -70,4 +71,7 @@ public class AzureRouteTableMgntDTO {
 	public void setAzureSubscriptionId(String azureSubscriptionId) {
 		this.azureSubscriptionId = azureSubscriptionId;
 	}
+
+	public String getSecurityGroup() { return securityGroup; }
+	public void setSecurityGroup(String securityGroup) { this.securityGroup = securityGroup; }
 }

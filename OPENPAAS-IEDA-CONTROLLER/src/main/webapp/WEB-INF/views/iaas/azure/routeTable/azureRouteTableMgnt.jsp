@@ -15,6 +15,7 @@
 var save_lock_msg = '<spring:message code="common.save.data.lock"/>';//등록 중 입니다.
 var detail_rg_lock_msg='<spring:message code="common.search.detaildata.lock"/>';//상세 조회 중 입니다.
 var text_required_msg='<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
+var select_required_msg='<spring:message code="common.select.vaildate.required.message"/>';//을(를) 선택하세요.
 var delete_confirm_msg ='<spring:message code="common.popup.delete.message"/>';//삭제 하시겠습니까?
 var delete_lock_msg= '<spring:message code="common.delete.data.lock"/>';//삭제 중 입니다.
 var accountId ="";
@@ -183,7 +184,7 @@ $(function() {
        w2popup.open({
            title   : "<b>Azure Route Table Subnet 연결</b>",
            width   : 580,
-           height  : 280,
+           height  : 300,
            modal   : true,
            body    : $("#addSubnetPopupDiv").html(),
            buttons : $("#addSubnetPopupBtnDiv").html(),
@@ -305,7 +306,8 @@ function addNewSubnet(){
         location : record.location,
         networkName : $(".w2ui-msg-body #addSubnetForm select[name='networkName'] :selected").val(),
         subnetName : $(".w2ui-msg-body #addSubnetForm select[name='subnetName'] :selected").val(),
-    }
+        securityGroup : $(".w2ui-msg-body #addSubnetForm select[name='securityGroup'] :selected").val(),
+}
     $.ajax({
         type : "POST",
         url : "/azureMgnt/routeTable/subnet/save",
@@ -446,6 +448,47 @@ function addNewSubnet(){
           });
    }
 
+/********************************************************
+ * 기능 : setAzureSecurityGroupList
+ * 설명 : 해당 NetworkName 에 대한 Route Table에 연결 가능 한 Azure SecurityGroup 목록 조회 기능
+ *********************************************************/
+function setAzureSecurityGroupList(networkName){
+    w2popup.lock('', true);
+    var accountId = $("select[name='accountId']").val();
+    var selected = w2ui['azure_routeTableGrid'].getSelection();
+    var record = w2ui['azure_routeTableGrid'].get(selected);
+    var resourceGroupName = record.resourceGroupName;
+
+    $.ajax({
+        type : "GET",
+        url : '/azureMgnt/securityGroup/list/'+accountId+'/resourceGroup/'+resourceGroupName,
+        contentType : "application/json",
+        dataType : "json",
+        success : function(data, status) {
+            var result = "";
+            if(data.length != 0){
+                result = "<option value=''>SecurityGroup을 선택하세요.</option>";
+                for(var i=0; i<data.length; i++){
+                    if(data[i] != null){
+                        result += "<option value='" +data[i].toString() + "' >";
+                        result += data[i].toString();
+                        result += "</option>";
+                    }
+                }
+            }else{
+                result = "<option value=''>선택 가능 한 SecurityGroup이 없습니다.</option>"
+            }
+            $("#securityGroupInfoDiv #securityGroupInfo").html(result);
+            w2popup.unlock();
+        },
+        error : function(request, status, error) {
+            w2popup.unlock();
+            var errorResult = JSON.parse(request.responseText);
+            w2alert(errorResult.message);
+        }
+    });
+}
+
 
 /********************************************************
  * 기능 : setAzureSubscription
@@ -493,10 +536,13 @@ function setAzureSubscription(){
   function azureNetworkNameOnchange(slectedvalue){
      accountId = $("select[name='accountId']").val();
      if(! slectedvalue == "" || ! slectedvalue == null){
-    	 $('.w2ui-msg-body #subnetNameInfoField').css('display', 'block');
+         $('.w2ui-msg-body #subnetNameInfoField').css('display', 'block');
+         $('.w2ui-msg-body #securityGroupInfoField').css('display', 'block');
          setAzureSubnetNameList(slectedvalue);
+         setAzureSecurityGroupList(slectedvalue);
      }else{
-    	 $('.w2ui-msg-body #subnetNameInfoField').css('display', 'none');
+         $('.w2ui-msg-body #subnetNameInfoField').css('display', 'none');
+         $('.w2ui-msg-body #securityGroupInfoField').css('display', 'none');
      }
   }
  
@@ -724,9 +770,9 @@ td {
     <!-- RouteTable Subnet 연결 팝업 -->
     <div id="addSubnetPopupDiv" hidden="true">
         <form id="addSubnetForm" action="POST" style="padding:5px 0 5px 0;margin:0;">
-            <div class="panel panel-info" style="height: 170px; margin-top: 7px;"> 
+            <div class="panel panel-info" style="height: 190px; margin-top: 7px;">
                 <div class="panel-heading"><b>Azure Route Table Subnet 연결</b></div>
-                <div class="panel-body" style="padding:20px 10px; height:150px; overflow-y:auto;">
+                <div class="panel-body" style="padding:20px 10px; height:170px; overflow-y:auto;">
                     <input type="hidden" name="accountId"/>
                     <div class="w2ui-field">
                             <label style="width:36%;text-align: left; padding-left: 20px;">Network</label>
@@ -738,6 +784,12 @@ td {
                             <label style="width:36%;text-align: left; padding-left: 20px;">Subnet</label>
                         <div id="subnetNameInfoDiv">
                            <select id="subnetNameInfo" name="subnetName" class="select" style="width:300px; font-size: 15px; height: 32px;"></select>
+                        </div>
+                    </div>
+                    <div class="w2ui-field " id="securityGroupInfoField" style="display: none;">
+                        <label style="width:36%;text-align: left; padding-left: 20px;">SecurityGroup</label>
+                        <div id="securityGroupInfoDiv">
+                            <select id="securityGroupInfo" name="securityGroup" class="select" style="width:300px; font-size: 15px; height: 32px;"></select>
                         </div>
                     </div>
                     
@@ -793,7 +845,7 @@ $(function() {
                  required:  "Route Table Name" + text_required_msg
             }, 
             resourceGroupName: { 
-                required:  "Resource Group Name "+text_required_msg
+                required:  "Resource Group Name "+ select_required_msg
                 
             },
         }, unhighlight: function(element) {
@@ -814,15 +866,24 @@ $(function() {
         ignore : "",
         onfocusout: true,
         rules: {
-            subnetName: { 
+            subnetName: {
                 required: function(){
                     return checkEmpty( $(".w2ui-msg-body #addSubnetForm select[name='subnetName'] :selected").val() );
                 }
-            }, 
+            },
+            securityGroup: {
+                required: function(){
+                    return checkEmpty( $(".w2ui-msg-body #addSubnetForm select[name='securityGroup'] :selected").val() );
+                }
+            },
         }, messages: {
-            subnetName: { 
-                required:  "Subnet Name "+text_required_msg
-                
+            subnetName: {
+                required:  "Subnet "+select_required_msg
+
+            },
+            securityGroup: {
+                required:  "Security Group "+select_required_msg
+
             },
         }, unhighlight: function(element) {
             setSuccessStyle(element);

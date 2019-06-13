@@ -1,19 +1,18 @@
 package org.openpaas.ieda.iaasDashboard.azureMgnt.web.securityGroup.service;
 
-import java.util.List;
-
-import org.openpaas.ieda.common.web.common.service.CommonApiService;
-import org.openpaas.ieda.iaasDashboard.azureMgnt.web.securityGroup.dto.AzureSecurityGroupMgntDTO;
-import org.openpaas.ieda.iaasDashboard.web.account.dao.IaasAccountMgntVO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.microsoft.azure.credentials.AzureTokenCredentials;
 import com.microsoft.azure.management.Azure;
 import com.microsoft.azure.management.network.NetworkSecurityGroup;
 import com.microsoft.azure.management.network.implementation.NetworkManagementClientImpl;
 import com.microsoft.azure.management.network.implementation.SecurityRuleInner;
 import com.microsoft.rest.LogLevel;
+import org.openpaas.ieda.common.web.common.service.CommonApiService;
+import org.openpaas.ieda.iaasDashboard.azureMgnt.web.securityGroup.dto.AzureSecurityGroupMgntDTO;
+import org.openpaas.ieda.iaasDashboard.web.account.dao.IaasAccountMgntVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AzureSecurityGroupMgntApiService {
@@ -31,22 +30,38 @@ public class AzureSecurityGroupMgntApiService {
        
        return azure;
     }
-   
-   /****************************************************************
+
+    /****************************************************************
      * @project : Azure 인프라 관리 대시보드
      * @description : Azure API를 통해  SecurityGroup 정보 목록 조회 실제 API 호출
      * @title : getAzureSecurityGroupInfoListFromAzure
      * @return : List<NetworkSecurityGroup>
-    *****************************************************************/
-   public List<NetworkSecurityGroup> getAzureSecurityGroupInfoListFromAzure(IaasAccountMgntVO vo){
-       AzureTokenCredentials azureClient = getAzureClient(vo);
-       Azure azure  = Azure.configure()
-               .withLogLevel(LogLevel.NONE)
-               .authenticate(azureClient)
-               .withSubscription(vo.getAzureSubscriptionId());
-       List<NetworkSecurityGroup>  list = azure.networkSecurityGroups().list();
-       return list;
-   }
+     *****************************************************************/
+    public List<NetworkSecurityGroup> getAzureSecurityGroupInfoListFromAzure(IaasAccountMgntVO vo){
+        AzureTokenCredentials azureClient = getAzureClient(vo);
+        Azure azure  = Azure.configure()
+                .withLogLevel(LogLevel.NONE)
+                .authenticate(azureClient)
+                .withSubscription(vo.getAzureSubscriptionId());
+        List<NetworkSecurityGroup>  list = azure.networkSecurityGroups().list();
+        return list;
+    }
+
+    /****************************************************************
+     * @project : Azure 인프라 관리 대시보드
+     * @description : Azure API를 통해  SecurityGroup 정보 목록 조회 실제 API 호출
+     * @title : getAzureSecurityGroupInfoListFromAzure
+     * @return : List<NetworkSecurityGroup>
+     *****************************************************************/
+    public List<NetworkSecurityGroup> getAzureSecurityGroupInfoListFromAzureResourceGroup(IaasAccountMgntVO vo, String resourceGroupName){
+        AzureTokenCredentials azureClient = getAzureClient(vo);
+        Azure azure  = Azure.configure()
+                .withLogLevel(LogLevel.NONE)
+                .authenticate(azureClient)
+                .withSubscription(vo.getAzureSubscriptionId());
+        List<NetworkSecurityGroup>  list = azure.networkSecurityGroups().listByResourceGroup(resourceGroupName);
+        return list;
+    }
    
    /****************************************************************
     * @project : Azure 인프라 관리 대시보드

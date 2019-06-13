@@ -1,14 +1,7 @@
 package org.openpaas.ieda.iaasDashboard.azureMgnt.web.securityGroup.service;
 
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Locale;
-import java.util.Map;
-
+import com.microsoft.azure.management.network.*;
+import com.microsoft.azure.management.network.implementation.SecurityRuleInner;
 import org.openpaas.ieda.common.exception.CommonException;
 import org.openpaas.ieda.iaasDashboard.azureMgnt.web.securityGroup.dao.AzureSecurityGroupMgntVO;
 import org.openpaas.ieda.iaasDashboard.azureMgnt.web.securityGroup.dto.AzureSecurityGroupMgntDTO;
@@ -19,12 +12,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.microsoft.azure.management.network.NetworkSecurityGroup;
-import com.microsoft.azure.management.network.NetworkSecurityRule;
-import com.microsoft.azure.management.network.SecurityRuleAccess;
-import com.microsoft.azure.management.network.SecurityRuleDirection;
-import com.microsoft.azure.management.network.SecurityRuleProtocol;
-import com.microsoft.azure.management.network.implementation.SecurityRuleInner;
+import java.security.Principal;
+import java.util.*;
 
 @Service
 public class AzureSecurityGroupMgntService {
@@ -69,7 +58,33 @@ public class AzureSecurityGroupMgntService {
          }
          return list;
     }
-    
+
+    /***************************************************
+     * @project : Azure 관리 대시보드
+     * @description : SecurityGroup 목록 조회
+     * @title : getAzureSecurityGroupInfoList
+     * @return : List<AzureSecurityGroupMgntVO>
+     ***************************************************/
+    public List<String> getAzureSecurityGroupInfoListByResourceGroup(Principal principal, int accountId, String resourceGroupName) {
+        IaasAccountMgntVO vo = getAzureAccountInfo(principal, accountId);
+        List<NetworkSecurityGroup> results = azureSecurityGroupMgntApiService.getAzureSecurityGroupInfoListFromAzureResourceGroup(vo, resourceGroupName);
+        List<String> list = new ArrayList<String>();
+        for (int i=0; i< results.size(); i++){
+            NetworkSecurityGroup result = results.get(i);
+//            AzureSecurityGroupMgntVO azureVo = new AzureSecurityGroupMgntVO();
+//            azureVo.setSecurityGroupName(result.name());
+//            azureVo.setSecurityGroupId(result.id());
+//            azureVo.setResourceGroupName(result.resourceGroupName());
+//            azureVo.setLocation(result.regionName());
+//            azureVo.setSubscriptionName(getAzureSubscriptionName( principal, accountId, vo.getAzureSubscriptionId()));
+//            azureVo.setAzureSubscriptionId(vo.getAzureSubscriptionId());
+//            azureVo.setAccountId(accountId);
+//            azureVo.setRecid(i);
+            list.add(result.name());
+        }
+        return list;
+    }
+
     /***************************************************
      * @project : Azure 관리 대시보드
      * @description : Azure SecurityGroup Inbound Rules 목록 조회
