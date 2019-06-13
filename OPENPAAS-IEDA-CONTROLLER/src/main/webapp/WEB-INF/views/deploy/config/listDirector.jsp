@@ -15,6 +15,7 @@
 var credsKeyPathFileList = "";
 var text_required_msg='<spring:message code="common.text.vaildate.required.message"/>';//을(를) 입력하세요.
 var text_injection_msg='<spring:message code="common.text.validate.sqlInjection.message"/>';//입력하신 값은 입력하실 수 없습니다.
+var search_lock_msg = '<spring:message code="common.search.data.lock"/>'; //데이터 조회 중 입니다.
 var save_lock_msg='<spring:message code="common.save.data.lock"/>';//등록 중 입니다.
 var update_lock_msg='<spring:message code="common.update.data.lock"/>';//등록 중 입니다.
 var text_ip_msg = '<spring:message code="common.text.validate.ip.message"/>';
@@ -211,6 +212,7 @@ $("#deleteSetting").click(function(){
  * 기능 : initView
  *********************************************************/
 function initView() {
+    w2popup.lock(search_lock_msg, true);
     // 기본 디렉터 정보 조회
      getDefaultDirector("<c:url value='/common/use/director'/>");
     // 디렉터 목록조회

@@ -124,7 +124,7 @@ public class HbCfDeploymentService {
             }
 
             //////////////////////////////////////////////////////////////////////////////////////
-            // [20190425, dummy] iaasType = azure
+            // [20190425] iaasType = azure
             //////////////////////////////////////////////////////////////////////////////////////
             if ("azure".equals(vo.getIaasType())){
                 items.add(new ReplaceItemDTO("[network_name]", vo.getHbCfDeploymentNetworkConfigVO().getAzureNetworkName1()));
