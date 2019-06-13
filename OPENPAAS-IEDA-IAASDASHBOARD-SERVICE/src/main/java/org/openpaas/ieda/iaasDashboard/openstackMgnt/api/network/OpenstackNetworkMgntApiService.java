@@ -1,7 +1,5 @@
 package org.openpaas.ieda.iaasDashboard.openstackMgnt.api.network;
 
-import java.util.List;
-
 import org.openpaas.ieda.common.web.common.service.CommonApiService;
 import org.openpaas.ieda.iaasDashboard.openstackMgnt.web.network.dto.OpenstackNetworkMgntDTO;
 import org.openpaas.ieda.iaasDashboard.web.account.dao.IaasAccountMgntVO;
@@ -17,6 +15,10 @@ import org.openstack4j.model.network.builder.SubnetBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class OpenstackNetworkMgntApiService {
@@ -58,7 +60,9 @@ public class OpenstackNetworkMgntApiService {
             return os.networking().network().list();
         }else{
             OSClientV3 osV3= getOpenstackClientV3(vo);
-            return osV3.networking().network().list();
+            Map<String, String> filteringParams = new HashMap<>();
+            filteringParams.put("project_id", osV3.getToken().getProject().getId());
+            return osV3.networking().network().list(filteringParams);
         }
     }
 
@@ -96,7 +100,8 @@ public class OpenstackNetworkMgntApiService {
                     .getId();
         } else {
             OSClientV3 osV3= getOpenstackClientV3(vo);
-            String projectId = osV3.perspective(Facing.ADMIN).identity().projects().getByName(vo.getCommonProject(), vo.getOpenstackDomain()).getId();
+          //String projectId = osV3.perspective(Facing.ADMIN).identity().projects().getByName(vo.getCommonProject(), vo.getOpenstackDomain()).getId();
+            String projectId = osV3.getToken().getProject().getId();
             networkId = osV3.networking().network().create(Builders.network().name(dto.getNetworkName())
                     .tenantId(projectId)
                     .adminStateUp(dto.isAdminState())
@@ -163,7 +168,9 @@ public class OpenstackNetworkMgntApiService {
             projectId = os.perspective(Facing.ADMIN).identity().tenants().getByName(vo.getCommonTenant()).getId();
         }else{
             osV3= getOpenstackClientV3(vo);
-            projectId = osV3.perspective(Facing.ADMIN).identity().projects().getByName(vo.getCommonProject(), vo.getOpenstackDomain()).getId();
+          //projectId = osV3.perspective(Facing.ADMIN).identity().projects().getByName(vo.getCommonProject(), vo.getOpenstackDomain()).getId();
+            projectId = osV3.getToken().getProject().getId();
+
         }
         SubnetBuilder builder = Builders.subnet()
                 .name(dto.getSubnetName())
