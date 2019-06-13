@@ -1,25 +1,20 @@
 package org.openpaas.ieda.iaasDashboard.openstackMgnt.api.router;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import org.openpaas.ieda.common.web.common.service.CommonApiService;
 import org.openpaas.ieda.iaasDashboard.openstackMgnt.web.router.dao.OpenstackRouterMgntVO;
 import org.openpaas.ieda.iaasDashboard.web.account.dao.IaasAccountMgntVO;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV2;
 import org.openstack4j.api.OSClient.OSClientV3;
-import org.openstack4j.model.network.AttachInterfaceType;
-import org.openstack4j.model.network.Network;
-import org.openstack4j.model.network.Port;
-import org.openstack4j.model.network.Router;
-import org.openstack4j.model.network.RouterInterface;
-import org.openstack4j.model.network.Subnet;
+import org.openstack4j.model.network.*;
 import org.openstack4j.openstack.networking.domain.NeutronRouter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class OpenstackRouterMgntApiService {
@@ -56,14 +51,23 @@ public class OpenstackRouterMgntApiService {
     ***************************************************/
     public List<? extends Router> getOpenstackRouterInfoListApiFromOpenstack(IaasAccountMgntVO vo){
         List<? extends Router> routerlist = new ArrayList<>();
+        List<Router> returnlist = new ArrayList<>();
         if(vo.getOpenstackKeystoneVersion().equalsIgnoreCase("v2")){
             OSClientV2 os = getOpenstackClientV2(vo);
             routerlist = os.networking().router().list();
+
+            return routerlist;
         }else{
             OSClientV3 osV3 = getOpenstackClientV3(vo);
             routerlist = osV3.networking().router().list();
+
+            for (org.openstack4j.model.network.Router router : routerlist) {
+                boolean isEquals = router.getTenantId().equals(osV3.getToken().getProject().getId());
+                if(isEquals) returnlist.add(router);
+            }
+
+            return returnlist;
         }
-        return routerlist;
     }
     
     /***************************************************
