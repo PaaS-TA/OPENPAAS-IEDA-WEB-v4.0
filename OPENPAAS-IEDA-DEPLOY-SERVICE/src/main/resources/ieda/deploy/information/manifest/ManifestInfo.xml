@@ -137,7 +137,7 @@
         FROM
             ieda_manifest
         <if test="searchVal != 'ALL' and searchVal != null">
-        WHERE manifest_file LIKE CONCAT('%',#{searchVal},'%') OR deployment_name Like CONCAT('%',#{searchVal},'%') OR manifest_file LIKE CONCAT('%',#{searchVal},'%');
+        WHERE manifest_file LIKE CONCAT('%',#{searchVal},'%') OR deployment_name Like CONCAT('%',#{searchVal},'%') OR description LIKE CONCAT('%',#{searchVal},'%');
         </if>
     </select>
     
