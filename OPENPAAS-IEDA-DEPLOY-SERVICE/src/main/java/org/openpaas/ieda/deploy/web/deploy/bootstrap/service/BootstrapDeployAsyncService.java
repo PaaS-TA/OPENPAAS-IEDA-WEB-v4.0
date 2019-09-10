@@ -57,14 +57,29 @@ public class BootstrapDeployAsyncService {
      * @return : void
     *****************************************************************/
     public void deployBootstrap(BootStrapDeployDTO.Install dto, Principal principal) {
-        
+
+        int lastNumberIndex = 0;
         String status = "";
         String accumulatedLog= null;
+        String releaseVersion = "";
+        String versionNumber = "";
+
         BufferedReader bufferedReader = null;
         BootstrapVO bootstrapInfo = new BootstrapVO();
         try {
             bootstrapInfo = bootstrapDao.selectBootstrapInfo(Integer.parseInt(dto.getId()));
-            ManifestTemplateVO result = commonDao.selectManifetTemplate(bootstrapInfo.getIaasType(), "267.8", "BOOTSTRAP", "bosh");
+
+            // 릴리즈명/버전 추출
+            String boshRelease = bootstrapInfo.getBoshRelease();
+            if(  bootstrapInfo.getBoshRelease().contains(".tgz") ){
+                boshRelease= bootstrapInfo.getBoshRelease().replace(".tgz", "");
+            }
+
+            versionNumber = boshRelease.split("-")[1];
+            lastNumberIndex = versionNumber.lastIndexOf(".");
+            releaseVersion = versionNumber.substring(0, lastNumberIndex);
+
+            ManifestTemplateVO result = commonDao.selectManifetTemplate(bootstrapInfo.getIaasType(), releaseVersion, "BOOTSTRAP", "bosh");
             String deployFile = "";
             
             if( bootstrapInfo != null ) {

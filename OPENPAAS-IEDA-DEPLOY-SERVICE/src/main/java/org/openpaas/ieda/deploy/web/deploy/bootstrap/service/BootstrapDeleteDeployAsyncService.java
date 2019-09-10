@@ -58,17 +58,32 @@ public class BootstrapDeleteDeployAsyncService{
      * @return : void
     *****************************************************************/
     public void deleteBootstrapDeploy(BootStrapDeployDTO.Delete dto, Principal principal) {
-        
+
+        int lastNumberIndex = 0;
+        String releaseVersion = "";
         String accumulatedLog = "";
+        String versionNumber = "";
+
         BootstrapVO vo = bootstrapDao.selectBootstrapInfo(Integer.parseInt(dto.getId()));
         if( vo == null ){
             bootstrapDao.deleteBootstrapInfo(Integer.parseInt(dto.getId()));
             vo = new BootstrapVO();
         }
+
+        // 릴리즈명/버전 추출
+        String boshRelease = vo.getBoshRelease();
+        if(  vo.getBoshRelease().contains(".tgz") ){
+            boshRelease= vo.getBoshRelease().replace(".tgz", "");
+        }
+        versionNumber = boshRelease.split("-")[1];
+        lastNumberIndex = versionNumber.lastIndexOf(".");
+        releaseVersion = versionNumber.substring(0, lastNumberIndex);
+
         String status = "";
         String resultMessage = "";
         BufferedReader bufferedReader = null;
-        ManifestTemplateVO result = commonDao.selectManifetTemplate(vo.getIaasType(), "267.8", "BOOTSTRAP", "bosh");
+
+        ManifestTemplateVO result = commonDao.selectManifetTemplate(vo.getIaasType(), releaseVersion , "BOOTSTRAP", "bosh");
 
         try {
             String deployStateFile = DEPLOYMENT_DIR +vo.getDeploymentFile().split(".yml")[0] + "-state.json";
