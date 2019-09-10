@@ -1162,9 +1162,11 @@ function getWindowsStemcellList(){
  *********************************************************/
 function resourceJobSettingsPop(){
     var paastaReleaseVersion = "";
-    if(defaultInfo.releaseVersion == "4.0"){
+    if(defaultInfo.releaseVersion == "4.0") {
         paastaReleaseVersion = "5.5.0";
-    } else {
+    }else if(defaultInfo.releaseVersion == "4.6"){
+            paastaReleaseVersion = "9.3.0";
+        } else {
         paastaReleaseVersion = defaultInfo.releaseVersion;
     }
     var flag = false;
