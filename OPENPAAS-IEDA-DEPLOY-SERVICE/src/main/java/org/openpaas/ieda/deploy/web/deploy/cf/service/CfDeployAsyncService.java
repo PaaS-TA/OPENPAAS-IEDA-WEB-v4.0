@@ -18,9 +18,12 @@ import org.openpaas.ieda.deploy.web.common.dao.CommonDeployDAO;
 import org.openpaas.ieda.deploy.web.common.dao.ManifestTemplateVO;
 import org.openpaas.ieda.deploy.web.config.setting.dao.DirectorConfigVO;
 import org.openpaas.ieda.deploy.web.config.setting.service.DirectorConfigService;
+import org.openpaas.ieda.deploy.web.deploy.bootstrap.service.BootstrapDeployAsyncService;
 import org.openpaas.ieda.deploy.web.deploy.cf.dao.CfDAO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dao.CfVO;
 import org.openpaas.ieda.deploy.web.deploy.cf.dto.CfParamDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -43,7 +46,10 @@ public class CfDeployAsyncService {
     private final static String MANIFEST_TEMPLATE_DIR = LocalDirectoryConfiguration.getManifastTemplateDir();
     final private static String CF_CREDENTIAL_DIR = LocalDirectoryConfiguration.getGenerateCfDeploymentCredentialDir();
     private final static String DEPLOYMENT_DIR = LocalDirectoryConfiguration.getDeploymentDir();
-    
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(CfDeployAsyncService.class);
+
+
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
      * @description : CF 플랫폼 설치 요청
@@ -69,8 +75,9 @@ public class CfDeployAsyncService {
         try {
             BufferedReader bufferedReader = null;
             DirectorConfigVO directorInfo = directorConfigService.getDefaultDirector();
-            
-            if("5.0.0".equals(vo.getReleaseVersion()) || "5.5.0".equals(vo.getReleaseVersion()) || "4.0".equals(vo.getReleaseVersion())){
+
+            // 2019. 08. CF v9.3.0, PaaS-TA v4.6 지원 추가.
+            if("5.0.0".equals(vo.getReleaseVersion()) || "5.5.0".equals(vo.getReleaseVersion()) || "9.3.0".equals(vo.getReleaseVersion())  || "4.0".equals(vo.getReleaseVersion()) || "4.6".equals(vo.getReleaseVersion())){
                 status = settingRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
             } else {
                 deleteRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
@@ -139,7 +146,8 @@ public class CfDeployAsyncService {
             while ((info = bufferedReader.readLine()) != null){
                 accumulatedBuffer.append(info).append("\n");
                 Thread.sleep(20);
-                
+
+//                LOGGER.debug("#### LOG : " + info);
                 if(info.contains("invalid argument") || info.contains("error") || info.contains("fail") || info.contains("Error") || info.contains("Expected")){
                     status = "error";
                     DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList(info));
