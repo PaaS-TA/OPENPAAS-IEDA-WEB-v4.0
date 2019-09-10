@@ -24,3 +24,4 @@
 - type: replace
   path: /cloud_provider/mbus
   value: https://mbus:((mbus_bootstrap_password))@((external_ip)):6868
+

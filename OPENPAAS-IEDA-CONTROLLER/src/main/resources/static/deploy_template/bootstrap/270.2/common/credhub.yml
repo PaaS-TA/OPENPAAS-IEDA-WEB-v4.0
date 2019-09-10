@@ -102,3 +102,4 @@
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/jwt/revocable?
   value: true
 
+
