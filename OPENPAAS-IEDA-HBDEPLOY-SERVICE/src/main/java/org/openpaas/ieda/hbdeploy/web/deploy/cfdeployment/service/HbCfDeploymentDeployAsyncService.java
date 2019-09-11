@@ -86,7 +86,7 @@ public class HbCfDeploymentDeployAsyncService {
                 }
             }
             // CF-Deployment 5.0.0 버전 이상 bosh runtime config required
-            if("5.0.0".equals(cfDeploymentVersion) || "5.5.0".equals(cfDeploymentVersion) || "4.0".equals(cfDeploymentVersion)){
+            if("5.0.0".equals(cfDeploymentVersion) || "5.5.0".equals(cfDeploymentVersion) || "4.0".equals(cfDeploymentVersion) || "9.3.0".equals(cfDeploymentVersion) || "4.6".equals(cfDeploymentVersion)){
                 status = settingRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
             } else {
                 deleteRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
@@ -118,8 +118,10 @@ public class HbCfDeploymentDeployAsyncService {
             cmd.add(vo.getHbCfDeploymentDefaultConfigVO().getDefaultConfigName());
             cmd.add("deploy");
             if(vo.getHbCfDeploymentNetworkConfigVO() != null){
-                if(!vo.getHbCfDeploymentNetworkConfigVO().getSubnetId1().equals("")){
+                if(!vo.getHbCfDeploymentNetworkConfigVO().getSubnetId2().equals("")){
                     cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/cf-deployment-multi-az.yml");
+                }else {
+                    cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getCommonBaseTemplate()+"");
                 }
             } else {
                 cmd.add(MANIFEST_TEMPLATE_DIR+"/cf-deployment/"+result.getTemplateVersion()+"/common/"+result.getCommonBaseTemplate()+"");
@@ -138,7 +140,6 @@ public class HbCfDeploymentDeployAsyncService {
             }
             cmd.add("--tty");
             cmd.add("-n");
-            cmd.add("--no-redact");
             //cmd.add("--no-redact");
             builder = new ProcessBuilder(cmd);
             builder.redirectErrorStream(true);
@@ -382,8 +383,8 @@ public class HbCfDeploymentDeployAsyncService {
         cmd.add("diego-cell_instance="+vo.getHbCfDeploymentInstanceConfigVO().getDiegoCell()+"");
         cmd.add("-v");
         cmd.add("doppler_instance="+vo.getHbCfDeploymentInstanceConfigVO().getDoppler()+"");
-        cmd.add("-v");
-        cmd.add("haproxy_instance="+vo.getHbCfDeploymentInstanceConfigVO().getHaproxy()+"");
+        //cmd.add("-v");
+        //cmd.add("haproxy_instance="+vo.getHbCfDeploymentInstanceConfigVO().getHaproxy()+"");
         cmd.add("-v");
         cmd.add("log-api_instance="+vo.getHbCfDeploymentInstanceConfigVO().getLogApi()+"");
         cmd.add("-v");

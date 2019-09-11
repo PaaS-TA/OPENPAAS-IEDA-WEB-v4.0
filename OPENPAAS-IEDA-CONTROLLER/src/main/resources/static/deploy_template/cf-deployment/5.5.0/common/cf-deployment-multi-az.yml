@@ -685,6 +685,7 @@ instance_groups:
 - name: api
   instances: 1
   azs:
+  - z1
   - z2
   vm_type: small
   vm_extensions:
@@ -1344,6 +1345,7 @@ instance_groups:
 - name: diego-cell
   instances: 1
   azs:
+  - z1
   - z2
   vm_type: small-highmem
   vm_extensions:

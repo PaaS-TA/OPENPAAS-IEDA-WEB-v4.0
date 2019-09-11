@@ -128,7 +128,7 @@
             And common_keypair_name = #{config.commonKeypairName}
             And common_keypair_path = #{config.commonKeypairPath} 
         </when>
-        <when test="config.iaasType == 'Openstack'">
+        <when test="config.iaasType == 'Openstack' or config.iaasType == 'OPENSTACK'">
             And common_security_group = #{config.commonSecurityGroup}
             And common_keypair_name = #{config.commonKeypairName}
             And common_keypair_path = #{config.commonKeypairPath}  

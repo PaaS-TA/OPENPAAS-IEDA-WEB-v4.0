@@ -3,6 +3,8 @@
   value:
     name: os-conf
     url: file:///((osRelease))
+   #version: 21.0.0
+ #release: os-conf
 
 - type: replace
   path: /instance_groups/name=bosh/properties/director/default_ssh_options?/gateway_user
@@ -17,3 +19,9 @@
       users:
       - name: jumpbox
         public_key: ((jumpbox_ssh.public_key))
+
+- path: /variables/-
+  type: replace
+  value:
+    name: jumpbox_ssh
+    type: ssh

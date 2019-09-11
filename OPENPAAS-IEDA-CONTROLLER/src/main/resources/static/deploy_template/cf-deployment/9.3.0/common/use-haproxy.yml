@@ -3,7 +3,7 @@
   value:
     name: haproxy
     sha1: d41444d7f6a18756128c4cd91692163ee80ded28
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/haproxy-boshrelease?v=9.6.0
+    url: file:///home/((inception_os_user_name))/workspace/paasta-4.6/release/paasta/haproxy-boshrelease-9.6.0.tgz
     version: 9.6.0
 - type: remove
   path: /instance_groups/name=router/vm_extensions
@@ -14,9 +14,9 @@
 - type: replace
   path: /instance_groups/name=smoke-tests:before
   value:
-    instances: 1
     azs:
     - z1
+    instances: 1
     jobs:
     - name: haproxy
       properties:

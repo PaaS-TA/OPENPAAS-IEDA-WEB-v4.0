@@ -3,6 +3,9 @@
   value:
     name: credhub
     url: file:///((credhubRelease))
+   #sha1: 2c4f2371271a200ee88fc6fdf2e7dfd5559c30e1
+   #version: 2.4.0
+  release: credhub
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
@@ -11,9 +14,6 @@
     release: credhub
     properties:
       credhub:
-        authorization:
-          acls:
-            enabled: false
         authentication:
           uaa:
             url: "https://((internal_ip)):8443"
@@ -38,6 +38,9 @@
             key_properties:
               encryption_password: ((credhub_encryption_password))
             active: true
+        authorization:
+          acls:
+            enabled: false
 
 - type: replace
   path: /instance_groups/name=bosh/properties/postgres/additional_databases?/-
@@ -89,17 +92,70 @@
     secret: ((credhub_admin_client_secret))
 
 - type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/jwt/revocable?
+  value: true
+
+- type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users/name=credhub_cli_user?/password
   value: ((credhub_cli_user_password))
 
-- type: replace
-  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users/name=credhub_cli_user?/groups
+- path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users/name=credhub_cli_user?/groups
+  type: replace
   value:
   - credhub.read
   - credhub.write
 
-- type: replace
-  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/jwt/revocable?
-  value: true
-
-
+- path: /instance_groups/name=bosh/jobs/-
+  type: replace
+  value:
+    name: bbr-credhubdb
+    properties:
+      credhub:
+        data_storage:
+          database: credhub
+          host: 127.0.0.1
+          password: ((postgres_password))
+          port: 5432
+          require_tls: false
+          type: postgres
+          username: postgres
+      release_level_backup: true
+    release: credhub
+- path: /variables/-
+  type: replace
+  value:
+    name: credhub_cli_user_password
+    type: password
+- path: /variables/-
+  type: replace
+  value:
+    name: credhub_ca
+    options:
+      common_name: CredHub CA
+      is_ca: true
+    type: certificate
+- path: /variables/-
+  type: replace
+  value:
+    name: credhub_tls
+    options:
+      alternative_names:
+      - ((internal_ip))
+      ca: credhub_ca
+      common_name: ((internal_ip))
+    type: certificate
+- path: /variables/-
+  type: replace
+  value:
+    name: credhub_encryption_password
+    type: password
+- path: /variables/-
+  type: replace
+  value:
+    name: uaa_clients_director_to_credhub
+    type: password
+- path: /variables/-
+  type: replace
+  value:
+    name: credhub_admin_client_secret
+    type: password

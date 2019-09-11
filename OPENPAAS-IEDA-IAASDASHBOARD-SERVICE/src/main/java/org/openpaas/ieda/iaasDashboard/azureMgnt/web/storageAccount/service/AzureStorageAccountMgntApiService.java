@@ -122,7 +122,8 @@ public class AzureStorageAccountMgntApiService {
     	    String storageAccountId = azure.storageAccounts().list().get(i).id();
     	    StorageAccount storageAccount = azure.storageAccounts().getById(storageAccountId);
     	    List<StorageAccountKey> storageAccountKeys = storageAccount.getKeys();
-    	    key = storageAccountKeys.get(i).value();
+    	    key = storageAccountKeys.get(0).value();
+            break;
          }
        }
       return key;

@@ -1,9 +1,12 @@
 - type: replace
   path: /releases/-
+  release: uaa
   value:
     name: uaa
     url: file:///((uaaRelease))
-    
+   #sha1: 24fc5c63c99a594a537732bd897f10b8589096ff
+   #version: 73.5.0
+ 
 # Switch Director to use UAA
 - type: replace
   path: /instance_groups/name=bosh/properties/director/user_management/provider
@@ -34,36 +37,35 @@
         active_key_label: uaa-encryption-key-1
       uaa:
         url: "https://((internal_ip)):8443"
-        port: -1
         sslPrivateKey: ((uaa_ssl.private_key))
         sslCertificate: ((uaa_ssl.certificate))
         jwt:
-          signing_key: ((uaa_jwt_signing_key.private_key))
-          verification_key: ((uaa_jwt_signing_key.public_key))
+          policy:
+            active_key_id: uaa-jwt-key-1
+            keys:
+              uaa-jwt-key-1:
+                signingKey: ((uaa_jwt_signing_key.private_key))
         scim:
           groups:
-          - scim.write
-          - scim.read
-          - bosh.admin
-          users:
-          - name: admin
-            groups: [bosh.admin]
-            password: "admin"
+            bosh.admin: User has admin access on any Director
+            bosh.read: User has read access on any Director
+            bosh.releases.upload: User can upload new releases
+            bosh.stemcells.upload: User can upload new stemcells
         clients:
           bosh_cli:
             override: true
             authorized-grant-types: password,refresh_token
             scope: openid,bosh.admin,bosh.read,bosh.*.admin,bosh.*.read,bosh.teams.*.admin,bosh.teams.*.read
             authorities: uaa.none
-            access-token-validity: 120 # 2 min
-            refresh-token-validity: 86400 # 1 day
+            access-token-validity: 120
+            refresh-token-validity: 86400
             secret: ""
           admin:
             override: true
             authorized-grant-types: client_credentials
             scope: ""
             authorities: bosh.admin
-            secret: admin
+            secret: ((admin_password))
           hm:
             override: true
             authorized-grant-types: client_credentials
@@ -76,13 +78,25 @@
             scope: ""
             authorities: clients.read,clients.write,clients.secret,uaa.admin,scim.read,scim.write,password.write
             secret: ((uaa_admin_client_secret))
-        login: {client_secret: ((uaa_login_client_secret))}
-        zones: {internal: {hostnames: []}}
+        login:
+          client_secret: ((uaa_login_client_secret))
+          users:
+          - groups:
+            - bosh.admin
+            name: admin
+            password: ((admin_password))
+        zones:
+          internal:
+            hostnames:
+            - ((internal_ip))
       login:
         saml:
-          serviceProviderKey: ((uaa_service_provider_ssl.private_key))
-          serviceProviderKeyPassword: "" # TODO: Remove this when UAA defaults this value
-          serviceProviderCertificate: ((uaa_service_provider_ssl.certificate))
+          activeKeyId: uaa-saml-key-1
+          keys:
+            uaa-saml-key-1:
+              certificate: ((uaa_service_provider_ssl.certificate))
+              key: ((uaa_service_provider_ssl.private_key))
+              passphrase: ""
       uaadb:
         address: 127.0.0.1
         port: 5432
@@ -94,7 +108,7 @@
         - tag: admin
           name: postgres
           password: ((postgres_password))
-
+        tls: disabled
 - type: replace
   path: /instance_groups/name=bosh/properties/postgres/additional_databases?/-
   value: uaa
@@ -108,3 +122,43 @@
   path: /instance_groups/name=bosh/properties/hm/director_account/client_secret?
   value: ((hm_password))
 
+- path: /variables/-
+  type: replace
+  value:
+    name: uaa_jwt_signing_key
+    type: rsa
+- path: /variables/-
+  type: replace
+  value:
+    name: uaa_admin_client_secret
+    type: password
+- path: /variables/-
+  type: replace
+  value:
+    name: uaa_login_client_secret
+    type: password
+- path: /variables/-
+  type: replace
+  value:
+    name: uaa_encryption_key_1
+    type: password
+- path: /variables/-
+  type: replace
+  value:
+    name: uaa_ssl
+    options:
+      alternative_names:
+      - ((internal_ip))
+      ca: default_ca
+      common_name: ((internal_ip))
+    type: certificate
+- path: /variables/-
+  type: replace
+  value:
+    name: uaa_service_provider_ssl
+    options:
+      alternative_names:
+      - ((internal_ip))
+      ca: default_ca
+      common_name: ((internal_ip))
+    type: certificate

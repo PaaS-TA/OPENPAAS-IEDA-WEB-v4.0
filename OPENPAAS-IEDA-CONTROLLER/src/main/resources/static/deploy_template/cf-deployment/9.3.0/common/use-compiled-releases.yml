@@ -34,7 +34,6 @@
 - type: replace
   path: /releases/name=uaa/sha1
   value: f6d97335833a325a78fde20e223f89f48868f4b1
-
 - type: replace
   path: /releases/name=nats/url
   value: file:///home/((inception_os_user_name))/workspace/paasta-4.6/release/paasta/nats-27-ubuntu-xenial-315.36-20190604-002225-109344473.tgz

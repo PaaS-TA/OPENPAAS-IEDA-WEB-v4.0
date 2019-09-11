@@ -13,22 +13,23 @@ addons:
       cache:
         enabled: true
       health:
-        enabled: truej
-        client:
-          tls: ((/dns_healthcheck_client_tls))
+        enabled: true
         server:
           tls: ((/dns_healthcheck_server_tls))
-      api:
         client:
-          tls: ((/dns_api_client_tls))
+          tls: ((/dns_healthcheck_client_tls))
+      api:
         server:
           tls: ((/dns_api_server_tls))
+        client:
+          tls: ((/dns_api_client_tls))
   include:
     deployments:
     - ((deployment_name))
     stemcell:
     - os: ubuntu-trusty
     - os: ubuntu-xenial
+
 - name: bosh-dns-windows
   jobs:
   - name: bosh-dns-windows
@@ -58,10 +59,11 @@ addons:
 
 variables:
 - name: /dns_healthcheck_tls_ca
-  options:
-    common_name: dns-healthcheck-tls-ca
-    is_ca: true
   type: certificate
+  options:
+    is_ca: true
+    common_name: dns-healthcheck-tls-ca
+
 - name: /dns_healthcheck_server_tls
   type: certificate
   options:
