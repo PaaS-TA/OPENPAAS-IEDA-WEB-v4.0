@@ -141,3 +141,78 @@ cloud_provider:
     blobstore: {provider: local, path: /var/vcap/micro_bosh/data/cache}
     ntp: *ntp
 
+variables:
+- name: admin_password
+  type: password
+- name: blobstore_director_password
+  type: password
+- name: blobstore_agent_password
+  type: password
+- name: hm_password
+  type: password
+- name: mbus_bootstrap_password
+  type: password
+- name: nats_password
+  type: password
+- name: postgres_password
+  type: password
+- name: default_ca
+  options:
+    common_name: ca
+    is_ca: true
+  type: certificate
+- name: mbus_bootstrap_ssl
+  options:
+    alternative_names:
+    - ((internal_ip))
+    ca: default_ca
+    common_name: ((internal_ip))
+  type: certificate
+- name: director_ssl
+  options:
+    alternative_names:
+    - ((internal_ip))
+    ca: default_ca
+    common_name: ((internal_ip))
+  type: certificate
+- name: nats_ca
+  options:
+    common_name: default.nats-ca.bosh-internal
+    is_ca: true
+  type: certificate
+- name: nats_server_tls
+  options:
+    alternative_names:
+    - ((internal_ip))
+    ca: nats_ca
+    common_name: default.nats.bosh-internal
+    extended_key_usage:
+    - server_auth
+  type: certificate
+- name: nats_clients_director_tls
+  options:
+    ca: nats_ca
+    common_name: default.director.bosh-internal
+    extended_key_usage:
+    - client_auth
+  type: certificate
+- name: nats_clients_health_monitor_tls
+  options:
+    ca: nats_ca
+    common_name: default.hm.bosh-internal
+    extended_key_usage:
+    - client_auth
+  type: certificate
+- name: blobstore_ca
+  options:
+    common_name: default.blobstore-ca.bosh-internal
+    is_ca: true
+  type: certificate
+- name: blobstore_server_tls
+  options:
+    alternative_names:
+    - ((internal_ip))
+    ca: blobstore_ca
+    common_name: ((internal_ip))
+  type: certificate
+
