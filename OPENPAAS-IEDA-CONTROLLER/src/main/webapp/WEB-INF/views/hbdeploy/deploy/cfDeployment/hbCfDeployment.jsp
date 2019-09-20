@@ -386,23 +386,51 @@ $(function() {
 
         var selected = w2ui['config_cfDeployment_grid2'].getSelection();
         
-        if(selected.length == 3) {
+        if(selected.length > 2) {
             w2alert("최대 2개의 CF Deployment이 설치 가능 합니다. ", "cfDeployment 설치");
             return;
         }
-        
+
         var record = new Array();
-        
+
         for(var i=0; i<selected.length; i++){
             record.push(w2ui['config_cfDeployment_grid2'].get(selected[i]));
         }
+
         if(record == ""){
             w2alert("배포할 CF Deployment이 존재하지 않습니다.");
         }else{
-            firstInstallPopup(record);
+            var defaultCloud = "openstack";
+            var compareCloudArray = ["aws", "azure"];
+
+            var deployType = "";
+            var cloudSum = 0;
+
+            for(var i=0; i<record.length;i++)
+            {
+                deployType = record[i].iaasType;
+
+                if(deployType.indexOf(defaultCloud) > -1){
+                    // Openstack sets as default.
+                    cloudSum += 100;
+                }else if(compareCloudArray.indexOf(deployType) > -1 ){
+                    cloudSum += 1;
+                }else{
+                    w2alert("CF-Deployment의 인프라 환경 타입을 다시 확인 바랍니다.", "cfDeployment 설치");
+                    return;
+                }
+            }
+
+            if(cloudSum > 100){
+                firstInstallPopup(record);
+            }else{
+                w2alert("이종 CF-Deployment의 설치 시, 인프라 환경 타입은 [Openstack - AWS] 또는 [Openstack - Azure]로 구성해야 합니다.", "cfDeployment 설치");
+                return;
+            }
         }
     });
-    
+
+
     /******************************************************************
      * 설명 : cfDeployment 삭제 버튼
      ***************************************************************** */
