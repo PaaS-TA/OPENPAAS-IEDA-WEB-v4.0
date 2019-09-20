@@ -119,7 +119,7 @@ public class CfDeployAsyncService {
             if("true".equalsIgnoreCase(vo.getPaastaMonitoringUse())){
                 // 2019. 09. 16. PaaS-TA v4.6 지원 추가.
                 if(!"4.0".equalsIgnoreCase(vo.getReleaseVersion()) && !"4.6".equalsIgnoreCase(vo.getReleaseVersion()) && !"paasta".equalsIgnoreCase(result.getReleaseType())){
-                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("PaaS-TA 모니터링은 paasta-4.0에서 사용 가능 합니다."));
+                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("PaaS-TA 모니터링은 paasta-4.0, 또는 paasta-4.6에서 사용 가능 합니다."));
                 }
                 settingPaasTaMonitoringInfo(vo, cmd, result);
             }
