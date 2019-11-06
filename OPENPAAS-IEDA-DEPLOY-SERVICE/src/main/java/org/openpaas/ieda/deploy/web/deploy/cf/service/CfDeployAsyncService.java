@@ -63,12 +63,12 @@ public class CfDeployAsyncService {
         CfVO vo = cfService.getCfInfo(Integer.parseInt(dto.getId()));
         ManifestTemplateVO result = commonDao.selectManifetTemplate(vo.getIaasType(), vo.getReleaseVersion(), "CFDEPLOYMENT", vo.getReleaseName());
         deploymentFileName = vo != null ? vo.getDeploymentFile() : "";
-        
+
         if ( StringUtils.isEmpty(deploymentFileName) ) {
-            throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA), 
+            throw new CommonException(message.getMessage("common.badRequest.exception.code", null, Locale.KOREA),
                     message.getMessage("common.badRequest.message", null, Locale.KOREA), HttpStatus.BAD_REQUEST);
         }
-        String cloudConfigFile = DEPLOYMENT_DIR + SEPARATOR + deploymentFileName; 
+        String cloudConfigFile = DEPLOYMENT_DIR + SEPARATOR + deploymentFileName;
         String errorMessage = message.getMessage("common.internalServerError.message", null, Locale.KOREA);
         String status = "";
 
@@ -77,7 +77,8 @@ public class CfDeployAsyncService {
             DirectorConfigVO directorInfo = directorConfigService.getDefaultDirector();
 
             // 2019. 08. CF v9.3.0, PaaS-TA v4.6 지원 추가.
-            if("5.0.0".equals(vo.getReleaseVersion()) || "5.5.0".equals(vo.getReleaseVersion()) || "9.3.0".equals(vo.getReleaseVersion())  || "4.0".equals(vo.getReleaseVersion()) || "4.6".equals(vo.getReleaseVersion())){
+            // 2019. 10. CF v9.5.0, PaaS-TA v5.0 지원 추가.
+            if("5.0.0".equals(vo.getReleaseVersion()) || "5.5.0".equals(vo.getReleaseVersion()) || "9.3.0".equals(vo.getReleaseVersion()) || "9.5.0".equals(vo.getReleaseVersion())  || "4.0".equals(vo.getReleaseVersion()) || "4.6".equals(vo.getReleaseVersion()) || "5.0".equals(vo.getReleaseVersion())){
                 status = settingRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
             } else {
                 deleteRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
@@ -118,8 +119,9 @@ public class CfDeployAsyncService {
             
             if("true".equalsIgnoreCase(vo.getPaastaMonitoringUse())){
                 // 2019. 09. 16. PaaS-TA v4.6 지원 추가.
-                if(!"4.0".equalsIgnoreCase(vo.getReleaseVersion()) && !"4.6".equalsIgnoreCase(vo.getReleaseVersion()) && !"paasta".equalsIgnoreCase(result.getReleaseType())){
-                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("PaaS-TA 모니터링은 paasta-4.0, 또는 paasta-4.6에서 사용 가능 합니다."));
+                // 2019. 10. 30. PaaS-TA v5.0 지원 추가.
+                if(!"4.0".equalsIgnoreCase(vo.getReleaseVersion()) && !"4.6".equalsIgnoreCase(vo.getReleaseVersion()) && !"5.0".equalsIgnoreCase(vo.getReleaseVersion()) && !"paasta".equalsIgnoreCase(result.getReleaseType())){
+                    DirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("PaaS-TA 모니터링은 paasta-4.0 이상에서 사용 가능 합니다."));
                 }
                 settingPaasTaMonitoringInfo(vo, cmd, result);
             }
