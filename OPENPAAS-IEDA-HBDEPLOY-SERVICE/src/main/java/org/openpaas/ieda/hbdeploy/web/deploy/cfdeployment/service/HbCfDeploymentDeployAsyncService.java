@@ -86,7 +86,7 @@ public class HbCfDeploymentDeployAsyncService {
                 }
             }
             // CF-Deployment 5.0.0 버전 이상 bosh runtime config required
-            if("5.0.0".equals(cfDeploymentVersion) || "5.5.0".equals(cfDeploymentVersion) || "4.0".equals(cfDeploymentVersion) || "9.3.0".equals(cfDeploymentVersion) || "4.6".equals(cfDeploymentVersion)){
+            if("5.0.0".equals(cfDeploymentVersion) || "5.5.0".equals(cfDeploymentVersion) || "9.3.0".equals(cfDeploymentVersion) || "9.5.0".equalsIgnoreCase(cfDeploymentVersion)|| "4.0".equals(cfDeploymentVersion) || "4.6".equals(cfDeploymentVersion) || "5.0".equals(cfDeploymentVersion)){
                 status = settingRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
             } else {
                 deleteRuntimeConfig(vo, directorInfo, principal, messageEndpoint, result);
