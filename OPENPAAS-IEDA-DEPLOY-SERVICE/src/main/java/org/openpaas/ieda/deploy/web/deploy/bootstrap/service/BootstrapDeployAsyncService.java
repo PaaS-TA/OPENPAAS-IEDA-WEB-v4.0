@@ -434,13 +434,17 @@ public class BootstrapDeployAsyncService {
         cmd.add("-o");
         cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + result.getMinReleaseVersion() + SEPARATOR + "common/" + "paasta-monitoring-agent.yml");
         cmd.add("-v");
-        cmd.add("metric_url="+ RELEASE_DIR + SEPARATOR + "");
+        cmd.add("paastaMoniteringRelease="+ RELEASE_DIR + SEPARATOR + vo.getPaastaMonitoringAgentRelease() + "");
         cmd.add("-v");
-        cmd.add("syslog_address="+ RELEASE_DIR + SEPARATOR +  "");
+        cmd.add("syslogRelease="+ RELEASE_DIR + SEPARATOR + vo.getPaastaMonitoringSyslogRelease() + "");
         cmd.add("-v");
-        cmd.add("syslog_port="+ RELEASE_DIR + SEPARATOR +  "");
+        cmd.add("metric_url="+ vo.getMetricUrl() + "");
         cmd.add("-v");
-        cmd.add("syslog_transport="+ RELEASE_DIR + SEPARATOR + "");
+        cmd.add("syslog_address="+ vo.getSyslogAddress() + "");
+        cmd.add("-v");
+        cmd.add("syslog_port="+ vo.getSyslogPort() + "");
+        cmd.add("-v");
+        cmd.add("syslog_transport="+ vo.getSyslogTransport() + "");
     }
     
     /****************************************************************
