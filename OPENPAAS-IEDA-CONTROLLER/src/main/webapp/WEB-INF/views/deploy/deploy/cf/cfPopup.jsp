@@ -1165,8 +1165,10 @@ function resourceJobSettingsPop(){
     if(defaultInfo.releaseVersion == "4.0") {
         paastaReleaseVersion = "5.5.0";
     }else if(defaultInfo.releaseVersion == "4.6"){
-            paastaReleaseVersion = "9.3.0";
-        } else {
+        paastaReleaseVersion = "9.3.0";
+    }else if(defaultInfo.releaseVersion == "5.0"){
+        paastaReleaseVersion = "9.5.0";
+    } else {
         paastaReleaseVersion = defaultInfo.releaseVersion;
     }
     var flag = false;
