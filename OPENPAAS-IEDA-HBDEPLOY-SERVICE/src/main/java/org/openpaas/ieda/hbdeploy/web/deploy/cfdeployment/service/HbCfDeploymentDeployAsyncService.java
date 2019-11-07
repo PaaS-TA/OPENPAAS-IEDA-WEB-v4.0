@@ -133,8 +133,10 @@ public class HbCfDeploymentDeployAsyncService {
             }
             setJobSetting(cmd, vo, result);
             if("true".equalsIgnoreCase(vo.getHbCfDeploymentDefaultConfigVO().getPaastaMonitoringUse())){
-                if(!"4.0".equalsIgnoreCase(cfDeploymentVersion) && !"paasta".equalsIgnoreCase(result.getReleaseType())){
-                    HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("PaaS-TA 모니터링은 paasta-4.0에서 사용 가능 합니다."));
+                // 2019. 09. 16. PaaS-TA v4.6 지원 추가.
+                // 2019. 10. 30. PaaS-TA v5.0 지원 추가.
+                if(!"4.0".equalsIgnoreCase(cfDeploymentVersion) && !"4.6".equalsIgnoreCase(cfDeploymentVersion) && !"5.0".equalsIgnoreCase(cfDeploymentVersion) && !"paasta".equalsIgnoreCase(result.getReleaseType())){
+                    HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, messageEndpoint, "error", Arrays.asList("PaaS-TA 모니터링은 paasta-4.0 이상에서 사용 가능 합니다."));
                 }
                 settingPaasTaMonitoringInfo(vo, cmd, result);
             }

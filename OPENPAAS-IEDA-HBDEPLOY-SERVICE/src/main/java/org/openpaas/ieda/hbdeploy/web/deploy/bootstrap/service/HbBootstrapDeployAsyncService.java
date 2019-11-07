@@ -95,8 +95,8 @@ public class HbBootstrapDeployAsyncService {
                 settingJumpBoxInfo(bootstrapInfo, cmd, result);
                 
                 if("true".equalsIgnoreCase(bootstrapInfo.getDefaultConfigVo().getPaastaMonitoringUse())){
-                    if(!"268.2".equalsIgnoreCase(result.getTemplateVersion())){
-                        HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "error", Arrays.asList("PaaS-TA 모니터링은 paasta-4.0(bosh-release v268.2)에서 사용 가능 합니다."));
+                    if(!"268.2".equalsIgnoreCase(result.getTemplateVersion()) || !"270.2".equalsIgnoreCase(result.getTemplateVersion())){
+                        HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, "error", Arrays.asList("PaaS-TA 모니터링은 paasta-4.0(bosh-release v268.2)이상에서 사용 가능 합니다."));
                     }
                     settingPaasTaMonitoringInfo(bootstrapInfo, cmd, result);
                 }
