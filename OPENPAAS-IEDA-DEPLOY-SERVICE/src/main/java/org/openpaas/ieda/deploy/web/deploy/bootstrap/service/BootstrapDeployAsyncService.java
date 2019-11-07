@@ -446,6 +446,7 @@ public class BootstrapDeployAsyncService {
         cmd.add("-v");
         cmd.add("syslog_transport="+ vo.getSyslogTransport() + "");
     }
+
     
     /****************************************************************
      * @project : Paas 플랫폼 설치 자동화
