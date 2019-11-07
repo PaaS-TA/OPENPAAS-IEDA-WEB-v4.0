@@ -1162,7 +1162,7 @@ function getWindowsStemcellList(){
  *********************************************************/
 function resourceJobSettingsPop(){
     var paastaReleaseVersion = "";
-    if(defaultInfo.releaseVersion == "4.0") {
+    if(defaultInfo.releaseVersion == "4.0"){
         paastaReleaseVersion = "5.5.0";
     }else if(defaultInfo.releaseVersion == "4.6"){
         paastaReleaseVersion = "9.3.0";
@@ -1282,7 +1282,11 @@ function settingCfJobs(){
     var release_version = "";
     if(defaultInfo.releaseVersion == "4.0"){
         release_version = "5.5.0";
-    } else {
+    }else if (defaultInfo.releaseVersion == "4.6"){
+        release_version = "9.3.0";
+    }else if (defaultInfo.releaseVersion == "5.0"){
+        release_version = "9.5.0";
+    }else {
         release_version = defaultInfo.releaseVersion;
     }
     $.ajax({
