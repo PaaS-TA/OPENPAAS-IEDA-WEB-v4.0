@@ -210,7 +210,7 @@ function setUploadFilePath(fileInput){
   *********************************************************/
 function uploadManifestValidate(){
     w2popup.lock(upload_lock_msg,true);
-    var form = $(".w2ui-msg-body #settingForm");
+    var form = $(".w2ui-msg-body #settingForm")[0];
     var formData = new FormData(form);
 
     var files = $(".w2ui-msg-body input[name='uploadPathFile']")[0].files;
