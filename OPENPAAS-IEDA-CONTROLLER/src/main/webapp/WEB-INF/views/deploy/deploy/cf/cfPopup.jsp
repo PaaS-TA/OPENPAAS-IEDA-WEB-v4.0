@@ -763,7 +763,7 @@ function saveNetworkInfo(type, form) {
      networkInfo = [];
      //External 
      var staticFrom = iaas.toLowerCase() != "vsphere" ? 
-             $(".w2ui-msg-body input[name='publicStaticIp']").val() : $(".w2ui-msg-body input[name='publicStaticFrom']").val();
+             $(".w2ui-msg-body input[name='publicStaticIp']").val() : $(".w2ui-msg-body input[name='publicStaticTo']").val();
              
      var external = {
                 cfId               : cfId,

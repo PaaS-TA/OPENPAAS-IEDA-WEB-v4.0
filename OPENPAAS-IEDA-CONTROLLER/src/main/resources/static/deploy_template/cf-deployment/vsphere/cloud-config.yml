@@ -1,8 +1,12 @@
+azs:
+- name: z1
+
 compilation:
   network: default
   reuse_compilation_vms: true
   vm_type: small
   workers: 5
+  az: z1
 
 disk_types:
 - disk_size: 5000
@@ -16,7 +20,8 @@ networks:
 - name: default
   type: manual
   subnets:
-  - gateway: [private_gateway]
+  - az: z1
+    gateway: [private_gateway]
     dns: [[private_dns]]
     range: [private_range]
     reserved: [[private_reserved]]
@@ -27,10 +32,12 @@ networks:
 - name: vip
   type: manual
   subnets:
-  - gateway: [public_gateway]
+  - az: z1
+    gateway: [public_gateway]
     dns: [[public_dns]]
     range: [public_range]
-    reserved: [[public_reserved]]
+#    reserved: [[public_reserved]]
+    static: [public_static]
     cloud_properties:
       name: [public_network_name]
 

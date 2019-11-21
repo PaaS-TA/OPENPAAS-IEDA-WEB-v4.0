@@ -333,11 +333,13 @@ public class CfService {
                         items.add(new ReplaceItemDTO("[public_gateway]", vo.getNetworks().get(i).getSubnetGateway()));
                         items.add(new ReplaceItemDTO("[public_dns]", vo.getNetworks().get(i).getSubnetDns()));
                         items.add(new ReplaceItemDTO("[public_range]", vo.getNetworks().get(i).getSubnetRange()));
-                        items.add(new ReplaceItemDTO("[public_reserved]", vo.getNetworks().get(i).getSubnetStaticTo() + " - " + vo.getNetworks().get(i).getSubnetStaticTo()));
+//                        items.add(new ReplaceItemDTO("[public_reserved]", vo.getNetworks().get(i).getSubnetStaticTo() + " - " + vo.getNetworks().get(i).getSubnetStaticTo()));
+                        items.add(new ReplaceItemDTO("[public_static]", vo.getNetworks().get(i).getSubnetStaticTo()));
                         items.add(new ReplaceItemDTO("[public_network_name]", vo.getNetworks().get(i).getNet()));
                     } else {
                         internalCnt ++;
                         if(internalCnt == 1){
+                            items.add(new ReplaceItemDTO("[private_gateway]", vo.getNetworks().get(i).getSubnetGateway()));
                             items.add(new ReplaceItemDTO("[private_gateway]", vo.getNetworks().get(i).getSubnetGateway()));
                             items.add(new ReplaceItemDTO("[private_dns]", vo.getNetworks().get(i).getSubnetDns()));
                             items.add(new ReplaceItemDTO("[private_range]", vo.getNetworks().get(i).getSubnetRange()));

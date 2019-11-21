@@ -865,7 +865,9 @@ function networkInfoPopup(div, btn, height){
 function settingVSPhereNetworkInfo(){
     //Internal
     $(".w2ui-msg-body input[name='privateStaticIp']").val(networkInfo.privateStaticIp);
-    $(".w2ui-msg-body input[name='subnetId']").val(networkInfo.subnetId);
+    // 11.19. vsphere network info
+    //$(".w2ui-msg-body input[name='subnetId']").val(networkInfo.subnetId);
+    $(".w2ui-msg-body input[name='networkName']").val(networkInfo.subnetId);
     $(".w2ui-msg-body input[name='networkName']").val(networkInfo.networkName);
     $(".w2ui-msg-body input[name='subnetRange']").val(networkInfo.subnetRange);
     $(".w2ui-msg-body input[name='subnetGateway']").val(networkInfo.subnetGateway);
@@ -2273,7 +2275,7 @@ function popupClose() {
                      <div class="w2ui-field">
                          <label class="subnetId" style="text-align: left;width:36%;font-size:11px;">포트그룹 명</label>
                          <div style="width: 60%">
-                             <input name="subnetId" type="text" style="display:inline-block;width:70%;" placeholder="포트그룹 명을 입력하세요."/>
+                             <input name="networkName" type="text" style="display:inline-block;width:70%;" placeholder="포트그룹 명을 입력하세요."/>
                          </div>
                      </div>
                      <div class="w2ui-field">

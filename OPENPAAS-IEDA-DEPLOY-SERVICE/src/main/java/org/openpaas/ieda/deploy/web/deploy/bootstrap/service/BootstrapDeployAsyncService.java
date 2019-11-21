@@ -375,7 +375,8 @@ public class BootstrapDeployAsyncService {
 //          cmd.add("-o");
 //          cmd.add(MANIFEST_TEMPLATE_PATH + SEPARATOR + vo.getIaasType().toLowerCase() + SEPARATOR  + result.getOptionResourceTemplate());
             cmd.add("-v");
-            cmd.add("network_name=" + vo.getNetworkName());
+            cmd.add("network_name=" + vo.getSubnetId());
+//            cmd.add("network_name=" + vo.getNetworkName());
             cmd.add("-v");
             cmd.add("vcenter_dc=" + vo.getIaasConfig().getVsphereVcentDataCenterName());
             cmd.add("-v");
