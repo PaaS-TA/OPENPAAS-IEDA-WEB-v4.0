@@ -61,6 +61,10 @@ public class HbBootstrapDeleteDeployAsyncService{
         }
         String status = "";
         String resultMessage = "";
+        int lastNumberIndex = 0;
+        String releaseVersion = "";
+        String releaseName = "";
+        String versionNumber = "";
         BufferedReader bufferedReader = null;
 
         try {
@@ -74,14 +78,24 @@ public class HbBootstrapDeleteDeployAsyncService{
                 
             }else{
                 File credentialFile = new File(HYBRID_CREDENTIAL_FILE+vo.getDefaultConfigVo().getCredentialKeyName());
+
+                // 릴리즈명/버전 추출
                 String boshRelease = vo.getDefaultConfigVo().getBoshRelease();
                 if(  vo.getDefaultConfigVo().getBoshRelease().contains(".tgz") ){
-                    boshRelease= vo.getDefaultConfigVo().getBoshRelease().replace(".tgz", ""); 
+                    boshRelease= vo.getDefaultConfigVo().getBoshRelease().replace(".tgz", "");
                 }
-                String releaseVersion = boshRelease.replaceAll("[^0-9]", "");
-                String releaseName = boshRelease.replaceAll("[^A-Za-z]", "");
+                versionNumber = boshRelease.split("-")[1];
+                lastNumberIndex = versionNumber.lastIndexOf(".");
+                releaseName = boshRelease.split("-")[0];
+                releaseVersion = versionNumber.substring(0, lastNumberIndex);
+
+//                if(  vo.getDefaultConfigVo().getBoshRelease().contains(".tgz") ){
+//                    boshRelease= vo.getDefaultConfigVo().getBoshRelease().replace(".tgz", "");
+//                }
+//                String releaseVersion = boshRelease.replaceAll("[^0-9]", "");
+//                String releaseName = boshRelease.replaceAll("[^A-Za-z]", "");
                 ManifestTemplateVO result = commonDeployDao.selectManifetTemplate(vo.getIaasType(), releaseVersion, "BOOTSTRAP", releaseName );
-                
+
                 if(!credentialFile.exists()){
                     status = "error";
                     HbDirectorRestHelper.sendTaskOutput(principal.getName(), messagingTemplate, MESSAGE_ENDPOINT, status, Arrays.asList("BOOTSTRAP 디렉터 인증서가 존재 하지 않습니다."));
