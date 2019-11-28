@@ -340,7 +340,6 @@ public class CfService {
                         internalCnt ++;
                         if(internalCnt == 1){
                             items.add(new ReplaceItemDTO("[private_gateway]", vo.getNetworks().get(i).getSubnetGateway()));
-                            items.add(new ReplaceItemDTO("[private_gateway]", vo.getNetworks().get(i).getSubnetGateway()));
                             items.add(new ReplaceItemDTO("[private_dns]", vo.getNetworks().get(i).getSubnetDns()));
                             items.add(new ReplaceItemDTO("[private_range]", vo.getNetworks().get(i).getSubnetRange()));
                             items.add(new ReplaceItemDTO("[private_reserved]", vo.getNetworks().get(i).getSubnetReservedFrom() + " - " + vo.getNetworks().get(i).getSubnetReservedTo()));
